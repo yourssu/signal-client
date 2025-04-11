@@ -4,6 +4,7 @@ import ProfileCard from "../../components/profile/ProfileCard";
 import { useProfile } from "@/queries/profile";
 import { useAtom } from "jotai";
 import { userUuid } from "@/atoms/userUuid";
+import { Button } from "@/components/ui/button";
 
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -58,22 +59,23 @@ const ProfileListPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="w-full h-full flex flex-col gap-12 items-center justify-center p-4">
       <div
         ref={cardRef}
-        className="w-full max-w-sm transition-transform"
+        className="w-full max-w-md transition-transform"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        {profile && (
-          <ProfileCard
-            profile={profile}
-            onViewContact={handleViewContact}
-            onSkip={handleSkip}
-          />
-        )}
+        {profile && <ProfileCard profile={profile} />}
       </div>
+      <Button
+        onClick={handleViewContact}
+        size="xl"
+        className="w-full rounded-3xl"
+      >
+        시그널 보내기
+      </Button>
     </div>
   );
 };
