@@ -1,32 +1,33 @@
+import { Button } from "@/components/ui/button";
 import React from "react";
 import { useNavigate } from "react-router";
+import feelings from "@/assets/feelings.png";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
+    <div className="flex flex-col items-center gap-24 justify-center min-h-screen p-4">
+      <div className="flex flex-col justify-center">
+        <h1 className="text-2xl break-keep mb-4 text-center">
+          당신의 시그널을 <br />
+          <span className="text-primary">153명</span>이 기다리고 있어요
+        </h1>
+        <p>시그널이 이어준 인연, 이번 학기에 어쩌구</p>
+      </div>
       <div className="mb-8">
         {/* Placeholder for animal character illustration */}
-        <div className="w-64 h-64 bg-gray-200 rounded-full flex items-center justify-center">
-          <span className="text-gray-500">Animal Character</span>
-        </div>
+        <img src={feelings} className="w-full" />
       </div>
 
-      <div className="space-y-4 w-full max-w-xs">
-        <button
-          onClick={() => navigate("/profile/register")}
-          className="w-full py-3 px-6 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-        >
+      <div className="flex flex-col items-stretch gap-4 justify-stretch w-full">
+        <Button onClick={() => navigate("/profile/register")} size="xl">
           프로필 등록하기
-        </button>
+        </Button>
 
-        <button
-          onClick={() => navigate("/verify")}
-          className="w-full py-3 px-6 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-        >
+        <Button onClick={() => navigate("/verify")} size="xl">
           프로필 조회하기
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -161,7 +161,7 @@ export const handlers = [
     return HttpResponse.json({
       timestamp: new Date().toISOString(),
       result: {
-        verificationCode: "1234",
+        verificationCode: "7",
       },
     });
   }),

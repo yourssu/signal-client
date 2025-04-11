@@ -1,5 +1,8 @@
 import { Gender } from "@/types/profile";
 import React from "react";
+import male from "@/assets/male.png";
+import female from "@/assets/female.png";
+import { Button } from "@/components/ui/button";
 
 interface GenderStepProps {
   onSelect: (gender: Gender) => void;
@@ -7,21 +10,25 @@ interface GenderStepProps {
 
 const GenderStep: React.FC<GenderStepProps> = ({ onSelect }) => {
   return (
-    <div className="flex flex-col items-center space-y-4">
-      <h2 className="text-2xl font-bold mb-6">성별을 선택해주세요</h2>
-      <div className="space-y-4 w-full max-w-xs">
-        <button
+    <div className="flex flex-col items-center space-y-4 gap-24">
+      <h2 className="text-2xl font-bold mb-6">성별을 선택해주세요.</h2>
+      <div className="flex justify-center gap-4 w-full">
+        <Button
           onClick={() => onSelect("MALE")}
-          className="w-full py-3 px-6 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          size="card"
+          className="flex flex-col justify-center items-center shadow-md bg-background text-foreground transition-all"
         >
+          <img src={male} className="size-24" />
           남성
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => onSelect("FEMALE")}
-          className="w-full py-3 px-6 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-colors"
+          size="card"
+          className="flex flex-col justify-center items-center shadow-md bg-background text-foreground transition-all"
         >
+          <img src={female} className="size-24" />
           여성
-        </button>
+        </Button>
       </div>
     </div>
   );
