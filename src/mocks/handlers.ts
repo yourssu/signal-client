@@ -1,5 +1,7 @@
 import { ErrorResponse, SuccessResponse } from "@/types/common";
 import {
+  AnimalType,
+  Gender,
   NicknameCreatedResponse,
   NicknameGeneratedRequest,
   ProfileContactResponse,
@@ -25,14 +27,71 @@ export const handlers = [
         { status: 403 }
       );
     }
+
+    // Helper functions for random value generation
+    const getRandomGender = (): Gender => {
+      const genders: Gender[] = ["MALE", "FEMALE"];
+      return genders[Math.floor(Math.random() * genders.length)];
+    };
+
+    const getRandomAnimal = (): AnimalType => {
+      const animals: AnimalType[] = [
+        "DOG",
+        "BEAR",
+        "DINOSAUR",
+        "WOLF",
+        "DEER",
+        "CAT",
+      ];
+      return animals[Math.floor(Math.random() * animals.length)];
+    };
+
+    const getRandomMBTI = (): string => {
+      const E_I = ["E", "I"];
+      const N_S = ["N", "S"];
+      const T_F = ["T", "F"];
+      const J_P = ["J", "P"];
+
+      return (
+        E_I[Math.floor(Math.random() * 2)] +
+        N_S[Math.floor(Math.random() * 2)] +
+        T_F[Math.floor(Math.random() * 2)] +
+        J_P[Math.floor(Math.random() * 2)]
+      );
+    };
+
+    const getRandomNickname = (animal: AnimalType): string => {
+      const adjectives = [
+        "총명한",
+        "귀여운",
+        "용감한",
+        "영리한",
+        "신비로운",
+        "활발한",
+      ];
+      const adjective =
+        adjectives[Math.floor(Math.random() * adjectives.length)];
+      const animalKorean: Record<AnimalType, string> = {
+        DOG: "강아지",
+        CAT: "고양이",
+        BEAR: "곰",
+        DINOSAUR: "공룡",
+        WOLF: "늑대",
+        DEER: "사슴",
+      };
+      return `${adjective} ${animalKorean[animal]}`;
+    };
+
+    const randomAnimal = getRandomAnimal();
+
     return HttpResponse.json({
       timestamp: new Date().toISOString(),
       result: {
-        profileId: 1234,
-        gender: "MALE",
-        animal: "DOG",
-        mbti: "ENTP",
-        nickname: "총명한 강아지",
+        profileId: Math.floor(Math.random() * 10000) + 1,
+        gender: getRandomGender(),
+        animal: randomAnimal,
+        mbti: getRandomMBTI(),
+        nickname: getRandomNickname(randomAnimal),
       },
     } satisfies SuccessResponse<ProfileResponse>);
   }),
