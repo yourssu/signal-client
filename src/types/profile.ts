@@ -1,6 +1,8 @@
+export type Gender = "MALE" | "FEMALE";
+export type AnimalType = "DOG" | "BEAR" | "DINOSAUR" | "WOLF" | "DEER" | "CAT";
 export interface ProfileCreatedRequest {
-  gender: string;
-  animal: string;
+  gender: Gender;
+  animal: AnimalType;
   contact: string;
   mbti: string;
   nickname: string;
@@ -25,8 +27,8 @@ export interface NicknameCreatedResponse {
 
 export interface ProfileResponse {
   profileId?: number;
-  gender: string;
-  animal: string;
+  gender: Gender;
+  animal: AnimalType;
   mbti: string;
   nickname: string;
 }

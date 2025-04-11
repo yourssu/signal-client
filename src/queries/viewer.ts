@@ -1,5 +1,9 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { TicketCreatedRequest, ViewerResponse } from "@/types/viewer";
+import {
+  TicketCreatedRequest as TicketIssuedRequest,
+  VerificationResponse,
+  ViewerResponse,
+} from "@/types/viewer";
 import { SuccessResponse } from "@/types/common";
 
 export const useViewerVerification = (uuid: string) => {
@@ -7,16 +11,17 @@ export const useViewerVerification = (uuid: string) => {
     queryKey: ["viewer", "verification", uuid],
     queryFn: async () => {
       const response = await fetch(`/api/viewers/verification?uuid=${uuid}`);
-      const data = await response.json();
+      const data =
+        (await response.json()) as SuccessResponse<VerificationResponse>;
       return data.result;
     },
     enabled: !!uuid,
   });
 };
 
-export const useCreateViewer = () => {
+export const useIssueTicket = () => {
   return useMutation({
-    mutationFn: async (data: TicketCreatedRequest) => {
+    mutationFn: async (data: TicketIssuedRequest) => {
       const response = await fetch("/api/viewers", {
         method: "POST",
         headers: {
@@ -24,7 +29,7 @@ export const useCreateViewer = () => {
         },
         body: JSON.stringify(data),
       });
-      const result = await response.json();
+      const result = (await response.json()) as SuccessResponse<ViewerResponse>;
       return result;
     },
   });

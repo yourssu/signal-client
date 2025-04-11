@@ -1,6 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  NicknameCreatedResponse,
   NicknameGeneratedRequest,
+  ProfileContactResponse,
   ProfileCreatedRequest,
   ProfileResponse,
   TicketConsumedRequest,
@@ -29,7 +31,8 @@ export const useCreateProfile = () => {
         },
         body: JSON.stringify(data),
       });
-      const result = await response.json();
+      const result =
+        (await response.json()) as SuccessResponse<ProfileContactResponse>;
       return result;
     },
   });
@@ -45,7 +48,8 @@ export const useGenerateNickname = () => {
         },
         body: JSON.stringify(data),
       });
-      const result = await response.json();
+      const result =
+        (await response.json()) as SuccessResponse<NicknameCreatedResponse>;
       return result;
     },
   });
@@ -61,7 +65,8 @@ export const useConsumeTicket = () => {
         },
         body: JSON.stringify(data),
       });
-      const result = await response.json();
+      const result =
+        (await response.json()) as SuccessResponse<ProfileContactResponse>;
       return result;
     },
   });

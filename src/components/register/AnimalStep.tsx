@@ -1,6 +1,5 @@
+import { AnimalType } from "@/types/profile";
 import React from "react";
-
-type AnimalType = "dog" | "bear" | "dinosaur" | "wolf" | "deer" | "cat";
 
 interface AnimalStepProps {
   onSelect: (animal: AnimalType) => void;
@@ -8,12 +7,12 @@ interface AnimalStepProps {
 
 const AnimalStep: React.FC<AnimalStepProps> = ({ onSelect }) => {
   const animals: { type: AnimalType; label: string }[] = [
-    { type: "dog", label: "강아지" },
-    { type: "bear", label: "곰" },
-    { type: "dinosaur", label: "공룡" },
-    { type: "wolf", label: "늑대" },
-    { type: "deer", label: "사슴" },
-    { type: "cat", label: "고양이" },
+    { type: "DOG", label: "강아지" },
+    { type: "BEAR", label: "곰" },
+    { type: "DINOSAUR", label: "공룡" },
+    { type: "WOLF", label: "늑대" },
+    { type: "DEER", label: "사슴" },
+    { type: "CAT", label: "고양이" },
   ];
 
   return (

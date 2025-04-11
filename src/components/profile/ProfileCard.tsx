@@ -1,16 +1,8 @@
+import { ProfileResponse } from "@/types/profile";
 import React from "react";
 
-export interface Profile {
-  id: string;
-  nickname: string;
-  mbti: string;
-  animal: string;
-  gender: "male" | "female";
-  contact: string;
-}
-
 interface ProfileCardProps {
-  profile: Profile;
+  profile: ProfileResponse;
   onViewContact: () => void;
   onSkip: () => void;
 }
@@ -24,7 +16,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       <div className="p-6">
         <div className="w-32 h-32 mx-auto bg-gray-200 rounded-full mb-4 flex items-center justify-center">
-          <span className="text-4xl">{profile.animal[0]}</span>
+          <span className="text-4xl">{profile.animal}</span>
         </div>
 
         <div className="text-center">

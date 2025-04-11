@@ -3,37 +3,13 @@ import { useFunnel } from "@use-funnel/react-router-dom";
 import GenderStep from "../../../components/register/GenderStep";
 import AnimalStep from "../../../components/register/AnimalStep";
 import PersonalInfoStep from "../../../components/register/PersonalInfoStep";
-
-type Gender = "male" | "female";
-type AnimalType = "dog" | "bear" | "dinosaur" | "wolf" | "deer" | "cat";
-interface PersonalInfo {
-  nickname: string;
-  mbti: string;
-  contact: string;
-}
-
-// Step별 context 타입 정의
-type GenderStep = {
-  gender?: Gender;
-  animal?: AnimalType;
-  personalInfo?: PersonalInfo;
-};
-type AnimalStep = {
-  gender: Gender;
-  animal?: AnimalType;
-  personalInfo?: PersonalInfo;
-};
-type PersonalStep = {
-  gender: Gender;
-  animal: AnimalType;
-  personalInfo?: PersonalInfo;
-};
+import { AnimalType, Gender, ProfileContactResponse } from "@/types/profile";
 
 const ProfileRegisterPage: React.FC = () => {
   const funnel = useFunnel<{
-    gender: GenderStep;
-    animal: AnimalStep;
-    personal: PersonalStep;
+    gender: Partial<ProfileContactResponse>;
+    animal: Partial<ProfileContactResponse>;
+    personal: Partial<ProfileContactResponse>;
   }>({
     id: "profile-register",
     initial: {
@@ -48,14 +24,16 @@ const ProfileRegisterPage: React.FC = () => {
 
   const handleAnimalSelect = (animal: AnimalType) => {
     // PersonalStep requires both gender and animal to be defined
-    const { gender } = funnel.context as AnimalStep;
+    const { gender } = funnel.context;
     funnel.history.push("personal", { gender, animal });
   };
 
-  const handlePersonalInfoSubmit = (personalInfo: PersonalInfo) => {
+  const handlePersonalInfoSubmit = (
+    personalInfo: Omit<ProfileContactResponse, "gender" | "animal">
+  ) => {
     // Here you would typically submit the complete registration data to your backend
-    const { gender, animal } = funnel.context as PersonalStep;
-    const finalData = { gender, animal, personalInfo };
+    const { gender, animal } = funnel.context;
+    const finalData = { gender, animal, ...personalInfo };
     console.log("Registration complete:", finalData);
 
     // Navigate back to home after registration
