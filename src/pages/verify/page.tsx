@@ -4,16 +4,9 @@ import { useNavigate } from "react-router";
 const ProfileVerificationPage: React.FC = () => {
   const navigate = useNavigate();
   const [verificationCode] = useState("1234"); // In a real app, this would be generated/fetched
-  const [inputCode, setInputCode] = useState("");
-  const [error, setError] = useState("");
 
   const handleVerify = () => {
-    if (inputCode === verificationCode) {
-      navigate("/profile/list");
-    } else {
-      setError("잘못된 인증번호입니다. 다시 확인해주세요.");
-      setInputCode("");
-    }
+    navigate("/profile");
   };
 
   return (
@@ -33,33 +26,10 @@ const ProfileVerificationPage: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          <div>
-            <label
-              htmlFor="code"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              인증번호 입력
-            </label>
-            <input
-              type="text"
-              id="code"
-              value={inputCode}
-              onChange={(e) => {
-                const value = e.target.value.replace(/[^0-9]/g, "").slice(0, 4);
-                setInputCode(value);
-                setError("");
-              }}
-              maxLength={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-2xl tracking-wider"
-              placeholder="0000"
-            />
-          </div>
-
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+          {/* {error && <p className="text-red-500 text-sm text-center">{error}</p>} */}
 
           <button
             onClick={handleVerify}
-            disabled={inputCode.length !== 4}
             className="w-full py-3 px-6 bg-blue-500 text-white rounded-lg hover:bg-blue-600 
                      transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
           >

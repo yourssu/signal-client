@@ -22,7 +22,7 @@ const HomePage: React.FC = () => {
         </button>
 
         <button
-          onClick={() => navigate("/profile/verify")}
+          onClick={() => navigate("/verify")}
           className="w-full py-3 px-6 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
         >
           프로필 조회하기
