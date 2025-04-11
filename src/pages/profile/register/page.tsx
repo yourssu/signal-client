@@ -1,8 +1,8 @@
 import React from "react";
 import { useFunnel } from "@use-funnel/react-router-dom";
-import GenderStep from "../components/register/GenderStep";
-import AnimalStep from "../components/register/AnimalStep";
-import PersonalInfoStep from "../components/register/PersonalInfoStep";
+import GenderStep from "../../../components/register/GenderStep";
+import AnimalStep from "../../../components/register/AnimalStep";
+import PersonalInfoStep from "../../../components/register/PersonalInfoStep";
 
 type Gender = "male" | "female";
 type AnimalType = "dog" | "bear" | "dinosaur" | "wolf" | "deer" | "cat";

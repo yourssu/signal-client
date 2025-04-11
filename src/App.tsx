@@ -1,11 +1,11 @@
 import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router";
 import Layout from "./components/Layout";
-import HomePage from "./pages/HomePage";
-import ProfileRegisterPage from "./pages/ProfileRegisterPage";
-import ProfileVerificationPage from "./pages/ProfileVerificationPage";
-import ProfileListPage from "./pages/ProfileListPage";
-import ContactViewPage from "./pages/ContactViewPage";
+import HomePage from "./pages/page";
+import ProfileRegisterPage from "./pages/profile/register/page";
+import ProfileVerificationPage from "./pages/verify/page";
+import ProfileListPage from "./pages/profile/page";
+import ContactViewPage from "./pages/profile/contact/page";
 import NotFound from "./pages/NotFound";
 
 const router = createBrowserRouter([
@@ -17,6 +17,14 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <HomePage />,
+      },
+      {
+        path: "verify",
+        element: <ProfileVerificationPage />,
+      },
+      {
+        path: "profile",
+        element: <ProfileListPage />,
       },
       {
         path: "profile/register",
@@ -38,14 +46,6 @@ const router = createBrowserRouter([
             element: <ProfileRegisterPage />,
           },
         ],
-      },
-      {
-        path: "profile/verify",
-        element: <ProfileVerificationPage />,
-      },
-      {
-        path: "profile/list",
-        element: <ProfileListPage />,
       },
       {
         path: "profile/contact/:id",

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router";
-import ProfileCard, { Profile } from "../components/profile/ProfileCard";
+import ProfileCard, { Profile } from "../../components/profile/ProfileCard";
 
 // Mock data - in a real app, this would come from an API
 const mockProfiles: Profile[] = [
