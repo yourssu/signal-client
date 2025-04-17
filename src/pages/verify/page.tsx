@@ -1,7 +1,7 @@
 import { userGender, userUuid } from "@/atoms/userUuid";
 import GenderStep from "@/components/GenderStep";
 import { VerifyStep } from "@/components/verify/VerifyStep";
-import { useViewerVerification } from "@/queries/viewer";
+import { useViewerVerification } from "@/hooks/queries/viewers";
 import { Gender } from "@/types/profile";
 import { useFunnel } from "@use-funnel/react-router-dom";
 import { useAtom } from "jotai";

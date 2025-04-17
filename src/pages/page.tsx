@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router";
 import feelings from "@/assets/feelings.png";
-import { useCountProfile } from "@/queries/profile";
+import { useCountProfile } from "@/hooks/queries/profiles";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();

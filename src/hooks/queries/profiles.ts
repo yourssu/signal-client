@@ -11,13 +11,13 @@ import {
 } from "@/types/profile";
 import { SuccessResponse } from "@/types/common";
 
+const profileBase = `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/profiles`;
+
 export const useCountProfile = () => {
   return useQuery({
     queryKey: ["profiles", "count"],
     queryFn: async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/profiles/count`
-      );
+      const response = await fetch(`${profileBase}/count`);
 
       const data =
         (await response.json()) as SuccessResponse<ProfileCountResponse>;
@@ -31,9 +31,7 @@ export const useRandomProfile = (uuid: string, gender: Gender) => {
     queryKey: ["profiles", uuid],
     queryFn: async () => {
       const response = await fetch(
-        `${
-          import.meta.env.VITE_API_BASE_URL ?? ""
-        }/api/profiles/random?uuid=${uuid}&gender=${gender}`
+        `${profileBase}/random?uuid=${uuid}&gender=${gender}`
       );
       const data = (await response.json()) as SuccessResponse<ProfileResponse>;
       return data.result;
@@ -45,16 +43,13 @@ export const useRandomProfile = (uuid: string, gender: Gender) => {
 export const useCreateProfile = () => {
   return useMutation({
     mutationFn: async (data: ProfileCreatedRequest) => {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/profiles`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(profileBase, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
       const result =
         (await response.json()) as SuccessResponse<ProfileContactResponse>;
       return result;
@@ -65,16 +60,13 @@ export const useCreateProfile = () => {
 export const useGenerateNickname = () => {
   return useMutation({
     mutationFn: async (data: NicknameGeneratedRequest) => {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/profiles/nickname`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${profileBase}/nickname`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
       const result =
         (await response.json()) as SuccessResponse<NicknameCreatedResponse>;
       return result;
@@ -85,16 +77,13 @@ export const useGenerateNickname = () => {
 export const useConsumeTicket = () => {
   return useMutation({
     mutationFn: async (data: TicketConsumedRequest) => {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/profiles/contact`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${profileBase}/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
       const result =
         (await response.json()) as SuccessResponse<ProfileContactResponse>;
       return result;

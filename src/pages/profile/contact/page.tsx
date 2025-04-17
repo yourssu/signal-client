@@ -1,4 +1,4 @@
-import { useConsumeTicket } from "@/queries/profile";
+import { useConsumeTicket } from "@/hooks/queries/profiles";
 import { userUuid } from "@/atoms/userUuid";
 import { useAtom } from "jotai";
 import React, { useMemo, useState } from "react";

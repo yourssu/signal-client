@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router";
 import ProfileCard from "../../components/profile/ProfileCard";
-import { useRandomProfile } from "@/queries/profile";
+import { useRandomProfile } from "@/hooks/queries/profiles";
 import { useAtom } from "jotai";
 import { userUuid } from "@/atoms/userUuid";
 import { Button } from "@/components/ui/button";
