@@ -1,25 +1,31 @@
-export interface ViewersFoundRequestParams {
-  secretKey: string;
-}
+import { Gender, ProfileContactResponse } from "@/types/profile";
 
 export interface VerificationRequestParams {
   uuid: string;
-}
-
-export interface TicketCreatedRequest {
-  secretKey: string;
-  verificationCode: number;
-  ticket: number;
+  gender: Gender;
 }
 
 export interface VerificationResponse {
-  verificationCode: string;
+  verificationCode: number;
+}
+
+export interface ViewerSelfRequest {
+  uuid: string;
+}
+
+export interface PurchasedProfileResponse extends ProfileContactResponse {
+  createdTime: string;
 }
 
 export interface ViewerResponse {
-  id?: number;
+  id: number;
   uuid: string;
+  gender: Gender;
   ticket: number;
   usedTicket: number;
   updatedDate: string;
+}
+
+export interface ViewerDetailResponse extends ViewerResponse {
+  purchasedProfiles: PurchasedProfileResponse[];
 }
