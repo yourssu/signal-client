@@ -3,9 +3,19 @@ import { useFunnel } from "@use-funnel/react-router-dom";
 import GenderStep from "../../../components/GenderStep";
 import AnimalStep from "../../../components/register/AnimalStep";
 import PersonalInfoStep from "../../../components/register/PersonalInfoStep";
-import { AnimalType, Gender, ProfileContactResponse } from "@/types/profile";
+import {
+  AnimalType,
+  Gender,
+  ProfileContactResponse,
+  ProfileCreatedRequest,
+} from "@/types/profile";
+import { useCreateProfile } from "@/hooks/queries/profiles";
+import { useNavigate } from "react-router";
+import { useUserUuid } from "@/hooks/useUserUuid";
 
 const ProfileRegisterPage: React.FC = () => {
+  const navigate = useNavigate();
+  const uuid = useUserUuid();
   const funnel = useFunnel<{
     gender: Partial<ProfileContactResponse>;
     animal: Partial<ProfileContactResponse>;
@@ -18,6 +28,8 @@ const ProfileRegisterPage: React.FC = () => {
     },
   });
 
+  const { mutateAsync: createProfile } = useCreateProfile();
+
   const handleGenderSelect = (gender: Gender) => {
     funnel.history.push("animal", { gender });
   };
@@ -28,7 +40,7 @@ const ProfileRegisterPage: React.FC = () => {
     funnel.history.push("personal", { gender, animal });
   };
 
-  const handlePersonalInfoSubmit = (
+  const handlePersonalInfoSubmit = async (
     personalInfo: Omit<
       ProfileContactResponse,
       "gender" | "animal" | "profileId"
@@ -36,11 +48,17 @@ const ProfileRegisterPage: React.FC = () => {
   ) => {
     // Here you would typically submit the complete registration data to your backend
     const { gender, animal } = funnel.context;
-    const finalData = { gender, animal, ...personalInfo };
-    console.log("Registration complete:", finalData);
-
-    // Navigate back to home after registration
-    window.location.href = "/";
+    if (gender && animal) {
+      const finalData: ProfileCreatedRequest = {
+        uuid,
+        gender,
+        animal,
+        ...personalInfo,
+      };
+      await createProfile(finalData);
+      // Navigate back to home after registration
+      navigate("/");
+    }
   };
 
   return (

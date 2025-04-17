@@ -1,7 +1,8 @@
-import { userGender, userUuid } from "@/atoms/userUuid";
+import { userGender } from "@/atoms/userGender";
 import GenderStep from "@/components/GenderStep";
 import { VerifyStep } from "@/components/verify/VerifyStep";
 import { useViewerVerification } from "@/hooks/queries/viewers";
+import { useUserUuid } from "@/hooks/useUserUuid";
 import { Gender } from "@/types/profile";
 import { useFunnel } from "@use-funnel/react-router-dom";
 import { useAtom } from "jotai";
@@ -21,7 +22,7 @@ const ProfileVerificationPage: React.FC = () => {
   });
   const { gender } = funnel.context;
   const navigate = useNavigate();
-  const [uuid] = useAtom(userUuid);
+  const uuid = useUserUuid();
   const [, setStoredGender] = useAtom(userGender);
   const { data, isLoading } = useViewerVerification(uuid, gender);
   const verificationCode: number | null = useMemo(

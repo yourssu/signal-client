@@ -3,13 +3,15 @@ import { useNavigate } from "react-router";
 import ProfileCard from "../../components/profile/ProfileCard";
 import { useRandomProfile } from "@/hooks/queries/profiles";
 import { useAtom } from "jotai";
-import { userUuid } from "@/atoms/userUuid";
+import { userGender } from "@/atoms/userGender";
 import { Button } from "@/components/ui/button";
+import { useUserUuid } from "@/hooks/useUserUuid";
 
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
-  const [uuid] = useAtom(userUuid);
-  const { data: profile, refetch } = useRandomProfile(uuid);
+  const uuid = useUserUuid();
+  const [gender] = useAtom(userGender);
+  const { data: profile, refetch } = useRandomProfile(uuid, gender);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);

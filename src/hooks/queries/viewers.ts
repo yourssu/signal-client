@@ -13,9 +13,16 @@ export const useViewerVerification = (
   return useQuery({
     queryKey: ["viewer", "verification", uuid, gender],
     queryFn: async () => {
-      const response = await fetch(
-        `${viewersBase}/verification?uuid=${uuid}&gender=${gender}`
-      );
+      const response = await fetch(`${viewersBase}/verification`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          uuid,
+          gender,
+        }),
+      });
       const data =
         (await response.json()) as SuccessResponse<VerificationResponse>;
       return data.result;

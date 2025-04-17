@@ -26,7 +26,7 @@ export const useCountProfile = () => {
   });
 };
 
-export const useRandomProfile = (uuid: string, gender: Gender) => {
+export const useRandomProfile = (uuid: string, gender: Gender | null) => {
   return useQuery({
     queryKey: ["profiles", uuid],
     queryFn: async () => {
@@ -36,7 +36,7 @@ export const useRandomProfile = (uuid: string, gender: Gender) => {
       const data = (await response.json()) as SuccessResponse<ProfileResponse>;
       return data.result;
     },
-    enabled: !!uuid,
+    enabled: !!uuid && !!gender,
   });
 };
 
