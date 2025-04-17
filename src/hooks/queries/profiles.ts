@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  Gender,
   NicknameCreatedResponse,
   NicknameGeneratedRequest,
   ProfileContactResponse,
@@ -26,17 +25,15 @@ export const useCountProfile = () => {
   });
 };
 
-export const useRandomProfile = (uuid: string, gender: Gender | null) => {
+export const useRandomProfile = (uuid: string) => {
   return useQuery({
     queryKey: ["profiles", uuid],
     queryFn: async () => {
-      const response = await fetch(
-        `${profileBase}/random?uuid=${uuid}&gender=${gender}`
-      );
+      const response = await fetch(`${profileBase}/random?uuid=${uuid}`);
       const data = (await response.json()) as SuccessResponse<ProfileResponse>;
       return data.result;
     },
-    enabled: !!uuid && !!gender,
+    enabled: !!uuid,
   });
 };
 
