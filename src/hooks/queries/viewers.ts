@@ -54,7 +54,7 @@ export const useViewers = (secretKey: string) => {
 
 export const useViewerSelf = (uuid: string) => {
   return useQuery({
-    queryKey: ["viewer", "me", uuid],
+    queryKey: ["viewer", "uuid", uuid],
     queryFn: async () => {
       const response = await fetch(`${viewersBase}/uuid?uuid=${uuid}`);
       const data = (await response.json()) as SuccessResponse<ViewerResponse>;
