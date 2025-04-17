@@ -28,7 +28,7 @@ const ProfileVerificationPage: React.FC = () => {
     () => Number(data?.verificationCode ?? null) || null,
     [data]
   );
-  // const { data: viewer } = useViewerMe(uuid); TODO: auto refetech viewer info when real endpoint is ready
+  // const { data: viewer } = useViewerSelf(uuid); TODO: auto refetech viewer info when real endpoint is ready
 
   const handleGenderSelect = (gender: Gender) => {
     funnel.history.push("verify", { gender });
