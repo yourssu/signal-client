@@ -1,4 +1,4 @@
-import { userUuid } from "@/atoms/userUuid";
+import { userGender, userUuid } from "@/atoms/userUuid";
 import GenderStep from "@/components/GenderStep";
 import { VerifyStep } from "@/components/verify/VerifyStep";
 import { useViewerVerification } from "@/queries/viewer";
@@ -10,8 +10,8 @@ import { useNavigate } from "react-router";
 
 const ProfileVerificationPage: React.FC = () => {
   const funnel = useFunnel<{
-    gender: Record<string, unknown>;
-    verify: { gender: Gender };
+    gender: { gender?: Gender };
+    verify: { gender?: Gender };
   }>({
     id: "verify",
     initial: {
@@ -19,9 +19,11 @@ const ProfileVerificationPage: React.FC = () => {
       context: {},
     },
   });
+  const { gender } = funnel.context;
   const navigate = useNavigate();
   const [uuid] = useAtom(userUuid);
-  const { data, isLoading } = useViewerVerification(uuid);
+  const [, setStoredGender] = useAtom(userGender);
+  const { data, isLoading } = useViewerVerification(uuid, gender);
   const verificationCode: number | null = useMemo(
     () => Number(data?.verificationCode ?? null) || null,
     [data]
@@ -33,20 +35,25 @@ const ProfileVerificationPage: React.FC = () => {
   };
 
   const handleVerify = () => {
+    if (gender) setStoredGender(gender);
     navigate("/profile");
   };
 
   return (
-    <funnel.Render
-      gender={() => <GenderStep onSelect={handleGenderSelect} />}
-      verify={() => (
-        <VerifyStep
-          isLoading={isLoading}
-          verificationCode={verificationCode}
-          onVerify={handleVerify}
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <funnel.Render
+          gender={() => <GenderStep onSelect={handleGenderSelect} />}
+          verify={() => (
+            <VerifyStep
+              isLoading={isLoading}
+              verificationCode={verificationCode}
+              onVerify={handleVerify}
+            />
+          )}
         />
-      )}
-    />
+      </div>
+    </div>
   );
 };
 

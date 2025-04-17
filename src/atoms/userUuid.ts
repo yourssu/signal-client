@@ -8,3 +8,5 @@ export const userUuid = atomWithStorage<string>(
   "user-uuid", // localStorage key
   generateUuid() // initial value if not in localStorage
 );
+
+export const userGender = atomWithStorage<string | null>("user-gender", null);

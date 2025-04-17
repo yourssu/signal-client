@@ -5,7 +5,7 @@ import App from "./App.tsx";
 import { initMocks } from "./mocks/browser";
 
 // Initialize MSW
-initMocks();
+if (import.meta.env.VITE_MOCK === "true") initMocks();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

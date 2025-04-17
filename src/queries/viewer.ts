@@ -1,34 +1,40 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  TicketCreatedRequest as TicketIssuedRequest,
-  VerificationResponse,
-  ViewerResponse,
-} from "@/types/viewer";
+import { VerificationResponse, ViewerResponse } from "@/types/viewer";
 import { SuccessResponse } from "@/types/common";
+import { TicketIssuedRequest } from "@/types/admin";
+import { Gender } from "@/types/profile";
 
-export const useViewerVerification = (uuid: string) => {
+export const useViewerVerification = (
+  uuid: string,
+  gender: Gender | undefined
+) => {
   return useQuery({
-    queryKey: ["viewer", "verification", uuid],
+    queryKey: ["viewer", "verification", uuid, gender],
     queryFn: async () => {
-      const response = await fetch(`/api/viewers/verification?uuid=${uuid}`);
+      const response = await fetch(
+        `/api/viewers/verification?uuid=${uuid}&gender=${gender}`
+      );
       const data =
         (await response.json()) as SuccessResponse<VerificationResponse>;
       return data.result;
     },
-    enabled: !!uuid,
+    enabled: !!uuid && !!gender,
   });
 };
 
 export const useIssueTicket = () => {
   return useMutation({
     mutationFn: async (data: TicketIssuedRequest) => {
-      const response = await fetch("/api/viewers", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/viewers`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
       const result = (await response.json()) as SuccessResponse<ViewerResponse>;
       return result;
     },
@@ -39,7 +45,11 @@ export const useViewers = (secretKey: string) => {
   return useQuery({
     queryKey: ["viewers", secretKey],
     queryFn: async () => {
-      const response = await fetch(`/api/viewers?secretKey=${secretKey}`);
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_API_BASE_URL ?? ""
+        }/api/viewers?secretKey=${secretKey}`
+      );
       const data = (await response.json()) as SuccessResponse<ViewerResponse[]>;
       return data.result;
     },
@@ -47,11 +57,15 @@ export const useViewers = (secretKey: string) => {
   });
 };
 
-export const useViewerMe = (uuid: string) => {
+export const useViewerSelf = (uuid: string) => {
   return useQuery({
     queryKey: ["viewer", "me", uuid],
     queryFn: async () => {
-      const response = await fetch(`/api/viewers/me?uuid=${uuid}`);
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_API_BASE_URL ?? ""
+        }/api/viewers/uuid?uuid=${uuid}`
+      );
       const data = (await response.json()) as SuccessResponse<ViewerResponse>;
       return data.result;
     },

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router";
 import ProfileCard from "../../components/profile/ProfileCard";
-import { useProfile } from "@/queries/profile";
+import { useRandomProfile } from "@/queries/profile";
 import { useAtom } from "jotai";
 import { userUuid } from "@/atoms/userUuid";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
   const [uuid] = useAtom(userUuid);
-  const { data: profile, refetch } = useProfile(uuid);
+  const { data: profile, refetch } = useRandomProfile(uuid);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
