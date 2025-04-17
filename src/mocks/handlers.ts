@@ -6,6 +6,7 @@ import {
   NicknameCreatedResponse,
   NicknameGeneratedRequest,
   ProfileContactResponse,
+  ProfileCountResponse,
   ProfileCreatedRequest,
   ProfileResponse,
   TicketConsumedRequest,
@@ -65,6 +66,14 @@ const getRandomNickname = (animal: AnimalType): string => {
 };
 
 export const handlers = [
+  http.get("/api/profiles/count", () => {
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: {
+        count: 1234,
+      },
+    } satisfies SuccessResponse<ProfileCountResponse>);
+  }),
   http.get("/api/profiles/uuid", ({ request }) => {
     const url = new URL(request.url);
     const uuid = url.searchParams.get("uuid");

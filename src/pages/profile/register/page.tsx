@@ -1,6 +1,6 @@
 import React from "react";
 import { useFunnel } from "@use-funnel/react-router-dom";
-import GenderStep from "../../../components/register/GenderStep";
+import GenderStep from "../../../components/GenderStep";
 import AnimalStep from "../../../components/register/AnimalStep";
 import PersonalInfoStep from "../../../components/register/PersonalInfoStep";
 import { AnimalType, Gender, ProfileContactResponse } from "@/types/profile";
@@ -29,7 +29,10 @@ const ProfileRegisterPage: React.FC = () => {
   };
 
   const handlePersonalInfoSubmit = (
-    personalInfo: Omit<ProfileContactResponse, "gender" | "animal">
+    personalInfo: Omit<
+      ProfileContactResponse,
+      "gender" | "animal" | "profileId"
+    >
   ) => {
     // Here you would typically submit the complete registration data to your backend
     const { gender, animal } = funnel.context;

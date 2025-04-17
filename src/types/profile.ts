@@ -32,6 +32,10 @@ export interface TicketConsumedRequest {
   uuid: string;
 }
 
+export interface ProfileCountResponse {
+  count: number;
+}
+
 export interface NicknameCreatedResponse {
   nickname: string;
 }

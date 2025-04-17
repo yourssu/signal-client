@@ -5,6 +5,7 @@ interface PersonalInfo {
   nickname: string;
   mbti: string;
   contact: string;
+  introSentences: string[];
 }
 
 interface PersonalInfoStepProps {
@@ -16,6 +17,7 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ onSubmit }) => {
     nickname: "",
     mbti: "",
     contact: "",
+    introSentences: [],
   });
 
   const handleSubmit = (e: React.FormEvent) => {
