@@ -51,7 +51,11 @@ const ProfileListPage: React.FC = () => {
 
   const handleViewContact = () => {
     if (!profile?.profileId) return;
-    navigate(`/profile/contact/${profile.profileId}`);
+    navigate(`/profile/contact/${profile.profileId}`, {
+      state: {
+        profile,
+      },
+    });
   };
 
   const handleSkip = () => {

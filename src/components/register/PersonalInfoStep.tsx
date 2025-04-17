@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 
 interface PersonalInfo {
@@ -50,9 +51,12 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-6 text-center">
-        개인 정보를 입력해주세요
+      <h2 className="text-2xl font-bold text-center">
+        개인 정보를 입력해주세요.
       </h2>
+      <p className="text-center mb-6">
+        인스타그램 연락처는 앞에 @을 붙여주세요.
+      </p>
 
       <div className="space-y-6">
         <div>
@@ -73,6 +77,22 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ onSubmit }) => {
             placeholder="닉네임을 입력하세요"
           />
         </div>
+        {[1, 2, 3].map((i) => (
+          <div key={i}>
+            <label
+              htmlFor="nickname"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              특징 {i}
+            </label>
+            <input
+              type="text"
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="특징을 입력하세요."
+            />
+          </div>
+        ))}
 
         <div>
           <label
@@ -113,16 +133,13 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ onSubmit }) => {
             onChange={handleChange}
             required
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="연락처를 입력하세요"
+            placeholder="연락처를 입력하세요."
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full py-3 px-6 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-        >
+        <Button type="submit" size="xl" className="w-full">
           등록 완료
-        </button>
+        </Button>
       </div>
     </form>
   );
