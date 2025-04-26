@@ -3,6 +3,7 @@ import { ErrorResponse, SuccessResponse } from "@/types/common";
 import {
   AnimalType,
   Gender,
+  Mbti,
   NicknameCreatedResponse,
   NicknameGeneratedRequest,
   ProfileContactResponse,
@@ -30,18 +31,16 @@ const getRandomAnimal = (): AnimalType => {
   return animals[Math.floor(Math.random() * animals.length)];
 };
 
-const getRandomMBTI = (): string => {
+const getRandomMBTI = (): Mbti => {
   const E_I = ["E", "I"];
   const N_S = ["N", "S"];
   const T_F = ["T", "F"];
   const J_P = ["J", "P"];
 
-  return (
-    E_I[Math.floor(Math.random() * 2)] +
+  return (E_I[Math.floor(Math.random() * 2)] +
     N_S[Math.floor(Math.random() * 2)] +
     T_F[Math.floor(Math.random() * 2)] +
-    J_P[Math.floor(Math.random() * 2)]
-  );
+    J_P[Math.floor(Math.random() * 2)]) as Mbti;
 };
 
 const getRandomNickname = (animal: AnimalType): string => {

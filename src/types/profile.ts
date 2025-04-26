@@ -1,11 +1,12 @@
 export type Gender = "MALE" | "FEMALE";
 export type AnimalType = "DOG" | "BEAR" | "DINOSAUR" | "WOLF" | "DEER" | "CAT";
+export type Mbti = `${"E" | "I"}${"N" | "S"}${"F" | "T"}${"J" | "P"}`;
 export interface ProfileCreatedRequest {
   uuid?: string;
   gender: Gender;
   animal: AnimalType;
   contact: string;
-  mbti: string;
+  mbti: Mbti;
   // maximum 15 characters
   nickname: string;
   introSentences: string[];
@@ -44,7 +45,7 @@ export interface ProfileResponse {
   profileId: number;
   gender: Gender;
   animal: AnimalType;
-  mbti: string;
+  mbti: Mbti;
   nickname: string;
   introSentences: string[];
 }
