@@ -25,11 +25,9 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({ onSubmit }) => {
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
       <h2 className="text-2xl font-bold text-center">
-        개인 정보를 입력해주세요.
+        본인의 특징 3가지를 말해주세요.
       </h2>
-      <p className="text-center mb-6">
-        인스타그램 연락처는 앞에 @을 붙여주세요.
-      </p>
+      <p className="text-center mb-6">plz</p>
 
       <div className="space-y-4">
         {Array.from({ length: 3 }, (_, index) => (

@@ -14,9 +14,7 @@ const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
 }) => {
   return (
     <div className="w-full max-w-md mx-auto">
-      <h2 className="text-2xl font-bold text-center">
-        개인 정보를 입력해주세요.
-      </h2>
+      <h2 className="text-2xl font-bold text-center">연락처를 입력해주세요.</h2>
       <p className="text-center mb-6">
         인스타그램 연락처는 앞에 @을 붙여주세요.
       </p>
