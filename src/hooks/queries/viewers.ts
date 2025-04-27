@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { VerificationResponse, ViewerResponse } from "@/types/viewer";
 import { SuccessResponse } from "@/types/common";
 import { TicketIssuedRequest } from "@/types/admin";
@@ -6,10 +6,7 @@ import { Gender } from "@/types/profile";
 
 const viewersBase = `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/viewers`;
 
-export const useViewerVerification = (
-  uuid: string,
-  gender: Gender | undefined
-) => {
+export const useViewerVerification = (uuid: string, gender: Gender | null) => {
   return useQuery({
     queryKey: ["viewer", "verification", uuid, gender],
     queryFn: async () => {
@@ -59,7 +56,10 @@ export const useViewers = (secretKey: string) => {
   });
 };
 
-export const useViewerSelf = (uuid: string) => {
+export const useViewerSelf = (
+  uuid: string,
+  queryOptions: Omit<UseQueryOptions<ViewerResponse>, "queryKey" | "queryFn">
+) => {
   return useQuery({
     queryKey: ["viewer", "uuid", uuid],
     queryFn: async () => {
@@ -68,5 +68,6 @@ export const useViewerSelf = (uuid: string) => {
       return data.result;
     },
     enabled: !!uuid,
+    ...queryOptions,
   });
 };
