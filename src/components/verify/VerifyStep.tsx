@@ -27,7 +27,7 @@ export const VerifyStep = ({
 
   return (
     // Main container matching Figma's Frame 1000011868 structure (approximated)
-    <div className="flex flex-col items-center justify-between h-full w-full max-w-sm mx-auto py-8 px-4 gap-8">
+    <div className="flex flex-col items-center grow w-full max-w-sm mx-auto py-8 px-4 gap-8">
       {/* Text content block */}
       <div className="flex flex-col items-center gap-1 text-center">
         {/* Title - Using style from 1544:2063 */}
@@ -40,7 +40,7 @@ export const VerifyStep = ({
       </div>
 
       {/* Verification Code and Bank Info Block */}
-      <div className="flex flex-col items-center gap-5 w-full">
+      <div className="flex flex-col items-center justify-center gap-5 w-full grow">
         {/* Code Boxes - Based on Frame 1000011942 */}
         <div className="flex justify-center items-center gap-2">
           {digits.map((digit, index) => (
