@@ -1,6 +1,7 @@
 import { userGender } from "@/atoms/userGender";
 import { viewerSelf } from "@/atoms/viewerSelf";
-import GenderStep from "@/components/GenderStep";
+import GenderStep from "@/components/GenderStep"; // Assuming GenderStep has its own appropriate styling
+import TopBar from "@/components/home/TopBar"; // Import TopBar
 import { VerifyStep } from "@/components/verify/VerifyStep";
 import { useViewerSelf, useViewerVerification } from "@/hooks/queries/viewers";
 import { useUserUuid } from "@/hooks/useUserUuid";
@@ -43,34 +44,61 @@ const ProfileVerificationPage: React.FC = () => {
     const old = viewer;
     if (viewerResponse) {
       setViewer(viewerResponse);
-      if (old === null || old.updatedDate !== viewerResponse.updatedDate) {
+      // Navigate if tickets are present (initial load or increase) or profile updated
+      if (
+        (old === null && viewerResponse.ticket > 0) || // First load shows tickets
+        (old && old.ticket < viewerResponse.ticket) || // Ticket count increased
+        (old &&
+          old.updatedDate !== viewerResponse.updatedDate &&
+          old.ticket === viewerResponse.ticket) // Updated, and tickets didn't decrease
+      ) {
         navigate("/profile");
       }
     }
-  });
+  }, [viewerResponse, setViewer, navigate, viewer]);
 
   const handleGenderSelect = (gender: Gender) => {
     setGender(gender);
     funnel.history.push("verify", { gender });
   };
 
-  const handleVerify = () => {
-    navigate("/profile");
+  const handleBack = () => {
+    if (funnel.index !== 0) {
+      funnel.history.back();
+    } else {
+      navigate("/");
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <funnel.Render
-          gender={() => <GenderStep onSelect={handleGenderSelect} />}
-          verify={() => (
-            <VerifyStep
-              isLoading={isVerificationLoading}
-              verificationCode={verificationCode}
-              onVerify={handleVerify}
-            />
-          )}
-        />
+    // Main page container - Flex column, min height screen
+    <div className="flex flex-col min-h-screen bg-background">
+      {" "}
+      {/* Assuming bg-background or similar default */}
+      <TopBar
+        heartCount={viewerResponse?.usedTicket ?? 0}
+        ticketCount={
+          (viewerResponse?.ticket ?? 0) - (viewerResponse?.usedTicket ?? 0)
+        }
+        onBack={handleBack}
+      />{" "}
+      {/* Add the TopBar */}
+      {/* Content area - Takes remaining height, centers content */}
+      <div className="flex-grow flex flex-col items-center justify-center p-4">
+        {/* Funnel container - Max width */}
+        <div className="w-full max-w-md h-full flex flex-col">
+          {" "}
+          {/* Ensure this container allows VerifyStep to use justify-between */}
+          <funnel.Render
+            gender={() => <GenderStep onSelect={handleGenderSelect} />}
+            verify={() => (
+              <VerifyStep
+                isLoading={isVerificationLoading}
+                verificationCode={verificationCode}
+              />
+            )}
+          />
+        </div>
       </div>
     </div>
   );
