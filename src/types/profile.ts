@@ -5,7 +5,10 @@ export type AnimalType =
   | "DINOSAUR"
   | "HAMSTER"
   | "DEER"
-  | "CAT";
+  | "CAT"
+  | "FOX"
+  | "TURTLE"
+  | "RABBIT";
 export type Mbti = `${"E" | "I"}${"N" | "S"}${"F" | "T"}${"J" | "P"}`;
 export interface ProfileCreatedRequest {
   uuid?: string;

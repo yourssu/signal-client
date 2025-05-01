@@ -8,6 +8,9 @@ import dinosaurImg from "@/assets/animals/dinosaur.png";
 import hamsterImg from "@/assets/animals/hamster.png";
 import deerImg from "@/assets/animals/deer.png";
 import catImg from "@/assets/animals/cat.png";
+import foxImg from "@/assets/animals/fox.png";
+import rabbitImg from "@/assets/animals/rabbit.png";
+import turtleImg from "@/assets/animals/turtle.png";
 
 // Mapping from AnimalType to image source
 const animalImageMap: Record<AnimalType, string> = {
@@ -17,6 +20,9 @@ const animalImageMap: Record<AnimalType, string> = {
   HAMSTER: hamsterImg,
   DEER: deerImg,
   CAT: catImg,
+  FOX: foxImg,
+  TURTLE: turtleImg,
+  RABBIT: rabbitImg,
 };
 
 interface AnimalImageProps {

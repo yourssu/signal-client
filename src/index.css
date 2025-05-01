@@ -146,6 +146,10 @@
   }
 }
 
+@utility no-scrollbar {
+  @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
+
 .profile-card-background {
   background: linear-gradient(
     to bottom,

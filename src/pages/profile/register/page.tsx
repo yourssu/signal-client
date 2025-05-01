@@ -13,7 +13,7 @@ import {
 import { useCreateProfile } from "@/hooks/queries/profiles";
 import { useNavigate } from "react-router";
 import { useUserUuid } from "@/hooks/useUserUuid";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { userGender } from "@/atoms/userGender";
 import PersonalityStep from "@/components/register/PersonalityStep";
 import NicknameStep from "@/components/register/NicknameStep";
@@ -22,12 +22,14 @@ import RegisterDoneStep from "@/components/register/RegisterDoneStep";
 import TopBar from "@/components/home/TopBar";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { Progress } from "@/components/ui/progress";
+import { userProfile } from "@/atoms/userProfile";
 
 const ProfileRegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const uuid = useUserUuid();
   const { data: self } = useViewerSelf(uuid);
   const [gender, setGender] = useAtom(userGender);
+  const setProfile = useSetAtom(userProfile);
   const funnel = useFunnel<{
     gender: Partial<ProfileContactResponse>;
     animal: Partial<ProfileContactResponse>;
@@ -86,6 +88,7 @@ const ProfileRegisterPage: React.FC = () => {
       const res = await createProfile(finalData);
       if (res.result) {
         funnel.history.push("done", res.result);
+        setProfile(res.result);
       }
     }
   };
@@ -121,7 +124,12 @@ const ProfileRegisterPage: React.FC = () => {
         <div className="grow flex items-stretch justify-stretch">
           <funnel.Render
             gender={() => <GenderStep onSelect={handleGenderSelect} />}
-            animal={() => <AnimalStep onSelect={handleAnimalSelect} />}
+            animal={() => (
+              <AnimalStep
+                onSelect={handleAnimalSelect}
+                gender={funnel.context.gender ?? "MALE"}
+              />
+            )}
             mbti={() => <MbtiStep onSubmit={handleMbtiSubmit} />}
             personality={() => (
               <PersonalityStep onSubmit={handlePersonalitySubmit} />
