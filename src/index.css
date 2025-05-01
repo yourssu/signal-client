@@ -46,6 +46,10 @@
   --color-white-pink: var(--white-pink);
   --color-black: var(--black);
   --color-gray: var(--gray);
+  --color-black-700: var(--black-700);
+  --color-black-600: var(--black-600);
+  --color-black-400: var(--black-400);
+  --color-white: var(--white);
 }
 
 :root {
@@ -89,6 +93,10 @@
   --white-pink: oklch(1 0.0025 345.21);
   --black: oklch(0.15 0.0438 23.79);
   --gray: oklch(0.73 0 0);
+  --black-700: oklch(0.37 0 0);
+  --black-600: oklch(0.44 0 0);
+  --black-400: oklch(0.71 0 0);
+  --white: oklch(1 0 0);
 }
 
 .dark {
