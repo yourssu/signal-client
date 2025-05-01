@@ -1,6 +1,5 @@
 import React from "react";
 import TopBar from "@/components/home/TopBar";
-import Background from "@/components/home/Background";
 import MainContent from "@/components/home/MainContent";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { useUserUuid } from "@/hooks/useUserUuid";
@@ -10,9 +9,6 @@ const HomePage: React.FC = () => {
   const { data: self } = useViewerSelf(uuid);
   return (
     <div className="flex flex-col min-h-dvh relative">
-      {/* Background with gradient effects */}
-      <Background />
-
       {/* Top bar with heart and ticket icons */}
       <TopBar
         heartCount={self?.usedTicket ?? 0}

@@ -51,6 +51,7 @@
   --color-black-600: var(--black-600);
   --color-black-400: var(--black-400);
   --color-white: var(--white);
+  --color-bg-end: var(--bg-end);
 }
 
 :root {
@@ -89,7 +90,7 @@
 
   /* Signal colors */
   --pink: oklch(0.66 0.1974 1.85);
-  --light-pink: oklch(0.91 0.0496 354.13);
+  --light-pink: oklch(0.97 0.0154 351.96);
   --pale-pink: oklch(0.98 0.0076 7.28);
   --white-pink: oklch(1 0.0025 345.21);
   --blue-400: oklch(0.7 0.1583 253.63);
@@ -99,6 +100,7 @@
   --black-600: oklch(0.44 0 0);
   --black-400: oklch(0.71 0 0);
   --white: oklch(1 0 0);
+  --bg-end: oklch(0.91 0.0522 353.83);
 }
 
 .dark {
@@ -162,10 +164,4 @@
   );
   box-shadow: 1.72px 1.72px 8.61px 0px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(26px); /* Approximate value */
-}
-
-.profile-badge {
-  background-color: rgba(255, 255, 255, 0.51);
-  border: 0.5px solid #ee518a; /* Using hex for stroke color from Figma */
-  backdrop-filter: blur(24px);
 }

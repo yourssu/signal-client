@@ -1,30 +1,18 @@
-import React from "react";
+import cloud from "@/assets/cloud.svg";
 
-const Background: React.FC = () => {
+const Background = () => {
   return (
-    <div className="absolute inset-0 overflow-hidden -z-10">
-      {/* Top gradient blob */}
-      <div
-        className="absolute w-full h-[40%] top-0 left-0 opacity-50 blur-3xl"
-        style={{
-          background: "linear-gradient(to bottom, #FF97BD, #FFDFEB)",
-        }}
+    <div className="fixed inset-0 overflow-hidden w-full h-dvh min-h-dvh -z-10 from-light-pink to-bg-end bg-linear-to-b">
+      <img
+        src={cloud}
+        role="none"
+        className="absolute top-1/5 right-0 translate-x-[100px] w-[420px] h-auto"
       />
 
-      {/* Bottom gradient blob */}
-      <div
-        className="absolute w-full h-[40%] bottom-0 left-0 opacity-45 blur-3xl"
-        style={{
-          background: "linear-gradient(to bottom, #FF97BD, #FFDFEB)",
-        }}
-      />
-
-      {/* Main background gradient */}
-      <div
-        className="absolute inset-0 -z-20"
-        style={{
-          background: "linear-gradient(to bottom, #FFF2F7, #FFD4E4)",
-        }}
+      <img
+        src={cloud}
+        role="none"
+        className="absolute top-3/5 left-0 -translate-x-[100px] w-[420px] h-auto"
       />
     </div>
   );
