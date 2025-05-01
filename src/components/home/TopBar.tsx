@@ -16,11 +16,21 @@ const TopBar: React.FC<TopBarProps> = ({
   ticketCount = 0,
   onBack,
 }) => {
+  const handleBack = () => {
+    if (typeof onBack === "function") {
+      onBack();
+    }
+  };
   return (
-    <div className="w-full h-11 px-6 flex justify-end items-center">
+    <div className="w-full h-11 pl-2 pr-6 flex justify-end items-center">
       {onBack && (
         <div className="grow flex items-center justify-start">
-          <Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleBack}
+            className="text-black-700"
+          >
             <ChevronLeft />
           </Button>
         </div>

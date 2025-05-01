@@ -19,10 +19,14 @@ import PersonalityStep from "@/components/register/PersonalityStep";
 import NicknameStep from "@/components/register/NicknameStep";
 import ContactStep from "@/components/register/ContactStep";
 import RegisterDoneStep from "@/components/register/RegisterDoneStep";
+import TopBar from "@/components/home/TopBar";
+import { useViewerSelf } from "@/hooks/queries/viewers";
+import { Progress } from "@/components/ui/progress";
 
 const ProfileRegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const uuid = useUserUuid();
+  const { data: self } = useViewerSelf(uuid);
   const [gender, setGender] = useAtom(userGender);
   const funnel = useFunnel<{
     gender: Partial<ProfileContactResponse>;
@@ -90,9 +94,25 @@ const ProfileRegisterPage: React.FC = () => {
     navigate("/verify");
   };
 
+  const handleBack = () => {
+    if (funnel.index == 0) {
+      navigate(-1);
+    } else {
+      funnel.history.back();
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex flex-col items-center">
+      <TopBar
+        heartCount={self?.usedTicket ?? 0}
+        ticketCount={(self?.ticket ?? 0) - (self?.usedTicket ?? 0)}
+        onBack={handleBack}
+      />
+      <div className="w-full max-w-md grow p-6 flex flex-col gap-10">
+        {funnel.step !== "done" && (
+          <Progress value={((funnel.index + 1) / 6) * 100} />
+        )}
         <funnel.Render
           gender={() => <GenderStep onSelect={handleGenderSelect} />}
           animal={() => <AnimalStep onSelect={handleAnimalSelect} />}
