@@ -34,18 +34,6 @@ const router = createBrowserRouter([
             index: true,
             element: <ProfileRegisterPage />,
           },
-          {
-            path: "gender",
-            element: <ProfileRegisterPage />,
-          },
-          {
-            path: "animal",
-            element: <ProfileRegisterPage />,
-          },
-          {
-            path: "personal",
-            element: <ProfileRegisterPage />,
-          },
         ],
       },
       {
