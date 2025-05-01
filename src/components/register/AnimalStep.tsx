@@ -55,17 +55,14 @@ const AnimalStep: React.FC<AnimalStepProps> = ({ onSelect }) => {
 
   return (
     // Main container - Adjusted layout based on Figma Frame 1000011952
-    <div className="flex flex-col items-center pt-10 gap-6 h-full w-full overflow-hidden">
+    <div className="flex flex-col items-center pt-10 gap-6 w-full overflow-hidden">
       {/* Top section: Progress and Title - Based on Frame 1426 */}
-      <div className="flex flex-col items-center gap-[10px] w-full">
-        {/* Progress Indicator - Based on 1421:4470 */}
-        <p className="text-xs text-muted-foreground">2 / 6</p>{" "}
-        {/* Using muted-foreground for #525252 */}
-        {/* Title - Based on 1421:4472 */}
-        <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line text-center">
-          {" "}
-          {/* Using stone-700 for #44403B */}
-          {`자신을 닮은\n동물을 골라주세요`}
+      <div className="flex flex-col items-start gap-2 w-full">
+        <p className="text-xs text-muted-foreground">2 / 6</p>
+        <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line">
+          자신을 닮은
+          <br />
+          <span className="text-primary">동물을 골라주세요</span>
         </h2>
       </div>
 

@@ -12,16 +12,15 @@ interface GenderStepProps {
 const GenderStep: React.FC<GenderStepProps> = ({ onSelect }) => {
   return (
     // Adjust main container layout and gap
-    <div className="flex flex-col items-center pt-10 gap-[332px] h-full">
+    <div className="flex flex-col items-center pt-10 w-full">
       {/* Add top section for progress and title */}
-      <div className="flex flex-col items-center gap-[10px] w-full">
-        {" "}
-        {/* Adjusted gap here based on Figma Frame 1425 */}
-        {/* Add progress indicator */}
+      <div className="flex flex-col gap-[10px] w-full grow">
         <p className="text-xs text-[#525252]">1 / 6</p>
         {/* Update title text and style */}
-        <h2 className="text-2xl font-semibold text-[#44403B] whitespace-pre-line text-center">
-          {`안녕하세요 :)\n성별을 알려주세요`}
+        <h2 className="text-2xl font-semibold text-[#44403B] whitespace-pre-line">
+          안녕하세요 :)
+          <br />
+          <span className="text-primary">성별을 알려주세요</span>
         </h2>
       </div>
       {/* Adjust button container layout */}

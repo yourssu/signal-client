@@ -9,7 +9,7 @@ const HomePage: React.FC = () => {
   const uuid = useUserUuid();
   const { data: self } = useViewerSelf(uuid);
   return (
-    <div className="flex flex-col min-h-screen relative">
+    <div className="flex flex-col min-h-dvh relative">
       {/* Background with gradient effects */}
       <Background />
 

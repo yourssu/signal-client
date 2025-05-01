@@ -29,12 +29,7 @@ const router = createBrowserRouter([
       },
       {
         path: "profile/register",
-        children: [
-          {
-            index: true,
-            element: <ProfileRegisterPage />,
-          },
-        ],
+        element: <ProfileRegisterPage />,
       },
       {
         path: "profile/contact/:id",

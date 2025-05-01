@@ -23,23 +23,19 @@ const ContactStep: React.FC<ContactStepProps> = ({ onSubmit }) => {
 
   return (
     // Main container - Based on Figma Frame 1000011964
-    <div className="flex flex-col items-center pt-10 gap-[311px] h-full w-full px-4">
-      {" "}
-      {/* Adjusted gap */}
-      {/* Top section: Progress, Title, Input - Based on Frame 1000011963 */}
-      <div className="flex flex-col items-center gap-[43px] w-full max-w-[324px]">
-        {" "}
-        {/* Adjusted gap and width */}
-        {/* Progress and Title container - Based on Frame 1425 */}
-        <div className="flex flex-col items-center gap-[10px]">
+    <div className="flex flex-col items-center pt-10 w-full px-4">
+      <div className="flex flex-col items-stretch gap-[43px] w-full grow">
+        <div className="flex flex-col gap-[10px]">
           {/* Progress Indicator - Based on 1412:7355 */}
-          <p className="text-xs text-muted-foreground">6 / 6</p>{" "}
+          <p className="text-xs text-muted-foreground">6 / 6</p>
           {/* Using muted-foreground for #525252 */}
           {/* Title - Based on 1412:7357 */}
-          <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line text-center">
-            {" "}
-            {/* Using stone-700 for #44403B */}
-            {`시그널이 닿을 수 있도록\n인스타 or 전화번호를 알려주세요`}
+          <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line">
+            시그널이 닿을 수 있도록
+            <br />
+            <span className="text-primary">
+              인스타그램 or 전화번호를 알려주세요
+            </span>
           </h2>
         </div>
         {/* Input Field - Based on INPUT instance 1421:2139 */}
@@ -55,22 +51,17 @@ const ContactStep: React.FC<ContactStepProps> = ({ onSubmit }) => {
           placeholder="ex. @yourssu_official" // Placeholder from Figma
         />
       </div>
-      {/* Confirmation Button - Based on BoxBtn instance 1421:2389 */}
-      <div className="mt-auto pb-10 w-full max-w-[342px]">
-        {" "}
-        {/* Push button to bottom, match width */}
-        <Button
-          onClick={handleSubmit}
-          disabled={!isValid} // Disable button if validation fails
-          className={`w-full h-[56px] rounded-2xl text-lg font-medium transition-colors ${
-            isValid
-              ? "bg-primary text-primary-foreground hover:bg-primary/90" // Enabled state (Pink)
-              : "bg-gray-300 text-white cursor-not-allowed" // Disabled state (Gray - #D1D5DC)
-          }`}
-        >
-          입력 완료
-        </Button>
-      </div>
+      <Button
+        onClick={handleSubmit}
+        disabled={!isValid} // Disable button if validation fails
+        className={`w-full h-[56px] rounded-2xl text-lg font-medium transition-colors ${
+          isValid
+            ? "bg-primary text-primary-foreground hover:bg-primary/90" // Enabled state (Pink)
+            : "bg-gray-300 text-white cursor-not-allowed" // Disabled state (Gray - #D1D5DC)
+        }`}
+      >
+        입력 완료
+      </Button>
     </div>
   );
 };

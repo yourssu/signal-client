@@ -1,8 +1,8 @@
 import React from "react";
 import { useFunnel } from "@use-funnel/react-router-dom";
-import GenderStep from "../../../components/GenderStep";
-import AnimalStep from "../../../components/register/AnimalStep";
-import MbtiStep from "../../../components/register/MbtiStep";
+import GenderStep from "@/components/register/GenderStep";
+import AnimalStep from "@/components/register/AnimalStep";
+import MbtiStep from "@/components/register/MbtiStep";
 import {
   AnimalType,
   Gender,
@@ -103,7 +103,7 @@ const ProfileRegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center">
+    <div className="min-h-dvh flex flex-col items-center">
       {funnel.step !== "done" ? (
         <TopBar
           heartCount={self?.usedTicket ?? 0}
@@ -118,27 +118,29 @@ const ProfileRegisterPage: React.FC = () => {
         {funnel.step !== "done" && (
           <Progress value={((funnel.index + 1) / 6) * 100} />
         )}
-        <funnel.Render
-          gender={() => <GenderStep onSelect={handleGenderSelect} />}
-          animal={() => <AnimalStep onSelect={handleAnimalSelect} />}
-          mbti={() => <MbtiStep onSubmit={handleMbtiSubmit} />}
-          personality={() => (
-            <PersonalityStep onSubmit={handlePersonalitySubmit} />
-          )}
-          nickname={() => (
-            <NicknameStep
-              onSubmit={handleNicknameSubmit}
-              introSentences={funnel.context.introSentences ?? []}
-            />
-          )}
-          contact={() => <ContactStep onSubmit={handleContactSubmit} />}
-          done={() => (
-            <RegisterDoneStep
-              profile={funnel.context as ProfileContactResponse}
-              onSubmit={handleDone}
-            />
-          )}
-        />
+        <div className="grow flex items-stretch justify-stretch">
+          <funnel.Render
+            gender={() => <GenderStep onSelect={handleGenderSelect} />}
+            animal={() => <AnimalStep onSelect={handleAnimalSelect} />}
+            mbti={() => <MbtiStep onSubmit={handleMbtiSubmit} />}
+            personality={() => (
+              <PersonalityStep onSubmit={handlePersonalitySubmit} />
+            )}
+            nickname={() => (
+              <NicknameStep
+                onSubmit={handleNicknameSubmit}
+                introSentences={funnel.context.introSentences ?? []}
+              />
+            )}
+            contact={() => <ContactStep onSubmit={handleContactSubmit} />}
+            done={() => (
+              <RegisterDoneStep
+                profile={funnel.context as ProfileContactResponse}
+                onSubmit={handleDone}
+              />
+            )}
+          />
+        </div>
       </div>
     </div>
   );

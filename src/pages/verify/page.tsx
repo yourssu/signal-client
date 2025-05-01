@@ -1,7 +1,7 @@
 import { userGender } from "@/atoms/userGender";
 import { viewerSelf } from "@/atoms/viewerSelf";
-import GenderStep from "@/components/GenderStep"; // Assuming GenderStep has its own appropriate styling
-import TopBar from "@/components/home/TopBar"; // Import TopBar
+import GenderStep from "@/components/verify/GenderStep";
+import TopBar from "@/components/home/TopBar";
 import { VerifyStep } from "@/components/verify/VerifyStep";
 import { useViewerSelf, useViewerVerification } from "@/hooks/queries/viewers";
 import { useUserUuid } from "@/hooks/useUserUuid";

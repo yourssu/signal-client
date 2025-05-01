@@ -45,23 +45,14 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
 
   return (
     // Main container - Based on Figma Frame 1000011961
-    <div className="flex flex-col items-center pt-10 gap-[255px] h-full w-full px-4">
-      {" "}
-      {/* Adjusted gap */}
-      {/* Top section: Progress, Title, Input, Generator Button - Based on Frame 1000011960 */}
-      <div className="flex flex-col items-center gap-[43px] w-full max-w-[324px]">
-        {" "}
-        {/* Adjusted gap and width */}
-        {/* Progress and Title container - Based on Frame 1425 */}
-        <div className="flex flex-col items-center gap-[10px]">
-          {/* Progress Indicator - Based on 1421:3738 */}
-          <p className="text-xs text-muted-foreground">5 / 6</p>{" "}
-          {/* Using muted-foreground for #525252 */}
-          {/* Title - Based on 1421:3740 */}
-          <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line text-center">
-            {" "}
-            {/* Using stone-700 for #44403B */}
-            {`나를 잘 뽐낼 수 있는\n닉네임을 만들어주세요`}
+    <div className="flex flex-col items-center pt-10 w-full px-4">
+      <div className="flex flex-col items-stretch gap-[43px] w-full grow">
+        <div className="flex flex-col gap-[10px]">
+          <p className="text-xs text-muted-foreground">5 / 6</p>
+          <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line">
+            나를 잘 뽐낼 수 있는
+            <br />
+            <span className="text-primary">닉네임을 만들어주세요</span>
           </h2>
         </div>
         {/* Input and Generator Button Container - Based on Frame 1000011959 */}
@@ -86,7 +77,7 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
             onClick={handleGenerateNickname}
             className="flex justify-center items-center gap-1 h-[42px] w-auto px-4 rounded-full bg-white/50 backdrop-blur-md shadow-sm hover:bg-white/70" // Adjusted styles based on Figma
           >
-            <Sparkles />
+            <Sparkles className="text-primary fill-primary" />
             {/* Icon size approx */}
             <span className="text-base font-medium text-primary">
               닉네임 생성기
@@ -95,22 +86,17 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
           </Button>
         </div>
       </div>
-      {/* Confirmation Button - Based on BoxBtn instance 1421:2394 */}
-      <div className="mt-auto pb-10 w-full max-w-[342px]">
-        {" "}
-        {/* Push button to bottom, match width */}
-        <Button
-          onClick={handleSubmit}
-          disabled={!isValid} // Disable button if validation fails
-          className={`w-full h-[56px] rounded-2xl text-lg font-medium transition-colors ${
-            isValid
-              ? "bg-primary text-primary-foreground hover:bg-primary/90" // Enabled state (Pink)
-              : "bg-gray-300 text-white cursor-not-allowed" // Disabled state (Gray - #D1D5DC)
-          }`}
-        >
-          입력 완료
-        </Button>
-      </div>
+      <Button
+        onClick={handleSubmit}
+        disabled={!isValid} // Disable button if validation fails
+        className={`w-full h-[56px] rounded-2xl text-lg font-medium transition-colors ${
+          isValid
+            ? "bg-primary text-primary-foreground hover:bg-primary/90" // Enabled state (Pink)
+            : "bg-gray-300 text-white cursor-not-allowed" // Disabled state (Gray - #D1D5DC)
+        }`}
+      >
+        입력 완료
+      </Button>
       {createPortal(
         <div
           className={cn(
