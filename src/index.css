@@ -46,6 +46,7 @@
   --color-white-pink: var(--white-pink);
   --color-black: var(--black);
   --color-gray: var(--gray);
+  --color-blue-400: var(--blue-400);
   --color-black-700: var(--black-700);
   --color-black-600: var(--black-600);
   --color-black-400: var(--black-400);
@@ -91,6 +92,7 @@
   --light-pink: oklch(0.91 0.0496 354.13);
   --pale-pink: oklch(0.98 0.0076 7.28);
   --white-pink: oklch(1 0.0025 345.21);
+  --blue-400: oklch(0.7 0.1583 253.63);
   --black: oklch(0.15 0.0438 23.79);
   --gray: oklch(0.73 0 0);
   --black-700: oklch(0.37 0 0);
