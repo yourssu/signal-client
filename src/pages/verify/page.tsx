@@ -45,13 +45,7 @@ const ProfileVerificationPage: React.FC = () => {
     if (viewerResponse) {
       setViewer(viewerResponse);
       // Navigate if tickets are present (initial load or increase) or profile updated
-      if (
-        (old === null && viewerResponse.ticket > 0) || // First load shows tickets
-        (old && old.ticket < viewerResponse.ticket) || // Ticket count increased
-        (old &&
-          old.updatedDate !== viewerResponse.updatedDate &&
-          old.ticket === viewerResponse.ticket) // Updated, and tickets didn't decrease
-      ) {
+      if (old === null || old.updatedDate !== viewerResponse.updatedDate) {
         navigate("/profile");
       }
     }
@@ -73,15 +67,13 @@ const ProfileVerificationPage: React.FC = () => {
   return (
     // Main page container - Flex column, min height screen
     <div className="flex flex-col min-h-dvh bg-background">
-      {" "}
-      {/* Assuming bg-background or similar default */}
       <TopBar
         heartCount={viewerResponse?.usedTicket ?? 0}
         ticketCount={
           (viewerResponse?.ticket ?? 0) - (viewerResponse?.usedTicket ?? 0)
         }
         onBack={handleBack}
-      />{" "}
+      />
       {/* Add the TopBar */}
       {/* Content area - Takes remaining height, centers content */}
       <div className="flex-grow flex flex-col items-center justify-center p-4">
