@@ -1,52 +1,18 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import { useNavigate } from "react-router";
 import ProfileCard from "../../components/profile/ProfileCard";
 import { useRandomProfile } from "@/hooks/queries/profiles";
 import { Button } from "@/components/ui/button";
 import { useUserUuid } from "@/hooks/useUserUuid";
+import { ChevronRight } from "lucide-react";
+import TopBar from "@/components/home/TopBar";
+import { useViewerSelf } from "@/hooks/queries/viewers";
 
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
   const uuid = useUserUuid();
   const { data: profile, refetch } = useRandomProfile(uuid);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const minSwipeDistance = 50;
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-
-    if (cardRef.current && touchStart !== null) {
-      const distance = touchStart - e.targetTouches[0].clientX;
-      const translateX = -distance;
-      cardRef.current.style.transform = `translateX(${translateX}px)`;
-    }
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-
-    if (cardRef.current) {
-      cardRef.current.style.transform = "";
-    }
-
-    if (isLeftSwipe) {
-      handleViewContact();
-    } else if (isRightSwipe) {
-      handleSkip();
-    }
-  };
+  const { data: self } = useViewerSelf(uuid);
 
   const handleViewContact = () => {
     if (!profile?.profileId) return;
@@ -62,23 +28,44 @@ const ProfileListPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col gap-12 items-center justify-center p-4">
-      <div
-        ref={cardRef}
-        className="w-full max-w-md transition-transform"
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-      >
-        {profile && <ProfileCard profile={profile} />}
+    <div className="w-full h-full flex flex-col items-center">
+      <TopBar
+        onBack="/"
+        heartCount={self?.usedTicket ?? 0}
+        ticketCount={(self?.ticket ?? 0) - (self?.usedTicket ?? 0)}
+      />
+      <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6">
+        <div className="flex flex-col items-start w-full">
+          <h1 className="text-2xl font-semibold text-stone-700">
+            <span className="text-primary">000명</span>이
+            <br />
+            당신의 시그널을 기다리는 중
+          </h1>
+        </div>
+        <div className="w-full max-w-md transition-transform flex items-center gap-2 grow">
+          {profile && <ProfileCard profile={profile} className="grow" />}
+          <Button variant="secondary" size="icon" onClick={handleSkip}>
+            <ChevronRight />
+          </Button>
+        </div>
+        <div className="flex gap-4 w-full">
+          <Button
+            onClick={handleViewContact}
+            variant="secondary"
+            size="xl"
+            className="basis-1/3 rounded-3xl text-primary"
+          >
+            저장
+          </Button>
+          <Button
+            onClick={handleViewContact}
+            size="xl"
+            className="grow rounded-3xl"
+          >
+            연락처 확인하기
+          </Button>
+        </div>
       </div>
-      <Button
-        onClick={handleViewContact}
-        size="xl"
-        className="w-full rounded-3xl"
-      >
-        시그널 보내기
-      </Button>
     </div>
   );
 };
