@@ -46,9 +46,8 @@ const ContactStep: React.FC<ContactStepProps> = ({ onSubmit }) => {
           value={contact}
           onChange={handleChange}
           required
-          // Styling based on Figma: text-2xl, text-center, placeholder color, bottom border
-          className="w-full h-[50px] text-2xl text-center bg-transparent border-0 border-b-2 border-stone-500 rounded-none px-2.5 focus:ring-0 focus:border-primary placeholder:text-stone-400 placeholder:text-xl" // Adjusted styles
-          placeholder="ex. @yourssu_official" // Placeholder from Figma
+          className="w-full h-[50px] text-2xl px-2.5"
+          placeholder="ex. @yourssu_official"
         />
       </div>
       <Button

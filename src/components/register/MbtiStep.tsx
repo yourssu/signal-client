@@ -68,7 +68,7 @@ const MbtiStep: React.FC<MbtiStepProps> = ({ onSubmit }) => {
           maxLength={4} // Enforce max length
           required
           // Styling based on Figma: text-2xl, text-center, placeholder color, bottom border
-          className="w-full h-[50px] text-2xl text-center bg-transparent border-0 border-b-2 border-stone-500 rounded-none px-2.5 focus:ring-0 focus:border-primary placeholder:text-stone-400" // Adjusted styles
+          className="w-full h-[50px] text-2xl px-2.5" // Adjusted styles
           placeholder="MBTI 입력 ex.ENFP" // Placeholder from Figma
         />
       </div>
@@ -78,8 +78,8 @@ const MbtiStep: React.FC<MbtiStepProps> = ({ onSubmit }) => {
         className={cn(
           `w-full h-[56px] rounded-2xl text-lg font-medium transition-colors`,
           isValid
-            ? "bg-primary text-primary-foreground hover:bg-primary/90" // Enabled state (Pink)
-            : "bg-gray-300 text-white cursor-not-allowed" // Disabled state (Gray - #D1D5DC)
+            ? "bg-primary text-primary-foreground hover:bg-primary/90"
+            : "bg-gray-300 text-white cursor-not-allowed"
         )}
       >
         입력 완료
@@ -87,23 +87,5 @@ const MbtiStep: React.FC<MbtiStepProps> = ({ onSubmit }) => {
     </div>
   );
 };
-
-// Helper function (consider moving to types/profile.ts or utils)
-// const isValidMbti = (mbti: string): mbti is Mbti => {
-//   if (mbti.length !== 4) return false;
-//   const validChars = [
-//     ['E', 'I'],
-//     ['S', 'N'],
-//     ['T', 'F'],
-//     ['J', 'P'],
-//   ];
-//   const upperMbti = mbti.toUpperCase();
-//   for (let i = 0; i < 4; i++) {
-//     if (!validChars[i].includes(upperMbti[i])) {
-//       return false;
-//     }
-//   }
-//   return true;
-// };
 
 export default MbtiStep;

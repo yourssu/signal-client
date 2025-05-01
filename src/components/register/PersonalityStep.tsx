@@ -34,7 +34,6 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({ onSubmit }) => {
     <div className="flex flex-col items-center pt-10 gap-[159px] w-full px-4">
       <div className="flex flex-col gap-[43px] w-full grow">
         <div className="flex flex-col items-start gap-[10px]">
-          {/* Progress Indicator - Based on 1412:7112 */}
           <p className="text-xs text-muted-foreground">4 / 6</p>
           <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line">
             본인을 잘 드러내는
@@ -42,10 +41,7 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({ onSubmit }) => {
             <span className="text-primary">특징을 입력해주세요</span>
           </h2>
         </div>
-        {/* Input Fields Container - Based on Frame 1000011904 */}
         <div className="flex flex-col gap-[26px] w-full">
-          {" "}
-          {/* Adjusted gap */}
           {traits.map((trait, index) => (
             <Input
               key={index}
@@ -56,7 +52,7 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({ onSubmit }) => {
               onChange={(e) => handleChange(index, e.target.value)}
               required={index < 2} // Require at least the first two
               // Styling based on Figma INPUT instances (style_TGM91S, fill_HGA9Q2, stroke_BLRCWW)
-              className="w-full h-[50px] text-lg font-medium text-center bg-transparent border-0 border-b-2 border-stone-500 rounded-none px-2.5 focus:ring-0 focus:border-primary placeholder:text-stone-400 placeholder:font-normal placeholder:text-lg" // Adjusted styles, placeholder style
+              className="w-full h-[50px] text-lg font-medium px-2.5" // Adjusted styles, placeholder style
               placeholder="특징 입력 ex.숭실대 카리나" // Placeholder from Figma
             />
           ))}

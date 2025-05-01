@@ -55,11 +55,7 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
             <span className="text-primary">닉네임을 만들어주세요</span>
           </h2>
         </div>
-        {/* Input and Generator Button Container - Based on Frame 1000011959 */}
         <div className="flex flex-col items-end gap-[17px] w-full">
-          {" "}
-          {/* Adjusted gap */}
-          {/* Input Field - Based on INPUT instance 1421:2125 */}
           <Input
             type="text"
             id="nickname"
@@ -68,21 +64,19 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
             onChange={handleChange}
             required
             // Styling based on Figma: text-2xl, text-center, placeholder color, bottom border
-            className="w-full h-[50px] text-2xl text-center bg-transparent border-0 border-b-2 border-stone-500 rounded-none px-2.5 focus:ring-0 focus:border-primary placeholder:text-stone-400 placeholder:text-xl" // Adjusted styles
+            className="w-full h-[50px] text-2xl px-2.5" // Adjusted styles
             placeholder="닉네임을 입력하세요." // Using clearer placeholder
+            maxLength={15}
           />
-          {/* Nickname Generator Button - Based on Frame 1000011906 */}
           <Button
             variant="ghost" // Use ghost variant for background blur effect potentially
             onClick={handleGenerateNickname}
             className="flex justify-center items-center gap-1 h-[42px] w-auto px-4 rounded-full bg-white/50 backdrop-blur-md shadow-sm hover:bg-white/70" // Adjusted styles based on Figma
           >
             <Sparkles className="text-primary fill-primary" />
-            {/* Icon size approx */}
             <span className="text-base font-medium text-primary">
               닉네임 생성기
-            </span>{" "}
-            {/* Text style from Figma */}
+            </span>
           </Button>
         </div>
       </div>
