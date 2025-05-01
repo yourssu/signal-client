@@ -72,7 +72,7 @@ const ProfileVerificationPage: React.FC = () => {
 
   return (
     // Main page container - Flex column, min height screen
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-dvh bg-background">
       {" "}
       {/* Assuming bg-background or similar default */}
       <TopBar
@@ -86,9 +86,7 @@ const ProfileVerificationPage: React.FC = () => {
       {/* Content area - Takes remaining height, centers content */}
       <div className="flex-grow flex flex-col items-center justify-center p-4">
         {/* Funnel container - Max width */}
-        <div className="w-full max-w-md h-full flex flex-col">
-          {" "}
-          {/* Ensure this container allows VerifyStep to use justify-between */}
+        <div className="w-full max-w-md h-full flex flex-col grow items-stretch justify-stretch">
           <funnel.Render
             gender={() => <GenderStep onSelect={handleGenderSelect} />}
             verify={() => (

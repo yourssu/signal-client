@@ -1,3 +1,7 @@
+import { userGender } from "@/atoms/userGender";
+import { cn } from "@/lib/utils";
+import { useAtomValue } from "jotai";
+
 interface VerifyStepProps {
   isLoading: boolean;
   verificationCode: number | null;
@@ -18,6 +22,7 @@ export const VerifyStep = ({
   isLoading,
   verificationCode,
 }: VerifyStepProps) => {
+  const gender = useAtomValue(userGender);
   const digits = getCodeDigits(verificationCode, isLoading);
 
   return (
@@ -26,7 +31,7 @@ export const VerifyStep = ({
       {/* Text content block */}
       <div className="flex flex-col items-center gap-1 text-center">
         {/* Title - Using style from 1544:2063 */}
-        <h1 className="text-2xl font-semibold text-pink">
+        <h1 className="text-2xl font-semibold text-primary">
           시그널을 이용하시겠어요?
         </h1>
         <h2 className="text-2xl font-semibold text-stone-600 whitespace-pre-line">
@@ -45,7 +50,14 @@ export const VerifyStep = ({
               className="flex justify-center items-center bg-white/60 rounded-lg w-[60px] h-[60px] shadow-sm" // Adjusted size, bg-white/60 for rgba(255, 255, 255, 0.6)
             >
               {/* Digit text - Based on style 1544:2043 */}
-              <span className="text-4xl font-medium text-primary">{digit}</span>
+              <span
+                className={cn(
+                  "text-4xl font-medium",
+                  gender === "MALE" ? "text-blue" : "text-primary"
+                )}
+              >
+                {digit}
+              </span>
             </div>
           ))}
         </div>
