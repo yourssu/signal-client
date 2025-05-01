@@ -125,7 +125,12 @@ const ProfileRegisterPage: React.FC = () => {
           personality={() => (
             <PersonalityStep onSubmit={handlePersonalitySubmit} />
           )}
-          nickname={() => <NicknameStep onSubmit={handleNicknameSubmit} />}
+          nickname={() => (
+            <NicknameStep
+              onSubmit={handleNicknameSubmit}
+              introSentences={funnel.context.introSentences ?? []}
+            />
+          )}
           contact={() => <ContactStep onSubmit={handleContactSubmit} />}
           done={() => (
             <RegisterDoneStep

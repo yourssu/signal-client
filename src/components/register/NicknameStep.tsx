@@ -2,14 +2,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
 import React, { useState, useMemo } from "react"; // Import useMemo
 import { Sparkles } from "lucide-react";
+import { useGenerateNickname } from "@/hooks/queries/profiles";
+import { createPortal } from "react-dom";
+import generatingImg from "@/assets/register/generating.png";
+import { cn } from "@/lib/utils";
 
 interface NicknameStepProps {
   onSubmit: (nickname: string) => void;
-  // TODO: Add props for personality traits if generator needs them
+  nickname?: string;
+  introSentences: string[];
 }
 
-const NicknameStep: React.FC<NicknameStepProps> = ({ onSubmit }) => {
+const NicknameStep: React.FC<NicknameStepProps> = ({
+  onSubmit,
+  introSentences,
+}) => {
   const [nickname, setNickname] = useState<string>("");
+  const { mutate: generateNickname, isPending } = useGenerateNickname();
 
   // Validation: Check if nickname is not empty
   const isValid = useMemo(() => nickname.trim() !== "", [nickname]);
@@ -20,17 +29,18 @@ const NicknameStep: React.FC<NicknameStepProps> = ({ onSubmit }) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // TODO: Add length validation if needed (e.g., max 15 chars from ProfileCreatedRequest)
     setNickname(e.target.value);
   };
 
   const handleGenerateNickname = () => {
-    // TODO: Implement nickname generation logic (API call)
-    // Example: fetch('/api/generate-nickname', { method: 'POST', body: JSON.stringify({ traits: [...] }) })
-    //          .then(res => res.json())
-    //          .then(data => setNickname(data.nickname));
-    console.log("Nickname generator clicked - implementation pending");
-    // Placeholder: setNickname("임시닉네임");
+    generateNickname(
+      { introSentences },
+      {
+        onSuccess: (data) => {
+          setNickname(data.result.nickname);
+        },
+      }
+    );
   };
 
   return (
@@ -101,6 +111,18 @@ const NicknameStep: React.FC<NicknameStepProps> = ({ onSubmit }) => {
           입력 완료
         </Button>
       </div>
+      {createPortal(
+        <div
+          className={cn(
+            "fixed inset-0 flex flex-col items-center justify-center bg-black/50 text-white transition-opacity opacity-0 duration-500",
+            isPending ? "opacity-100 delay-500" : "hidden"
+          )}
+        >
+          <img src={generatingImg} alt="Generating..." />
+          닉네임을 생성 중이에요...
+        </div>,
+        document.body
+      )}
     </div>
   );
 };
