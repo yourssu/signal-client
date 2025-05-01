@@ -1,6 +1,9 @@
+import AnimalImage from "@/components/profile/AnimalImage";
 import { Badge } from "@/components/ui/badge";
+import { animalDisplayMap } from "@/lib/animal";
 import { cn } from "@/lib/utils";
 import { ProfileResponse } from "@/types/profile";
+import { Heart } from "lucide-react";
 import React from "react";
 
 interface ProfileCardProps {
@@ -20,29 +23,24 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, className }) => {
       {/* Frame 1000011852 */}
       <div className="flex flex-col items-center gap-[15px] w-[245.47px]">
         {/* Frame 1000011906 (Badges) */}
-        <div className="profile-badge rounded-[50px] px-[13px] py-[4px] flex justify-center items-center gap-[3px]">
+        <Badge
+          variant="outline"
+          className="profile-badge rounded-[50px] px-[13px] py-[4px] flex justify-center items-center gap-[3px]"
+        >
           {/* 00상 Badge */}
-          <Badge className="profile-badge text-[#EE518A] font-pretendard text-[14px] font-medium leading-[1.3em] tracking-[-1%] p-0 bg-transparent border-none">
-            {profile.animal}상 {/* Assuming animal type maps to 00상 */}
-          </Badge>
-          {/* Heart Icon - TODO: Add Heart Icon SVG */}
-          {/* MBTI Badge */}
-          <Badge className="profile-badge text-[#EE518A] font-pretendard text-[14px] font-medium leading-[1.3em] tracking-[-1%] p-0 bg-transparent border-none">
-            {profile.mbti}
-          </Badge>
-        </div>
+          {animalDisplayMap[profile.animal]}상
+          <Heart className="fill-pink size-2" />
+          {profile.mbti}
+        </Badge>
 
         {/* Frame 1000011851 (Image and Text) */}
         <div className="flex flex-col items-stretch gap-[-5px] w-full">
           {/* Frame 1000011912 (Image) */}
-          <div className="flex flex-col items-center items-stretch w-full">
+          <div className="flex flex-col items-stretch w-full">
             {/* Frame 1000011849 (Image Group) */}
-            <div className="flex flex-col items-center items-stretch w-full">
+            <div className="flex flex-col items-center w-full">
               {/* Group 1000011822 (Image Placeholder) */}
-              <div className="w-[100px] h-[100px] bg-gray-300 rounded-full flex items-center justify-center">
-                {/* TODO: Implement image display based on profile data */}
-                <span className="text-gray-600 text-sm">Image Placeholder</span>
-              </div>
+              <AnimalImage animalType={profile.animal} className="w-full" />
             </div>
           </div>
 
