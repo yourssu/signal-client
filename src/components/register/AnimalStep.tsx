@@ -37,7 +37,7 @@ const AnimalStep: React.FC<AnimalStepProps> = ({ onSelect }) => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
       const scrollLeft =
-        index * (IMAGE_WIDTH + GAP) -
+        (index + 1) * (IMAGE_WIDTH + GAP) -
         container.offsetWidth / 2 +
         IMAGE_WIDTH / 2;
       container.scrollTo({ left: scrollLeft, behavior: "smooth" });
