@@ -25,7 +25,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, className }) => {
         {/* Frame 1000011906 (Badges) */}
         <Badge
           variant="outline"
-          className="profile-badge rounded-[50px] px-[13px] py-[4px] flex justify-center items-center gap-[3px]"
+          className="profile-badge rounded-[50px] px-[13px] py-[4px] flex justify-center items-center gap-[3px] text-primary"
         >
           {/* 00상 Badge */}
           {animalDisplayMap[profile.animal]}상

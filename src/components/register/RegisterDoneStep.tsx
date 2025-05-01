@@ -13,7 +13,7 @@ const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
   onSubmit,
 }) => {
   return (
-    <div className="w-full max-w-md mx-auto flex flex-col items-center">
+    <div className="w-full max-w-md mx-auto flex flex-col items-center grow">
       <h2 className="text-3xl font-bold text-center text-pink">
         프로필 등록 완료!
       </h2>
@@ -23,17 +23,12 @@ const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
         프로필 열람 이용권을 500원 할인해 드려요
       </p>
 
-      <div className="w-full">
-        <div className="mb-10">
-          {" "}
-          {/* Added margin bottom for spacing */}
-          <ProfileCard profile={profile} contact={profile.contact} />
-        </div>
-
-        <Button type="submit" size="xl" className="w-full" onClick={onSubmit}>
-          등록 완료
-        </Button>
+      <div className="grow flex flex-col justify-center items-center">
+        <ProfileCard profile={profile} contact={profile.contact} />
       </div>
+      <Button type="submit" size="xl" className="w-full" onClick={onSubmit}>
+        이용권 구매하기
+      </Button>
     </div>
   );
 };
