@@ -5,7 +5,12 @@ import main from "@/assets/home/main.png";
 import { useCountProfile } from "@/hooks/queries/profiles";
 import { cn } from "@/lib/utils";
 
-const MainContent = ({ verifyNeeded }: { verifyNeeded: boolean }) => {
+interface MainContentProps {
+  profileRegistered: boolean;
+  verifyNeeded: boolean;
+}
+
+const MainContent = ({ profileRegistered, verifyNeeded }: MainContentProps) => {
   const { data } = useCountProfile();
   const count = React.useMemo(() => data?.count ?? 0, [data?.count]);
 
@@ -33,10 +38,13 @@ const MainContent = ({ verifyNeeded }: { verifyNeeded: boolean }) => {
           to="/profile/register"
           className={cn(
             buttonVariants({ variant: "secondary" }),
-            "h-14 rounded-2xl bg-light-pink text-pink hover:bg-light-pink/90 shadow-sm"
+            "h-14 rounded-2xl bg-light-pink text-pink hover:bg-light-pink/90 shadow-sm",
+            profileRegistered &&
+              "pointer-events-none opacity-50 cursor-not-allowed"
           )}
+          aria-disabled={profileRegistered}
         >
-          프로필 등록하기
+          {profileRegistered ? "프로필을 이미 등록했어요" : "프로필 등록하기"}
         </Link>
 
         <Link
