@@ -13,14 +13,20 @@ const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
   onSubmit,
 }) => {
   return (
-    <div className="w-full max-w-md mx-auto">
-      <h2 className="text-2xl font-bold text-center">연락처를 입력해주세요.</h2>
-      <p className="text-center mb-6">
-        인스타그램 연락처는 앞에 @을 붙여주세요.
+    <div className="w-full max-w-md mx-auto flex flex-col items-center">
+      <h2 className="text-3xl font-bold text-center text-pink">
+        프로필 등록 완료!
+      </h2>
+      <p className="text-base font-medium text-center text-black-600 mt-3 mb-10">
+        이 화면을 유어슈 STAFF에게 보여주면
+        <br />
+        프로필 열람 이용권을 500원 할인해 드려요
       </p>
 
-      <div className="space-y-4">
-        <div>
+      <div className="w-full">
+        <div className="mb-10">
+          {" "}
+          {/* Added margin bottom for spacing */}
           <ProfileCard profile={profile} contact={profile.contact} />
         </div>
 

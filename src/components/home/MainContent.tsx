@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
-import catCharacter from "@/assets/figma/cat_character.png";
+import main from "@/assets/home/main.png";
 import { useCountProfile } from "@/hooks/queries/profiles";
 
 const MainContent: React.FC = () => {
@@ -23,7 +23,7 @@ const MainContent: React.FC = () => {
       </div>
 
       <div className="w-full max-w-[280px]">
-        <img src={catCharacter} alt="Cat Character" className="w-full h-auto" />
+        <img src={main} alt="Cat Character" className="w-full h-auto" />
       </div>
 
       <div className="flex flex-col items-stretch gap-4 w-full max-w-[342px]">

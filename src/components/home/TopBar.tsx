@@ -1,6 +1,6 @@
 import React from "react";
-import heartIcon from "@/assets/figma/heart_icon.svg";
-import ticketIcon from "@/assets/figma/ticket_icon.svg";
+import heartIcon from "@/assets/icons/heart_icon.svg";
+import ticketIcon from "@/assets/icons/ticket_icon.svg";
 import { To } from "react-router";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";

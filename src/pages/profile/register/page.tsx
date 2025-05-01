@@ -104,11 +104,16 @@ const ProfileRegisterPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center">
-      <TopBar
-        heartCount={self?.usedTicket ?? 0}
-        ticketCount={(self?.ticket ?? 0) - (self?.usedTicket ?? 0)}
-        onBack={handleBack}
-      />
+      {funnel.step !== "done" ? (
+        <TopBar
+          heartCount={self?.usedTicket ?? 0}
+          ticketCount={(self?.ticket ?? 0) - (self?.usedTicket ?? 0)}
+          onBack={handleBack}
+        />
+      ) : (
+        <div className="h-11" />
+      )}
+
       <div className="w-full max-w-md grow p-6 flex flex-col gap-10">
         {funnel.step !== "done" && (
           <Progress value={((funnel.index + 1) / 6) * 100} />

@@ -1,61 +1,92 @@
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
+import React, { useState, useMemo } from "react"; // Import useMemo
 
 interface PersonalityStepProps {
   onSubmit: (personality: string[]) => void;
 }
 
 const PersonalityStep: React.FC<PersonalityStepProps> = ({ onSubmit }) => {
-  const [personality, setPersonality] = useState<string[]>([]);
+  // State for 3 input fields
+  const [traits, setTraits] = useState<string[]>(["", "", ""]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (personality.length < 2) return;
-    onSubmit(personality);
+  // Validation: Check if at least 2 traits are entered
+  const isValid = useMemo(() => {
+    return traits.filter((trait) => trait.trim() !== "").length >= 2;
+  }, [traits]);
+
+  const handleSubmit = () => {
+    if (!isValid) return;
+    // Submit only non-empty traits
+    onSubmit(traits.filter((trait) => trait.trim() !== ""));
   };
 
   const handleChange = (index: number, value: string) => {
-    setPersonality((prev) => {
-      const newPersonality = [...prev];
-      newPersonality[index] = value;
-      return newPersonality;
+    setTraits((prev) => {
+      const newTraits = [...prev];
+      newTraits[index] = value;
+      return newTraits;
     });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
-      <h2 className="text-2xl font-bold text-center">
-        본인의 특징 3가지를 말해주세요.
-      </h2>
-      <p className="text-center mb-6">plz</p>
-
-      <div className="space-y-4">
-        {Array.from({ length: 3 }, (_, index) => (
-          <div key={index}>
-            <label
-              htmlFor="mbti"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              특징 {index + 1}
-            </label>
-            <input
+    // Main container - Based on Figma Frame 1000011957
+    <div className="flex flex-col items-center pt-10 gap-[159px] h-full w-full px-4">
+      {" "}
+      {/* Adjusted gap */}
+      {/* Top section: Progress, Title, Inputs - Based on Frame 1000011956 */}
+      <div className="flex flex-col items-center gap-[43px] w-full max-w-[324px]">
+        {" "}
+        {/* Adjusted gap and width */}
+        {/* Progress and Title container - Based on Frame 1425 */}
+        <div className="flex flex-col items-center gap-[10px]">
+          {/* Progress Indicator - Based on 1412:7112 */}
+          <p className="text-xs text-muted-foreground">4 / 6</p>{" "}
+          {/* Using muted-foreground for #525252 */}
+          {/* Title - Based on 1412:7114 */}
+          <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line text-center">
+            {" "}
+            {/* Using stone-700 for #44403B */}
+            {`본인을 잘 드러내는\n특징을 입력해주세요`}
+          </h2>
+        </div>
+        {/* Input Fields Container - Based on Frame 1000011904 */}
+        <div className="flex flex-col gap-[26px] w-full">
+          {" "}
+          {/* Adjusted gap */}
+          {traits.map((trait, index) => (
+            <Input
+              key={index}
               type="text"
               id={`personality-${index}`}
               name={`personality-${index}`}
-              value={personality[index] || ""}
+              value={trait}
               onChange={(e) => handleChange(index, e.target.value)}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="특징 입력"
+              required={index < 2} // Require at least the first two
+              // Styling based on Figma INPUT instances (style_TGM91S, fill_HGA9Q2, stroke_BLRCWW)
+              className="w-full h-[50px] text-lg font-medium text-center bg-transparent border-0 border-b-2 border-stone-500 rounded-none px-2.5 focus:ring-0 focus:border-primary placeholder:text-stone-400 placeholder:font-normal placeholder:text-lg" // Adjusted styles, placeholder style
+              placeholder="특징 입력 ex.숭실대 카리나" // Placeholder from Figma
             />
-          </div>
-        ))}
-
-        <Button type="submit" size="xl" className="w-full">
-          등록 완료
+          ))}
+        </div>
+      </div>
+      {/* Confirmation Button - Based on BoxBtn instance 1421:1884 */}
+      <div className="mt-auto pb-10 w-full max-w-[342px]">
+        {" "}
+        {/* Push button to bottom, match width */}
+        <Button
+          onClick={handleSubmit}
+          disabled={!isValid} // Disable button if validation fails
+          className={`w-full h-[56px] rounded-2xl text-lg font-medium transition-colors ${
+            isValid
+              ? "bg-primary text-primary-foreground hover:bg-primary/90" // Enabled state (Pink)
+              : "bg-gray-300 text-white cursor-not-allowed" // Disabled state (Gray - #D1D5DC)
+          }`}
+        >
+          입력 완료
         </Button>
       </div>
-    </form>
+    </div>
   );
 };
 

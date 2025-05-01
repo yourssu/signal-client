@@ -1,5 +1,11 @@
 export type Gender = "MALE" | "FEMALE";
-export type AnimalType = "DOG" | "BEAR" | "DINOSAUR" | "WOLF" | "DEER" | "CAT";
+export type AnimalType =
+  | "DOG"
+  | "BEAR"
+  | "DINOSAUR"
+  | "HAMSTER"
+  | "DEER"
+  | "CAT";
 export type Mbti = `${"E" | "I"}${"N" | "S"}${"F" | "T"}${"J" | "P"}`;
 export interface ProfileCreatedRequest {
   uuid?: string;
