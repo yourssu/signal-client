@@ -1,11 +1,11 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router";
+import { buttonVariants } from "@/components/ui/button";
+import { Link } from "react-router";
 import main from "@/assets/home/main.png";
 import { useCountProfile } from "@/hooks/queries/profiles";
+import { cn } from "@/lib/utils";
 
-const MainContent: React.FC = () => {
-  const navigate = useNavigate();
+const MainContent = ({ verifyNeeded }: { verifyNeeded: boolean }) => {
   const { data } = useCountProfile();
   const count = React.useMemo(() => data?.count ?? 0, [data?.count]);
 
@@ -27,19 +27,25 @@ const MainContent: React.FC = () => {
       </div>
 
       <div className="flex flex-col items-stretch gap-4 w-full max-w-[342px]">
-        <Button
-          onClick={() => navigate("/profile/register")}
-          className="h-14 rounded-2xl bg-white text-pink hover:bg-white/90 shadow-sm"
+        <Link
+          to="/profile/register"
+          className={cn(
+            buttonVariants({ variant: "secondary" }),
+            "h-14 rounded-2xl bg-white text-pink hover:bg-white/90 shadow-sm"
+          )}
         >
           프로필 등록하기
-        </Button>
+        </Link>
 
-        <Button
-          onClick={() => navigate("/verify")}
-          className="h-14 rounded-2xl bg-pink text-white hover:bg-pink/90"
+        <Link
+          to={verifyNeeded ? "/verify" : "/profile"}
+          className={cn(
+            buttonVariants({ variant: "default" }),
+            "h-14 rounded-2xl bg-pink text-white hover:bg-pink/90"
+          )}
         >
           시그널 보내기
-        </Button>
+        </Link>
       </div>
     </div>
   );

@@ -20,7 +20,9 @@ const HomePage: React.FC = () => {
       />
 
       {/* Main content with text, image, and buttons */}
-      <MainContent />
+      <MainContent
+        verifyNeeded={!self || self.ticket - self.usedTicket === 0}
+      />
     </div>
   );
 };
