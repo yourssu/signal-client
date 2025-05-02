@@ -1,11 +1,10 @@
 import { useConsumeTicket } from "@/hooks/queries/profiles";
-import { userUuid } from "@/atoms/userUuid";
-import { useAtom } from "jotai";
 import React, { useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { ProfileContactResponse, ProfileResponse } from "@/types/profile";
 import { Button } from "@/components/ui/button";
 import ProfileCard from "@/components/profile/ProfileCard";
+import { useUserUuid } from "@/hooks/useUserUuid";
 
 const ContactViewPage: React.FC = () => {
   const location = useLocation();
@@ -13,7 +12,7 @@ const ContactViewPage: React.FC = () => {
   const { id: idStr } = useParams<{ id: string }>();
   const { profile } = location.state as { profile: ProfileResponse };
   const id = useMemo(() => Number(idStr), [idStr]);
-  const [uuid] = useAtom(userUuid);
+  const uuid = useUserUuid();
   const { mutateAsync } = useConsumeTicket();
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [profileContact, setProfileContact] =
