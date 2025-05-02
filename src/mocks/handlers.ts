@@ -1,3 +1,4 @@
+import { animalDisplayMap } from "@/lib/animal";
 import { TicketIssuedRequest } from "@/types/admin";
 import { ErrorResponse, SuccessResponse } from "@/types/common";
 import {
@@ -24,9 +25,12 @@ const getRandomAnimal = (): AnimalType => {
     "DOG",
     "BEAR",
     "DINOSAUR",
-    "WOLF",
+    "HAMSTER",
     "DEER",
     "CAT",
+    "FOX",
+    "TURTLE",
+    "RABBIT",
   ];
   return animals[Math.floor(Math.random() * animals.length)];
 };
@@ -53,15 +57,7 @@ const getRandomNickname = (animal: AnimalType): string => {
     "활발한",
   ];
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
-  const animalKorean: Record<AnimalType, string> = {
-    DOG: "강아지",
-    CAT: "고양이",
-    BEAR: "곰",
-    DINOSAUR: "공룡",
-    WOLF: "늑대",
-    DEER: "사슴",
-  };
-  return `${adjective} ${animalKorean[animal]}`;
+  return `${adjective} ${animalDisplayMap[animal]}`;
 };
 
 export const handlers = [
