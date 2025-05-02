@@ -261,7 +261,7 @@ export const handlers = [
         gender: "MALE",
         ticket: 1,
         usedTicket: 0,
-        updatedDate: new Date().toISOString(),
+        updatedTime: new Date().toISOString(),
         purchasedProfiles: [],
       },
     } satisfies SuccessResponse<ViewerDetailResponse>);

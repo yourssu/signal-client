@@ -23,7 +23,7 @@ export interface ViewerResponse {
   gender: Gender;
   ticket: number;
   usedTicket: number;
-  updatedDate: string;
+  updatedTime: string;
 }
 
 export interface ViewerDetailResponse extends ViewerResponse {

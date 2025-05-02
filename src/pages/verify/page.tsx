@@ -41,11 +41,13 @@ const ProfileVerificationPage: React.FC = () => {
   });
 
   useEffect(() => {
-    const old = viewer;
     if (viewerResponse) {
-      setViewer(viewerResponse);
       // Navigate if tickets are present (initial load or increase) or profile updated
-      if (old === null || old.updatedDate !== viewerResponse.updatedDate) {
+      if (
+        viewer === null ||
+        viewer.updatedTime !== viewerResponse.updatedTime
+      ) {
+        setViewer(viewerResponse);
         navigate("/profile");
       }
     }
