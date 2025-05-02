@@ -66,7 +66,7 @@ const ProfileVerificationPage: React.FC = () => {
 
   return (
     // Main page container - Flex column, min height screen
-    <div className="flex flex-col min-h-dvh bg-background">
+    <div className="flex flex-col min-h-dvh">
       <TopBar
         heartCount={viewerResponse?.usedTicket ?? 0}
         ticketCount={
