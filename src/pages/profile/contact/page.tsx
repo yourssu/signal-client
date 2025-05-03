@@ -1,15 +1,29 @@
 import { useConsumeTicket } from "@/hooks/queries/profiles";
 import React, { useMemo, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router";
 import { ProfileContactResponse, ProfileResponse } from "@/types/profile";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import ProfileCard from "@/components/profile/ProfileCard";
 import { useUserUuid } from "@/hooks/useUserUuid";
+import { cn } from "@/lib/utils";
+
+const TICKET_COST = import.meta.env.VITE_TICKET_COST || 1;
 
 const ContactViewPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
   const { id: idStr } = useParams<{ id: string }>();
+
+  const from = params.get("from") ?? "profile";
+  const returnLink = from === "saved" ? "/profile/saved" : "/profile";
+
   const { profile } = location.state as { profile: ProfileResponse };
   const id = useMemo(() => Number(idStr), [idStr]);
   const uuid = useUserUuid();
@@ -40,7 +54,7 @@ const ContactViewPage: React.FC = () => {
         <div className="text-center">
           <p className="mb-6 text-gray-600 text-lg">
             <span className="text-primary">
-              이용권을 2개 소모해
+              이용권을 {TICKET_COST}개 소모해
               <br />
             </span>
             {profile.nickname}님의 연락처를 열람하시겠습니까?
@@ -75,13 +89,12 @@ const ContactViewPage: React.FC = () => {
             contact={profileContact.contact}
             className="w-full"
           />
-          <Button
-            onClick={() => navigate("/profile")}
-            size="xl"
-            className="w-full rounded-2xl"
+          <Link
+            to={returnLink}
+            className={cn(buttonVariants({ size: "xl" }), "w-full rounded-2xl")}
           >
             다른 시그널 보내기
-          </Button>
+          </Link>
         </>
       )
     );
