@@ -115,7 +115,7 @@ const SavedProfilesPage: React.FC = () => {
             {/* Scroll snap implementation */}
             <div
               ref={scrollContainerRef}
-              className="w-full flex overflow-x-auto snap-x snap-mandatory scroll-smooth gap-4 grow items-center py-2"
+              className="w-full flex overflow-x-auto snap-x snap-mandatory scroll-smooth gap-4 grow items-center py-2 no-scrollbar"
             >
               {savedProfiles.map((p, index) => (
                 <div
