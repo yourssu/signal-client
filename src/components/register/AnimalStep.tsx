@@ -60,7 +60,7 @@ const AnimalStep: React.FC<AnimalStepProps> = ({ gender, onSelect }) => {
         "offsetWidth",
         container.offsetWidth,
         "scrollLeft",
-        scrollLeft,
+        scrollLeft
       );
       container.scrollTo({ left: scrollLeft, behavior: "smooth" });
     }
@@ -89,7 +89,7 @@ const AnimalStep: React.FC<AnimalStepProps> = ({ gender, onSelect }) => {
       </div>
 
       {/* Animal Carousel Section - Based on Frame 1000011950 */}
-      <div className="w-screen flex flex-col items-center gap-5">
+      <div className="-mx-6 self-stretch flex flex-col items-center gap-5">
         <div
           ref={scrollContainerRef}
           className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory items-center h-fit w-full no-scrollbar"
