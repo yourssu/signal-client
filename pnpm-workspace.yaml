@@ -1,4 +1,5 @@
 onlyBuiltDependencies:
-  - "@swc/core"
+  - '@swc/core'
   - esbuild
   - msw
+  - sharp
