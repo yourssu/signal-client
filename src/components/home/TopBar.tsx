@@ -5,18 +5,21 @@ import { Link, To } from "react-router";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAtomValue } from "jotai";
+import { savedProfilesAtom } from "@/atoms/viewerProfiles";
+import { useViewerSelf } from "@/hooks/queries/viewers";
+import { useUserUuid } from "@/hooks/useUserUuid";
 
 interface TopBarProps {
-  heartCount?: number;
-  ticketCount?: number;
   onBack?: To | (() => void);
 }
 
-const TopBar: React.FC<TopBarProps> = ({
-  heartCount = 0,
-  ticketCount = 0,
-  onBack,
-}) => {
+const TopBar: React.FC<TopBarProps> = ({ onBack }) => {
+  const uuid = useUserUuid();
+  const savedProfiles = useAtomValue(savedProfilesAtom);
+  const heartCount = savedProfiles.length;
+  const { data: self } = useViewerSelf(uuid);
+  const ticketCount = (self?.ticket ?? 0) - (self?.usedTicket ?? 0);
   const handleBack = () => {
     if (typeof onBack === "function") {
       onBack();
@@ -39,7 +42,7 @@ const TopBar: React.FC<TopBarProps> = ({
             <Link
               className={cn(
                 buttonVariants({ variant: "ghost", size: "icon" }),
-                "text-black-700",
+                "text-black-700"
               )}
               to={onBack}
             >

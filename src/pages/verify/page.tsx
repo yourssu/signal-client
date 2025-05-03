@@ -29,11 +29,11 @@ const ProfileVerificationPage: React.FC = () => {
 
   const { data, isLoading: isVerificationLoading } = useViewerVerification(
     uuid,
-    gender,
+    gender
   );
   const verificationCode: number | null = useMemo(
     () => Number(data?.verificationCode ?? null) || null,
-    [data],
+    [data]
   );
 
   const { data: viewerResponse } = useViewerSelf(uuid, {
@@ -69,14 +69,7 @@ const ProfileVerificationPage: React.FC = () => {
   return (
     // Main page container - Flex column, min height screen
     <div className="flex flex-col min-h-dvh">
-      <TopBar
-        heartCount={viewerResponse?.usedTicket ?? 0}
-        ticketCount={
-          (viewerResponse?.ticket ?? 0) - (viewerResponse?.usedTicket ?? 0)
-        }
-        onBack={handleBack}
-      />
-      {/* Add the TopBar */}
+      <TopBar onBack={handleBack} />
       {/* Content area - Takes remaining height, centers content */}
       <div className="flex-grow flex flex-col items-center justify-center p-4">
         {/* Funnel container - Max width */}

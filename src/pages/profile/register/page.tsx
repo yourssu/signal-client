@@ -20,14 +20,12 @@ import NicknameStep from "@/components/register/NicknameStep";
 import ContactStep from "@/components/register/ContactStep";
 import RegisterDoneStep from "@/components/register/RegisterDoneStep";
 import TopBar from "@/components/home/TopBar";
-import { useViewerSelf } from "@/hooks/queries/viewers";
 import { Progress } from "@/components/ui/progress";
 import { userProfile } from "@/atoms/userProfile";
 
 const ProfileRegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const uuid = useUserUuid();
-  const { data: self } = useViewerSelf(uuid);
   const [gender, setGender] = useAtom(userGender);
   const setProfile = useSetAtom(userProfile);
   const funnel = useFunnel<{
@@ -108,11 +106,7 @@ const ProfileRegisterPage: React.FC = () => {
   return (
     <div className="min-h-dvh flex flex-col items-center">
       {funnel.step !== "done" ? (
-        <TopBar
-          heartCount={self?.usedTicket ?? 0}
-          ticketCount={(self?.ticket ?? 0) - (self?.usedTicket ?? 0)}
-          onBack={handleBack}
-        />
+        <TopBar onBack={handleBack} />
       ) : (
         <div className="h-11" />
       )}

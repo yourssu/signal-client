@@ -1,13 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router";
 import { useSetAtom, useAtomValue } from "jotai"; // Import useSetAtom and useAtomValue
-import ProfileCard from "../../components/profile/ProfileCard";
+import ProfileCard from "@/components/profile/ProfileCard";
 import { useCountProfile, useRandomProfile } from "@/hooks/queries/profiles";
 import { Button } from "@/components/ui/button";
 import { useUserUuid } from "@/hooks/useUserUuid";
 import { ChevronRight } from "lucide-react";
 import TopBar from "@/components/home/TopBar";
-import { useViewerSelf } from "@/hooks/queries/viewers";
 import { SaveDrawer } from "@/components/profile/SaveDrawer";
 import { saveProfileAtom, savedProfilesAtom } from "@/atoms/viewerProfiles"; // Import savedProfilesAtom too
 
@@ -15,7 +14,6 @@ const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
   const uuid = useUserUuid();
   const { data: profile, refetch } = useRandomProfile(uuid);
-  const { data: self } = useViewerSelf(uuid);
   const { data: countData } = useCountProfile();
   const saveProfile = useSetAtom(saveProfileAtom); // Corrected usage
   const savedProfiles = useAtomValue(savedProfilesAtom); // Read the saved profiles
@@ -46,11 +44,7 @@ const ProfileListPage: React.FC = () => {
 
   return (
     <div className="w-full h-full flex flex-col items-center">
-      <TopBar
-        onBack="/"
-        heartCount={self?.usedTicket ?? 0}
-        ticketCount={(self?.ticket ?? 0) - (self?.usedTicket ?? 0)}
-      />
+      <TopBar onBack="/" />
       <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6">
         <div className="flex flex-col items-start w-full">
           <h1 className="text-2xl font-semibold text-stone-700">

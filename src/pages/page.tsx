@@ -13,10 +13,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-dvh relative">
       {/* Top bar with heart and ticket icons */}
-      <TopBar
-        heartCount={self?.usedTicket ?? 0}
-        ticketCount={(self?.ticket ?? 0) - (self?.usedTicket ?? 0)}
-      />
+      <TopBar />
 
       {/* Main content with text, image, and buttons */}
       <MainContent
