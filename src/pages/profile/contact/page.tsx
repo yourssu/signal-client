@@ -12,6 +12,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import ProfileCard from "@/components/profile/ProfileCard";
 import { useUserUuid } from "@/hooks/useUserUuid";
 import { cn } from "@/lib/utils";
+import TopBar from "@/components/home/TopBar";
 
 const TICKET_COST = import.meta.env.VITE_TICKET_COST || 1;
 
@@ -48,10 +49,14 @@ const ContactViewPage: React.FC = () => {
     }
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   const renderContent = () => {
     if (!isConfirmed) {
       return (
-        <div className="text-center">
+        <div className="text-center flex flex-col items-center justify-center grow">
           <p className="mb-6 text-gray-600 text-lg">
             <span className="text-primary">
               이용권을 {TICKET_COST}개 소모해
@@ -84,11 +89,21 @@ const ContactViewPage: React.FC = () => {
     return (
       profileContact && (
         <>
-          <ProfileCard
-            profile={profile}
-            contact={profileContact.contact}
-            className="w-full"
-          />
+          <TopBar onBack={handleBack} />
+          <div className="flex flex-col items-start w-full">
+            <h1 className="text-2xl font-semibold text-stone-700">
+              <span className="text-primary">시그널 성공</span>
+              <br />
+              지금 바로 연결해보세요
+            </h1>
+          </div>
+          <div className="grow flex items-center justify-center">
+            <ProfileCard
+              profile={profile}
+              contact={profileContact.contact}
+              className="w-full"
+            />
+          </div>
           <Link
             to={returnLink}
             className={cn(buttonVariants({ size: "xl" }), "w-full rounded-2xl")}
@@ -101,7 +116,7 @@ const ContactViewPage: React.FC = () => {
   };
 
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center gap-12 p-4">
+    <div className="h-full w-full flex flex-col items-center gap-12 p-4">
       {renderContent()}
     </div>
   );
