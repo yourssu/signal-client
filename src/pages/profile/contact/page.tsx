@@ -26,6 +26,7 @@ const ContactViewPage: React.FC = () => {
   const returnLink = from === "saved" ? "/profile/saved" : "/profile";
 
   const { profile } = location.state as { profile: ProfileResponse };
+  console.log(profile, idStr);
   const id = useMemo(() => Number(idStr), [idStr]);
   const uuid = useUserUuid();
   const { mutateAsync } = useConsumeTicket();
@@ -116,7 +117,7 @@ const ContactViewPage: React.FC = () => {
   };
 
   return (
-    <div className="h-full w-full flex flex-col items-center gap-12 p-4">
+    <div className="h-full w-full flex flex-col items-center gap-12">
       {renderContent()}
     </div>
   );
