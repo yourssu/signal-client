@@ -5,5 +5,5 @@ export const userGender = atomWithStorage<Gender | null>(
   "user.gender",
   null,
   undefined,
-  { getOnInit: true }
+  { getOnInit: true },
 );

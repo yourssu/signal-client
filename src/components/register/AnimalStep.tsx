@@ -60,7 +60,7 @@ const AnimalStep: React.FC<AnimalStepProps> = ({ gender, onSelect }) => {
         "offsetWidth",
         container.offsetWidth,
         "scrollLeft",
-        scrollLeft
+        scrollLeft,
       );
       container.scrollTo({ left: scrollLeft, behavior: "smooth" });
     }

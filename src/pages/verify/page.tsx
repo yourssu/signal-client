@@ -29,11 +29,11 @@ const ProfileVerificationPage: React.FC = () => {
 
   const { data, isLoading: isVerificationLoading } = useViewerVerification(
     uuid,
-    gender
+    gender,
   );
   const verificationCode: number | null = useMemo(
     () => Number(data?.verificationCode ?? null) || null,
-    [data]
+    [data],
   );
 
   const { data: viewerResponse } = useViewerSelf(uuid, {

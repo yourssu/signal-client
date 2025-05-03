@@ -39,7 +39,7 @@ const TopBar: React.FC<TopBarProps> = ({
             <Link
               className={cn(
                 buttonVariants({ variant: "ghost", size: "icon" }),
-                "text-black-700"
+                "text-black-700",
               )}
               to={onBack}
             >

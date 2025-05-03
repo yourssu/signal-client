@@ -79,7 +79,7 @@ export const handlers = [
           status: 403,
           message: "ID가 필요합니다.",
         } satisfies ErrorResponse,
-        { status: 403 }
+        { status: 403 },
       );
     }
     const randomAnimal = getRandomAnimal();
@@ -108,7 +108,7 @@ export const handlers = [
           status: 403,
           message: "ID가 필요합니다.",
         } satisfies ErrorResponse,
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -162,7 +162,7 @@ export const handlers = [
           status: 403,
           message: "ID가 필요합니다.",
         } satisfies ErrorResponse,
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -191,7 +191,7 @@ export const handlers = [
           status: 403,
           message: "ID가 필요합니다.",
         },
-        { status: 403 }
+        { status: 403 },
       );
     }
     return HttpResponse.json({
@@ -211,7 +211,7 @@ export const handlers = [
           status: 403,
           message: "시크릿이 필요합니다.",
         } satisfies ErrorResponse,
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -232,7 +232,7 @@ export const handlers = [
           status: 403,
           message: "시크릿이 필요합니다.",
         } satisfies ErrorResponse,
-        { status: 403 }
+        { status: 403 },
       );
     }
     return HttpResponse.json({
@@ -250,7 +250,7 @@ export const handlers = [
           status: 403,
           message: "ID가 필요합니다.",
         } satisfies ErrorResponse,
-        { status: 403 }
+        { status: 403 },
       );
     }
     return HttpResponse.json({

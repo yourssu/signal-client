@@ -79,7 +79,7 @@ const MbtiStep: React.FC<MbtiStepProps> = ({ onSubmit }) => {
           `w-full h-[56px] rounded-2xl text-lg font-medium transition-colors`,
           isValid
             ? "bg-primary text-primary-foreground hover:bg-primary/90"
-            : "bg-gray-300 text-white cursor-not-allowed"
+            : "bg-gray-300 text-white cursor-not-allowed",
         )}
       >
         입력 완료

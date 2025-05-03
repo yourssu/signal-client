@@ -58,7 +58,7 @@ export const useViewers = (secretKey: string) => {
 
 export const useViewerSelf = (
   uuid: string,
-  queryOptions?: Omit<UseQueryOptions<ViewerResponse>, "queryKey" | "queryFn">
+  queryOptions?: Omit<UseQueryOptions<ViewerResponse>, "queryKey" | "queryFn">,
 ) => {
   return useQuery({
     queryKey: ["viewer", "uuid", uuid],

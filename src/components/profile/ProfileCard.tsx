@@ -17,7 +17,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, className }) => {
     <div
       className={cn(
         "profile-card-background rounded-[30px] shadow-md overflow-hidden flex flex-col justify-center items-center gap-[8.61px] p-[20px_20px_15px]",
-        className
+        className,
       )}
     >
       {/* Frame 1000011852 */}

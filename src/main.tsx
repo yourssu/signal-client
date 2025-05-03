@@ -9,5 +9,5 @@ if (import.meta.env.DEV) initMocks();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App />
-  </StrictMode>
+  </StrictMode>,
 );

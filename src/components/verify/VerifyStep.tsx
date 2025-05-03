@@ -53,7 +53,7 @@ export const VerifyStep = ({
               <span
                 className={cn(
                   "text-4xl font-medium",
-                  gender === "MALE" ? "text-blue" : "text-primary"
+                  gender === "MALE" ? "text-blue" : "text-primary",
                 )}
               >
                 {digit}
