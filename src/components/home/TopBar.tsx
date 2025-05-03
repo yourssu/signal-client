@@ -52,14 +52,25 @@ const TopBar: React.FC<TopBarProps> = ({ onBack }) => {
         </div>
       )}
       <div className="flex items-center gap-5">
-        <div className="flex items-center gap-1">
-          <div className="w-6 h-6 flex items-center justify-center rounded-full p-1">
-            <img src={heartIcon} alt="Heart" className="w-4 h-4" />
+        {heartCount > 0 ? (
+          <Link to="/profile/saved" className="flex items-center gap-1">
+            <div className="w-6 h-6 flex items-center justify-center rounded-full p-1">
+              <img src={heartIcon} alt="Heart" className="w-4 h-4" />
+            </div>
+            <span className="text-xs font-medium text-black-700">
+              {heartCount.toString().padStart(2, "0")}
+            </span>
+          </Link>
+        ) : (
+          <div className="flex items-center gap-1">
+            <div className="w-6 h-6 flex items-center justify-center rounded-full p-1">
+              <img src={heartIcon} alt="Heart" className="w-4 h-4" />
+            </div>
+            <span className="text-xs font-medium text-black-700">
+              {heartCount.toString().padStart(2, "0")}
+            </span>
           </div>
-          <span className="text-xs font-medium text-black-700">
-            {heartCount.toString().padStart(2, "0")}
-          </span>
-        </div>
+        )}
 
         <div className="flex items-center gap-1">
           <div className="w-6 h-6 flex items-center justify-center rounded-full p-1">

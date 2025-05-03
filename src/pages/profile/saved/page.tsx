@@ -81,6 +81,10 @@ const SavedProfilesPage: React.FC = () => {
 
   const count = `${savedProfiles.length}`.padStart(2, "0");
 
+  const handleBack = () => {
+    navigate(-1); // Go back one step in browser history
+  };
+
   const handleViewContact = () => {
     if (!profile?.profileId) return;
     navigate(`/profile/contact/${profile.profileId}&from=saved`, {
@@ -97,7 +101,7 @@ const SavedProfilesPage: React.FC = () => {
 
   return (
     <div className="w-full h-full flex flex-col items-center">
-      <TopBar onBack="/" />
+      <TopBar onBack={handleBack} />
       {profile ? (
         <>
           <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6">
