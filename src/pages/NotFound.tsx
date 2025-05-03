@@ -1,26 +1,30 @@
+import Background from "@/components/home/Background";
+import TopBar from "@/components/home/TopBar";
+import { buttonVariants } from "@/components/ui/button";
 import React from "react";
-import { useNavigate } from "react-router";
+import { Link } from "react-router";
 
 const NotFound: React.FC = () => {
-  const navigate = useNavigate();
-
   return (
-    <div className="text-center space-y-4">
-      <h1 className="text-2xl font-bold text-pink-600 md:text-3xl">
-        404 - Page Not Found
-      </h1>
-      <p className="text-gray-600">
-        Oops! The page you are looking for does not exist.
-      </p>
-      <button
-        onClick={() => navigate("/")}
-        className="px-6 py-2 bg-pink-500 text-white rounded-full 
-                 transition-colors duration-200 hover:bg-pink-600 
-                 focus:outline-none focus:ring-2 focus:ring-pink-400 
-                 focus:ring-offset-2 text-sm md:text-base"
-      >
-        Go to Home
-      </button>
+    <div className="h-dvh min-h-dvh">
+      <Background />
+      <main className="max-w-md mx-auto w-full h-full shadow-sm">
+        {/* Top bar with heart and ticket icons */}
+        <TopBar />
+
+        {/* Main content with text, image, and buttons */}
+        <div className="flex flex-col items-center justify-center h-full gap-4 p-6">
+          <h1 className="text-2xl font-bold text-pink md:text-3xl">
+            페이지를 찾을 수 없어요!
+          </h1>
+          <p className="text-gray-600">
+            잘못된 페이지로 이동된 것 같아요. 처음으로 돌아갈까요?
+          </p>
+          <Link to="/" className={buttonVariants({ size: "xl" })}>
+            처음으로 돌아가기
+          </Link>
+        </div>
+      </main>
     </div>
   );
 };
