@@ -1,5 +1,5 @@
 @host={{VITE_API_BASE_URL}}
-@verificationCode=
+@verificationCode=1639
 
 @gender=MALE
 #@gender=FEMALE

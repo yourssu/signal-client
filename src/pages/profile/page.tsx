@@ -74,8 +74,7 @@ const ProfileListPage: React.FC = () => {
               className="basis-1/3 rounded-3xl text-primary"
               disabled={isSaved} // Disable button if already saved
             >
-              {isSaved ? "저장됨" : "저장"}{" "}
-              {/* Change text based on saved state */}
+              {isSaved ? "저장됨" : "저장"}
             </Button>
           </SaveDrawer>
 

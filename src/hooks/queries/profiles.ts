@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import {
   NicknameCreatedResponse,
   NicknameGeneratedRequest,
@@ -34,6 +34,8 @@ export const useRandomProfile = (uuid: string) => {
       return data.result;
     },
     enabled: !!uuid,
+    placeholderData: keepPreviousData,
+    staleTime: Infinity,
   });
 };
 
