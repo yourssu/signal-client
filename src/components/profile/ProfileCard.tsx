@@ -42,7 +42,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           <div className="flex flex-col items-stretch gap-[5px] w-full">
             <div className="flex flex-col items-stretch w-full">
               <div className="px-[6.89px] flex flex-col items-stretch gap-[7.75px] w-full">
-                <h3 className="text-[#404040] font-pretendard text-[24.97px] font-semibold leading-[1.3em] tracking-[-1%] text-center w-full">
+                <h3 className="text-[#404040] text-[24.97px] font-semibold leading-[1.3em] tracking-[-1%] text-center w-full">
                   {profile.nickname}
                 </h3>
               </div>
@@ -50,7 +50,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 
             {contact ? (
               <div className="w-full flex flex-row justify-center items-center gap-[4px] px-[16px] py-4 bg-[#FFF2F7] border border-[rgba(238,81,138,0.2)] rounded-[16px]">
-                <span className="font-pretendard text-[18px] font-medium leading-[1.3em] tracking-[-1%] text-[#EE518A] text-center">
+                <span className="text-[18px] font-medium leading-[1.3em] tracking-[-1%] text-[#EE518A] text-center">
                   {contact}
                 </span>
               </div>
@@ -62,7 +62,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                     className="flex flex-row justify-stretch items-stretch gap-[8.61px] w-full"
                   >
                     <div className="flex flex-row justify-stretch items-stretch gap-[8.61px] w-full">
-                      <p className="text-[#525252] font-pretendard text-[16px] font-medium leading-[1.3em] tracking-[-1%] text-left w-full">
+                      <p className="text-[#525252] text-[16px] font-medium leading-[1.3em] tracking-[-1%] text-left w-full">
                         {sentence}
                       </p>
                     </div>

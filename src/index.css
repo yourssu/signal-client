@@ -1,9 +1,31 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/*
+Copyright (c) 2021 Kil Hyung-jin, with Reserved Font Name Pretendard.
+https://github.com/orioncactus/pretendard
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+http://scripts.sil.org/OFL
+*/
+
+@font-face {
+  font-family: "Pretendard Variable";
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+
+  /* noinspection CssUnknownTarget */
+  src: url("/fonts/PretendardVariable.subset.woff2") format("woff2-variations");
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-sans:
+    "Pretendard Variable", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
