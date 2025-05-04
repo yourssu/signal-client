@@ -20,7 +20,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   return (
     <div
       className={cn(
-        "profile-card-background rounded-[30px] shadow-md overflow-hidden flex flex-col justify-center items-center gap-[8.61px] p-[20px_20px_15px]",
+        "profile-card-background rounded-[30px] shadow-md overflow-hidden flex flex-col justify-center items-center gap-[8.61px] p-[20px_20px_15px] select-none",
         className
       )}
     >

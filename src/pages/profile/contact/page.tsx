@@ -13,6 +13,11 @@ import ProfileCard from "@/components/profile/ProfileCard";
 import { useUserUuid } from "@/hooks/useUserUuid";
 import { cn } from "@/lib/utils";
 import TopBar from "@/components/home/TopBar";
+import { useAtomValue, useSetAtom } from "jotai";
+import {
+  contactedProfilesAtom,
+  contactProfileAtom,
+} from "@/atoms/viewerProfiles";
 
 const TICKET_COST = import.meta.env.VITE_TICKET_COST || 1;
 
@@ -30,9 +35,16 @@ const ContactViewPage: React.FC = () => {
   const id = useMemo(() => Number(idStr), [idStr]);
   const uuid = useUserUuid();
   const { mutateAsync } = useConsumeTicket();
-  const [isConfirmed, setIsConfirmed] = useState(false);
+  const contactedProfiles = useAtomValue(contactedProfilesAtom);
+  const contactedProfile = contactedProfiles.find(
+    (profile) => profile.profileId === id
+  );
+  const addContact = useSetAtom(contactProfileAtom);
+  const [isConfirmed, setIsConfirmed] = useState(
+    contactedProfile !== undefined
+  );
   const [profileContact, setProfileContact] =
-    useState<ProfileContactResponse | null>(null);
+    useState<ProfileContactResponse | null>(contactedProfile ?? null);
   const [error, setError] = useState<string | null>(null);
 
   const handleConfirm = async () => {
@@ -44,6 +56,7 @@ const ContactViewPage: React.FC = () => {
       setIsConfirmed(true);
       setError(null);
       setProfileContact(res.result);
+      addContact(res.result);
     } catch (e) {
       console.log(e);
       setError("이용권이 부족합니다.");
@@ -91,33 +104,34 @@ const ContactViewPage: React.FC = () => {
       profileContact && (
         <>
           <TopBar onBack={handleBack} />
-          <div className="flex flex-col items-start w-full">
-            <h1 className="text-2xl font-semibold text-stone-700">
-              <span className="text-primary">시그널 성공</span>
-              <br />
-              지금 바로 연결해보세요
-            </h1>
+          <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6">
+            <div className="flex flex-col items-start w-full">
+              <h1 className="text-2xl font-semibold text-stone-700">
+                <span className="text-primary">시그널 성공</span>
+                <br />
+                지금 바로 연결해보세요
+              </h1>
+            </div>
+            <div className="grow flex flex-col justify-center items-stretch w-full">
+              <ProfileCard profile={profile} contact={profileContact.contact} />
+            </div>
+            <Link
+              to={returnLink}
+              className={cn(
+                buttonVariants({ size: "xl" }),
+                "w-full rounded-2xl"
+              )}
+            >
+              다른 시그널 보내기
+            </Link>
           </div>
-          <div className="grow flex items-center justify-center">
-            <ProfileCard
-              profile={profile}
-              contact={profileContact.contact}
-              className="w-full"
-            />
-          </div>
-          <Link
-            to={returnLink}
-            className={cn(buttonVariants({ size: "xl" }), "w-full rounded-2xl")}
-          >
-            다른 시그널 보내기
-          </Link>
         </>
       )
     );
   };
 
   return (
-    <div className="h-full w-full flex flex-col items-center gap-12">
+    <div className="h-full w-full flex flex-col items-center">
       {renderContent()}
     </div>
   );
