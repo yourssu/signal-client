@@ -1,5 +1,5 @@
 import React from "react";
-import { useFunnel } from "@use-funnel/react-router-dom";
+import { useFunnel } from "@use-funnel/react-router";
 import GenderStep from "@/components/register/GenderStep";
 import AnimalStep from "@/components/register/AnimalStep";
 import MbtiStep from "@/components/register/MbtiStep";

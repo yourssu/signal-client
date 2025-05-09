@@ -6,7 +6,7 @@ import { VerifyStep } from "@/components/verify/VerifyStep";
 import { useViewerSelf, useViewerVerification } from "@/hooks/queries/viewers";
 import { useUserUuid } from "@/hooks/useUserUuid";
 import { Gender } from "@/types/profile";
-import { useFunnel } from "@use-funnel/react-router-dom";
+import { useFunnel } from "@use-funnel/react-router";
 import { useAtom } from "jotai";
 import React, { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
