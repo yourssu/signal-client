@@ -84,10 +84,8 @@ const ProfileRegisterPage: React.FC = () => {
         contact,
       };
       const res = await createProfile(finalData);
-      if (res.result) {
-        funnel.history.push("done", res.result);
-        setProfile(res.result);
-      }
+      funnel.history.push("done", res);
+      setProfile(res);
     }
   };
 

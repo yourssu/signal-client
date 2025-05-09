@@ -1,0 +1,69 @@
+@host=https://api.dev.signal.yourssu.com
+@uuid=6595c53a-3bec-4041-84c8-df217c174f38
+
+@gender=MALE
+#@gender=FEMALE
+
+// Issue a verification code for uuid - 200 OK
+###
+POST {{host}}/api/viewers/verification
+Content-Type: application/json
+
+{
+  "uuid": "{{uuid}}",
+  "gender" : "{{gender}}"
+}
+
+> {%
+    client.global.set("verificationCode", response.body.result.verificationCode);
+%}
+
+###
+// If the uuid is not registered, then a new verification code will be created.
+// Otherwise the uuid is registered, then return the verification code for the uuid.
+
+
+@secretKey=DonaEmilyEatSteakLeopold
+@verificationCode=6767
+// Verify the uuid with the verification code - 200 OK
+###
+POST {{host}}/api/viewers
+Content-Type: application/json
+
+{
+  "secretKey": "{{secretKey}}",
+  "verificationCode": {{verificationCode}},
+  "ticket": 3
+}
+
+###
+// The verification code is able to be used only once.
+
+
+// Get a Viewer by uuid - 200 OK
+// with purchased profiles info
+###
+GET {{host}}/api/viewers/uuid?uuid={{uuid}}
+
+###
+
+
+// Get All Viewers - 200 OK
+###
+GET {{host}}/api/viewers?secretKey={{secretKey}}
+
+###
+
+@profileId=1
+// ConsumeTicket - 200 OK
+###
+POST {{host}}/api/profiles/contact
+Content-Type: application/json
+
+{
+  "uuid": "{{uuid}}",
+  "profileId": {{profileId}}
+}
+
+###
+// If this profile is already purchased, then does not consume tickets.

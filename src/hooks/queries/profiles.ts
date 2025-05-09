@@ -8,7 +8,8 @@ import {
   ProfileResponse,
   TicketConsumedRequest,
 } from "@/types/profile";
-import { SuccessResponse } from "@/types/common";
+import { SignalResponse } from "@/types/common";
+import { SignalError } from "@/lib/error";
 
 const profileBase = `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/profiles`;
 
@@ -18,9 +19,13 @@ export const useCountProfile = () => {
     queryFn: async () => {
       const response = await fetch(`${profileBase}/count`);
 
-      const data =
-        (await response.json()) as SuccessResponse<ProfileCountResponse>;
-      return data.result;
+      const res =
+        (await response.json()) as SignalResponse<ProfileCountResponse>;
+      if (!("result" in res)) {
+        throw new SignalError(res.message, res.status, res.timestamp);
+      } else {
+        return res.result;
+      }
     },
   });
 };
@@ -30,8 +35,12 @@ export const useRandomProfile = (uuid: string) => {
     queryKey: ["profiles", uuid],
     queryFn: async () => {
       const response = await fetch(`${profileBase}/random?uuid=${uuid}`);
-      const data = (await response.json()) as SuccessResponse<ProfileResponse>;
-      return data.result;
+      const res = (await response.json()) as SignalResponse<ProfileResponse>;
+      if (!("result" in res)) {
+        throw new SignalError(res.message, res.status, res.timestamp);
+      } else {
+        return res.result;
+      }
     },
     enabled: !!uuid,
     placeholderData: keepPreviousData,
@@ -49,9 +58,13 @@ export const useCreateProfile = () => {
         },
         body: JSON.stringify(data),
       });
-      const result =
-        (await response.json()) as SuccessResponse<ProfileContactResponse>;
-      return result;
+      const res =
+        (await response.json()) as SignalResponse<ProfileContactResponse>;
+      if (!("result" in res)) {
+        throw new SignalError(res.message, res.status, res.timestamp);
+      } else {
+        return res.result;
+      }
     },
   });
 };
@@ -66,9 +79,13 @@ export const useGenerateNickname = () => {
         },
         body: JSON.stringify(data),
       });
-      const result =
-        (await response.json()) as SuccessResponse<NicknameCreatedResponse>;
-      return result;
+      const res =
+        (await response.json()) as SignalResponse<NicknameCreatedResponse>;
+      if (!("result" in res)) {
+        throw new SignalError(res.message, res.status, res.timestamp);
+      } else {
+        return res.result;
+      }
     },
   });
 };
@@ -83,9 +100,13 @@ export const useConsumeTicket = () => {
         },
         body: JSON.stringify(data),
       });
-      const result =
-        (await response.json()) as SuccessResponse<ProfileContactResponse>;
-      return result;
+      const res =
+        (await response.json()) as SignalResponse<ProfileContactResponse>;
+      if (!("result" in res)) {
+        throw new SignalError(res.message, res.status, res.timestamp);
+      } else {
+        return res.result;
+      }
     },
   });
 };

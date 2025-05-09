@@ -1,3 +1,4 @@
+export type SignalResponse<T> = SuccessResponse<T> | ErrorResponse;
 export interface SuccessResponse<T> {
   timestamp: string;
   result: T;

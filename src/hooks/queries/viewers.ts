@@ -1,8 +1,9 @@
 import { useMutation, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { VerificationResponse, ViewerResponse } from "@/types/viewer";
-import { SuccessResponse } from "@/types/common";
+import { SignalResponse } from "@/types/common";
 import { TicketIssuedRequest } from "@/types/admin";
 import { Gender } from "@/types/profile";
+import { SignalError } from "@/lib/error";
 
 const viewersBase = `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/viewers`;
 
@@ -20,9 +21,13 @@ export const useViewerVerification = (uuid: string, gender: Gender | null) => {
           gender,
         }),
       });
-      const data =
-        (await response.json()) as SuccessResponse<VerificationResponse>;
-      return data.result;
+      const res =
+        (await response.json()) as SignalResponse<VerificationResponse>;
+      if (!("result" in res)) {
+        throw new SignalError(res.message, res.status, res.timestamp);
+      } else {
+        return res.result;
+      }
     },
     enabled: !!uuid && !!gender,
   });
@@ -38,8 +43,12 @@ export const useIssueTicket = () => {
         },
         body: JSON.stringify(data),
       });
-      const result = (await response.json()) as SuccessResponse<ViewerResponse>;
-      return result;
+      const res = (await response.json()) as SignalResponse<ViewerResponse>;
+      if (!("result" in res)) {
+        throw new SignalError(res.message, res.status, res.timestamp);
+      } else {
+        return res.result;
+      }
     },
   });
 };
@@ -49,8 +58,12 @@ export const useViewers = (secretKey: string) => {
     queryKey: ["viewers", secretKey],
     queryFn: async () => {
       const response = await fetch(`${viewersBase}?secretKey=${secretKey}`);
-      const data = (await response.json()) as SuccessResponse<ViewerResponse[]>;
-      return data.result;
+      const res = (await response.json()) as SignalResponse<ViewerResponse[]>;
+      if (!("result" in res)) {
+        throw new SignalError(res.message, res.status, res.timestamp);
+      } else {
+        return res.result;
+      }
     },
     enabled: !!secretKey,
   });
@@ -58,14 +71,18 @@ export const useViewers = (secretKey: string) => {
 
 export const useViewerSelf = (
   uuid: string,
-  queryOptions?: Omit<UseQueryOptions<ViewerResponse>, "queryKey" | "queryFn">,
+  queryOptions?: Omit<UseQueryOptions<ViewerResponse>, "queryKey" | "queryFn">
 ) => {
   return useQuery({
     queryKey: ["viewer", "uuid", uuid],
     queryFn: async () => {
       const response = await fetch(`${viewersBase}/uuid?uuid=${uuid}`);
-      const data = (await response.json()) as SuccessResponse<ViewerResponse>;
-      return data.result;
+      const res = (await response.json()) as SignalResponse<ViewerResponse>;
+      if (!("result" in res)) {
+        throw new SignalError(res.message, res.status, res.timestamp);
+      } else {
+        return res.result;
+      }
     },
     enabled: !!uuid,
     ...queryOptions,
