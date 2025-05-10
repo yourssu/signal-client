@@ -39,7 +39,7 @@ const ProfileRegisterPage: React.FC = () => {
   }>({
     id: "profile-register",
     initial: {
-      step: gender ? "animal" : "gender",
+      step: "gender",
       context: {
         ...(gender && { gender }),
       },
