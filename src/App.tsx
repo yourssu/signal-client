@@ -33,7 +33,7 @@ const router = createBrowserRouter([
         element: <ProfileRegisterPage />,
       },
       {
-        path: "profile/contact/:id",
+        path: "profile/contact",
         element: <ContactViewPage />,
       },
       {

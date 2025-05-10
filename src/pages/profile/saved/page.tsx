@@ -87,7 +87,7 @@ const SavedProfilesPage: React.FC = () => {
 
   const handleViewContact = () => {
     if (!profile?.profileId) return;
-    navigate(`/profile/contact/${profile.profileId}?from=saved`, {
+    navigate(`/profile/contact?id=${profile.profileId}&from=saved`, {
       state: {
         profile,
       },

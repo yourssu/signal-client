@@ -1,12 +1,6 @@
 import { useConsumeTicket } from "@/hooks/queries/profiles";
 import React, { useMemo, useState } from "react";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
 import { ProfileContactResponse, ProfileResponse } from "@/types/profile";
 import { Button, buttonVariants } from "@/components/ui/button";
 import ProfileCard from "@/components/profile/ProfileCard";
@@ -25,13 +19,12 @@ const ContactViewPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [params] = useSearchParams();
-  const { id: idStr } = useParams<{ id: string }>();
+  const idStr = params.get("id") ?? "";
 
   const from = params.get("from") ?? "profile";
   const returnLink = from === "saved" ? "/profile/saved" : "/profile";
 
   const { profile } = location.state as { profile: ProfileResponse };
-  console.log(profile, idStr);
   const id = useMemo(() => Number(idStr), [idStr]);
   const uuid = useUserUuid();
   const { mutateAsync } = useConsumeTicket();
