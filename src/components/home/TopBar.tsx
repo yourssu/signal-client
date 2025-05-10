@@ -72,7 +72,7 @@ const TopBar: React.FC<TopBarProps> = ({ onBack }) => {
           </div>
         )}
 
-        <div className="flex items-center gap-1">
+        <Link to="/verify" className="flex items-center gap-1">
           <div className="w-6 h-6 flex items-center justify-center rounded-full p-1">
             <img src={ticketIcon} alt="Ticket" className="w-4 h-4" />
           </div>
@@ -81,7 +81,7 @@ const TopBar: React.FC<TopBarProps> = ({ onBack }) => {
               {ticketCount.toString().padStart(2, "0")}
             </span>
           </div>
-        </div>
+        </Link>
       </div>
     </div>
   );
