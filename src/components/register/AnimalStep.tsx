@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { AnimalType, Gender } from "@/types/profile";
-import React, { useState, useRef, useEffect } from "react"; // Import useState, useRef, useEffect
+import React, { useState, useRef, useEffect, useCallback } from "react"; // Import hooks
 
 // Import downloaded animal images
 import dogImg from "@/assets/animals/dog.png";
@@ -48,7 +48,6 @@ const AnimalStep: React.FC<AnimalStepProps> = ({ gender, onSelect }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleSelectAnimal = (index: number) => {
-    setSelectedIndex(index);
     // Scroll the selected item to the center
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
@@ -56,20 +55,61 @@ const AnimalStep: React.FC<AnimalStepProps> = ({ gender, onSelect }) => {
         (index + 1) * (IMAGE_WIDTH + GAP) -
         container.offsetWidth / 2 +
         IMAGE_WIDTH / 2;
-      console.log(
-        "offsetWidth",
-        container.offsetWidth,
-        "scrollLeft",
-        scrollLeft
-      );
       container.scrollTo({ left: scrollLeft, behavior: "smooth" });
     }
   };
 
-  // Scroll to initial position on mount
+  // Function to determine which animal is in the center of the view
+  const determineSelectedAnimal = useCallback(() => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+
+      // Get all animal elements
+      const animalElements = Array.from(container.children);
+
+      // Get container's bounding rectangle
+      const containerRect = container.getBoundingClientRect();
+
+      // Calculate the center of the container
+      const containerCenter = containerRect.left + containerRect.width / 2;
+
+      // Find which animal is closest to the center
+      let closestIndex = 0;
+      let minDistance = Number.MAX_VALUE;
+
+      animalElements.forEach((element, index) => {
+        const rect = element.getBoundingClientRect();
+        const elementCenter = rect.left + rect.width / 2;
+        const distance = Math.abs(elementCenter - containerCenter);
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      // Only update if the selected index has changed
+      if (closestIndex !== selectedIndex) {
+        setSelectedIndex(closestIndex);
+      }
+    }
+  }, [selectedIndex]);
+
+  // Add scroll event listener
   useEffect(() => {
-    handleSelectAnimal(0);
-  }, []);
+    const container = scrollContainerRef.current;
+    if (container) {
+      const handleScroll = () => {
+        determineSelectedAnimal();
+      };
+
+      container.addEventListener("scroll", handleScroll);
+
+      return () => {
+        container.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, [determineSelectedAnimal]);
 
   const handleConfirmSelection = () => {
     onSelect(animals[gender][selectedIndex].type);
@@ -103,7 +143,7 @@ const AnimalStep: React.FC<AnimalStepProps> = ({ gender, onSelect }) => {
             <div
               key={animal.type}
               onClick={() => handleSelectAnimal(index)}
-              className={`flex-shrink-0 snap-center transition-transform duration-300 ease-in-out cursor-pointer`}
+              className={`flex-shrink-0 snap-center transition-transform duration-300 ease-in-out cursor-pointer animal-item`}
               style={{ width: `${IMAGE_WIDTH}px`, height: "auto" }} // Fixed size for images
             >
               <img
