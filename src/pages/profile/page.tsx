@@ -17,14 +17,13 @@ const ProfileListPage: React.FC = () => {
   const desiredGender = useAtomValue(desiredGenderAtom);
   const { data: viewerSelf, isLoading } = useViewerSelf(uuid);
   const ticketCount = (viewerSelf?.ticket ?? 0) - (viewerSelf?.usedTicket ?? 0);
-  const { data: profile, refetch } = useRandomProfile(
-    uuid,
-    desiredGender!,
-    undefined,
-    {
-      enabled: !!desiredGender && ticketCount > 0,
-    }
-  );
+  const {
+    data: profile,
+    refetch,
+    isRefetching,
+  } = useRandomProfile(uuid, desiredGender!, undefined, {
+    enabled: !!desiredGender && ticketCount > 0,
+  });
   const { data: countData } = useCountProfile();
   const saveProfile = useSetAtom(saveProfileAtom); // Corrected usage
   const savedProfiles = useAtomValue(savedProfilesAtom); // Read the saved profiles
@@ -70,10 +69,14 @@ const ProfileListPage: React.FC = () => {
         </div>
         <div className="w-full max-w-md flex items-center justify-center grow relative">
           {profile && (
-            <SwipeableProfileCard profile={profile} onSwipe={handleSkip} />
+            <SwipeableProfileCard
+              profile={profile}
+              onSwipe={handleSkip}
+              isRefetching={isRefetching}
+            />
           )}
         </div>
-        <div className="flex gap-4 w-full">
+        <div className="flex gap-4 w-full relative z-50">
           <SaveDrawer>
             <Button
               onClick={handleSave}

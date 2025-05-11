@@ -1,22 +1,39 @@
 import ProfileCard from "@/components/profile/ProfileCard";
+import { cn } from "@/lib/utils";
 import { ProfileResponse } from "@/types/profile";
 import { useMotionValue, useTransform, animate, motion } from "motion/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // SwipeableProfileCard component for handling swipe gestures
 export const SwipeableProfileCard: React.FC<{
   profile: ProfileResponse;
+  isRefetching: boolean;
   onSwipe: () => void;
-}> = ({ profile, onSwipe }) => {
+}> = ({ profile, isRefetching, onSwipe }) => {
   const [swiped, setSwiped] = useState(false);
 
   // Motion values for tracking card position and rotation
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotate = useTransform(x, [-200, 0, 200], [-15, 0, 15]);
-
   // Calculate opacity based on swipe distance
-  const opacity = useTransform(x, [-200, -100, 0, 100, 200], [0, 1, 1, 1, 0]);
+  const opacityX = useTransform(x, [-200, -100, 0, 100, 200], [0, 1, 1, 1, 0]);
+  const opacityY = useTransform(y, [0, 100], [1, 0]);
+  const opacity = useTransform(() => opacityX.get() * opacityY.get());
+
+  // Animation for profile change
+  useEffect(() => {
+    // Skip animation on initial render
+    if (!isRefetching) {
+      // Animate upward
+      animate(y, 0, {
+        type: "spring",
+        stiffness: 300,
+        damping: 25,
+        duration: 0.5,
+      });
+    }
+  }, [isRefetching, y]);
 
   // Function to handle drag movement
   const handleDrag = (mx: number, down: boolean, xDir: number) => {
@@ -47,9 +64,11 @@ export const SwipeableProfileCard: React.FC<{
         duration: 0.3,
         onComplete: () => {
           // Reset position and call onSwipe callback
+          y.set(100);
           x.set(0);
-          setSwiped(false);
+          opacity.set(0);
           onSwipe();
+          setSwiped(false);
         },
       });
     } else {
@@ -111,7 +130,11 @@ export const SwipeableProfileCard: React.FC<{
   };
 
   return (
-    <div className="absolute w-full touch-none cursor-grab active:cursor-grabbing">
+    <div
+      className={cn(
+        "absolute w-full touch-none cursor-grab active:cursor-grabbing"
+      )}
+    >
       <motion.div
         style={{ x, y, rotate, opacity }}
         onTouchStart={handleTouchStart}
