@@ -50,26 +50,38 @@ const ProfileRegisterPage: React.FC = () => {
 
   const handleGenderSelect = (gender: Gender) => {
     setGender(gender);
+    funnel.history.replace("gender", { ...funnel.context, gender });
     funnel.history.push("animal", { ...funnel.context, gender });
   };
 
-  const handleAnimalSelect = (animal: AnimalType) =>
+  const handleAnimalSelect = (animal: AnimalType) => {
+    funnel.history.replace("animal", { ...funnel.context, animal });
     funnel.history.push("mbti", { ...funnel.context, animal });
+  };
 
-  const handleMbtiSubmit = async (mbti: Mbti) =>
+  const handleMbtiSubmit = async (mbti: Mbti) => {
+    funnel.history.replace("mbti", { ...funnel.context, mbti });
     funnel.history.push("personality", { ...funnel.context, mbti });
+  };
 
-  const handlePersonalitySubmit = async (personality: string[]) =>
+  const handlePersonalitySubmit = async (personality: string[]) => {
+    funnel.history.replace("personality", {
+      ...funnel.context,
+      introSentences: personality,
+    });
     funnel.history.push("nickname", {
       ...funnel.context,
       introSentences: personality,
     });
+  };
 
-  const handleNicknameSubmit = async (nickname: string) =>
+  const handleNicknameSubmit = async (nickname: string) => {
+    funnel.history.replace("nickname", { ...funnel.context, nickname });
     funnel.history.push("contact", {
       ...funnel.context,
       nickname,
     });
+  };
 
   const handleContactSubmit = async (contact: string) => {
     const { gender, animal, mbti, introSentences, nickname } = funnel.context;
@@ -84,6 +96,7 @@ const ProfileRegisterPage: React.FC = () => {
         contact,
       };
       const res = await createProfile(finalData);
+      funnel.history.replace("contact", res);
       funnel.history.push("done", res);
       setProfile(res);
     }
@@ -118,21 +131,36 @@ const ProfileRegisterPage: React.FC = () => {
             gender={() => <GenderStep onSelect={handleGenderSelect} />}
             animal={() => (
               <AnimalStep
-                onSelect={handleAnimalSelect}
                 gender={funnel.context.gender ?? "MALE"}
+                animal={funnel.context.animal}
+                onSelect={handleAnimalSelect}
               />
             )}
-            mbti={() => <MbtiStep onSubmit={handleMbtiSubmit} />}
+            mbti={() => (
+              <MbtiStep
+                mbti={funnel.context.mbti}
+                onSubmit={handleMbtiSubmit}
+              />
+            )}
             personality={() => (
-              <PersonalityStep onSubmit={handlePersonalitySubmit} />
+              <PersonalityStep
+                traits={funnel.context.introSentences}
+                onSubmit={handlePersonalitySubmit}
+              />
             )}
             nickname={() => (
               <NicknameStep
                 onSubmit={handleNicknameSubmit}
+                nickname={funnel.context.nickname}
                 introSentences={funnel.context.introSentences ?? []}
               />
             )}
-            contact={() => <ContactStep onSubmit={handleContactSubmit} />}
+            contact={() => (
+              <ContactStep
+                contact={funnel.context.contact}
+                onSubmit={handleContactSubmit}
+              />
+            )}
             done={() => (
               <RegisterDoneStep
                 profile={funnel.context as ProfileContactResponse}

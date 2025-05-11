@@ -15,9 +15,10 @@ interface NicknameStepProps {
 
 const NicknameStep: React.FC<NicknameStepProps> = ({
   onSubmit,
+  nickname: defaultNickname,
   introSentences,
 }) => {
-  const [nickname, setNickname] = useState<string>("");
+  const [nickname, setNickname] = useState<string>(defaultNickname ?? "");
   const { mutate: generateNickname, isPending } = useGenerateNickname();
 
   // Validation: Check if nickname is not empty

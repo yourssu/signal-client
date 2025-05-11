@@ -4,6 +4,7 @@ import { cn, whenPressEnter } from "@/lib/utils";
 import React, { useState, useMemo } from "react"; // Import useMemo
 
 interface ContactStepProps {
+  contact?: string;
   onSubmit: (contact: string) => void;
 }
 
@@ -15,8 +16,11 @@ const isValidContact = (contact: string): boolean => {
   return PHONE_REGEX.test(contact) || INSTAGRAM_REGEX.test(contact);
 };
 
-const ContactStep: React.FC<ContactStepProps> = ({ onSubmit }) => {
-  const [contact, setContact] = useState<string>(""); // Initialize with empty string
+const ContactStep: React.FC<ContactStepProps> = ({
+  contact: defaultContact,
+  onSubmit,
+}) => {
+  const [contact, setContact] = useState<string>(defaultContact ?? ""); // Initialize with empty string
   const [isValid, setIsValid] = useState<boolean | null>(null); // State to track validity
 
   // Validation: Check if contact is not empty

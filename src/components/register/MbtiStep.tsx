@@ -22,11 +22,12 @@ const isValidMbti = (mbti: string): mbti is Mbti => {
 };
 
 interface MbtiStepProps {
+  mbti?: Mbti;
   onSubmit: (mbti: Mbti) => void;
 }
 
-const MbtiStep: React.FC<MbtiStepProps> = ({ onSubmit }) => {
-  const [mbtiInput, setMbtiInput] = useState<string>(""); // Store raw input
+const MbtiStep: React.FC<MbtiStepProps> = ({ mbti, onSubmit }) => {
+  const [mbtiInput, setMbtiInput] = useState<string>(mbti ?? ""); // Store raw input
 
   // Validate MBTI input
   const isValid = useMemo(() => isValidMbti(mbtiInput), [mbtiInput]);

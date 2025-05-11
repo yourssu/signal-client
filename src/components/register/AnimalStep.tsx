@@ -15,6 +15,7 @@ import turtleImg from "@/assets/animals/turtle.png";
 
 interface AnimalStepProps {
   gender: Gender;
+  animal?: AnimalType;
   onSelect: (animal: AnimalType) => void;
 }
 
@@ -40,11 +41,26 @@ const animals: Record<
   ],
 };
 
+const animalIndexes = {
+  MALE: Object.fromEntries(
+    animals.MALE.map((animal, index) => [animal.type, index]),
+  ),
+  FEMALE: Object.fromEntries(
+    animals.FEMALE.map((animal, index) => [animal.type, index]),
+  ),
+};
+
 const IMAGE_WIDTH = 200; // Based on Figma Rectangles
 const GAP = 20; // Approximate gap from Figma
 
-const AnimalStep: React.FC<AnimalStepProps> = ({ gender, onSelect }) => {
-  const [selectedIndex, setSelectedIndex] = useState(0); // State for selected animal index
+const AnimalStep: React.FC<AnimalStepProps> = ({
+  gender,
+  animal,
+  onSelect,
+}) => {
+  const [selectedIndex, setSelectedIndex] = useState(
+    animal ? animalIndexes[gender][animal] : 0,
+  ); // State for selected animal index
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleSelectAnimal = (index: number) => {
@@ -58,6 +74,10 @@ const AnimalStep: React.FC<AnimalStepProps> = ({ gender, onSelect }) => {
       container.scrollTo({ left: scrollLeft, behavior: "smooth" });
     }
   };
+
+  useEffect(() => {
+    handleSelectAnimal(animal ? animalIndexes[gender][animal] : 0);
+  }, [animal, gender]);
 
   // Function to determine which animal is in the center of the view
   const determineSelectedAnimal = useCallback(() => {

@@ -4,12 +4,16 @@ import { whenPressEnter } from "@/lib/utils";
 import React, { useState, useMemo } from "react"; // Import useMemo
 
 interface PersonalityStepProps {
-  onSubmit: (personality: string[]) => void;
+  traits?: string[];
+  onSubmit: (traits: string[]) => void;
 }
 
-const PersonalityStep: React.FC<PersonalityStepProps> = ({ onSubmit }) => {
+const PersonalityStep: React.FC<PersonalityStepProps> = ({
+  traits: defaultTraits,
+  onSubmit,
+}) => {
   // State for 3 input fields
-  const [traits, setTraits] = useState<string[]>(["", "", ""]);
+  const [traits, setTraits] = useState<string[]>(defaultTraits ?? ["", "", ""]);
 
   // Validation: Check if at least 2 traits are entered
   const isValid = useMemo(() => {
