@@ -1,5 +1,4 @@
 import ProfileCard from "@/components/profile/ProfileCard";
-import { cn } from "@/lib/utils";
 import { ProfileResponse } from "@/types/profile";
 import { useMotionValue, useTransform, animate, motion } from "motion/react";
 import { useState, useEffect } from "react";
@@ -130,18 +129,13 @@ export const SwipeableProfileCard: React.FC<{
   };
 
   return (
-    <div
-      className={cn(
-        "absolute w-full touch-none cursor-grab active:cursor-grabbing"
-      )}
+    <motion.div
+      style={{ x, y, rotate, opacity }}
+      onTouchStart={handleTouchStart}
+      onMouseDown={handleMouseDown}
+      className="w-full h-auto touch-none cursor-grab active:cursor-grabbing"
     >
-      <motion.div
-        style={{ x, y, rotate, opacity }}
-        onTouchStart={handleTouchStart}
-        onMouseDown={handleMouseDown}
-      >
-        <ProfileCard profile={profile} className="grow" />
-      </motion.div>
-    </div>
+      <ProfileCard profile={profile} className="grow h-auto" />
+    </motion.div>
   );
 };

@@ -59,7 +59,7 @@ const ProfileListPage: React.FC = () => {
   return (
     <div className="w-full h-full flex flex-col items-center">
       <TopBar onBack="/" />
-      <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6">
+      <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6 overflow-hidden">
         <div className="flex flex-col items-start w-full">
           <h1 className="text-2xl font-semibold text-stone-700">
             <span className="text-primary">{count}명</span>이
@@ -67,7 +67,7 @@ const ProfileListPage: React.FC = () => {
             당신의 시그널을 기다리는 중
           </h1>
         </div>
-        <div className="w-full max-w-md flex items-center justify-center grow relative">
+        <div className="w-full h-full max-w-md flex items-center justify-center grow">
           {profile && (
             <SwipeableProfileCard
               profile={profile}
