@@ -1,6 +1,9 @@
 import { desiredGenderAtom } from "@/atoms/desiredGender";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { useAtomValue } from "jotai";
+import { Copy } from "lucide-react";
+import { toast } from "sonner";
 
 interface VerifyStepProps {
   isLoading: boolean;
@@ -25,6 +28,12 @@ export const VerifyStep = ({
   const desired = useAtomValue(desiredGenderAtom);
   const digits = getCodeDigits(verificationCode, isLoading);
 
+  const copyToClipboard = () => {
+    const text = "카카오뱅크 034353566343";
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success("계좌번호가 복사되었습니다.");
+    });
+  };
   return (
     // Main container matching Figma's Frame 1000011868 structure (approximated)
     <div className="flex flex-col items-center grow w-full max-w-sm mx-auto py-8 px-4 gap-8">
@@ -35,7 +44,9 @@ export const VerifyStep = ({
           시그널을 이용하시겠어요?
         </h1>
         <h2 className="text-2xl font-semibold text-stone-600 whitespace-pre-line">
-          {"입금 후, 유어슈 STAFF에게\n화면을 보여주세요"}
+          입금 후, 유어슈 STAFF에게
+          <br />
+          화면을 보여주세요
         </h2>
       </div>
 
@@ -53,7 +64,7 @@ export const VerifyStep = ({
               <span
                 className={cn(
                   "text-4xl font-medium",
-                  desired === "FEMALE" ? "text-blue" : "text-primary"
+                  desired === "FEMALE" ? "text-blue" : "text-primary",
                 )}
               >
                 {digit}
@@ -63,9 +74,18 @@ export const VerifyStep = ({
         </div>
         {/* Bank Account Info - Based on 1544:2058 */}
         <p className="text-lg font-medium text-neutral-700">
-          카카오뱅크 034353566343 유어슈
+          <a
+            href="#"
+            className="inline-flex items-baseline gap-2"
+            onClick={copyToClipboard}
+          >
+            <Copy className="size-3 inline" />
+            <span className="underline">카카오뱅크 034353566343</span>
+          </a>{" "}
+          유어슈
         </p>
       </div>
+      <Toaster />
     </div>
   );
 };
