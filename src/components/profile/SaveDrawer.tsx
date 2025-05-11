@@ -26,12 +26,6 @@ export function SaveDrawer({ children }: SaveDrawerProps) {
         <div className="mx-auto w-full max-w-sm p-[22px] pt-[40px]">
           <DrawerHeader className="p-0">
             <div className="flex flex-col items-center gap-[17px]">
-              <img
-                src={HeartGif}
-                alt="Heart animation"
-                width={100}
-                height={100}
-              />
               <div className="flex flex-col items-center gap-[10px] py-[7px]">
                 <DrawerTitle className="text-2xl font-semibold text-[#404040]">
                   저장 완료
@@ -42,6 +36,12 @@ export function SaveDrawer({ children }: SaveDrawerProps) {
                   저장 목록을 확인할 수 있어요
                 </DrawerDescription>
               </div>
+              <img
+                src={HeartGif}
+                alt="Heart animation"
+                width={100}
+                height={100}
+              />
             </div>
           </DrawerHeader>
           <DrawerFooter className="mt-[27px] flex flex-col gap-[18px] p-0">
@@ -60,7 +60,7 @@ export function SaveDrawer({ children }: SaveDrawerProps) {
                 variant="outline" // Use outline or style manually
                 className="h-auto rounded-[16px] border-none bg-[#FFF2F7] py-3 text-lg font-medium text-[#EE518A] hover:bg-[#fdeaf1]" /* Style second button */
               >
-                운명의 상대 찾으러 가기
+                이어서 시그널 보내기
               </Button>
             </DrawerClose>
           </DrawerFooter>
