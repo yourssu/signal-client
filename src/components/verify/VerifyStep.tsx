@@ -1,4 +1,4 @@
-import { userGender } from "@/atoms/userGender";
+import { desiredGenderAtom } from "@/atoms/desiredGender";
 import { cn } from "@/lib/utils";
 import { useAtomValue } from "jotai";
 
@@ -22,7 +22,7 @@ export const VerifyStep = ({
   isLoading,
   verificationCode,
 }: VerifyStepProps) => {
-  const gender = useAtomValue(userGender);
+  const desired = useAtomValue(desiredGenderAtom);
   const digits = getCodeDigits(verificationCode, isLoading);
 
   return (
@@ -53,7 +53,7 @@ export const VerifyStep = ({
               <span
                 className={cn(
                   "text-4xl font-medium",
-                  gender === "MALE" ? "text-blue" : "text-primary",
+                  desired === "FEMALE" ? "text-blue" : "text-primary"
                 )}
               >
                 {digit}

@@ -1,8 +1,8 @@
 import { Gender } from "@/types/profile";
 import { atomWithStorage } from "jotai/utils";
 
-export const userGenderAtom = atomWithStorage<Gender | null>(
-  "user.gender",
+export const desiredGenderAtom = atomWithStorage<Gender | null>(
+  "viewer.desiredGender",
   null,
   undefined,
   { getOnInit: true }

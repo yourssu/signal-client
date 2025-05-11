@@ -14,20 +14,20 @@ import { useCreateProfile } from "@/hooks/queries/profiles";
 import { useNavigate } from "react-router";
 import { useUserUuid } from "@/hooks/useUserUuid";
 import { useAtom, useSetAtom } from "jotai";
-import { userGender } from "@/atoms/userGender";
+import { userGenderAtom } from "@/atoms/userGender";
 import PersonalityStep from "@/components/register/PersonalityStep";
 import NicknameStep from "@/components/register/NicknameStep";
 import ContactStep from "@/components/register/ContactStep";
 import RegisterDoneStep from "@/components/register/RegisterDoneStep";
 import TopBar from "@/components/home/TopBar";
 import { Progress } from "@/components/ui/progress";
-import { userProfile } from "@/atoms/userProfile";
+import { userProfileAtom } from "@/atoms/userProfile";
 
 const ProfileRegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const uuid = useUserUuid();
-  const [gender, setGender] = useAtom(userGender);
-  const setProfile = useSetAtom(userProfile);
+  const [gender, setGender] = useAtom(userGenderAtom);
+  const setProfile = useSetAtom(userProfileAtom);
   const funnel = useFunnel<{
     gender: Partial<ProfileContactResponse>;
     animal: Partial<ProfileContactResponse>;

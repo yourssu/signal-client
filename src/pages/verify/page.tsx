@@ -1,5 +1,4 @@
-import { userGender } from "@/atoms/userGender";
-import { viewerSelf } from "@/atoms/viewerSelf";
+import { viewerSelfAtom } from "@/atoms/viewerSelf";
 import GenderStep from "@/components/verify/GenderStep";
 import TopBar from "@/components/home/TopBar";
 import { VerifyStep } from "@/components/verify/VerifyStep";
@@ -10,34 +9,33 @@ import { useFunnel } from "@use-funnel/react-router";
 import { useAtom } from "jotai";
 import React, { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
+import { desiredGenderAtom } from "@/atoms/desiredGender";
 
 const ProfileVerificationPage: React.FC = () => {
-  const [gender, setGender] = useAtom(userGender);
-  const [viewer, setViewer] = useAtom(viewerSelf);
+  const [desiredGender, setDesiredGender] = useAtom(desiredGenderAtom);
+  const [viewer, setViewer] = useAtom(viewerSelfAtom);
   const funnel = useFunnel<{
     gender: { gender?: Gender };
     verify: { gender?: Gender };
   }>({
     id: "verify",
     initial: {
-      step: gender ? "verify" : "gender",
-      context: { ...(gender && { gender }) },
+      step: "gender",
+      context: { ...(desiredGender && { gender: desiredGender }) },
     },
   });
   const navigate = useNavigate();
   const uuid = useUserUuid();
 
-  const { data, isLoading: isVerificationLoading } = useViewerVerification(
-    uuid,
-    gender
-  );
+  const { data, isLoading: isVerificationLoading } =
+    useViewerVerification(uuid);
   const verificationCode: number | null = useMemo(
     () => Number(data?.verificationCode ?? null) || null,
     [data]
   );
 
   const { data: viewerResponse } = useViewerSelf(uuid, {
-    refetchInterval: !!gender && 1000,
+    refetchInterval: 1000,
   });
 
   useEffect(() => {
@@ -54,7 +52,7 @@ const ProfileVerificationPage: React.FC = () => {
   }, [viewerResponse, setViewer, navigate, viewer]);
 
   const handleGenderSelect = (gender: Gender) => {
-    setGender(gender);
+    setDesiredGender(gender);
     funnel.history.push("verify", { gender });
   };
 

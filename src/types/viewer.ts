@@ -20,7 +20,6 @@ export interface PurchasedProfileResponse extends ProfileContactResponse {
 export interface ViewerResponse {
   id: number;
   uuid: string;
-  gender: Gender;
   ticket: number;
   usedTicket: number;
   updatedTime: string;

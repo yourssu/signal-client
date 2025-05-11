@@ -1,9 +1,9 @@
 import { ViewerResponse } from "@/types/viewer";
 import { atomWithStorage } from "jotai/utils";
 
-export const viewerSelf = atomWithStorage<ViewerResponse | null>(
+export const viewerSelfAtom = atomWithStorage<ViewerResponse | null>(
   "viewer.self",
   null,
   undefined,
-  { getOnInit: true },
+  { getOnInit: true }
 );
