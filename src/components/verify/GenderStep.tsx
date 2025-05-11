@@ -15,7 +15,7 @@ const GenderStep: React.FC<GenderStepProps> = ({ onSelect }) => {
       <div className="flex flex-col items-start w-full px-4">
         {/* Apply Figma text style: Pretendard, 600, 24px, #404040 */}
         <h2 className="text-[24px] font-semibold text-[#404040]">
-          <span className="text-primary">시그널을 보낼 성별</span>을
+          <span className="text-primary">본인의 성별</span>을
           <br />
           선택해주세요
         </h2>

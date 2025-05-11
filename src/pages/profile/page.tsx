@@ -7,14 +7,15 @@ import { useUserUuid } from "@/hooks/useUserUuid";
 import TopBar from "@/components/TopBar";
 import { SaveDrawer } from "@/components/profile/SaveDrawer";
 import { saveProfileAtom, savedProfilesAtom } from "@/atoms/viewerProfiles";
-import { desiredGenderAtom } from "@/atoms/desiredGender";
 import { SwipeableProfileCard } from "@/components/profile/SwipeableProfileCard";
 import { useViewerSelf } from "@/hooks/queries/viewers";
+import { userGenderAtom } from "@/atoms/userGender";
 
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
   const uuid = useUserUuid();
-  const desiredGender = useAtomValue(desiredGenderAtom);
+  const gender = useAtomValue(userGenderAtom);
+  const desiredGender = gender === "MALE" ? "FEMALE" : "MALE";
   const { data: viewerSelf, isLoading } = useViewerSelf(uuid);
   const ticketCount = (viewerSelf?.ticket ?? 0) - (viewerSelf?.usedTicket ?? 0);
   const {

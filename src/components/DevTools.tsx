@@ -1,4 +1,3 @@
-import { desiredGenderAtom } from "@/atoms/desiredGender";
 import { userGenderAtom } from "@/atoms/userGender";
 import { userProfileAtom } from "@/atoms/userProfile";
 import { userUuidAtom } from "@/atoms/userUuid";
@@ -30,7 +29,6 @@ const resetData = () => {
 
 export const DevTools = () => {
   const userUuid = useAtomValue(userUuidAtom);
-  const desiredGender = useAtomValue(desiredGenderAtom);
   const userGender = useAtomValue(userGenderAtom);
   const userProfile = useAtomValue(userProfileAtom);
   const viewerSelf = useAtomValue(viewerSelfAtom);
@@ -113,7 +111,6 @@ export const DevTools = () => {
             </div>
             <div>
               <h1 className="font-medium text-lg">VIEWER</h1>
-              <p>desiredGender: {desiredGender}</p>
               <p>self</p>
               <pre className="whitespace-pre-wrap break-all">
                 {JSON.stringify(viewerSelf)}

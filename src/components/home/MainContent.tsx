@@ -48,7 +48,7 @@ const MainContent = ({ profileRegistered, verifyNeeded }: MainContentProps) => {
         </Link>
 
         <Link
-          to={verifyNeeded ? "/verify" : "/gender"}
+          to={verifyNeeded ? "/verify" : "/profile"}
           className={cn(
             buttonVariants({ variant: "default" }),
             "h-14 text-xl rounded-2xl bg-white text-pink hover:bg-white/90",
