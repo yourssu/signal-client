@@ -1,5 +1,5 @@
 import { desiredGenderAtom } from "@/atoms/desiredGender";
-import TopBar from "@/components/home/TopBar";
+import TopBar from "@/components/TopBar";
 import GenderStep from "@/components/verify/GenderStep";
 import { Gender } from "@/types/profile";
 import { useSetAtom } from "jotai";

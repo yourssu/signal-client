@@ -1,5 +1,5 @@
 import React from "react";
-import TopBar from "@/components/home/TopBar";
+import TopBar from "@/components/TopBar";
 import MainContent from "@/components/home/MainContent";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { useUserUuid } from "@/hooks/useUserUuid";

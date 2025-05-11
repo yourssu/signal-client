@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAtomValue } from "jotai";
 import { Button, buttonVariants } from "@/components/ui/button";
-import TopBar from "@/components/home/TopBar";
+import TopBar from "@/components/TopBar";
 import { savedProfilesAtom } from "@/atoms/viewerProfiles";
 import { ProfileResponse } from "@/types/profile";
 import { cn } from "@/lib/utils";

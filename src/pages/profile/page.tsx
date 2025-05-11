@@ -4,7 +4,7 @@ import { useSetAtom, useAtomValue } from "jotai";
 import { useCountProfile, useRandomProfile } from "@/hooks/queries/profiles";
 import { Button } from "@/components/ui/button";
 import { useUserUuid } from "@/hooks/useUserUuid";
-import TopBar from "@/components/home/TopBar";
+import TopBar from "@/components/TopBar";
 import { SaveDrawer } from "@/components/profile/SaveDrawer";
 import { saveProfileAtom, savedProfilesAtom } from "@/atoms/viewerProfiles";
 import { desiredGenderAtom } from "@/atoms/desiredGender";

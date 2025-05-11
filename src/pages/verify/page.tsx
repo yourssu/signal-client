@@ -1,5 +1,5 @@
 import { viewerSelfAtom } from "@/atoms/viewerSelf";
-import TopBar from "@/components/home/TopBar";
+import TopBar from "@/components/TopBar";
 import { VerifyStep } from "@/components/verify/VerifyStep";
 import { useViewerSelf, useViewerVerification } from "@/hooks/queries/viewers";
 import { useUserUuid } from "@/hooks/useUserUuid";

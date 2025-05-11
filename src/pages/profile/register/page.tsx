@@ -19,7 +19,7 @@ import PersonalityStep from "@/components/register/PersonalityStep";
 import NicknameStep from "@/components/register/NicknameStep";
 import ContactStep from "@/components/register/ContactStep";
 import RegisterDoneStep from "@/components/register/RegisterDoneStep";
-import TopBar from "@/components/home/TopBar";
+import TopBar from "@/components/TopBar";
 import { Progress } from "@/components/ui/progress";
 import { userProfileAtom } from "@/atoms/userProfile";
 

@@ -6,7 +6,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import ProfileCard from "@/components/profile/ProfileCard";
 import { useUserUuid } from "@/hooks/useUserUuid";
 import { cn } from "@/lib/utils";
-import TopBar from "@/components/home/TopBar";
+import TopBar from "@/components/TopBar";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
   contactedProfilesAtom,
