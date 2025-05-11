@@ -15,8 +15,8 @@ const MainContent = ({ profileRegistered, verifyNeeded }: MainContentProps) => {
   const count = React.useMemo(() => data?.count ?? 0, [data?.count]);
 
   return (
-    <div className="flex flex-col items-center gap-16 justify-center flex-1 p-6 grow">
-      <div className="flex flex-col items-center justify-center gap-4 w-full max-w-[342px] grow">
+    <div className="flex flex-col items-center justify-center flex-1 p-6 grow">
+      <div className="flex flex-col items-center justify-center gap-4 w-full grow">
         <div className="flex flex-col items-center gap-2">
           <h1 className="text-3xl font-semibold text-center leading-tight tracking-tight text-black-700">
             당신의 시그널을
@@ -33,7 +33,7 @@ const MainContent = ({ profileRegistered, verifyNeeded }: MainContentProps) => {
         </div>
       </div>
 
-      <div className="flex flex-col items-stretch gap-4 w-full max-w-[342px]">
+      <div className="flex flex-col items-stretch gap-4 w-full">
         <Link
           to="/profile/register"
           className={cn(
