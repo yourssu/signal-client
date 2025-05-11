@@ -40,7 +40,7 @@ const MainContent = ({ profileRegistered, verifyNeeded }: MainContentProps) => {
             buttonVariants({ variant: "secondary" }),
             "h-14 text-xl rounded-2xl bg-light-pink text-pink hover:bg-light-pink/90 shadow-sm",
             profileRegistered &&
-              "pointer-events-none opacity-50 cursor-not-allowed",
+              "pointer-events-none opacity-50 cursor-not-allowed"
           )}
           aria-disabled={profileRegistered}
         >
@@ -48,10 +48,10 @@ const MainContent = ({ profileRegistered, verifyNeeded }: MainContentProps) => {
         </Link>
 
         <Link
-          to={verifyNeeded ? "/verify" : "/profile"}
+          to={verifyNeeded ? "/verify" : "/gender"}
           className={cn(
             buttonVariants({ variant: "default" }),
-            "h-14 text-xl rounded-2xl bg-white text-pink hover:bg-white/90",
+            "h-14 text-xl rounded-2xl bg-white text-pink hover:bg-white/90"
           )}
         >
           시그널 보내기
