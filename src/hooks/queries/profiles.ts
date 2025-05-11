@@ -1,5 +1,12 @@
-import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import {
+  keepPreviousData,
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  UseQueryOptions,
+} from "@tanstack/react-query";
+import {
+  Gender,
   NicknameCreatedResponse,
   NicknameGeneratedRequest,
   ProfileContactResponse,
@@ -13,7 +20,12 @@ import { SignalError } from "@/lib/error";
 
 const profileBase = `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/profiles`;
 
-export const useCountProfile = () => {
+export const useCountProfile = (
+  queryOptions?: Omit<
+    UseQueryOptions<ProfileCountResponse, SignalError>,
+    "queryKey" | "queryFn"
+  >
+) => {
   return useQuery({
     queryKey: ["profiles", "count"],
     queryFn: async () => {
@@ -27,14 +39,31 @@ export const useCountProfile = () => {
         return res.result;
       }
     },
+    ...queryOptions,
   });
 };
 
-export const useRandomProfile = (uuid: string) => {
+export const useRandomProfile = (
+  uuid: string,
+  desiredGender: Gender,
+  excludeProfiles?: number[],
+  queryOptions?: Omit<
+    UseQueryOptions<ProfileResponse, SignalError>,
+    "queryKey" | "queryFn"
+  >
+) => {
   return useQuery({
     queryKey: ["profiles", uuid],
     queryFn: async () => {
-      const response = await fetch(`${profileBase}/random?uuid=${uuid}`);
+      const params = new URLSearchParams();
+      params.append("uuid", uuid);
+      params.append("gender", desiredGender);
+      if (excludeProfiles) {
+        params.append("excludeProfiles", excludeProfiles.join(","));
+      }
+      const response = await fetch(
+        `${profileBase}/random?${params.toString()}`
+      );
       const res = (await response.json()) as SignalResponse<ProfileResponse>;
       if (!("result" in res)) {
         throw new SignalError(res.message, res.status, res.timestamp);
@@ -45,10 +74,20 @@ export const useRandomProfile = (uuid: string) => {
     enabled: !!uuid,
     placeholderData: keepPreviousData,
     staleTime: Infinity,
+    ...queryOptions,
   });
 };
 
-export const useCreateProfile = () => {
+export const useCreateProfile = (
+  mutationOptions?: Omit<
+    UseMutationOptions<
+      ProfileContactResponse,
+      SignalError,
+      ProfileCreatedRequest
+    >,
+    "mutationFn"
+  >
+) => {
   return useMutation({
     mutationFn: async (data: ProfileCreatedRequest) => {
       const response = await fetch(profileBase, {
@@ -66,10 +105,20 @@ export const useCreateProfile = () => {
         return res.result;
       }
     },
+    ...mutationOptions,
   });
 };
 
-export const useGenerateNickname = () => {
+export const useGenerateNickname = (
+  mutationOptions?: Omit<
+    UseMutationOptions<
+      NicknameCreatedResponse,
+      SignalError,
+      NicknameGeneratedRequest
+    >,
+    "mutationFn"
+  >
+) => {
   return useMutation({
     mutationFn: async (data: NicknameGeneratedRequest) => {
       const response = await fetch(`${profileBase}/nickname`, {
@@ -87,10 +136,20 @@ export const useGenerateNickname = () => {
         return res.result;
       }
     },
+    ...mutationOptions,
   });
 };
 
-export const useConsumeTicket = () => {
+export const useConsumeTicket = (
+  mutationOptions?: Omit<
+    UseMutationOptions<
+      ProfileContactResponse,
+      SignalError,
+      TicketConsumedRequest
+    >,
+    "mutationFn"
+  >
+) => {
   return useMutation({
     mutationFn: async (data: TicketConsumedRequest) => {
       const response = await fetch(`${profileBase}/contact`, {
@@ -108,5 +167,6 @@ export const useConsumeTicket = () => {
         return res.result;
       }
     },
+    ...mutationOptions,
   });
 };
