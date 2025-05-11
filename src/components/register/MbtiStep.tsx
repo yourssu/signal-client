@@ -47,8 +47,8 @@ const MbtiStep: React.FC<MbtiStepProps> = ({ onSubmit }) => {
   return (
     // Main container - Based on Figma Frame 'Content' (1659:1810)
     <div className="flex flex-col items-center pt-10 w-full px-4">
-      <div className="flex flex-col items-stretch gap-[43px] w-full grow">
-        <div className="flex flex-col items-start gap-[10px]">
+      <div className="flex flex-col items-stretch gap-10 w-full grow">
+        <div className="flex flex-col items-start gap-2.5">
           {/* Progress Indicator - Based on 1412:6567 */}
           <p className="text-xs text-muted-foreground">3 / 6</p>
           {/* Using muted-foreground for #525252 */}
@@ -68,7 +68,7 @@ const MbtiStep: React.FC<MbtiStepProps> = ({ onSubmit }) => {
           maxLength={4} // Enforce max length
           required
           // Styling based on Figma: text-2xl, text-center, placeholder color, bottom border
-          className="w-full h-[50px] text-2xl px-2.5" // Adjusted styles
+          className="w-full h-12 text-2xl px-2.5" // Adjusted styles
           placeholder="MBTI 입력 ex.ENFP" // Placeholder from Figma
         />
       </div>
@@ -76,10 +76,10 @@ const MbtiStep: React.FC<MbtiStepProps> = ({ onSubmit }) => {
         onClick={handleSubmit}
         disabled={!isValid} // Disable button if input is not valid
         className={cn(
-          `w-full h-[56px] rounded-2xl text-lg font-medium transition-colors`,
+          `w-full h-14 rounded-2xl text-lg font-medium transition-colors`,
           isValid
             ? "bg-primary text-primary-foreground hover:bg-primary/90"
-            : "bg-gray-300 text-white cursor-not-allowed",
+            : "bg-gray-300 text-white cursor-not-allowed"
         )}
       >
         입력 완료

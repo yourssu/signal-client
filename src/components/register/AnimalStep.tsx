@@ -119,7 +119,7 @@ const AnimalStep: React.FC<AnimalStepProps> = ({ gender, onSelect }) => {
     // Main container - Adjusted layout based on Figma Frame 1000011952
     <div className="flex flex-col items-center pt-10 gap-6 w-full overflow-visible">
       {/* Top section: Progress and Title - Based on Frame 1426 */}
-      <div className="flex flex-col items-start gap-2 w-full">
+      <div className="flex flex-col items-start gap-2 w-full px-4">
         <p className="text-xs text-muted-foreground">2 / 6</p>
         <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line">
           자신을 닮은
@@ -158,18 +158,13 @@ const AnimalStep: React.FC<AnimalStepProps> = ({ gender, onSelect }) => {
             </div>
           ))}
         </div>
-        {/* Selected Animal Name Display - Based on Frame 1000011906 */}
-        <div className="flex justify-center items-center h-[43px] min-w-[146px] px-4 rounded-full bg-white/50 backdrop-blur-md">
-          {" "}
-          {/* Using bg-white/50 for rgba(255, 255, 255, 0.51) */}
+        <div className="flex justify-center items-center h-10 px-4 rounded-full bg-white/50 backdrop-blur-md">
           <p className="text-lg font-medium text-primary">
-            {" "}
-            {/* Using primary for #EE518A */}
             {animals[gender][selectedIndex].name}상
           </p>
         </div>
         {/* Pagination Dots - Based on Frame 1000011897 */}
-        <div className="flex justify-center items-center gap-[9px]">
+        <div className="flex justify-center items-center gap-2">
           {animals[gender].map((_, index) => (
             <div
               key={index}
@@ -182,12 +177,10 @@ const AnimalStep: React.FC<AnimalStepProps> = ({ gender, onSelect }) => {
       </div>
 
       {/* Confirmation Button - Based on 1421:4439 */}
-      <div className="mt-auto pb-10 px-4 w-full max-w-[375px]">
-        {" "}
-        {/* Push button to bottom */}
+      <div className="px-4 w-full grow flex items-end">
         <Button
           onClick={handleConfirmSelection}
-          className="w-full h-[56px] bg-primary text-primary-foreground rounded-2xl text-lg font-medium hover:bg-primary/90" // Adjusted styles
+          className="w-full h-14 bg-primary text-primary-foreground rounded-2xl text-lg font-medium hover:bg-primary/90" // Adjusted styles
         >
           선택 완료
         </Button>
