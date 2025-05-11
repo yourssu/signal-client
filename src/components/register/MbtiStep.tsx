@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
-import { cn } from "@/lib/utils";
+import { cn, whenPressEnter } from "@/lib/utils";
 import { Mbti } from "@/types/profile"; // Assuming isValidMbti exists or needs creation
 import React, { useState, useMemo } from "react"; // Import useMemo
 
@@ -36,6 +36,9 @@ const MbtiStep: React.FC<MbtiStepProps> = ({ onSubmit }) => {
     onSubmit(mbtiInput.toUpperCase() as Mbti); // Submit validated and formatted MBTI
   };
 
+  const submitOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) =>
+    whenPressEnter(e, handleSubmit);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Allow only valid MBTI characters and limit length
     const value = e.target.value.toUpperCase();
@@ -67,6 +70,7 @@ const MbtiStep: React.FC<MbtiStepProps> = ({ onSubmit }) => {
           name="mbti"
           value={mbtiInput}
           onChange={handleChange}
+          onKeyDown={submitOnEnter}
           maxLength={4} // Enforce max length
           required
           // Styling based on Figma: text-2xl, text-center, placeholder color, bottom border

@@ -5,7 +5,7 @@ import { Sparkles } from "lucide-react";
 import { useGenerateNickname } from "@/hooks/queries/profiles";
 import { createPortal } from "react-dom";
 import generatingImg from "@/assets/register/generating.png";
-import { cn } from "@/lib/utils";
+import { cn, whenPressEnter } from "@/lib/utils";
 
 interface NicknameStepProps {
   onSubmit: (nickname: string) => void;
@@ -27,6 +27,9 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
     if (!isValid) return;
     onSubmit(nickname.trim());
   };
+
+  const submitOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) =>
+    whenPressEnter(e, handleSubmit);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
@@ -64,6 +67,7 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
             name="nickname"
             value={nickname}
             onChange={handleChange}
+            onKeyDown={submitOnEnter}
             required
             // Styling based on Figma: text-2xl, text-center, placeholder color, bottom border
             className="w-full h-12 text-2xl px-2.5" // Adjusted styles

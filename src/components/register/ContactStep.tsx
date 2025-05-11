@@ -1,24 +1,43 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
+import { cn, whenPressEnter } from "@/lib/utils";
 import React, { useState, useMemo } from "react"; // Import useMemo
 
 interface ContactStepProps {
   onSubmit: (contact: string) => void;
 }
 
+const PHONE_REGEX = /^010\d{8}$/; // Regex to validate phone numbers
+const INSTAGRAM_REGEX = /^^@[a-zA-Z0-9._]{1,30}$/; // Regex to validate Instagram IDs
+
+const isValidContact = (contact: string): boolean => {
+  // Check if the contact is a valid phone number or Instagram ID
+  return PHONE_REGEX.test(contact) || INSTAGRAM_REGEX.test(contact);
+};
+
 const ContactStep: React.FC<ContactStepProps> = ({ onSubmit }) => {
   const [contact, setContact] = useState<string>(""); // Initialize with empty string
+  const [isValid, setIsValid] = useState<boolean | null>(null); // State to track validity
 
   // Validation: Check if contact is not empty
-  const isValid = useMemo(() => contact.trim() !== "", [contact]);
+  const isEmpty = useMemo(() => contact.trim() === "", [contact]);
 
   const handleSubmit = () => {
-    if (!isValid) return;
+    handleValidation(contact);
+    if (isEmpty || !isValid) return;
     onSubmit(contact.trim());
   };
 
+  const handleValidation = (value: string) => {
+    setIsValid(isValidContact(value));
+  };
+
+  const submitOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) =>
+    whenPressEnter(e, handleSubmit);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContact(e.target.value);
+    if (isEmpty) setIsValid(null);
   };
 
   return (
@@ -47,22 +66,30 @@ const ContactStep: React.FC<ContactStepProps> = ({ onSubmit }) => {
             name="contact"
             value={contact}
             onChange={handleChange}
+            onKeyDown={submitOnEnter}
+            onBlur={(e) => handleValidation(e.target.value)}
             required
             className="w-full h-12 text-2xl px-2.5"
             placeholder="ex. @yourssu_official"
           />
-          <p className="text-sm text-muted-foreground">
-            전화번호는 <strong>010-XXXX-XXXX</strong> 형태,
-            <br />
-            인스타그램 아이디는 앞에 <strong>@</strong>를 붙여 입력해주세요.
+          <p
+            className={cn(
+              "text-sm text-muted-foreground",
+              isValid === false &&
+                !isEmpty &&
+                "text-red-500 font-bold animate-shake",
+            )}
+          >
+            전화번호는 숫자만, 인스타그램 아이디는 앞에 <strong>@</strong>를
+            붙여 입력해주세요.
           </p>
         </div>
       </div>
       <Button
         onClick={handleSubmit}
-        disabled={!isValid} // Disable button if validation fails
+        disabled={!isValid || isEmpty} // Disable button if validation fails
         className={`w-full h-14 rounded-2xl text-lg font-medium transition-colors ${
-          isValid
+          isValid && !isEmpty
             ? "bg-primary text-primary-foreground hover:bg-primary/90" // Enabled state (Pink)
             : "bg-gray-300 text-white cursor-not-allowed" // Disabled state (Gray - #D1D5DC)
         }`}

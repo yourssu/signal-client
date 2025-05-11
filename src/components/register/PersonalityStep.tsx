@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
+import { whenPressEnter } from "@/lib/utils";
 import React, { useState, useMemo } from "react"; // Import useMemo
 
 interface PersonalityStepProps {
@@ -20,6 +21,21 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({ onSubmit }) => {
     // Submit only non-empty traits
     onSubmit(traits.filter((trait) => trait.trim() !== ""));
   };
+
+  const proceedWithEnter = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) =>
+    whenPressEnter(e, () => {
+      if (index < traits.length - 1) {
+        const nextInput = document.getElementById(`personality-${index + 1}`);
+        if (nextInput) {
+          nextInput.focus();
+        }
+      } else {
+        handleSubmit();
+      }
+    });
 
   const handleChange = (index: number, value: string) => {
     setTraits((prev) => {
@@ -52,6 +68,8 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({ onSubmit }) => {
               name={`personality-${index}`}
               value={trait}
               onChange={(e) => handleChange(index, e.target.value)}
+              onKeyDown={(e) => proceedWithEnter(index, e)}
+              maxLength={20}
               required={index < 2} // Require at least the first two
               // Styling based on Figma INPUT instances (style_TGM91S, fill_HGA9Q2, stroke_BLRCWW)
               className="w-full h-12 text-lg font-medium px-2.5 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500" // Adjusted styles, placeholder style
