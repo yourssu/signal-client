@@ -3,7 +3,7 @@ import { userGenderAtom } from "@/atoms/userGender";
 import { userProfileAtom } from "@/atoms/userProfile";
 import { userUuidAtom } from "@/atoms/userUuid";
 import { viewerSelfAtom } from "@/atoms/viewerSelf";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -121,7 +121,13 @@ export const DevTools = () => {
         </div>
         <DrawerFooter>
           <Button onClick={resetData}>데이터 초기화</Button>
-          <Button>제안 & 버그 신고</Button>
+          <a
+            href="https://www.notion.so/yourssu/Signal-QA-1ef6915d697880d8bf4cfef48e6aeb19"
+            target="_blank"
+            className={buttonVariants({})}
+          >
+            제안 & 버그 신고
+          </a>
           <DrawerClose asChild>
             <Button variant="outline">닫기</Button>
           </DrawerClose>
