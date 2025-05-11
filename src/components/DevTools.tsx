@@ -21,7 +21,7 @@ import { Code } from "lucide-react";
 import { useRef } from "react";
 import { createPortal } from "react-dom";
 
-const IS_LOCAL = import.meta.env.NODE_ENV === "development";
+const IS_LOCAL = !import.meta.env.VITE_SHA;
 
 const resetData = () => {
   localStorage.clear();
