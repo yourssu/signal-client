@@ -70,7 +70,17 @@ export const DevTools = () => {
         <DrawerHeader>
           <DrawerTitle>SIGNAL DEVTOOLS</DrawerTitle>
           <DrawerDescription>
-            {IS_LOCAL ? "LOCAL TEST BUILD" : `SHA: ${import.meta.env.VITE_SHA}`}
+            {IS_LOCAL ? (
+              "LOCAL TEST BUILD"
+            ) : (
+              <a
+                href={`https://github.com/yourssu/yourssu-signal-client/commit/${import.meta.env.VITE_SHA}`}
+                target="_blank"
+                className="underline"
+              >
+                REV: {import.meta.env.VITE_SHA.substring(0, 7)}
+              </a>
+            )}
             <br />
             {userUuid && `UUID: ${userUuid}`}
           </DrawerDescription>
