@@ -109,6 +109,14 @@ export const DevTools = () => {
                 {JSON.stringify(viewerSelf)}
               </pre>
             </div>
+            <div>
+              <h1 className="font-medium text-lg">ENV</h1>
+              <p>NODE_ENV: {import.meta.env.NODE_ENV}</p>
+              <p>MODE: {import.meta.env.MODE}</p>
+              <p>API_BASE_URL: {import.meta.env.VITE_API_BASE_URL}</p>
+              <p>SHA: {import.meta.env.VITE_SHA}</p>
+              <p>TICKET_COST: {import.meta.env.TICKET_COST}</p>
+            </div>
           </details>
         </div>
         <DrawerFooter>
