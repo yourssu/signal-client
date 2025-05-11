@@ -31,11 +31,13 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({ onSubmit }) => {
 
   return (
     // Main container - Based on Figma Frame 1000011957
-    <div className="flex flex-col items-center pt-10 gap-[159px] w-full px-4">
+    <div className="flex flex-col items-center pt-10 gap-[160px] w-full">
       <div className="flex flex-col gap-[43px] w-full grow">
-        <div className="flex flex-col items-start gap-[10px]">
-          <p className="text-xs text-muted-foreground">4 / 6</p>
-          <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line">
+        <div className="flex flex-col items-start gap-2.5">
+          <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
+            4 / 6
+          </p>
+          <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
             본인을 잘 드러내는
             <br />
             <span className="text-primary">특징을 입력해주세요</span>
@@ -52,7 +54,7 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({ onSubmit }) => {
               onChange={(e) => handleChange(index, e.target.value)}
               required={index < 2} // Require at least the first two
               // Styling based on Figma INPUT instances (style_TGM91S, fill_HGA9Q2, stroke_BLRCWW)
-              className="w-full h-[50px] text-lg font-medium px-2.5" // Adjusted styles, placeholder style
+              className="w-full h-12 text-lg font-medium px-2.5 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500" // Adjusted styles, placeholder style
               placeholder="특징 입력 ex.숭실대 카리나" // Placeholder from Figma
             />
           ))}
@@ -61,7 +63,7 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({ onSubmit }) => {
       <Button
         onClick={handleSubmit}
         disabled={!isValid} // Disable button if validation fails
-        className={`w-full h-[56px] rounded-2xl text-lg font-medium transition-colors ${
+        className={`w-full h-14 rounded-2xl text-lg font-medium transition-colors ${
           isValid
             ? "bg-primary text-primary-foreground hover:bg-primary/90" // Enabled state (Pink)
             : "bg-gray-300 text-white cursor-not-allowed" // Disabled state (Gray - #D1D5DC)

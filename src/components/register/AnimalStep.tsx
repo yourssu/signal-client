@@ -119,9 +119,11 @@ const AnimalStep: React.FC<AnimalStepProps> = ({ gender, onSelect }) => {
     // Main container - Adjusted layout based on Figma Frame 1000011952
     <div className="flex flex-col items-center pt-10 gap-6 w-full overflow-visible">
       {/* Top section: Progress and Title - Based on Frame 1426 */}
-      <div className="flex flex-col items-start gap-2 w-full px-4">
-        <p className="text-xs text-muted-foreground">2 / 6</p>
-        <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line">
+      <div className="flex flex-col items-start gap-2 w-full">
+        <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
+          2 / 6
+        </p>
+        <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
           자신을 닮은
           <br />
           <span className="text-primary">동물을 골라주세요</span>
@@ -129,7 +131,7 @@ const AnimalStep: React.FC<AnimalStepProps> = ({ gender, onSelect }) => {
       </div>
 
       {/* Animal Carousel Section - Based on Frame 1000011950 */}
-      <div className="-mx-6 self-stretch flex flex-col items-center gap-5">
+      <div className="-mx-6 self-stretch flex flex-col items-center gap-5 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500">
         <div
           ref={scrollContainerRef}
           className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory items-center h-fit w-full no-scrollbar"
@@ -177,7 +179,7 @@ const AnimalStep: React.FC<AnimalStepProps> = ({ gender, onSelect }) => {
       </div>
 
       {/* Confirmation Button - Based on 1421:4439 */}
-      <div className="px-4 w-full grow flex items-end">
+      <div className="w-full grow flex items-end">
         <Button
           onClick={handleConfirmSelection}
           className="w-full h-14 bg-primary text-primary-foreground rounded-2xl text-lg font-medium hover:bg-primary/90" // Adjusted styles

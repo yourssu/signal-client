@@ -46,14 +46,16 @@ const MbtiStep: React.FC<MbtiStepProps> = ({ onSubmit }) => {
 
   return (
     // Main container - Based on Figma Frame 'Content' (1659:1810)
-    <div className="flex flex-col items-center pt-10 w-full px-4">
+    <div className="flex flex-col items-center pt-10 w-full">
       <div className="flex flex-col items-stretch gap-10 w-full grow">
         <div className="flex flex-col items-start gap-2.5">
           {/* Progress Indicator - Based on 1412:6567 */}
-          <p className="text-xs text-muted-foreground">3 / 6</p>
+          <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
+            3 / 6
+          </p>
           {/* Using muted-foreground for #525252 */}
           {/* Title - Based on 1412:6569 */}
-          <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line">
+          <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
             당신의 성격이 궁금해요!
             <br />
             <span className="text-primary">MBTI를 적어주세요</span>
@@ -68,7 +70,7 @@ const MbtiStep: React.FC<MbtiStepProps> = ({ onSubmit }) => {
           maxLength={4} // Enforce max length
           required
           // Styling based on Figma: text-2xl, text-center, placeholder color, bottom border
-          className="w-full h-12 text-2xl px-2.5" // Adjusted styles
+          className="w-full h-12 text-2xl px-2.5 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500" // Adjusted styles
           placeholder="MBTI 입력 ex.ENFP" // Placeholder from Figma
         />
       </div>
