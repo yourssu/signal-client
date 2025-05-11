@@ -46,7 +46,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         <div className="flex flex-col items-center w-full">
           <AnimalImage
             animalType={profile.animal}
-            className="w-full max-w-[230px]"
+            className="w-full max-h-[200px] object-contain"
           />
         </div>
         <div className="flex flex-col items-stretch w-full">
