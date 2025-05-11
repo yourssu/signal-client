@@ -20,16 +20,18 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   return (
     <div
       className={cn(
-        "profile-card-background rounded-[30px] shadow-md overflow-hidden flex flex-col justify-center items-center gap-[8.61px] p-[20px_20px_15px] select-none",
+        "profile-card-background rounded-4xl shadow-md overflow-hidden flex flex-col justify-center items-center gap-2 p-5 select-none",
         className
       )}
     >
-      <div className="flex flex-col items-center gap-[15px] w-[245.47px]">
+      <div className="flex flex-col items-center gap-4">
         <Badge
           variant="outline"
           className={cn(
-            "profile-badge rounded-[50px] px-[13px] py-[4px] flex justify-center items-center gap-[3px]",
-            profile.gender === "MALE" ? "text-blue" : "text-primary"
+            "profile-badge rounded-full px-3 py-1 flex justify-center items-center gap-1",
+            profile.gender === "MALE"
+              ? "border-blue/50 text-blue"
+              : "border-primary/50 text-primary"
           )}
         >
           {animalDisplayMap[profile.animal]}상
@@ -41,40 +43,32 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           />
           {profile.mbti}
         </Badge>
-        <div className="flex flex-col items-stretch gap-[-5px] w-full">
-          <div className="flex flex-col items-stretch w-full">
-            <div className="flex flex-col items-center w-full">
-              <AnimalImage animalType={profile.animal} className="w-full" />
-            </div>
-          </div>
-          <div className="flex flex-col items-stretch gap-[5px] w-full">
-            <div className="flex flex-col items-stretch w-full">
-              <div className="px-[6.89px] flex flex-col items-stretch gap-[7.75px] w-full">
-                <h3 className="text-[#404040] text-[24.97px] font-semibold leading-[1.3em] tracking-[-1%] text-center w-full">
-                  {profile.nickname}
-                </h3>
-              </div>
-            </div>
-
+        <div className="flex flex-col items-center w-full">
+          <AnimalImage
+            animalType={profile.animal}
+            className="w-full max-w-[150px] sm:max-w-[230px]"
+          />
+        </div>
+        <div className="flex flex-col items-stretch w-full">
+          <div className="flex flex-col items-stretch gap-3 w-full">
+            <h3 className="text-foreground text-xl font-semibold leading-5 text-center w-full">
+              {profile.nickname}
+            </h3>
             {contact ? (
-              <div className="w-full flex flex-row justify-center items-center gap-[4px] px-[16px] py-4 bg-[#FFF2F7] border border-[rgba(238,81,138,0.2)] rounded-[16px]">
-                <span className="text-[18px] font-medium leading-[1.3em] tracking-[-1%] text-[#EE518A] text-center">
+              <div className="w-full flex flex-row justify-center items-center gap-1 p-4 bg-[#FFF2F7] border border-[rgba(238,81,138,0.2)] rounded-2xl">
+                <span className="text-lg font-medium leading-5 text-primary text-center">
                   {contact}
                 </span>
               </div>
             ) : (
-              <div className="flex flex-col items-stretch gap-[10px] p-[8.61px_10.34px] w-full">
+              <div className="flex flex-col items-stretch gap-2 w-full">
                 {profile.introSentences.map((sentence, index) => (
-                  <div
+                  <p
                     key={index}
-                    className="flex flex-row justify-stretch items-stretch gap-[8.61px] w-full"
+                    className="text-foreground font-medium leading-5 text-start w-full"
                   >
-                    <div className="flex flex-row justify-stretch items-stretch gap-[8.61px] w-full">
-                      <p className="text-[#525252] text-[16px] font-medium leading-[1.3em] tracking-[-1%] text-left w-full">
-                        {sentence}
-                      </p>
-                    </div>
-                  </div>
+                    {sentence}
+                  </p>
                 ))}
               </div>
             )}
