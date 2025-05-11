@@ -16,7 +16,7 @@ export const useViewerVerification = (
   queryOptions?: Omit<
     UseQueryOptions<VerificationResponse, SignalError>,
     "queryKey" | "queryFn"
-  >
+  >,
 ) => {
   return useQuery({
     queryKey: ["viewer", "verification", uuid],
@@ -47,7 +47,7 @@ export const useIssueTicket = (
   mutationOptions?: Omit<
     UseMutationOptions<ViewerResponse, SignalError, TicketIssuedRequest>,
     "mutationFn"
-  >
+  >,
 ) => {
   return useMutation({
     mutationFn: async (data: TicketIssuedRequest) => {
@@ -74,7 +74,7 @@ export const useViewerSelf = (
   queryOptions?: Omit<
     UseQueryOptions<ViewerResponse, SignalError>,
     "queryKey" | "queryFn"
-  >
+  >,
 ) => {
   return useQuery({
     queryKey: ["viewer", "uuid", uuid],

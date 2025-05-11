@@ -21,7 +21,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     <div
       className={cn(
         "profile-card-background rounded-4xl shadow-md overflow-hidden flex flex-col justify-center items-center gap-2 p-5 select-none",
-        className
+        className,
       )}
     >
       <div className="flex flex-col items-center gap-4">
@@ -31,14 +31,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             "profile-badge rounded-full px-3 py-1 flex justify-center items-center gap-1",
             profile.gender === "MALE"
               ? "border-blue/50 text-blue"
-              : "border-primary/50 text-primary"
+              : "border-primary/50 text-primary",
           )}
         >
           {animalDisplayMap[profile.animal]}상
           <Heart
             className={cn(
               "size-2",
-              profile.gender === "MALE" ? "fill-blue" : "fill-primary"
+              profile.gender === "MALE" ? "fill-blue" : "fill-primary",
             )}
           />
           {profile.mbti}

@@ -5,5 +5,5 @@ export const desiredGenderAtom = atomWithStorage<Gender | null>(
   "viewer.desiredGender",
   null,
   undefined,
-  { getOnInit: true }
+  { getOnInit: true },
 );

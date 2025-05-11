@@ -39,7 +39,7 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
         onSuccess: (data) => {
           setNickname(data.nickname);
         },
-      }
+      },
     );
   };
 
@@ -97,13 +97,13 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
         <div
           className={cn(
             "fixed inset-0 flex flex-col items-center justify-center bg-black/50 text-white transition-opacity opacity-0 duration-500",
-            isPending ? "opacity-100 delay-500" : "hidden"
+            isPending ? "opacity-100 delay-500" : "hidden",
           )}
         >
           <img src={generatingImg} alt="Generating..." />
           닉네임을 생성 중이에요...
         </div>,
-        document.body
+        document.body,
       )}
     </div>
   );

@@ -16,7 +16,7 @@ const ProfileVerificationPage: React.FC = () => {
     useViewerVerification(uuid);
   const verificationCode: number | null = useMemo(
     () => Number(data?.verificationCode ?? null) || null,
-    [data]
+    [data],
   );
 
   const { data: viewerResponse } = useViewerSelf(uuid, {

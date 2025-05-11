@@ -5,5 +5,5 @@ export const userProfileAtom = atomWithStorage<ProfileContactResponse | null>(
   "user.profile",
   null,
   undefined,
-  { getOnInit: true }
+  { getOnInit: true },
 );

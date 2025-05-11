@@ -24,7 +24,7 @@ export const useCountProfile = (
   queryOptions?: Omit<
     UseQueryOptions<ProfileCountResponse, SignalError>,
     "queryKey" | "queryFn"
-  >
+  >,
 ) => {
   return useQuery({
     queryKey: ["profiles", "count"],
@@ -50,7 +50,7 @@ export const useRandomProfile = (
   queryOptions?: Omit<
     UseQueryOptions<ProfileResponse, SignalError>,
     "queryKey" | "queryFn"
-  >
+  >,
 ) => {
   return useQuery({
     queryKey: ["profiles", uuid],
@@ -62,7 +62,7 @@ export const useRandomProfile = (
         params.append("excludeProfiles", excludeProfiles.join(","));
       }
       const response = await fetch(
-        `${profileBase}/random?${params.toString()}`
+        `${profileBase}/random?${params.toString()}`,
       );
       const res = (await response.json()) as SignalResponse<ProfileResponse>;
       if (!("result" in res)) {
@@ -86,7 +86,7 @@ export const useCreateProfile = (
       ProfileCreatedRequest
     >,
     "mutationFn"
-  >
+  >,
 ) => {
   return useMutation({
     mutationFn: async (data: ProfileCreatedRequest) => {
@@ -117,7 +117,7 @@ export const useGenerateNickname = (
       NicknameGeneratedRequest
     >,
     "mutationFn"
-  >
+  >,
 ) => {
   return useMutation({
     mutationFn: async (data: NicknameGeneratedRequest) => {
@@ -148,7 +148,7 @@ export const useConsumeTicket = (
       TicketConsumedRequest
     >,
     "mutationFn"
-  >
+  >,
 ) => {
   return useMutation({
     mutationFn: async (data: TicketConsumedRequest) => {

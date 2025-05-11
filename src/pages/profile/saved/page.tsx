@@ -15,7 +15,7 @@ const SavedProfilesPage: React.FC = () => {
   // State for tracking the currently selected profile and its index
   const [currentIndex, setCurrentIndex] = useState(0);
   const [profile, setProfile] = useState<ProfileResponse | null>(
-    savedProfiles[0] || null
+    savedProfiles[0] || null,
   );
 
   // Refs for scroll container and profile items
@@ -46,7 +46,7 @@ const SavedProfilesPage: React.FC = () => {
       entries.forEach((entry) => {
         if (entry.isIntersecting && entry.intersectionRatio >= 0.75) {
           const index = profileRefs.current.findIndex(
-            (ref) => ref === entry.target
+            (ref) => ref === entry.target,
           );
           if (index !== -1) {
             setCurrentIndex(index);
@@ -54,7 +54,7 @@ const SavedProfilesPage: React.FC = () => {
         }
       });
     },
-    []
+    [],
   );
 
   // Set up Intersection Observer
@@ -150,7 +150,7 @@ const SavedProfilesPage: React.FC = () => {
               to="/profile"
               className={cn(
                 buttonVariants({ size: "xl" }),
-                "w-full rounded-3xl mt-auto"
+                "w-full rounded-3xl mt-auto",
               )}
             >
               시그널 보내러 가기

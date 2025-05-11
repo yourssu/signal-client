@@ -134,6 +134,6 @@ export const DevTools = () => {
         </DrawerFooter>
       </DrawerContent>
     </Drawer>,
-    document.body
+    document.body,
   );
 };

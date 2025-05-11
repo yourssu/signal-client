@@ -30,11 +30,11 @@ const ContactViewPage: React.FC = () => {
   const { mutateAsync } = useConsumeTicket();
   const contactedProfiles = useAtomValue(contactedProfilesAtom);
   const contactedProfile = contactedProfiles.find(
-    (profile) => profile.profileId === id
+    (profile) => profile.profileId === id,
   );
   const addContact = useSetAtom(contactProfileAtom);
   const [isConfirmed, setIsConfirmed] = useState(
-    contactedProfile !== undefined
+    contactedProfile !== undefined,
   );
   const [profileContact, setProfileContact] =
     useState<ProfileContactResponse | null>(contactedProfile ?? null);
@@ -112,7 +112,7 @@ const ContactViewPage: React.FC = () => {
               to={returnLink}
               className={cn(
                 buttonVariants({ size: "xl" }),
-                "w-full rounded-2xl"
+                "w-full rounded-2xl",
               )}
             >
               다른 시그널 보내기

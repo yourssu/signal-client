@@ -49,7 +49,7 @@ export function SaveDrawer({ children }: SaveDrawerProps) {
               to="/profile/saved"
               className={cn(
                 buttonVariants(),
-                "h-auto rounded-[16px] bg-[#EE518A] py-3 text-lg font-medium text-white hover:bg-[#d8487b]"
+                "h-auto rounded-[16px] bg-[#EE518A] py-3 text-lg font-medium text-white hover:bg-[#d8487b]",
               )} /* Style first button */
             >
               저장 목록 보기

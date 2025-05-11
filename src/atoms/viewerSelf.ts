@@ -5,5 +5,5 @@ export const viewerSelfAtom = atomWithStorage<ViewerResponse | null>(
   "viewer.self",
   null,
   undefined,
-  { getOnInit: true }
+  { getOnInit: true },
 );

@@ -7,7 +7,7 @@ export const savedProfilesAtom = atomWithStorage<ProfileResponse[]>(
   "profile.saved",
   [],
   undefined,
-  { getOnInit: true }
+  { getOnInit: true },
 );
 
 // Write-only atom to handle the 'SAVE' action (appending a profile)
@@ -17,11 +17,11 @@ export const saveProfileAtom = atom(
     const currentProfiles = get(savedProfilesAtom);
     set(savedProfilesAtom, [
       ...currentProfiles.filter(
-        (profile) => profile.profileId != newProfile.profileId
+        (profile) => profile.profileId != newProfile.profileId,
       ),
       newProfile,
     ]);
-  }
+  },
 );
 
 // Base atom to store the array of profiles
@@ -29,7 +29,7 @@ export const contactedProfilesAtom = atomWithStorage<ProfileContactResponse[]>(
   "profile.contacted",
   [],
   undefined,
-  { getOnInit: true }
+  { getOnInit: true },
 );
 
 // Write-only atom to handle the 'SAVE' action (appending a profile)
@@ -39,11 +39,11 @@ export const contactProfileAtom = atom(
     const currentProfiles = get(contactedProfilesAtom);
     set(contactedProfilesAtom, [
       ...currentProfiles.filter(
-        (profile) => profile.profileId != newProfile.profileId
+        (profile) => profile.profileId != newProfile.profileId,
       ),
       newProfile,
     ]);
-  }
+  },
 );
 
 // Atom to store the recently viewed profile IDs (max 10)
@@ -51,7 +51,7 @@ export const recentlyViewedProfilesAtom = atomWithStorage<string[]>(
   "profile.viewed",
   [],
   undefined,
-  { getOnInit: true }
+  { getOnInit: true },
 ); // Assuming profileId is a string
 
 // Write-only atom to add a recently viewed profile ID
@@ -68,5 +68,5 @@ export const addRecentlyViewedProfileAtom = atom(
       updatedIds.shift(); // Remove the oldest ID (first element)
     }
     set(recentlyViewedProfilesAtom, updatedIds);
-  }
+  },
 );
