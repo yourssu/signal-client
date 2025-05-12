@@ -39,12 +39,9 @@ const MainContent = ({ profileRegistered, verifyNeeded }: MainContentProps) => {
           className={cn(
             buttonVariants({ variant: "secondary" }),
             "h-14 text-xl rounded-2xl bg-light-pink text-pink hover:bg-light-pink/90 shadow-sm",
-            profileRegistered &&
-              "pointer-events-none opacity-50 cursor-not-allowed",
           )}
-          aria-disabled={profileRegistered}
         >
-          {profileRegistered ? "프로필을 이미 등록했어요" : "프로필 등록하기"}
+          {profileRegistered ? "내 프로필 보기" : "프로필 등록하기"}
         </Link>
 
         <Link

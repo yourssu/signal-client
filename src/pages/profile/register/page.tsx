@@ -13,7 +13,7 @@ import {
 import { useCreateProfile } from "@/hooks/queries/profiles";
 import { useNavigate } from "react-router";
 import { useUserUuid } from "@/hooks/useUserUuid";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { userGenderAtom } from "@/atoms/userGender";
 import PersonalityStep from "@/components/register/PersonalityStep";
 import NicknameStep from "@/components/register/NicknameStep";
@@ -27,7 +27,7 @@ const ProfileRegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const uuid = useUserUuid();
   const [gender, setGender] = useAtom(userGenderAtom);
-  const setProfile = useSetAtom(userProfileAtom);
+  const [profile, setProfile] = useAtom(userProfileAtom);
   const funnel = useFunnel<{
     gender: Partial<ProfileContactResponse>;
     animal: Partial<ProfileContactResponse>;
@@ -38,12 +38,17 @@ const ProfileRegisterPage: React.FC = () => {
     done: ProfileContactResponse;
   }>({
     id: "profile-register",
-    initial: {
-      step: "gender",
-      context: {
-        ...(gender && { gender }),
-      },
-    },
+    initial: profile
+      ? {
+          step: "done",
+          context: profile,
+        }
+      : {
+          step: "gender",
+          context: {
+            ...(gender && { gender }),
+          },
+        },
   });
 
   const { mutateAsync: createProfile } = useCreateProfile();
