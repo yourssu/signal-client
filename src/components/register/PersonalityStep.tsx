@@ -51,7 +51,7 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
 
   return (
     // Main container - Based on Figma Frame 1000011957
-    <div className="flex flex-col items-center pt-10 gap-[160px] w-full">
+    <div className="flex flex-col items-center pt-10 w-full">
       <div className="flex flex-col gap-[43px] w-full grow">
         <div className="flex flex-col items-start gap-2.5">
           <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
