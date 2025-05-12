@@ -53,7 +53,7 @@ export const useRandomProfile = (
   >,
 ) => {
   return useQuery({
-    queryKey: ["profiles", uuid],
+    queryKey: ["profiles", uuid, "random", desiredGender, excludeProfiles],
     queryFn: async () => {
       const params = new URLSearchParams();
       params.append("uuid", uuid);
