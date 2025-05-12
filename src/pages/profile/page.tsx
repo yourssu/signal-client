@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, useNavigate } from "react-router";
 import { useSetAtom, useAtomValue } from "jotai";
 import { useCountProfile, useRandomProfile } from "@/hooks/queries/profiles";
@@ -6,7 +6,12 @@ import { Button } from "@/components/ui/button";
 import { useUserUuid } from "@/hooks/useUserUuid";
 import TopBar from "@/components/TopBar";
 import { SaveDrawer } from "@/components/profile/SaveDrawer";
-import { saveProfileAtom, savedProfilesAtom } from "@/atoms/viewerProfiles";
+import {
+  saveProfileAtom,
+  savedProfilesAtom,
+  recentlyViewedProfilesAtom,
+  addRecentlyViewedProfileAtom,
+} from "@/atoms/viewerProfiles";
 import { SwipeableProfileCard } from "@/components/profile/SwipeableProfileCard";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { userGenderAtom } from "@/atoms/userGender";
@@ -18,14 +23,35 @@ const ProfileListPage: React.FC = () => {
   const desiredGender = gender === "MALE" ? "FEMALE" : "MALE";
   const { data: viewerSelf, isLoading } = useViewerSelf(uuid);
   const ticketCount = (viewerSelf?.ticket ?? 0) - (viewerSelf?.usedTicket ?? 0);
+
+  // Get recently viewed profiles to exclude them from random profile fetch
+  const recentlyViewedProfiles = useAtomValue(recentlyViewedProfilesAtom);
+  const addRecentlyViewedProfile = useSetAtom(addRecentlyViewedProfileAtom);
+
+  // Convert string IDs to numbers for the API
+  const excludeProfiles = recentlyViewedProfiles.map((id) => parseInt(id, 10));
+
+  const { data: countData } = useCountProfile();
+
   const {
     data: profile,
     refetch,
     isRefetching,
-  } = useRandomProfile(uuid, desiredGender!, undefined, {
-    enabled: !!desiredGender && ticketCount > 0,
+  } = useRandomProfile(uuid, desiredGender!, excludeProfiles, {
+    enabled: false,
   });
-  const { data: countData } = useCountProfile();
+
+  useEffect(() => {
+    if (ticketCount > 0) refetch();
+  }, [refetch, ticketCount]);
+
+  // Add current profile to recently viewed profiles when it changes
+  useEffect(() => {
+    if (profile && countData) {
+      addRecentlyViewedProfile(profile.profileId.toString(), countData.count);
+    }
+  }, [profile, countData, addRecentlyViewedProfile]);
+
   const saveProfile = useSetAtom(saveProfileAtom); // Corrected usage
   const savedProfiles = useAtomValue(savedProfilesAtom); // Read the saved profiles
 
