@@ -1,4 +1,4 @@
-import ProfileCard from "@/components/profile/ProfileCard";
+import TurnableProfileCard from "@/components/profile/TurnableProfileCard";
 import { Button } from "@/components/ui/button";
 import { ProfileContactResponse } from "@/types/profile";
 import React from "react";
@@ -24,7 +24,7 @@ const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
       </p>
 
       <div className="grow flex flex-col justify-center items-center">
-        <ProfileCard profile={profile} contact={profile.contact} />
+        <TurnableProfileCard profile={profile} contact={profile.contact} />
       </div>
       <Button type="submit" size="xl" className="w-full" onClick={onSubmit}>
         이용권 구매하기
