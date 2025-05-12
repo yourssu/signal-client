@@ -60,7 +60,7 @@ export const recentlyViewedProfilesAtom = atomWithStorage<string[]>(
  */
 export const calculateMaxRecentlyViewedProfiles = (count: number): number => {
   if (count === 1) return 0;
-  return Math.ceil(1.5 * Math.sqrt(count));
+  return Math.ceil(0.5 * Math.sqrt(count));
 };
 
 // Write-only atom to add a recently viewed profile ID
