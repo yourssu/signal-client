@@ -43,6 +43,7 @@ jobs:
           VITE_TICKET_COST: ${{ vars.TICKET_COST }}
           VITE_ACCOUNT: ${{ vars.ACCOUNT }}
           VITE_ACCOUNT_OWNER: ${{ vars.ACCOUNT_OWNER }}
+          VITE_PERSONALITIES: ${{ vars.PERSONALITIES }}
           VITE_SHA: ${{ github.sha }}
 
       - name: Configure AWS Credentials

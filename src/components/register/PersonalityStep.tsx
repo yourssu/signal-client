@@ -3,6 +3,32 @@ import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
 import { whenPressEnter } from "@/lib/utils";
 import React, { useState, useMemo } from "react"; // Import useMemo
 
+const shuffle = <T,>(array: T[]) =>
+  array
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+
+const getPersonalityExamples = (n: number): string[] => {
+  try {
+    const array = JSON.parse(
+      import.meta.env.VITE_PERSONALITIES ??
+        `["답장 빨라요", "낯가림 심한데 친해지면 말 많음", "힙합 좋아해요"]`,
+    ) as string[];
+    if (array.length < n) {
+      throw new Error("Not enough personality examples");
+    }
+    return shuffle(array).slice(0, n);
+  } catch (e) {
+    console.error("Error parsing personality examples:", e);
+  }
+  return shuffle([
+    "답장 빨라요",
+    "낯가림 심한데 친해지면 말 많음",
+    "힙합 좋아해요",
+  ]).slice(0, n);
+};
+
 interface PersonalityStepProps {
   traits?: string[];
   onSubmit: (traits: string[]) => void;
@@ -49,6 +75,8 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
     });
   };
 
+  const personalityExamples = getPersonalityExamples(traits.length);
+
   return (
     // Main container - Based on Figma Frame 1000011957
     <div className="flex flex-col items-center pt-10 w-full">
@@ -77,7 +105,7 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
               required={index < 2} // Require at least the first two
               // Styling based on Figma INPUT instances (style_TGM91S, fill_HGA9Q2, stroke_BLRCWW)
               className="w-full h-12 text-lg font-medium px-2.5 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500" // Adjusted styles, placeholder style
-              placeholder="특징 입력 ex.숭실대 카리나" // Placeholder from Figma
+              placeholder={`ex. ${personalityExamples[index]}`} // Placeholder from Figma
             />
           ))}
         </div>
