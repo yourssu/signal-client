@@ -39,11 +39,12 @@ const ProfileListPage: React.FC = () => {
     isRefetching,
   } = useRandomProfile(uuid, desiredGender!, excludeProfiles, {
     enabled: false,
+    staleTime: Infinity,
   });
 
   useEffect(() => {
-    if (ticketCount > 0) refetch();
-  }, [refetch, ticketCount]);
+    if (ticketCount > 0 && !profile) refetch();
+  }, [profile, refetch, ticketCount]);
 
   // Add current profile to recently viewed profiles when it changes
   useEffect(() => {
