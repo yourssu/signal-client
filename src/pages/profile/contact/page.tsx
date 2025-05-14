@@ -12,8 +12,7 @@ import {
   contactProfileAtom,
 } from "@/atoms/viewerProfiles";
 import TurnableProfileCard from "@/components/profile/TurnableProfileCard";
-
-const TICKET_COST = import.meta.env.VITE_TICKET_COST || 1;
+import { TICKET_COST } from "@/env";
 
 const ContactViewPage: React.FC = () => {
   const location = useLocation();

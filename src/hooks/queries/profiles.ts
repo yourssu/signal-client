@@ -17,8 +17,9 @@ import {
 } from "@/types/profile";
 import { SignalResponse } from "@/types/common";
 import { SignalError } from "@/lib/error";
+import { API_BASE_URL } from "@/env";
 
-const profileBase = `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/profiles`;
+const profileBase = `${API_BASE_URL ?? ""}/api/profiles`;
 
 export const useCountProfile = (
   queryOptions?: Omit<

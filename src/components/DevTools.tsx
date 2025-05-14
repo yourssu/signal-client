@@ -14,13 +14,22 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
+import {
+  ACCOUNT,
+  ACCOUNT_OWNER,
+  API_BASE_URL,
+  ENABLE_SAVED,
+  IS_LOCAL,
+  MODE,
+  PERSONALITIES,
+  SHA,
+  TICKET_COST,
+} from "@/env";
 import { useIssueTicket } from "@/hooks/queries/viewers";
 import { useAtomValue } from "jotai";
 import { Code } from "lucide-react";
 import { useRef } from "react";
 import { createPortal } from "react-dom";
-
-const IS_LOCAL = !import.meta.env.VITE_SHA;
 
 const resetData = () => {
   localStorage.clear();
@@ -68,15 +77,15 @@ export const DevTools = () => {
         <DrawerHeader>
           <DrawerTitle>SIGNAL DEVTOOLS</DrawerTitle>
           <DrawerDescription>
-            {IS_LOCAL ? (
+            {IS_LOCAL || !SHA ? (
               "LOCAL TEST BUILD"
             ) : (
               <a
-                href={`https://github.com/yourssu/yourssu-signal-client/commit/${import.meta.env.VITE_SHA}`}
+                href={`https://github.com/yourssu/yourssu-signal-client/commit/${SHA}`}
                 target="_blank"
                 className="underline"
               >
-                REV: {import.meta.env.VITE_SHA.substring(0, 7)}
+                REV: {SHA.substring(0, 7)}
               </a>
             )}
             <br />
@@ -119,10 +128,15 @@ export const DevTools = () => {
             <div>
               <h1 className="font-medium text-lg">ENV</h1>
               <p>NODE_ENV: {import.meta.env.NODE_ENV}</p>
-              <p>MODE: {import.meta.env.MODE}</p>
-              <p>API_BASE_URL: {import.meta.env.VITE_API_BASE_URL}</p>
-              <p>SHA: {import.meta.env.VITE_SHA}</p>
-              <p>TICKET_COST: {import.meta.env.TICKET_COST}</p>
+              <p>MODE: {MODE}</p>
+              <p>API_BASE_URL: {API_BASE_URL}</p>
+              <p>SHA: {SHA}</p>
+              <p>TICKET_COST: {TICKET_COST}</p>
+              <p>PERSONALITIES: {PERSONALITIES}</p>
+              <p>
+                ACCOUNT/ACCOUNT_OWNER: {ACCOUNT}/{ACCOUNT_OWNER}
+              </p>
+              <p>ENABLE_SAVED: {ENABLE_SAVED}</p>
             </div>
           </details>
         </div>

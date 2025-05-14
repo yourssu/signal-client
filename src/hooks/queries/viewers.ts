@@ -8,8 +8,9 @@ import { VerificationResponse, ViewerResponse } from "@/types/viewer";
 import { SignalResponse } from "@/types/common";
 import { TicketIssuedRequest } from "@/types/admin";
 import { SignalError } from "@/lib/error";
+import { API_BASE_URL } from "@/env";
 
-const viewersBase = `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/viewers`;
+const viewersBase = `${API_BASE_URL ?? ""}/api/viewers`;
 
 export const useViewerVerification = (
   uuid: string,

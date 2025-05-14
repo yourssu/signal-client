@@ -1,12 +1,9 @@
 import { userGenderAtom } from "@/atoms/userGender";
+import { ACCOUNT, ACCOUNT_OWNER } from "@/env";
 import { cn } from "@/lib/utils";
 import { useAtomValue } from "jotai";
 import { Copy } from "lucide-react";
 import { toast } from "sonner";
-
-const ACCOUNT: string =
-  import.meta.env.VITE_ACCOUNT ?? "카카오뱅크 034353566343";
-const ACCOUNT_OWNER: string = import.meta.env.VITE_ACCOUNT_OWNER ?? "유어슈";
 
 interface VerifyStepProps {
   isLoading: boolean;

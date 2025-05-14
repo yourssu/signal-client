@@ -4,6 +4,7 @@ import React, { useState, useMemo } from "react"; // Import useMemo
 import RegisterConfirmationDrawer from "./RegisterConfirmationDrawer";
 import { ProfileResponse } from "@/types/profile";
 import TermsDrawer from "@/components/register/TermsDrawer";
+import { PRIVACY, TERMS } from "@/env";
 
 interface ContactStepProps {
   profile?: ProfileResponse;
@@ -13,9 +14,6 @@ interface ContactStepProps {
 
 const PHONE_REGEX = /^010\d{8}$/; // Regex to validate phone numbers
 const INSTAGRAM_REGEX = /^^@[a-zA-Z0-9._]{1,30}$/; // Regex to validate Instagram IDs
-
-const TERMS = import.meta.env.VITE_TERMS ?? "서비스 이용약관";
-const PRIVACY = import.meta.env.VITE_PRIVACY ?? "개인정보 처리방침";
 
 const isValidContact = (contact: string): boolean => {
   // Check if the contact is a valid phone number or Instagram ID

@@ -1,0 +1,30 @@
+// Commit hash for development
+export const SHA: string | undefined = import.meta.env.VITE_SHA;
+// SHA is undefined in local development
+export const IS_LOCAL: boolean = !SHA;
+// Deployment mode. Setting this to "production" will disable devtools.
+export const MODE: string = import.meta.env.MODE;
+// Base URL for the API. This is used to make API calls.
+export const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
+// Ticket cost for the service.
+export const TICKET_COST: number =
+  Number(import.meta.env.VITE_TICKET_COST) || 1;
+// Terms and conditions for the service.
+export const TERMS: string = import.meta.env.VITE_TERMS ?? "서비스 이용약관";
+// Privacy policy for the service.
+export const PRIVACY: string =
+  import.meta.env.VITE_PRIVACY ?? "개인정보 처리방침";
+// List of personality traits for the service. This is used to suggest traits to users.
+export const PERSONALITIES: string[] = JSON.parse(
+  import.meta.env.VITE_PERSONALITIES ??
+    `["답장 빨라요", "낯가림 심한데 친해지면 말 많음", "힙합 좋아해요"]`,
+) as string[];
+
+// Bank account information for the service.
+export const ACCOUNT: string =
+  import.meta.env.VITE_ACCOUNT ?? "카카오뱅크 034353566343";
+// Bank account owner information for the service.
+export const ACCOUNT_OWNER: string =
+  import.meta.env.VITE_ACCOUNT_OWNER ?? "유어슈";
+export const ENABLE_SAVED: boolean =
+  import.meta.env.VITE_ENABLE_SAVED === "true";

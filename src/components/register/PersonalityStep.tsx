@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
+import { PERSONALITIES } from "@/env";
 import { whenPressEnter } from "@/lib/utils";
 import React, { useState, useMemo } from "react"; // Import useMemo
 
@@ -11,14 +12,10 @@ const shuffle = <T,>(array: T[]) =>
 
 const getPersonalityExamples = (n: number): string[] => {
   try {
-    const array = JSON.parse(
-      import.meta.env.VITE_PERSONALITIES ??
-        `["답장 빨라요", "낯가림 심한데 친해지면 말 많음", "힙합 좋아해요"]`,
-    ) as string[];
-    if (array.length < n) {
+    if (PERSONALITIES.length < n) {
       throw new Error("Not enough personality examples");
     }
-    return shuffle(array).slice(0, n);
+    return shuffle(PERSONALITIES).slice(0, n);
   } catch (e) {
     console.error("Error parsing personality examples:", e);
   }

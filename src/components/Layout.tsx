@@ -1,6 +1,7 @@
 import { DevTools } from "@/components/DevTools";
 import Background from "@/components/home/Background";
 import { Toaster } from "@/components/ui/sonner";
+import { MODE } from "@/env";
 import React from "react";
 import { Outlet } from "react-router";
 
@@ -11,7 +12,7 @@ const Layout: React.FC = () => {
       <main className="max-w-md mx-auto w-full h-full shadow-sm">
         <Outlet />
         <Toaster />
-        {import.meta.env.MODE !== "production" && <DevTools />}
+        {MODE !== "production" && <DevTools />}
       </main>
     </div>
   );
