@@ -75,7 +75,10 @@ export const SwipeableProfileCard: React.FC<{
 
   // Function to handle drag movement
   const handleDrag = (mx: number, down: boolean, xDir: number) => {
-    if (isFirstEntrance) setIsFirstEntrance(false);
+    if (isFirstEntrance) {
+      setIsFirstEntrance(false);
+      return;
+    }
     // If already swiped, ignore further gestures
     if (swiped) return;
 
