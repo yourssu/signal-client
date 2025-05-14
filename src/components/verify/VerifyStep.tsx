@@ -5,6 +5,10 @@ import { useAtomValue } from "jotai";
 import { Copy } from "lucide-react";
 import { toast } from "sonner";
 
+const ACCOUNT: string =
+  import.meta.env.VITE_ACCOUNT ?? "카카오뱅크 034353566343";
+const ACCOUNT_OWNER: string = import.meta.env.VITE_ACCOUNT_OWNER ?? "유어슈";
+
 interface VerifyStepProps {
   isLoading: boolean;
   verificationCode: number | null;
@@ -29,8 +33,7 @@ export const VerifyStep = ({
   const digits = getCodeDigits(verificationCode, isLoading);
 
   const copyToClipboard = () => {
-    const text = "카카오뱅크 034353566343";
-    navigator.clipboard.writeText(text).then(() => {
+    navigator.clipboard.writeText(ACCOUNT).then(() => {
       toast.success("계좌번호가 복사되었습니다.");
     });
   };
@@ -44,9 +47,9 @@ export const VerifyStep = ({
           시그널을 이용하시겠어요?
         </h1>
         <h2 className="text-2xl font-semibold text-stone-600 whitespace-pre-line">
-          입금 후, 유어슈 STAFF에게
+          아래의 코드로 입금자명을
           <br />
-          화면을 보여주세요
+          설정하여 입금해주세요.
         </h2>
       </div>
 
@@ -80,9 +83,14 @@ export const VerifyStep = ({
             onClick={copyToClipboard}
           >
             <Copy className="size-3 inline" />
-            <span className="underline">카카오뱅크 034353566343</span>
-          </a>{" "}
-          유어슈
+            <span className="underline">{ACCOUNT}</span>
+          </a>
+          {` ${ACCOUNT_OWNER}`}
+        </p>
+        <p className="text-sm text-center">
+          입금하였는데 티켓이 추가되지 않았다면,
+          <br />
+          부스 STAFF에게 문의해주세요.
         </p>
       </div>
       <Toaster />
