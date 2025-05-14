@@ -75,7 +75,10 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
     });
   };
 
-  const personalityExamples = getPersonalityExamples(traits.length);
+  const personalityExamples = useMemo(
+    () => getPersonalityExamples(traits.length),
+    [traits.length],
+  );
 
   return (
     // Main container - Based on Figma Frame 1000011957
