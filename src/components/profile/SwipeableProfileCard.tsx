@@ -1,6 +1,16 @@
+import { isFirstEntranceAtom } from "@/atoms/isFirstEntrance";
 import ProfileCard from "@/components/profile/ProfileCard";
+import { cn } from "@/lib/utils";
 import { ProfileResponse } from "@/types/profile";
-import { useMotionValue, useTransform, animate, motion } from "motion/react";
+import { useAtom } from "jotai";
+import { MoveHorizontal } from "lucide-react";
+import {
+  useMotionValue,
+  useTransform,
+  animate,
+  motion,
+  AnimationPlaybackControls,
+} from "motion/react";
 import { useState, useEffect } from "react";
 
 // SwipeableProfileCard component for handling swipe gestures
@@ -9,6 +19,7 @@ export const SwipeableProfileCard: React.FC<{
   isRefetching: boolean;
   onSwipe: () => void;
 }> = ({ profile, isRefetching, onSwipe }) => {
+  const [isFirstEntrance, setIsFirstEntrance] = useAtom(isFirstEntranceAtom);
   const [swiped, setSwiped] = useState(false);
 
   // Motion values for tracking card position and rotation
@@ -20,11 +31,39 @@ export const SwipeableProfileCard: React.FC<{
   const opacityY = useTransform(y, [0, 100], [1, 0]);
   const opacity = useTransform(() => opacityX.get() * opacityY.get());
 
+  // Setup guide animation when isFirstEntrance changes
+  useEffect(() => {
+    let animation: AnimationPlaybackControls | undefined;
+
+    if (isFirstEntrance) {
+      animation = animate(x, 20, {
+        type: "spring",
+        stiffness: 400,
+        damping: 70,
+        repeat: Infinity,
+        repeatType: "reverse",
+      });
+    } else {
+      // Reset position when animation stops
+      animate(x, 0, {
+        type: "spring",
+        stiffness: 400,
+        damping: 70,
+      });
+    }
+
+    // Cleanup animation when component unmounts or isFirstEntrance changes
+    return () => {
+      if (animation) {
+        animation.stop();
+      }
+    };
+  }, [isFirstEntrance, x]);
+
   // Animation for profile change
   useEffect(() => {
-    // Skip animation on initial render
+    // Regular profile change animation
     if (!isRefetching) {
-      // Animate upward
       animate(y, 0, {
         type: "spring",
         stiffness: 300,
@@ -36,6 +75,7 @@ export const SwipeableProfileCard: React.FC<{
 
   // Function to handle drag movement
   const handleDrag = (mx: number, down: boolean, xDir: number) => {
+    if (isFirstEntrance) setIsFirstEntrance(false);
     // If already swiped, ignore further gestures
     if (swiped) return;
 
@@ -133,9 +173,21 @@ export const SwipeableProfileCard: React.FC<{
       style={{ x, y, rotate, opacity }}
       onTouchStart={handleTouchStart}
       onMouseDown={handleMouseDown}
-      className="w-full h-auto touch-none cursor-grab active:cursor-grabbing"
+      className="w-full h-auto touch-none cursor-grab active:cursor-grabbing relative"
     >
       <ProfileCard profile={profile} className="grow h-auto" />
+      <div
+        className={cn(
+          "opacity-0 absolute inset-0 bg-black/75 rounded-4xl flex flex-col items-center justify-center transition-opacity",
+          isFirstEntrance && "opacity-100",
+        )}
+      >
+        <MoveHorizontal className="text-pale-pink" />
+        <p className="text-pale-pink">좌우로 움직여 프로필을 넘겨 보세요</p>
+        <p className="text-sm text-primary">
+          주의: 한 번 넘기면 되돌아갈 수 없습니다!
+        </p>
+      </div>
     </motion.div>
   );
 };
