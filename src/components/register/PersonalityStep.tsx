@@ -48,8 +48,7 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
 
   const handleSubmit = () => {
     if (!isValid) return;
-    // Submit only non-empty traits
-    onSubmit(traits.filter((trait) => trait.trim() !== ""));
+    onSubmit(traits);
   };
 
   const proceedWithEnter = (
@@ -94,22 +93,27 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
             <span className="text-primary">특징을 입력해주세요</span>
           </h2>
         </div>
-        <div className="flex flex-col gap-[26px] w-full">
+        <div className="flex flex-col gap-4 w-full">
           {traits.map((trait, index) => (
-            <Input
+            <div
+              className="animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500 flex flex-col gap-0.5"
               key={index}
-              type="text"
-              id={`personality-${index}`}
-              name={`personality-${index}`}
-              value={trait}
-              onChange={(e) => handleChange(index, e.target.value)}
-              onKeyDown={(e) => proceedWithEnter(index, e)}
-              maxLength={20}
-              required={index < 2} // Require at least the first two
-              // Styling based on Figma INPUT instances (style_TGM91S, fill_HGA9Q2, stroke_BLRCWW)
-              className="w-full h-12 text-lg font-medium px-2.5 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500" // Adjusted styles, placeholder style
-              placeholder={`ex. ${personalityExamples[index]}`} // Placeholder from Figma
-            />
+            >
+              <Input
+                type="text"
+                id={`personality-${index}`}
+                name={`personality-${index}`}
+                value={trait}
+                onChange={(e) => handleChange(index, e.target.value)}
+                onKeyDown={(e) => proceedWithEnter(index, e)}
+                maxLength={20}
+                required={index < 2} // Require at least the first two
+                // Styling based on Figma INPUT instances (style_TGM91S, fill_HGA9Q2, stroke_BLRCWW)
+                className="w-full h-12 text-lg font-medium px-2.5" // Adjusted styles, placeholder style
+                placeholder={`ex. ${personalityExamples[index]}`} // Placeholder from Figma
+              />
+              <p className="text-xs text-end">{trait.length}/20</p>
+            </div>
           ))}
         </div>
       </div>

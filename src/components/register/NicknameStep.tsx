@@ -62,19 +62,22 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
           </h2>
         </div>
         <div className="flex flex-col items-end gap-[17px] w-full animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500">
-          <Input
-            type="text"
-            id="nickname"
-            name="nickname"
-            value={nickname}
-            onChange={handleChange}
-            onKeyDown={submitOnEnter}
-            required
-            // Styling based on Figma: text-2xl, text-center, placeholder color, bottom border
-            className="w-full h-12 text-2xl px-2.5" // Adjusted styles
-            placeholder="닉네임을 입력하세요." // Using clearer placeholder
-            maxLength={15}
-          />
+          <div className="flex flex-col gap-0.5">
+            <Input
+              type="text"
+              id="nickname"
+              name="nickname"
+              value={nickname}
+              onChange={handleChange}
+              onKeyDown={submitOnEnter}
+              required
+              // Styling based on Figma: text-2xl, text-center, placeholder color, bottom border
+              className="w-full h-12 text-2xl px-2.5" // Adjusted styles
+              placeholder="닉네임을 입력하세요." // Using clearer placeholder
+              maxLength={15}
+            />
+            <p className="text-xs text-end">{nickname.length} / 15</p>
+          </div>
           <Button
             variant="ghost" // Use ghost variant for background blur effect potentially
             onClick={handleGenerateNickname}

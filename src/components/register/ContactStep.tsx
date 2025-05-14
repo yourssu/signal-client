@@ -81,14 +81,14 @@ const ContactStep: React.FC<ContactStepProps> = ({
           />
           <p
             className={cn(
-              "text-sm text-muted-foreground",
+              "text-xs text-muted-foreground",
               isValid === false &&
                 !isEmpty &&
                 "text-red-500 font-bold animate-shake",
             )}
           >
-            전화번호는 숫자만, 인스타그램 아이디는 앞에 <strong>@</strong>를
-            붙여 입력해주세요.
+            전화번호는 숫자만, 인스타그램 아이디는 <strong>@</strong>를 붙여
+            입력해주세요.
           </p>
         </div>
       </div>
