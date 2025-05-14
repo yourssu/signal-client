@@ -112,7 +112,10 @@ const ProfileRegisterPage: React.FC = () => {
   };
 
   const handleBack = () => {
-    if (funnel.step === "done") navigate("/");
+    if (funnel.step === "done") {
+      navigate("/");
+      return;
+    }
     if (funnel.index == 0) {
       navigate(-1);
     } else {
