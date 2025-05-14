@@ -112,6 +112,7 @@ const ProfileRegisterPage: React.FC = () => {
   };
 
   const handleBack = () => {
+    if (funnel.step === "done") navigate("/");
     if (funnel.index == 0) {
       navigate(-1);
     } else {
@@ -121,12 +122,7 @@ const ProfileRegisterPage: React.FC = () => {
 
   return (
     <div className="min-h-dvh flex flex-col items-center">
-      {funnel.step !== "done" ? (
-        <TopBar onBack={handleBack} />
-      ) : (
-        <div className="h-11" />
-      )}
-
+      <TopBar onBack={handleBack} />
       <div className="w-full max-w-md grow p-6 flex flex-col gap-10">
         {funnel.step !== "done" && (
           <Progress value={((funnel.index + 1) / 6) * 100} />
