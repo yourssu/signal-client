@@ -3,7 +3,6 @@ import React, { useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
 import { ProfileContactResponse, ProfileResponse } from "@/types/profile";
 import { Button, buttonVariants } from "@/components/ui/button";
-import ProfileCard from "@/components/profile/ProfileCard";
 import { useUserUuid } from "@/hooks/useUserUuid";
 import { cn } from "@/lib/utils";
 import TopBar from "@/components/TopBar";
@@ -12,6 +11,7 @@ import {
   contactedProfilesAtom,
   contactProfileAtom,
 } from "@/atoms/viewerProfiles";
+import TurnableProfileCard from "@/components/profile/TurnableProfileCard";
 
 const TICKET_COST = import.meta.env.VITE_TICKET_COST || 1;
 
@@ -64,31 +64,33 @@ const ContactViewPage: React.FC = () => {
     if (!isConfirmed) {
       return (
         <div className="text-center flex flex-col items-center justify-center grow">
-          <p className="mb-6 text-gray-600 text-lg">
-            <span className="text-primary">
-              이용권을 {TICKET_COST}개 소모해
-              <br />
-            </span>
-            {profile.nickname}님의 연락처를 열람하시겠습니까?
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Button
-              onClick={handleConfirm}
-              size="xl"
-              className="py-2 px-6 grow"
-            >
-              확인
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => navigate("/profile")}
-              size="xl"
-              className="grow"
-            >
-              취소
-            </Button>
+          <div className="p-6 bg-background rounded-2xl shadow-md">
+            <p className="mb-6 text-foreground text-lg">
+              <span className="text-primary font-bold">
+                이용권을 {TICKET_COST}개 소모해
+                <br />
+              </span>
+              {profile.nickname}님의 연락처를 열람하시겠습니까?
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Button
+                onClick={handleConfirm}
+                size="xl"
+                className="py-2 px-6 grow"
+              >
+                확인
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => navigate("/profile")}
+                size="xl"
+                className="grow"
+              >
+                취소
+              </Button>
+            </div>
+            {error && <p className="mt-4 text-red-500 font-medium">{error}</p>}
           </div>
-          {error && <p className="mt-4 text-red-500 font-medium">{error}</p>}
         </div>
       );
     }
@@ -106,7 +108,11 @@ const ContactViewPage: React.FC = () => {
               </h1>
             </div>
             <div className="grow flex flex-col justify-center items-stretch w-full">
-              <ProfileCard profile={profile} contact={profileContact.contact} />
+              <TurnableProfileCard
+                profile={profile}
+                contact={profileContact.contact}
+                isFlipped={true}
+              />
             </div>
             <Link
               to={returnLink}

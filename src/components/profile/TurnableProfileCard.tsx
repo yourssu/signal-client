@@ -1,20 +1,44 @@
-import { motion } from "motion/react";
-import { useState } from "react";
+import { animate, motion, useMotionValue } from "motion/react";
+import { useEffect, useState } from "react";
 import ProfileCard from "./ProfileCard";
 import { ProfileResponse } from "@/types/profile";
+import { cn } from "@/lib/utils";
 
 interface TurnableProfileCardProps {
   profile: ProfileResponse;
   contact: string;
   className?: string;
+  isFlipped?: boolean;
 }
 
 const TurnableProfileCard: React.FC<TurnableProfileCardProps> = ({
   profile,
   contact,
   className,
+  isFlipped: defaultFlipped = false,
 }) => {
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(defaultFlipped);
+  // Use Inverted value for the initial rotation
+  const rotateY = useMotionValue(defaultFlipped ? 0 : 180);
+
+  useEffect(() => {
+    animate(rotateY, defaultFlipped ? 180 : 0, {
+      type: "spring",
+      duration: 0.6,
+      damping: 20,
+      stiffness: 100,
+      delay: 1,
+    });
+  }, [defaultFlipped, rotateY]);
+
+  useEffect(() => {
+    animate(rotateY, isFlipped ? 180 : 0, {
+      type: "spring",
+      duration: 0.6,
+      damping: 20,
+      stiffness: 100,
+    });
+  }, [isFlipped, rotateY]);
 
   return (
     <div
@@ -24,9 +48,8 @@ const TurnableProfileCard: React.FC<TurnableProfileCardProps> = ({
     >
       <motion.div
         className="relative w-full"
-        style={{ transformStyle: "preserve-3d" }}
+        style={{ transformStyle: "preserve-3d", rotateY }}
         initial={false}
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{
           duration: 0.6,
           type: "spring",
@@ -35,7 +58,7 @@ const TurnableProfileCard: React.FC<TurnableProfileCardProps> = ({
         }}
       >
         <motion.div
-          className="absolute w-full"
+          className="absolute w-full h-full"
           initial={false}
           animate={{ opacity: isFlipped ? 0 : 1 }}
           transition={{ duration: 0.3 }}
@@ -48,7 +71,7 @@ const TurnableProfileCard: React.FC<TurnableProfileCardProps> = ({
         </motion.div>
 
         <motion.div
-          className="absolute w-full"
+          className="absolute w-full h-full"
           initial={false}
           animate={{ opacity: isFlipped ? 1 : 0 }}
           transition={{ duration: 0.3 }}
@@ -61,7 +84,7 @@ const TurnableProfileCard: React.FC<TurnableProfileCardProps> = ({
           <ProfileCard
             profile={profile}
             contact={contact}
-            className={className}
+            className={cn("h-full", className)}
           />
         </motion.div>
 

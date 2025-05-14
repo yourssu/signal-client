@@ -55,21 +55,21 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               {profile.nickname}
             </h3>
             {contact ? (
-              <div className="w-full flex flex-row justify-center items-center gap-1 p-4 bg-[#FFF2F7] border border-[rgba(238,81,138,0.2)] rounded-2xl">
+              <a
+                href={`https://instagram.com/${contact.substring(1)}`}
+                target="_blank"
+                className="w-full flex flex-row justify-center items-center gap-1 p-4 bg-[#FFF2F7] border border-[rgba(238,81,138,0.2)] rounded-2xl"
+              >
                 {contact.startsWith("@") ? (
-                  <a
-                    href={`https://instagram.com/${contact.substring(1)}`}
-                    target="_blank"
-                    className="text-lg font-medium leading-5 text-primary text-center underline"
-                  >
+                  <span className="text-lg font-medium leading-5 text-primary text-center underline">
                     {contact}
-                  </a>
+                  </span>
                 ) : (
                   <span className="text-lg font-medium leading-5 text-primary text-center">
                     {contact}
                   </span>
                 )}
-              </div>
+              </a>
             ) : (
               <div className="flex flex-col items-stretch gap-2 w-full">
                 {profile.introSentences.map((sentence, index) => (
