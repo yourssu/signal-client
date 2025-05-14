@@ -1,5 +1,4 @@
 import { userGenderAtom } from "@/atoms/userGender";
-import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { useAtomValue } from "jotai";
 import { Copy } from "lucide-react";
@@ -12,6 +11,7 @@ const ACCOUNT_OWNER: string = import.meta.env.VITE_ACCOUNT_OWNER ?? "유어슈";
 interface VerifyStepProps {
   isLoading: boolean;
   verificationCode: number | null;
+  onManualCheck: () => void;
 }
 
 // Helper function to split the code into digits or return placeholders
@@ -28,6 +28,7 @@ const getCodeDigits = (code: number | null, loading: boolean): string[] => {
 export const VerifyStep = ({
   isLoading,
   verificationCode,
+  onManualCheck,
 }: VerifyStepProps) => {
   const gender = useAtomValue(userGenderAtom);
   const digits = getCodeDigits(verificationCode, isLoading);
@@ -36,6 +37,10 @@ export const VerifyStep = ({
     navigator.clipboard.writeText(ACCOUNT).then(() => {
       toast.success("계좌번호가 복사되었습니다.");
     });
+  };
+
+  const handleManualCheck = () => {
+    onManualCheck();
   };
   return (
     // Main container matching Figma's Frame 1000011868 structure (approximated)
@@ -88,12 +93,15 @@ export const VerifyStep = ({
           {` ${ACCOUNT_OWNER}`}
         </p>
         <p className="text-sm text-center">
-          입금하였는데 티켓이 추가되지 않았다면,
+          입금이 완료되면 자동으로 화면이 이동됩니다.
           <br />
-          부스 STAFF에게 문의해주세요.
+          이동되지 않는다면{" "}
+          <a onClick={handleManualCheck} className="underline cursor-pointer">
+            여기를 눌러주세요
+          </a>
+          .
         </p>
       </div>
-      <Toaster />
     </div>
   );
 };

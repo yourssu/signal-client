@@ -8,8 +8,9 @@ import { useUserUuid } from "@/hooks/useUserUuid";
 import { Gender } from "@/types/profile";
 import { useFunnel } from "@use-funnel/react-router";
 import { useAtom } from "jotai";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 const ProfileVerificationPage: React.FC = () => {
   const [gender, setGender] = useAtom(userGenderAtom);
@@ -26,6 +27,7 @@ const ProfileVerificationPage: React.FC = () => {
   });
   const navigate = useNavigate();
   const uuid = useUserUuid();
+  const isManualRefetching = useRef(false);
 
   const { data, isLoading: isVerificationLoading } =
     useViewerVerification(uuid);
@@ -34,7 +36,11 @@ const ProfileVerificationPage: React.FC = () => {
     [data],
   );
 
-  const { data: viewerResponse } = useViewerSelf(uuid, {
+  const {
+    data: viewerResponse,
+    refetch,
+    isRefetching,
+  } = useViewerSelf(uuid, {
     refetchInterval: 1000,
   });
 
@@ -47,9 +53,14 @@ const ProfileVerificationPage: React.FC = () => {
       ) {
         setViewer(viewerResponse);
         navigate("/profile");
+      } else if (isManualRefetching.current) {
+        toast.error(
+          "입금 확인에 실패했습니다.\n입금을 하셨다면 부스 STAFF에게 문의해 주세요.",
+        );
+        isManualRefetching.current = false;
       }
     }
-  }, [viewerResponse, setViewer, navigate, viewer]);
+  }, [viewerResponse, setViewer, navigate, viewer, isRefetching]);
 
   const handleGenderSelect = (gender: Gender) => {
     setGender(gender);
@@ -62,6 +73,11 @@ const ProfileVerificationPage: React.FC = () => {
     } else {
       navigate("/");
     }
+  };
+
+  const handleManualCheck = () => {
+    refetch({ cancelRefetch: true });
+    isManualRefetching.current = true;
   };
 
   return (
@@ -78,6 +94,7 @@ const ProfileVerificationPage: React.FC = () => {
               <VerifyStep
                 isLoading={isVerificationLoading}
                 verificationCode={verificationCode}
+                onManualCheck={handleManualCheck}
               />
             )}
           />
