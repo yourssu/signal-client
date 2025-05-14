@@ -1,9 +1,11 @@
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
 import { cn, whenPressEnter } from "@/lib/utils";
 import React, { useState, useMemo } from "react"; // Import useMemo
+import RegisterConfirmationDrawer from "./RegisterConfirmationDrawer";
+import { ProfileResponse } from "@/types/profile";
 
 interface ContactStepProps {
+  profile?: ProfileResponse;
   contact?: string;
   onSubmit: (contact: string) => void;
 }
@@ -17,6 +19,7 @@ const isValidContact = (contact: string): boolean => {
 };
 
 const ContactStep: React.FC<ContactStepProps> = ({
+  profile,
   contact: defaultContact,
   onSubmit,
 }) => {
@@ -89,17 +92,13 @@ const ContactStep: React.FC<ContactStepProps> = ({
           </p>
         </div>
       </div>
-      <Button
-        onClick={handleSubmit}
-        disabled={!isValid || isEmpty} // Disable button if validation fails
-        className={`w-full h-14 rounded-2xl text-lg font-medium transition-colors ${
-          isValid && !isEmpty
-            ? "bg-primary text-primary-foreground hover:bg-primary/90" // Enabled state (Pink)
-            : "bg-gray-300 text-white cursor-not-allowed" // Disabled state (Gray - #D1D5DC)
-        }`}
-      >
-        입력 완료
-      </Button>
+
+      <RegisterConfirmationDrawer
+        disabled={!isValid || isEmpty}
+        profile={profile as ProfileResponse}
+        contact={contact}
+        onConfirm={handleSubmit}
+      />
     </div>
   );
 };

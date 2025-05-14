@@ -9,6 +9,7 @@ import {
   Mbti,
   ProfileContactResponse,
   ProfileCreatedRequest,
+  ProfileResponse,
 } from "@/types/profile";
 import { useCreateProfile } from "@/hooks/queries/profiles";
 import { useNavigate } from "react-router";
@@ -161,6 +162,7 @@ const ProfileRegisterPage: React.FC = () => {
             )}
             contact={() => (
               <ContactStep
+                profile={funnel.context as ProfileResponse}
                 contact={funnel.context.contact}
                 onSubmit={handleContactSubmit}
               />
