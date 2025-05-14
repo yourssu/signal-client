@@ -12,7 +12,7 @@ import {
   contactProfileAtom,
 } from "@/atoms/viewerProfiles";
 import TurnableProfileCard from "@/components/profile/TurnableProfileCard";
-import { TICKET_COST } from "@/env";
+import { ENABLE_SAVED, TICKET_COST } from "@/env";
 
 const ContactViewPage: React.FC = () => {
   const location = useLocation();
@@ -113,6 +113,7 @@ const ContactViewPage: React.FC = () => {
                 isFlipped={true}
               />
             </div>
+
             <Link
               to={returnLink}
               className={cn(
@@ -122,6 +123,17 @@ const ContactViewPage: React.FC = () => {
             >
               다른 시그널 보내기
             </Link>
+            {!ENABLE_SAVED && (
+              <Link
+                to={"/profile/saved"}
+                className={cn(
+                  buttonVariants({ variant: "secondary", size: "xl" }),
+                  "w-full rounded-2xl text-primary",
+                )}
+              >
+                보낸 시그널 목록 보기
+              </Link>
+            )}
           </div>
         </>
       )

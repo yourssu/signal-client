@@ -6,9 +6,13 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAtomValue } from "jotai";
-import { savedProfilesAtom } from "@/atoms/viewerProfiles";
+import {
+  contactedProfilesAtom,
+  savedProfilesAtom,
+} from "@/atoms/viewerProfiles";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { useUserUuid } from "@/hooks/useUserUuid";
+import { ENABLE_SAVED } from "@/env";
 
 interface TopBarProps {
   onBack?: To | (() => void);
@@ -16,7 +20,9 @@ interface TopBarProps {
 
 const TopBar: React.FC<TopBarProps> = ({ onBack }) => {
   const uuid = useUserUuid();
-  const savedProfiles = useAtomValue(savedProfilesAtom);
+  const savedProfiles = useAtomValue(
+    ENABLE_SAVED ? savedProfilesAtom : contactedProfilesAtom,
+  );
   const heartCount = savedProfiles.length;
   const { data: self } = useViewerSelf(uuid);
   const ticketCount = (self?.ticket ?? 0) - (self?.usedTicket ?? 0);

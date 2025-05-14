@@ -15,6 +15,7 @@ import {
 import { SwipeableProfileCard } from "@/components/profile/SwipeableProfileCard";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { userGenderAtom } from "@/atoms/userGender";
+import { ENABLE_SAVED } from "@/env";
 
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -105,17 +106,19 @@ const ProfileListPage: React.FC = () => {
           )}
         </div>
         <div className="flex gap-4 w-full relative z-50">
-          <SaveDrawer>
-            <Button
-              onClick={handleSave}
-              variant="secondary"
-              size="xl"
-              className="basis-1/3 rounded-3xl text-primary"
-              disabled={isSaved} // Disable button if already saved
-            >
-              {isSaved ? "저장됨" : "저장"}
-            </Button>
-          </SaveDrawer>
+          {ENABLE_SAVED && (
+            <SaveDrawer>
+              <Button
+                onClick={handleSave}
+                variant="secondary"
+                size="xl"
+                className="basis-1/3 rounded-3xl text-primary"
+                disabled={isSaved} // Disable button if already saved
+              >
+                {isSaved ? "저장됨" : "저장"}
+              </Button>
+            </SaveDrawer>
+          )}
 
           <Button
             onClick={handleViewContact}

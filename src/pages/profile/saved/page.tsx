@@ -3,18 +3,23 @@ import { Link, useNavigate } from "react-router";
 import { useAtomValue } from "jotai";
 import { Button, buttonVariants } from "@/components/ui/button";
 import TopBar from "@/components/TopBar";
-import { savedProfilesAtom } from "@/atoms/viewerProfiles";
+import {
+  contactedProfilesAtom,
+  savedProfilesAtom,
+} from "@/atoms/viewerProfiles";
 import { ProfileResponse } from "@/types/profile";
 import { cn } from "@/lib/utils";
 import { ScrollableCards } from "@/components/saved/ScrollableCards";
+import { ENABLE_SAVED } from "@/env";
 
 const SavedProfilesPage: React.FC = () => {
   const navigate = useNavigate();
-  const savedProfiles = useAtomValue(savedProfilesAtom);
+  const savedProfiles: Array<ProfileResponse & { contact?: string }> =
+    useAtomValue(ENABLE_SAVED ? savedProfilesAtom : contactedProfilesAtom);
 
-  const [profile, setProfile] = useState<ProfileResponse | null>(
-    savedProfiles[0] || null,
-  );
+  const [profile, setProfile] = useState<
+    (ProfileResponse & { contact?: string }) | null
+  >(savedProfiles[0] || null);
 
   // Update profile state when index changes
 
@@ -40,35 +45,53 @@ const SavedProfilesPage: React.FC = () => {
         <>
           <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6">
             <div className="flex flex-col items-start w-full">
-              <h1 className="text-2xl font-semibold text-stone-700">
-                내 마음 속에 <span className="text-primary">{count}명</span>이
-                <br />
-                저장되어 있어요
-              </h1>
+              {ENABLE_SAVED ? (
+                <h1 className="text-2xl font-semibold text-stone-700">
+                  내 마음 속에 <span className="text-primary">{count}명</span>이
+                  <br />
+                  저장되어 있어요
+                </h1>
+              ) : (
+                <h1 className="text-2xl font-semibold text-stone-700">
+                  <span className="text-primary">{count}명</span>에게
+                  <br />
+                  시그널을 보냈어요
+                </h1>
+              )}
             </div>
             <ScrollableCards
               profiles={savedProfiles}
               selectedId={profile?.profileId}
               onSelect={setProfile}
             />
-            <Button
-              onClick={handleViewContact}
-              size="xl"
-              className="w-full rounded-3xl"
-            >
-              연락처 확인하기
-            </Button>
+            {ENABLE_SAVED && (
+              <Button
+                onClick={handleViewContact}
+                size="xl"
+                className="w-full rounded-3xl"
+              >
+                연락처 확인하기
+              </Button>
+            )}
           </div>
         </>
       ) : (
         <>
           <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6">
             <div className="flex flex-col items-start w-full">
-              <h1 className="text-2xl font-semibold text-stone-700">
-                아직 저장된 사람이 없어요
-                <br />
-                마음에 드는 사람을 저장해보세요
-              </h1>
+              {ENABLE_SAVED ? (
+                <h1 className="text-2xl font-semibold text-stone-700">
+                  아직 저장된 사람이 없어요
+                  <br />
+                  마음에 드는 사람을 저장해보세요
+                </h1>
+              ) : (
+                <h1 className="text-2xl font-semibold text-stone-700">
+                  아직 시그널을 보낸 사람이 없어요
+                  <br />
+                  마음에 드는 사람에게 시그널을 보내보세요
+                </h1>
+              )}
             </div>
             <Link
               to="/profile"
