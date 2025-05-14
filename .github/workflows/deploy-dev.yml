@@ -44,6 +44,9 @@ jobs:
           VITE_ACCOUNT: ${{ vars.ACCOUNT }}
           VITE_ACCOUNT_OWNER: ${{ vars.ACCOUNT_OWNER }}
           VITE_PERSONALITIES: ${{ vars.PERSONALITIES }}
+          VITE_TERMS: ${{ vars.TERMS }}
+          VITE_PRIVACY: ${{ vars.PRIVACY }}
+          VITE_ENABLE_SAVED: ${{ vars.ENABLE_SAVED }}
           VITE_SHA: ${{ github.sha }}
 
       - name: Configure AWS Credentials
