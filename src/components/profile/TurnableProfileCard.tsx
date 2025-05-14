@@ -9,6 +9,7 @@ interface TurnableProfileCardProps {
   contact: string;
   className?: string;
   isFlipped?: boolean;
+  size?: "full" | "small";
 }
 
 const TurnableProfileCard: React.FC<TurnableProfileCardProps> = ({
@@ -16,6 +17,7 @@ const TurnableProfileCard: React.FC<TurnableProfileCardProps> = ({
   contact,
   className,
   isFlipped: defaultFlipped = false,
+  size,
 }) => {
   const [isFlipped, setIsFlipped] = useState(defaultFlipped);
   // Use Inverted value for the initial rotation
@@ -67,7 +69,7 @@ const TurnableProfileCard: React.FC<TurnableProfileCardProps> = ({
             WebkitBackfaceVisibility: "hidden",
           }}
         >
-          <ProfileCard profile={profile} className={className} />
+          <ProfileCard profile={profile} className={className} size={size} />
         </motion.div>
 
         <motion.div
@@ -85,12 +87,13 @@ const TurnableProfileCard: React.FC<TurnableProfileCardProps> = ({
             profile={profile}
             contact={contact}
             className={cn("h-full", className)}
+            size={size}
           />
         </motion.div>
 
         {/* Invisible element to maintain container size */}
         <div className="invisible">
-          <ProfileCard profile={profile} className={className} />
+          <ProfileCard profile={profile} className={className} size={size} />
         </div>
       </motion.div>
     </div>

@@ -10,12 +10,14 @@ interface ProfileCardProps {
   profile: ProfileResponse;
   contact?: string;
   className?: string;
+  size?: "full" | "small";
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
   profile,
   contact,
   className,
+  size,
 }) => {
   return (
     <div
@@ -46,12 +48,20 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         <div className="flex flex-col items-center w-full">
           <AnimalImage
             animalType={profile.animal}
-            className="w-full max-h-[200px] object-contain"
+            className={cn(
+              "w-full object-contain",
+              size === "small" ? "max-h-[80px]" : "max-h-[200px]",
+            )}
           />
         </div>
         <div className="flex flex-col items-stretch w-full">
           <div className="flex flex-col items-stretch gap-3 w-full">
-            <h3 className="text-foreground text-xl font-semibold leading-5 text-center w-full">
+            <h3
+              className={cn(
+                "text-foreground font-semibold leading-5 text-center w-full text-xl",
+                size === "small" && "text-base",
+              )}
+            >
               {profile.nickname}
             </h3>
             {contact ? (
@@ -61,21 +71,34 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 className="w-full flex flex-row justify-center items-center gap-1 p-4 bg-[#FFF2F7] border border-[rgba(238,81,138,0.2)] rounded-2xl"
               >
                 {contact.startsWith("@") ? (
-                  <span className="text-lg font-medium leading-5 text-primary text-center underline">
+                  <span
+                    className={cn(
+                      "font-medium leading-5 text-primary text-center underline text-lg",
+                      size === "small" && "text-base",
+                    )}
+                  >
                     {contact}
                   </span>
                 ) : (
-                  <span className="text-lg font-medium leading-5 text-primary text-center">
+                  <span
+                    className={cn(
+                      "text-lg font-medium leading-5 text-primary text-center",
+                      size === "small" && "text-base",
+                    )}
+                  >
                     {contact}
                   </span>
                 )}
               </a>
             ) : (
-              <div className="flex flex-col items-stretch gap-2 w-full">
+              <div className="flex flex-col items-stretch gap-1 w-full">
                 {profile.introSentences.map((sentence, index) => (
                   <p
                     key={index}
-                    className="text-foreground font-medium leading-5 text-start w-full"
+                    className={cn(
+                      "text-foreground font-medium text-start w-full",
+                      size === "small" && "text-xs",
+                    )}
                   >
                     {sentence}
                   </p>
