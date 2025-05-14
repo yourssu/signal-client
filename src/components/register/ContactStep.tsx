@@ -3,6 +3,7 @@ import { cn, whenPressEnter } from "@/lib/utils";
 import React, { useState, useMemo } from "react"; // Import useMemo
 import RegisterConfirmationDrawer from "./RegisterConfirmationDrawer";
 import { ProfileResponse } from "@/types/profile";
+import TermsDrawer from "@/components/register/TermsDrawer";
 
 interface ContactStepProps {
   profile?: ProfileResponse;
@@ -12,6 +13,9 @@ interface ContactStepProps {
 
 const PHONE_REGEX = /^010\d{8}$/; // Regex to validate phone numbers
 const INSTAGRAM_REGEX = /^^@[a-zA-Z0-9._]{1,30}$/; // Regex to validate Instagram IDs
+
+const TERMS = import.meta.env.VITE_TERMS ?? "서비스 이용약관";
+const PRIVACY = import.meta.env.VITE_PRIVACY ?? "개인정보 처리방침";
 
 const isValidContact = (contact: string): boolean => {
   // Check if the contact is a valid phone number or Instagram ID
@@ -25,6 +29,8 @@ const ContactStep: React.FC<ContactStepProps> = ({
 }) => {
   const [contact, setContact] = useState<string>(defaultContact ?? ""); // Initialize with empty string
   const [isValid, setIsValid] = useState<boolean | null>(null); // State to track validity
+  const [openTerms, setOpenTerms] = useState(false); // State to track terms modal
+  const [openPrivacy, setOpenPrivacy] = useState(false); // State to track privacy modal
 
   // Validation: Check if contact is not empty
   const isEmpty = useMemo(() => contact.trim() === "", [contact]);
@@ -45,6 +51,14 @@ const ContactStep: React.FC<ContactStepProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContact(e.target.value);
     if (isEmpty) setIsValid(null);
+  };
+
+  const handleOpenTerms = () => {
+    setOpenTerms(true);
+  };
+
+  const handleOpenPrivacy = () => {
+    setOpenPrivacy(true);
   };
 
   return (
@@ -93,12 +107,37 @@ const ContactStep: React.FC<ContactStepProps> = ({
         </div>
       </div>
 
-      <RegisterConfirmationDrawer
-        disabled={!isValid || isEmpty}
-        profile={profile as ProfileResponse}
-        contact={contact}
-        onConfirm={handleSubmit}
-      />
+      <div className="flex flex-col gap-1 w-full">
+        <p className="text-xs text-center">
+          프로필을 등록할 경우, '시그널'{" "}
+          <a onClick={handleOpenTerms} className="underline cursor-pointer">
+            서비스 이용약관
+          </a>
+          과<br />
+          <a onClick={handleOpenPrivacy} className="underline cursor-pointer">
+            개인정보 처리방침
+          </a>
+          에 동의하는 것으로 간주됩니다.
+        </p>
+        <RegisterConfirmationDrawer
+          disabled={!isValid || isEmpty}
+          profile={profile as ProfileResponse}
+          contact={contact}
+          onConfirm={handleSubmit}
+        />
+        <TermsDrawer
+          open={openTerms}
+          onOpenChange={() => setOpenTerms(false)}
+          title="서비스 이용약관"
+          terms={TERMS}
+        />
+        <TermsDrawer
+          open={openPrivacy}
+          onOpenChange={() => setOpenPrivacy(false)}
+          title="개인정보 처리방침"
+          terms={PRIVACY}
+        />
+      </div>
     </div>
   );
 };
