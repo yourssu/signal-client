@@ -73,19 +73,19 @@ const ContactViewPage: React.FC = () => {
             </p>
             <div className="flex gap-4 justify-center">
               <Button
-                onClick={handleConfirm}
-                size="xl"
-                className="py-2 px-6 grow"
-              >
-                확인
-              </Button>
-              <Button
                 variant="secondary"
                 onClick={() => navigate("/profile")}
                 size="xl"
                 className="grow"
               >
                 취소
+              </Button>
+              <Button
+                onClick={handleConfirm}
+                size="xl"
+                className="py-2 px-6 grow"
+              >
+                확인
               </Button>
             </div>
             {error && <p className="mt-4 text-red-500 font-medium">{error}</p>}
