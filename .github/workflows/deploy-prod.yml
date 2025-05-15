@@ -14,7 +14,9 @@ jobs:
   deploy:
     name: Build and Deploy to S3 (Production)
     runs-on: ubuntu-latest
-    environment: develop
+    environment:
+      name: production
+      url: https://signal.yourssu.com
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
