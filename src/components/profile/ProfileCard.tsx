@@ -66,29 +66,22 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             </h3>
             {contact ? (
               <a
-                href={`https://instagram.com/${contact.substring(1)}`}
+                href={
+                  contact.startsWith("@")
+                    ? `https://instagram.com/${contact.substring(1)}`
+                    : `tel:${contact}`
+                }
                 target="_blank"
                 className="w-full flex flex-row justify-center items-center gap-1 p-4 bg-[#FFF2F7] border border-[rgba(238,81,138,0.2)] rounded-2xl"
               >
-                {contact.startsWith("@") ? (
-                  <span
-                    className={cn(
-                      "font-medium leading-5 text-primary text-center underline text-lg",
-                      size === "small" && "text-base",
-                    )}
-                  >
-                    {contact}
-                  </span>
-                ) : (
-                  <span
-                    className={cn(
-                      "text-lg font-medium leading-5 text-primary text-center",
-                      size === "small" && "text-base",
-                    )}
-                  >
-                    {contact}
-                  </span>
-                )}
+                <span
+                  className={cn(
+                    "font-medium leading-5 text-primary text-center underline text-lg",
+                    size === "small" && "text-base",
+                  )}
+                >
+                  {contact}
+                </span>
               </a>
             ) : (
               <div className="flex flex-col items-stretch gap-1 w-full">
