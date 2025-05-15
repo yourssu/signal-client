@@ -61,8 +61,8 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
             <span className="text-primary">닉네임을 만들어주세요</span>
           </h2>
         </div>
-        <div className="flex flex-col items-end gap-[17px] w-full animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500">
-          <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col items-end gap-4 w-full animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500">
+          <div className="flex flex-col gap-0.5 self-stretch">
             <Input
               type="text"
               id="nickname"
