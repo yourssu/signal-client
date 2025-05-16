@@ -15,26 +15,26 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
   const viewer = useAtomValue(viewerSelfAtom);
   const onSale = (viewer?.ticket ?? 0) === 0;
   return (
-    <div className="flex flex-col items-stretch px-6 py-9 w-full">
+    <div className="flex flex-col gap-4 items-stretch px-4 py-6 w-full">
       {/* Progress and Title Section */}
-      <div className="flex flex-col gap-2.5 px-[11px] h-[86px]">
+      <div className="flex flex-col gap-2">
         {/* Progress indicator */}
-        <span className="text-[#525252] text-xs font-normal">1 / 2</span>
+        <p className="text-black-600 text-xs font-normal animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
+          1 / 2
+        </p>
 
         {/* Title */}
-        <div className="flex flex-col gap-[7px]">
-          <h2 className="text-2xl font-semibold text-black-700 leading-[1.3em]">
-            이용권이 필요해요
-            <br />
-            <span className="text-primary">몇 장을 충전할까요?</span>
-          </h2>
-        </div>
+        <h2 className="text-2xl font-semibold text-black-700 leading-[1.3em] animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
+          이용권이 필요해요
+          <br />
+          <span className="text-primary">몇 장을 충전할까요?</span>
+        </h2>
       </div>
 
       {/* Character and Package Options */}
-      <div className="flex flex-col items-center gap-[21px] mt-4 w-full">
+      <div className="flex flex-col items-center gap-2 w-full animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500">
         {/* Character Image */}
-        <div className="w-[180px] h-[180px] rounded-full overflow-hidden">
+        <div className="size-[160px] rounded-full overflow-hidden">
           <img
             src={mainCharacter}
             alt="캐릭터"
@@ -71,6 +71,9 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
             </Button>
           ))}
         </div>
+        <p className="text-sm">
+          프로필 등록 후 첫 구매 할인이 적용된 가격입니다.
+        </p>
       </div>
     </div>
   );
