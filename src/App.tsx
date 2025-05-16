@@ -1,5 +1,5 @@
 import React from "react";
-import { RouterProvider, createBrowserRouter } from "react-router";
+import { Navigate, RouterProvider, createBrowserRouter } from "react-router";
 import Layout from "@/components/Layout";
 import HomePage from "@/pages/page";
 import ProfileRegisterPage from "@/pages/profile/register/page";
@@ -9,6 +9,7 @@ import ContactViewPage from "@/pages/profile/contact/page";
 import NotFound from "@/pages/NotFound";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import SavedProfilesPage from "@/pages/profile/saved/page";
+import { ENABLE_PROFILE_VIEW, ENABLE_REGISTER } from "@/env";
 
 const router = createBrowserRouter([
   {
@@ -22,23 +23,43 @@ const router = createBrowserRouter([
       },
       {
         path: "verify",
-        element: <ProfileVerificationPage />,
+        element: ENABLE_PROFILE_VIEW ? (
+          <ProfileVerificationPage />
+        ) : (
+          <Navigate to="/" />
+        ),
       },
       {
         path: "profile",
-        element: <ProfileListPage />,
+        element: ENABLE_PROFILE_VIEW ? (
+          <ProfileListPage />
+        ) : (
+          <Navigate to="/" />
+        ),
       },
       {
         path: "profile/register",
-        element: <ProfileRegisterPage />,
+        element: ENABLE_REGISTER ? (
+          <ProfileRegisterPage />
+        ) : (
+          <Navigate to="/" />
+        ),
       },
       {
         path: "profile/contact",
-        element: <ContactViewPage />,
+        element: ENABLE_PROFILE_VIEW ? (
+          <ContactViewPage />
+        ) : (
+          <Navigate to="/" />
+        ),
       },
       {
         path: "profile/saved",
-        element: <SavedProfilesPage />,
+        element: ENABLE_PROFILE_VIEW ? (
+          <SavedProfilesPage />
+        ) : (
+          <Navigate to="/" />
+        ),
       },
     ],
   },

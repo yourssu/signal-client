@@ -28,3 +28,13 @@ export const ACCOUNT_OWNER: string =
   import.meta.env.VITE_ACCOUNT_OWNER ?? "유어슈";
 export const ENABLE_SAVED: boolean =
   import.meta.env.VITE_ENABLE_SAVED === "true";
+export const ENABLE_PROFILE_VIEW: boolean =
+  import.meta.env.VITE_ENABLE_PROFILE_VIEW === "true";
+export const ENABLE_REGISTER: boolean =
+  import.meta.env.VITE_ENABLE_REGISTER === "true";
+export const DISABLED_PROFILE_VIEW_DESC: string =
+  import.meta.env.VITE_DISABLED_PROFILE_VIEW_DESC ??
+  "5/21(수) 10:00부터 프로필을 등록할 수 있어요.";
+export const DISABLED_REGISTER_DESC: string =
+  import.meta.env.VITE_DISABLED_REGISTER_DESC ??
+  "5/19(월) 19:00부터 프로필을 등록할 수 있어요.";
