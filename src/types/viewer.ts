@@ -16,6 +16,10 @@ export interface VerificationResponse {
   verificationCode: number;
 }
 
+export interface PayNotificationRequest {
+  message: string;
+}
+
 export interface ViewerSelfRequest {
   uuid: string;
 }

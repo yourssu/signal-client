@@ -4,7 +4,11 @@ import {
   useQuery,
   UseQueryOptions,
 } from "@tanstack/react-query";
-import { VerificationResponse, ViewerResponse } from "@/types/viewer";
+import {
+  PayNotificationRequest,
+  VerificationResponse,
+  ViewerResponse,
+} from "@/types/viewer";
 import { SignalResponse } from "@/types/common";
 import { TicketIssuedRequest } from "@/types/admin";
 import { SignalError } from "@/lib/error";
@@ -60,6 +64,32 @@ export const useIssueTicket = (
         body: JSON.stringify(data),
       });
       const res = (await response.json()) as SignalResponse<ViewerResponse>;
+      if (!("result" in res)) {
+        throw new SignalError(res.message, res.status, res.timestamp);
+      } else {
+        return res.result;
+      }
+    },
+    ...mutationOptions,
+  });
+};
+
+export const usePayNotification = (
+  mutationOptions?: Omit<
+    UseMutationOptions<string, SignalError, PayNotificationRequest>,
+    "mutationFn"
+  >,
+) => {
+  return useMutation({
+    mutationFn: async (data: PayNotificationRequest) => {
+      const response = await fetch(`${API_BASE_URL}/api/notification`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const res = (await response.json()) as SignalResponse<string>;
       if (!("result" in res)) {
         throw new SignalError(res.message, res.status, res.timestamp);
       } else {
