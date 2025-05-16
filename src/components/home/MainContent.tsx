@@ -24,31 +24,43 @@ const MainContent = ({ profileRegistered, verifyNeeded }: MainContentProps) => {
   const [viewGuardOpen, setViewGuardOpen] = useState(false);
 
   return (
-    <div className="flex flex-col items-center justify-center flex-1 p-6 grow">
-      <div className="flex flex-col items-center justify-center gap-4 w-full grow">
-        <div className="flex flex-col items-center gap-2">
-          <h1 className="text-3xl font-semibold text-center leading-tight tracking-tight text-black-700">
-            당신의 시그널을
-            <br />
-            기다리고 있어요
-          </h1>
-          <p className="text-lg font-semibold text-black-600 tracking-tight">
-            <span className="text-primary">{count}명</span>이 기다리고 있어요
-          </p>
-        </div>
-
-        <div className="w-full max-w-[280px]">
-          <img src={main} alt="Cat Character" className="w-full h-auto" />
-        </div>
+    <div className="flex flex-col items-center justify-center flex-1 p-6 grow gap-5">
+      {/* Top section with title and subtitle */}
+      <div className="flex flex-col items-center gap-2 py-4">
+        <p className="text-primary font-semibold text-sm leading-tight">
+          숭실대생을 위한 소개팅 서비스, 시그널
+        </p>
+        <h1 className="text-3xl font-semibold text-center leading-tight text-black-600">
+          시그널을 보내면
+          <br />
+          운명의 상대와 연결돼요
+        </h1>
       </div>
 
+      {/* Middle section with image */}
+      <div className="w-full max-w-[280px]">
+        <img src={main} alt="Cat Character" className="w-full h-auto" />
+      </div>
+
+      {/* Text section before buttons */}
+      <div className="flex flex-col w-full gap-1 text-center grow">
+        <p className="text-black-600 text-base font-medium">
+          <span className="text-primary">{count}명</span>이 당신을 기다리고
+          있어요
+        </p>
+        <p className="text-muted-foreground text-xs font-medium">
+          '시그널 보내기'를 눌러 마음을 전달하세요
+        </p>
+      </div>
+
+      {/* Button section */}
       <div className="flex flex-col items-stretch gap-4 w-full">
         {ENABLE_REGISTER ? (
           <Link
             to="/profile/register"
             className={cn(
               buttonVariants({ variant: "secondary" }),
-              "h-14 text-xl rounded-2xl text-pink shadow-sm",
+              "h-14 text-lg rounded-2xl text-primary bg-[#FFF2F7] shadow-sm font-medium tracking-[-0.01em]",
             )}
           >
             {profileRegistered ? "내 프로필 보기" : "프로필 등록하기"}
@@ -58,7 +70,7 @@ const MainContent = ({ profileRegistered, verifyNeeded }: MainContentProps) => {
             variant="secondary"
             className={cn(
               buttonVariants({ variant: "secondary" }),
-              "h-14 text-xl rounded-2xl text-pink shadow-sm",
+              "h-14 text-lg rounded-2xl text-primary bg-[#FFF2F7] shadow-sm font-medium tracking-[-0.01em]",
             )}
             onClick={() => setRegisterGuardOpen(true)}
           >
@@ -71,7 +83,7 @@ const MainContent = ({ profileRegistered, verifyNeeded }: MainContentProps) => {
             to={verifyNeeded ? "/verify" : "/profile"}
             className={cn(
               buttonVariants({ variant: "default" }),
-              "h-14 text-xl rounded-2xl bg-white text-pink hover:bg-white/90",
+              "h-14 text-lg rounded-2xl bg-white text-primary hover:bg-white/90 font-medium tracking-[-0.01em]",
             )}
           >
             시그널 보내기
@@ -81,7 +93,7 @@ const MainContent = ({ profileRegistered, verifyNeeded }: MainContentProps) => {
             variant="default"
             className={cn(
               buttonVariants({ variant: "default" }),
-              "h-14 text-xl rounded-2xl bg-white text-pink hover:bg-white/90",
+              "h-14 text-lg rounded-2xl bg-white text-primary hover:bg-white/90 font-medium tracking-[-0.01em]",
             )}
             onClick={() => setViewGuardOpen(true)}
           >
