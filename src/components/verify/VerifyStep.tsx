@@ -1,14 +1,21 @@
 import { userGenderAtom } from "@/atoms/userGender";
-import { ACCOUNT, ACCOUNT_OWNER } from "@/env";
+import { ACCOUNT, ACCOUNT_OWNER, PRIVACY, TERMS } from "@/env";
 import { cn } from "@/lib/utils";
 import { useAtomValue } from "jotai";
-import { Copy } from "lucide-react";
+import { Copy, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Button } from "../ui/button";
+import { Progress } from "../ui/progress";
+import TermsDrawer from "@/components/TermsDrawer";
+import { RenameRequestDrawer } from "./RenameRequestDrawer";
 
 interface VerifyStepProps {
   isLoading: boolean;
   verificationCode: number | null;
-  onManualCheck: () => void;
+  onStartCheck: () => void;
+  onEndCheck: () => void;
+  onRenameRequested: (name: string) => void;
 }
 
 // Helper function to split the code into digits or return placeholders
@@ -25,10 +32,37 @@ const getCodeDigits = (code: number | null, loading: boolean): string[] => {
 export const VerifyStep = ({
   isLoading,
   verificationCode,
-  onManualCheck,
+  onStartCheck,
+  onEndCheck,
+  onRenameRequested,
 }: VerifyStepProps) => {
   const gender = useAtomValue(userGenderAtom);
   const digits = getCodeDigits(verificationCode, isLoading);
+  const [isChecking, setIsChecking] = useState(false);
+  const [remainingTime, setRemainingTime] = useState(30);
+  const [openTerms, setOpenTerms] = useState(false); // State to track terms modal
+  const [openPrivacy, setOpenPrivacy] = useState(false); // State to track privacy modal
+  const [openRenameDrawer, setOpenRenameDrawer] = useState(false); // State to track rename drawer
+  const [checkFailed, setCheckFailed] = useState(false); // State to track check failure
+
+  useEffect(() => {
+    let timer: number | undefined;
+
+    if (isChecking && remainingTime > 0) {
+      timer = window.setInterval(() => {
+        setRemainingTime((prev) => prev - 1);
+      }, 1000);
+    } else if (remainingTime === 0) {
+      onEndCheck();
+      setCheckFailed(true);
+      setIsChecking(false);
+      setRemainingTime(30);
+    }
+
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isChecking, onEndCheck, remainingTime]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(ACCOUNT).then(() => {
@@ -36,69 +70,176 @@ export const VerifyStep = ({
     });
   };
 
-  const handleManualCheck = () => {
-    onManualCheck();
+  const handleOpenTerms = () => {
+    setOpenTerms(true);
   };
+
+  const handleOpenPrivacy = () => {
+    setOpenPrivacy(true);
+  };
+
+  const handleStartCheck = () => {
+    if (!isChecking) {
+      setIsChecking(true);
+      onStartCheck();
+    }
+  };
+
+  const handleRenameRequested = (name: string) => {
+    if (name.length > 0) {
+      onRenameRequested(name);
+    } else {
+      toast.error("입금자명을 입력해주세요.");
+    }
+  };
+
   return (
-    // Main container matching Figma's Frame 1000011868 structure (approximated)
-    <div className="flex flex-col items-center grow w-full max-w-sm mx-auto py-8 px-4 gap-8">
-      {/* Text content block */}
-      <div className="flex flex-col items-center gap-1 text-center">
-        {/* Title - Using style from 1544:2063 */}
-        <h1 className="text-2xl font-semibold text-primary">
-          시그널을 이용하시겠어요?
-        </h1>
-        <h2 className="text-2xl font-semibold text-stone-600 whitespace-pre-line">
-          아래의 코드로 입금자명을
+    // Main container matching Figma's design
+    <div className="flex flex-col items-center justify-between grow w-full px-4 py-6 gap-4">
+      {/* Header section */}
+      <div className="flex flex-col gap-2 self-stretch">
+        <p className="text-xs text-black-600 font-normal animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
+          2 / 2
+        </p>
+        <h1 className="text-2xl font-semibold text-black-700 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
+          천천히 안내를 따르면
           <br />
-          설정하여 입금해주세요.
-        </h2>
+          <span className="text-primary">금방 시그널을 보낼 수 있어요!</span>
+        </h1>
       </div>
 
-      {/* Verification Code and Bank Info Block */}
-      <div className="flex flex-col items-center justify-center gap-5 w-full grow">
-        {/* Code Boxes - Based on Frame 1000011942 */}
-        <div className="flex justify-center items-center gap-2">
-          {digits.map((digit, index) => (
-            // Individual digit box - Based on Frame 1000011938 etc.
-            <div
-              key={index}
-              className="flex justify-center items-center bg-white/60 rounded-lg w-[60px] h-[60px] shadow-sm" // Adjusted size, bg-white/60 for rgba(255, 255, 255, 0.6)
+      {/* Steps section */}
+      <div className="flex flex-col w-full gap-4 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
+        {/* Step 1: Account copy */}
+        <div className="flex flex-col gap-2">
+          <h2 className="text-sm font-medium text-black-700">
+            Step 1. 계좌 복사
+          </h2>
+          <div className="bg-pink-50 border border-primary/20 rounded-lg p-4 flex items-center">
+            <p className="grow text-sm font-medium text-black-600">
+              <span
+                className="underline cursor-pointer"
+                onClick={copyToClipboard}
+              >
+                {ACCOUNT}
+              </span>
+              {` ${ACCOUNT_OWNER}`}
+            </p>
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={copyToClipboard}
+              className="p-2 rounded-full"
             >
-              {/* Digit text - Based on style 1544:2043 */}
+              <Copy className="size-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Step 2: Verification code */}
+        <div className="flex flex-col gap-2">
+          <h2 className="text-sm font-medium text-black-700">
+            Step 2. 입금자명 설정
+          </h2>
+          <div className="flex flex-col gap-2">
+            <p className="text-xs font-medium text-primary">
+              ⚠️ 아래 숫자를 '받는 분 통장 표시'에 입력해야 자동 충전돼요
+            </p>
+            <div className="bg-pink-50 border border-primary/20 rounded-lg p-2 flex items-center justify-center">
               <span
                 className={cn(
-                  "text-4xl font-medium",
+                  "text-xl font-medium",
                   gender === "MALE" ? "text-blue" : "text-primary",
                 )}
               >
-                {digit}
+                {digits.join("")}
               </span>
             </div>
-          ))}
+          </div>
         </div>
-        {/* Bank Account Info - Based on 1544:2058 */}
-        <p className="text-lg font-medium text-neutral-700">
-          <a
-            href="#"
-            className="inline-flex items-baseline gap-2"
-            onClick={copyToClipboard}
-          >
-            <Copy className="size-3 inline" />
-            <span className="underline">{ACCOUNT}</span>
+
+        {/* Step 3: Amount confirmation */}
+        <div className="flex flex-col gap-2">
+          <h2 className="text-sm font-medium text-black-700">
+            Step 3. 금액 확인
+          </h2>
+          <p className="bg-pink-50 border border-primary/20 rounded-lg p-4 text-center font-medium">
+            송금할 금액{" "}
+            <span className="text-primary font-semibold">
+              3,000원(이용권 4개)
+            </span>
+          </p>
+        </div>
+        {/* Terms notice */}
+        <p className="text-xs text-center mb-2">
+          결제 진행 시, '시그널'{" "}
+          <a onClick={handleOpenTerms} className="underline cursor-pointer">
+            서비스 이용약관
           </a>
-          {` ${ACCOUNT_OWNER}`}
-        </p>
-        <p className="text-sm text-center">
-          입금이 완료되면 자동으로 화면이 이동됩니다.
-          <br />
-          이동되지 않는다면{" "}
-          <a onClick={handleManualCheck} className="underline cursor-pointer">
-            여기를 눌러주세요
+          과<br />
+          <a onClick={handleOpenPrivacy} className="underline cursor-pointer">
+            개인정보 처리방침
           </a>
-          .
+          에 동의하는 것으로 간주됩니다.
         </p>
       </div>
+
+      {/* Button section */}
+      <div className="w-full flex flex-col gap-2">
+        {isChecking && (
+          <div className="flex flex-col gap-2 mb-4 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-300">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-stone-600">자동 확인 중...</span>
+              <span className="text-sm text-stone-600">
+                {remainingTime}초 남음
+              </span>
+            </div>
+            <Progress value={(remainingTime / 30) * 100} className="h-1" />
+          </div>
+        )}
+        {checkFailed && !isChecking && (
+          <p
+            className="text-sm text-primary font-medium underline text-center animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-300 cursor-pointer"
+            onClick={() => setOpenRenameDrawer(true)}
+          >
+            입금자명을 잘못 설정했나요?
+          </p>
+        )}
+        <Button
+          onClick={handleStartCheck}
+          disabled={isChecking}
+          className="w-full h-14 text-lg font-medium"
+          variant="default"
+        >
+          {isChecking ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              송금 확인 중...
+            </>
+          ) : checkFailed ? (
+            "재확인"
+          ) : (
+            "송금완료"
+          )}
+        </Button>
+      </div>
+      <TermsDrawer
+        open={openTerms}
+        onOpenChange={() => setOpenTerms(false)}
+        title="서비스 이용약관"
+        terms={TERMS}
+      />
+      <TermsDrawer
+        open={openPrivacy}
+        onOpenChange={() => setOpenPrivacy(false)}
+        title="개인정보 처리방침"
+        terms={PRIVACY}
+      />
+      <RenameRequestDrawer
+        open={openRenameDrawer}
+        onOpenChange={setOpenRenameDrawer}
+        onConfirm={handleRenameRequested}
+      />
     </div>
   );
 };

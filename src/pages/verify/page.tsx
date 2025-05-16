@@ -6,9 +6,8 @@ import { useUserUuid } from "@/hooks/useUserUuid";
 import { Package } from "@/types/viewer";
 import { useFunnel } from "@use-funnel/react-router";
 import { useAtom } from "jotai";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-import { toast } from "sonner";
 import PackageSelectionStep from "@/components/verify/PackageSelectionStep";
 
 const ProfileVerificationPage: React.FC = () => {
@@ -25,7 +24,7 @@ const ProfileVerificationPage: React.FC = () => {
   });
   const navigate = useNavigate();
   const uuid = useUserUuid();
-  const isManualRefetching = useRef(false);
+  const [isChecking, setIsChecking] = useState(false);
 
   const { data, isLoading: isVerificationLoading } =
     useViewerVerification(uuid);
@@ -34,12 +33,8 @@ const ProfileVerificationPage: React.FC = () => {
     [data],
   );
 
-  const {
-    data: viewerResponse,
-    refetch,
-    isRefetching,
-  } = useViewerSelf(uuid, {
-    refetchInterval: 1000,
+  const { data: viewerResponse, isRefetching } = useViewerSelf(uuid, {
+    refetchInterval: isChecking && 1000,
   });
 
   useEffect(() => {
@@ -51,11 +46,6 @@ const ProfileVerificationPage: React.FC = () => {
       ) {
         setViewer(viewerResponse);
         navigate("/profile");
-      } else if (isManualRefetching.current) {
-        toast.error(
-          "입금 확인에 실패했습니다.\n입금을 하셨다면 부스 STAFF에게 문의해 주세요.",
-        );
-        isManualRefetching.current = false;
       }
     }
   }, [viewerResponse, setViewer, navigate, viewer, isRefetching]);
@@ -72,9 +62,9 @@ const ProfileVerificationPage: React.FC = () => {
     }
   };
 
-  const handleManualCheck = () => {
-    refetch({ cancelRefetch: true });
-    isManualRefetching.current = true;
+  const handleRenameRequested = (name: string) => {
+    console.log("Rename requested with name:", name);
+    // TODO: Send rename request to server
   };
 
   return (
@@ -93,7 +83,9 @@ const ProfileVerificationPage: React.FC = () => {
               <VerifyStep
                 isLoading={isVerificationLoading}
                 verificationCode={verificationCode}
-                onManualCheck={handleManualCheck}
+                onStartCheck={() => setIsChecking(true)}
+                onEndCheck={() => setIsChecking(false)}
+                onRenameRequested={handleRenameRequested}
               />
             )}
           />
