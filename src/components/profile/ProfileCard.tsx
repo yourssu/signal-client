@@ -19,6 +19,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   className,
   size,
 }) => {
+  const shortenedYear = profile.birthYear.toString().slice(-2);
   return (
     <div
       className={cn(
@@ -26,7 +27,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         className,
       )}
     >
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-2">
         <Badge
           variant="outline"
           className={cn(
@@ -36,14 +37,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               : "border-primary/50 text-primary",
           )}
         >
-          {animalDisplayMap[profile.animal]}상
+          {shortenedYear}년생
           <Heart
             className={cn(
               "size-2",
               profile.gender === "MALE" ? "fill-blue" : "fill-primary",
             )}
           />
-          {profile.mbti}
+          {profile.department}
         </Badge>
         <div className="flex flex-col items-center w-full">
           <AnimalImage
@@ -56,14 +57,24 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         </div>
         <div className="flex flex-col items-stretch w-full">
           <div className="flex flex-col items-stretch gap-3 w-full">
-            <h3
-              className={cn(
-                "text-foreground font-semibold leading-5 text-center w-full text-xl",
-                size === "small" && "text-base",
-              )}
-            >
-              {profile.nickname}
-            </h3>
+            <div className="flex flex-col gap-1">
+              <h3
+                className={cn(
+                  "text-foreground font-semibold leading-5 text-center w-full text-xl",
+                  size === "small" && "text-base",
+                )}
+              >
+                {profile.nickname}
+              </h3>
+              <p
+                className={cn(
+                  "text-muted-foreground text-center text-sm font-medium",
+                  size === "small" && "text-xs",
+                )}
+              >
+                {animalDisplayMap[profile.animal]}·{profile.mbti}
+              </p>
+            </div>
             {contact ? (
               <a
                 href={
