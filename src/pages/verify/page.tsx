@@ -1,7 +1,11 @@
 import { viewerSelfAtom } from "@/atoms/viewerSelf";
 import TopBar from "@/components/TopBar";
 import { VerifyStep } from "@/components/verify/VerifyStep";
-import { useViewerSelf, useViewerVerification } from "@/hooks/queries/viewers";
+import {
+  useNotificationDeposit,
+  useViewerSelf,
+  useViewerVerification,
+} from "@/hooks/queries/viewers";
 import { useUserUuid } from "@/hooks/useUserUuid";
 import { Package } from "@/types/viewer";
 import { useFunnel } from "@use-funnel/react-router";
@@ -62,9 +66,16 @@ const ProfileVerificationPage: React.FC = () => {
     }
   };
 
+  const { mutate: sendRenameRequest } = useNotificationDeposit();
+
   const handleRenameRequested = (name: string) => {
-    console.log("Rename requested with name:", name);
-    // TODO: Send rename request to server
+    if (verificationCode) {
+      sendRenameRequest({
+        message: name,
+        verificationCode,
+      });
+    }
+    setIsChecking(true);
   };
 
   return (

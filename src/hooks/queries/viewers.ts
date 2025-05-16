@@ -5,7 +5,7 @@ import {
   UseQueryOptions,
 } from "@tanstack/react-query";
 import {
-  PayNotificationRequest,
+  NotificationDepositRequest,
   VerificationResponse,
   ViewerResponse,
 } from "@/types/viewer";
@@ -74,15 +74,15 @@ export const useIssueTicket = (
   });
 };
 
-export const usePayNotification = (
+export const useNotificationDeposit = (
   mutationOptions?: Omit<
-    UseMutationOptions<string, SignalError, PayNotificationRequest>,
+    UseMutationOptions<string, SignalError, NotificationDepositRequest>,
     "mutationFn"
   >,
 ) => {
   return useMutation({
-    mutationFn: async (data: PayNotificationRequest) => {
-      const response = await fetch(`${API_BASE_URL}/api/notification`, {
+    mutationFn: async (data: NotificationDepositRequest) => {
+      const response = await fetch(`${viewersBase}/deposit`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

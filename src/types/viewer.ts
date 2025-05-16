@@ -16,8 +16,9 @@ export interface VerificationResponse {
   verificationCode: number;
 }
 
-export interface PayNotificationRequest {
+export interface NotificationDepositRequest {
   message: string;
+  verificationCode: number;
 }
 
 export interface ViewerSelfRequest {
