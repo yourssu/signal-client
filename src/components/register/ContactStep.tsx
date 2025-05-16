@@ -66,7 +66,7 @@ const ContactStep: React.FC<ContactStepProps> = ({
         <div className="flex flex-col gap-2.5">
           {/* Progress Indicator - Based on 1412:7355 */}
           <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
-            6 / 6
+            8 / 8
           </p>
           {/* Using muted-foreground for #525252 */}
           {/* Title - Based on 1412:7357 */}
@@ -105,8 +105,8 @@ const ContactStep: React.FC<ContactStepProps> = ({
         </div>
       </div>
 
-      <div className="flex flex-col gap-1 w-full">
-        <p className="text-xs text-center">
+      <div className="flex flex-col gap-2 w-full">
+        <p className="text-xs text-center mb-2">
           프로필을 등록할 경우, '시그널'{" "}
           <a onClick={handleOpenTerms} className="underline cursor-pointer">
             서비스 이용약관

@@ -23,6 +23,8 @@ import RegisterDoneStep from "@/components/register/RegisterDoneStep";
 import TopBar from "@/components/TopBar";
 import { Progress } from "@/components/ui/progress";
 import { userProfileAtom } from "@/atoms/userProfile";
+import DepartmentStep from "@/components/register/DepartmentStep";
+import BirthYearStep from "@/components/register/BirthYearStep";
 
 const ProfileRegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -33,6 +35,8 @@ const ProfileRegisterPage: React.FC = () => {
     gender: Partial<ProfileContactResponse>;
     animal: Partial<ProfileContactResponse>;
     mbti: Partial<ProfileContactResponse>;
+    department: Partial<ProfileContactResponse>;
+    birthYear: Partial<ProfileContactResponse>;
     personality: Partial<ProfileContactResponse>;
     nickname: Partial<ProfileContactResponse>;
     contact: Partial<ProfileContactResponse>;
@@ -67,7 +71,17 @@ const ProfileRegisterPage: React.FC = () => {
 
   const handleMbtiSubmit = async (mbti: Mbti) => {
     funnel.history.replace("mbti", { ...funnel.context, mbti });
-    funnel.history.push("personality", { ...funnel.context, mbti });
+    funnel.history.push("department", { ...funnel.context, mbti });
+  };
+
+  const handleDepartmentSubmit = async (department: string) => {
+    funnel.history.replace("department", { ...funnel.context, department });
+    funnel.history.push("birthYear", { ...funnel.context, department });
+  };
+
+  const handleBirthYearSubmit = async (birthYear: number) => {
+    funnel.history.replace("birthYear", { ...funnel.context, birthYear });
+    funnel.history.push("personality", { ...funnel.context, birthYear });
   };
 
   const handlePersonalitySubmit = async (personality: string[]) => {
@@ -90,13 +104,31 @@ const ProfileRegisterPage: React.FC = () => {
   };
 
   const handleContactSubmit = async (contact: string) => {
-    const { gender, animal, mbti, introSentences, nickname } = funnel.context;
-    if (gender && animal && mbti && introSentences && nickname) {
+    const {
+      gender,
+      animal,
+      mbti,
+      department,
+      birthYear,
+      introSentences,
+      nickname,
+    } = funnel.context;
+    if (
+      gender &&
+      animal &&
+      mbti &&
+      department &&
+      birthYear &&
+      introSentences &&
+      nickname
+    ) {
       const finalData: ProfileCreatedRequest = {
         uuid,
         gender,
         animal,
         mbti,
+        department,
+        birthYear,
         introSentences,
         nickname,
         contact,
@@ -145,6 +177,18 @@ const ProfileRegisterPage: React.FC = () => {
               <MbtiStep
                 mbti={funnel.context.mbti}
                 onSubmit={handleMbtiSubmit}
+              />
+            )}
+            department={() => (
+              <DepartmentStep
+                department={funnel.context.department}
+                onSubmit={handleDepartmentSubmit}
+              />
+            )}
+            birthYear={() => (
+              <BirthYearStep
+                birthYear={funnel.context.birthYear}
+                onSubmit={handleBirthYearSubmit}
               />
             )}
             personality={() => (

@@ -1,51 +1,38 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
 import { cn, whenPressEnter } from "@/lib/utils";
-import { Mbti } from "@/types/profile"; // Assuming isValidMbti exists or needs creation
 import React, { useState, useMemo } from "react"; // Import useMemo
 
-const isValidMbti = (mbti: string): mbti is Mbti => {
-  if (typeof mbti !== "string" || mbti.length !== 4) return false;
-  const upperMbti = mbti.toUpperCase();
-  const validChars = [
-    ["E", "I"],
-    ["S", "N"],
-    ["T", "F"],
-    ["J", "P"],
-  ];
-  for (let i = 0; i < 4; i++) {
-    if (!validChars[i].includes(upperMbti[i])) {
-      return false;
-    }
-  }
-  return true;
-};
-
-interface MbtiStepProps {
-  mbti?: Mbti;
-  onSubmit: (mbti: Mbti) => void;
+interface BirthYearStepProps {
+  birthYear?: number;
+  onSubmit: (birthYear: number) => void;
 }
 
-const MbtiStep: React.FC<MbtiStepProps> = ({ mbti, onSubmit }) => {
-  const [mbtiInput, setMbtiInput] = useState<string>(mbti ?? ""); // Store raw input
+const BirthYearStep: React.FC<BirthYearStepProps> = ({
+  birthYear,
+  onSubmit,
+}) => {
+  const [birthYearInput, setBirthYearInput] = useState<number | null>(
+    birthYear ?? null,
+  ); // Store raw input
 
   // Validate MBTI input
-  const isValid = useMemo(() => isValidMbti(mbtiInput), [mbtiInput]);
+  const isValid = useMemo(
+    () => birthYearInput && birthYearInput < 2007,
+    [birthYearInput],
+  );
 
   const handleSubmit = () => {
     if (!isValid) return;
-    onSubmit(mbtiInput.toUpperCase() as Mbti); // Submit validated and formatted MBTI
+    onSubmit(birthYearInput!);
   };
 
   const submitOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) =>
     whenPressEnter(e, handleSubmit);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Allow only valid MBTI characters and limit length
-    const value = e.target.value.toUpperCase();
-    if (value.length <= 4) {
-      setMbtiInput(value);
-    }
+    const value = parseInt(e.target.value);
+    setBirthYearInput(value);
   };
 
   return (
@@ -55,28 +42,29 @@ const MbtiStep: React.FC<MbtiStepProps> = ({ mbti, onSubmit }) => {
         <div className="flex flex-col items-start gap-2.5">
           {/* Progress Indicator - Based on 1412:6567 */}
           <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
-            3 / 8
+            5 / 8
           </p>
           {/* Using muted-foreground for #525252 */}
           {/* Title - Based on 1412:6569 */}
           <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
-            성격 먼저 볼까요?
+            얼마나 고였는지 궁금해요! ㅎㅎ
             <br />
-            <span className="text-primary">MBTI를 적어주세요</span>
+            <span className="text-primary">출생년도를 입력해주세요</span>
           </h2>
         </div>
         <Input
-          type="text"
+          type="number"
           id="mbti"
           name="mbti"
-          value={mbtiInput}
+          value={birthYearInput ?? undefined}
           onChange={handleChange}
           onKeyDown={submitOnEnter}
           maxLength={4} // Enforce max length
+          max={2006}
           required
           // Styling based on Figma: text-2xl, text-center, placeholder color, bottom border
           className="w-full h-12 text-2xl px-2.5 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500" // Adjusted styles
-          placeholder="MBTI 입력 ex.ENFP" // Placeholder from Figma
+          placeholder="출생년도 ex. 2003" // Placeholder from Figma
         />
       </div>
       <Button
@@ -95,4 +83,4 @@ const MbtiStep: React.FC<MbtiStepProps> = ({ mbti, onSubmit }) => {
   );
 };
 
-export default MbtiStep;
+export default BirthYearStep;

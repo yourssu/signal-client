@@ -16,7 +16,7 @@ const GenderStep: React.FC<GenderStepProps> = ({ onSelect }) => {
       {/* Add top section for progress and title */}
       <div className="flex flex-col gap-[10px] w-full grow">
         <p className="text-xs text-[#525252] animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
-          1 / 6
+          1 / 8
         </p>
         {/* Update title text and style */}
         <h2 className="text-2xl font-semibold text-[#44403B] whitespace-pre-line animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">

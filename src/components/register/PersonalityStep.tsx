@@ -1,29 +1,34 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
-import { PERSONALITIES } from "@/env";
+// import { PERSONALITIES } from "@/env";
 import { whenPressEnter } from "@/lib/utils";
 import React, { useState, useMemo } from "react"; // Import useMemo
 
-const shuffle = <T,>(array: T[]) =>
-  array
-    .map((value) => ({ value, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ value }) => value);
+// const shuffle = <T,>(array: T[]) =>
+//   array
+//     .map((value) => ({ value, sort: Math.random() }))
+//     .sort((a, b) => a.sort - b.sort)
+//     .map(({ value }) => value);
 
-const getPersonalityExamples = (n: number): string[] => {
-  try {
-    if (PERSONALITIES.length < n) {
-      throw new Error("Not enough personality examples");
-    }
-    return shuffle(PERSONALITIES).slice(0, n);
-  } catch (e) {
-    console.error("Error parsing personality examples:", e);
-  }
-  return shuffle([
-    "답장 빨라요",
-    "낯가림 심한데 친해지면 말 많음",
-    "힙합 좋아해요",
-  ]).slice(0, n);
+const getPersonalityExamples = (): string[] => {
+  // try {
+  //   if (PERSONALITIES.length < n) {
+  //     throw new Error("Not enough personality examples");
+  //   }
+  //   return shuffle(PERSONALITIES).slice(0, n);
+  // } catch (e) {
+  //   console.error("Error parsing personality examples:", e);
+  // }
+  // return shuffle([
+  //   "답장 빨라요",
+  //   "낯가림 심한데 친해지면 말 많음",
+  //   "힙합 좋아해요",
+  // ]).slice(0, n);
+  return [
+    "본인 특징 (ex. 영화 좋아함, 장난기 많음)",
+    "함께 하고싶은 것 (ex. 공연 관람, 술 배틀)",
+    "이런 사람 만나고 싶어요 (ex. 키 큰 사람)",
+  ];
 };
 
 interface PersonalityStepProps {
@@ -71,10 +76,7 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
     });
   };
 
-  const personalityExamples = useMemo(
-    () => getPersonalityExamples(traits.length),
-    [traits.length],
-  );
+  const personalityExamples = useMemo(() => getPersonalityExamples(), []);
 
   return (
     // Main container - Based on Figma Frame 1000011957
@@ -82,12 +84,12 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
       <div className="flex flex-col gap-[43px] w-full grow">
         <div className="flex flex-col items-start gap-2.5">
           <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
-            4 / 6
+            6 / 8
           </p>
           <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
-            본인을 잘 드러내는
+            나를 어필할 수 있는
             <br />
-            <span className="text-primary">특징을 입력해주세요</span>
+            <span className="text-primary">특징 3가지를 입력해주세요</span>
           </h2>
         </div>
         <div className="flex flex-col gap-4 w-full">
@@ -104,10 +106,10 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => proceedWithEnter(index, e)}
                 maxLength={20}
-                required={index < 2} // Require at least the first two
+                required={true}
                 // Styling based on Figma INPUT instances (style_TGM91S, fill_HGA9Q2, stroke_BLRCWW)
                 className="w-full h-12 text-lg font-medium px-2.5" // Adjusted styles, placeholder style
-                placeholder={`ex. ${personalityExamples[index]}`} // Placeholder from Figma
+                placeholder={personalityExamples[index]} // Placeholder from Figma
               />
               <p className="text-xs text-end">{trait.length}/20</p>
             </div>

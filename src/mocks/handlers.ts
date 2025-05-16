@@ -88,6 +88,8 @@ export const handlers = [
       result: {
         profileId: Math.floor(Math.random() * 10000) + 1,
         gender: "MALE",
+        department: "테스트학과",
+        birthYear: 2002,
         animal: randomAnimal,
         mbti: getRandomMBTI(),
         nickname: getRandomNickname(randomAnimal),
@@ -119,6 +121,8 @@ export const handlers = [
       result: {
         profileId: Math.floor(Math.random() * 10000) + 1,
         gender: gender === "MALE" ? "FEMALE" : "MALE",
+        department: "테스트학과",
+        birthYear: 2002,
         animal: randomAnimal,
         mbti: getRandomMBTI(),
         nickname: getRandomNickname(randomAnimal),
@@ -134,6 +138,8 @@ export const handlers = [
       result: {
         profileId: 1234,
         gender: body.gender,
+        department: "테스트학과",
+        birthYear: 2002,
         animal: body.animal,
         mbti: body.mbti,
         nickname: body.nickname,
@@ -171,6 +177,8 @@ export const handlers = [
       result: {
         profileId,
         gender: "MALE",
+        department: "테스트학과",
+        birthYear: 2002,
         animal: "DOG",
         mbti: "ENTP",
         nickname: "총명한 강아지",

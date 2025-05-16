@@ -13,6 +13,8 @@ export type Mbti = `${"E" | "I"}${"N" | "S"}${"F" | "T"}${"J" | "P"}`;
 export interface ProfileCreatedRequest {
   uuid?: string;
   gender: Gender;
+  department: string;
+  birthYear: number;
   animal: AnimalType;
   contact: string;
   mbti: Mbti;
@@ -53,6 +55,8 @@ export interface NicknameCreatedResponse {
 export interface ProfileResponse {
   profileId: number;
   gender: Gender;
+  department: string;
+  birthYear: number;
   animal: AnimalType;
   mbti: Mbti;
   nickname: string;
