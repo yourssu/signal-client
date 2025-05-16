@@ -1,28 +1,26 @@
-import { userGenderAtom } from "@/atoms/userGender";
 import { viewerSelfAtom } from "@/atoms/viewerSelf";
-import GenderStep from "@/components/verify/GenderStep";
 import TopBar from "@/components/TopBar";
 import { VerifyStep } from "@/components/verify/VerifyStep";
 import { useViewerSelf, useViewerVerification } from "@/hooks/queries/viewers";
 import { useUserUuid } from "@/hooks/useUserUuid";
-import { Gender } from "@/types/profile";
+import { Package } from "@/types/viewer";
 import { useFunnel } from "@use-funnel/react-router";
 import { useAtom } from "jotai";
 import React, { useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import PackageSelectionStep from "@/components/verify/PackageSelectionStep";
 
 const ProfileVerificationPage: React.FC = () => {
-  const [gender, setGender] = useAtom(userGenderAtom);
   const [viewer, setViewer] = useAtom(viewerSelfAtom);
   const funnel = useFunnel<{
-    gender: { gender?: Gender };
-    verify: { gender?: Gender };
+    packageSelection: { package?: Package };
+    verify: { package?: Package };
   }>({
     id: "verify",
     initial: {
-      step: gender ? "verify" : "gender",
-      context: { ...(gender && { gender }) },
+      step: "packageSelection",
+      context: {},
     },
   });
   const navigate = useNavigate();
@@ -62,9 +60,8 @@ const ProfileVerificationPage: React.FC = () => {
     }
   }, [viewerResponse, setViewer, navigate, viewer, isRefetching]);
 
-  const handleGenderSelect = (gender: Gender) => {
-    setGender(gender);
-    funnel.history.push("verify", { gender });
+  const handlePackageSelect = (ticketPackage: Package) => {
+    funnel.history.push("verify", { package: ticketPackage });
   };
 
   const handleBack = () => {
@@ -89,7 +86,9 @@ const ProfileVerificationPage: React.FC = () => {
         {/* Funnel container - Max width */}
         <div className="w-full max-w-md h-full flex flex-col grow items-stretch justify-stretch">
           <funnel.Render
-            gender={() => <GenderStep onSelect={handleGenderSelect} />}
+            packageSelection={() => (
+              <PackageSelectionStep onSelect={handlePackageSelect} />
+            )}
             verify={() => (
               <VerifyStep
                 isLoading={isVerificationLoading}

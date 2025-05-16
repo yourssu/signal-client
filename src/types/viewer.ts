@@ -5,6 +5,13 @@ export interface VerificationRequestParams {
   gender: Gender;
 }
 
+export interface Package {
+  id: string;
+  name: string;
+  quantity: [number, number]; // Discounted, Original
+  price: [number, number];
+}
+
 export interface VerificationResponse {
   verificationCode: number;
 }

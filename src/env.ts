@@ -1,3 +1,5 @@
+import { Package } from "@/types/viewer";
+
 // Commit hash for development
 export const SHA: string | undefined = import.meta.env.VITE_SHA;
 // SHA is undefined in local development
@@ -38,3 +40,26 @@ export const DISABLED_PROFILE_VIEW_DESC: string =
 export const DISABLED_REGISTER_DESC: string =
   import.meta.env.VITE_DISABLED_REGISTER_DESC ??
   "5/19(월) 19:00부터 프로필을 등록할 수 있어요.";
+export const TICKET_PACKAGES: Package[] = JSON.parse(
+  import.meta.env.VITE_TICKET_PACKAGES ??
+    `[
+  {
+    "id": "single",
+    "name": "1개",
+    "quantity": [1, 1],
+    "price": [700, 1000]
+  },
+  {
+    "id": "small",
+    "name": "4개",
+    "quantity": [4, 4],
+    "price": [2100, 3000]
+  },
+  {
+    "id": "best",
+    "name": "8개",
+    "quantity": [8, 8],
+    "price": [3500, 5000]
+  }
+]`,
+) as Package[];
