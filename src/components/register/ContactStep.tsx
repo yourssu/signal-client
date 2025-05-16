@@ -3,7 +3,7 @@ import { cn, whenPressEnter } from "@/lib/utils";
 import React, { useState, useMemo } from "react"; // Import useMemo
 import RegisterConfirmationDrawer from "./RegisterConfirmationDrawer";
 import { ProfileResponse } from "@/types/profile";
-import TermsDrawer from "@/components/register/TermsDrawer";
+import TermsDrawer from "@/components/TermsDrawer";
 import { PRIVACY, TERMS } from "@/env";
 
 interface ContactStepProps {
