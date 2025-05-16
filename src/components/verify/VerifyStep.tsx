@@ -109,7 +109,7 @@ export const VerifyStep = ({
       </div>
 
       {/* Steps section */}
-      <div className="flex flex-col w-full gap-4 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
+      <div className="flex flex-col w-full gap-4 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500">
         {/* Step 1: Account copy */}
         <div className="flex flex-col gap-2">
           <h2 className="text-sm font-medium text-black-700">
