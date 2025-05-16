@@ -76,24 +76,31 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               </p>
             </div>
             {contact ? (
-              <a
-                href={
-                  contact.startsWith("@")
-                    ? `https://instagram.com/${contact.substring(1)}`
-                    : `tel:${contact}`
-                }
-                target="_blank"
-                className="w-full flex flex-row justify-center items-center gap-1 p-4 bg-[#FFF2F7] border border-[rgba(238,81,138,0.2)] rounded-2xl"
-              >
-                <span
-                  className={cn(
-                    "font-medium leading-5 text-primary text-center underline text-lg",
-                    size === "small" && "text-base",
-                  )}
+              <>
+                <a
+                  href={
+                    contact.startsWith("@")
+                      ? `https://instagram.com/${contact.substring(1)}`
+                      : `tel:${contact}`
+                  }
+                  target="_blank"
+                  className="w-full flex flex-row justify-center items-center gap-1 p-4 bg-[#FFF2F7] border border-[rgba(238,81,138,0.2)] rounded-2xl"
                 >
-                  {contact}
-                </span>
-              </a>
+                  <span
+                    className={cn(
+                      "font-medium leading-5 text-primary text-center underline text-lg",
+                      size === "small" && "text-base",
+                    )}
+                  >
+                    {contact}
+                  </span>
+                </a>
+                <p className="text-sm text-primary font-medium">
+                  {contact.startsWith("@")
+                    ? "아이디를 누르면 인스타로 연결됩니다."
+                    : "번호를 누르면 연락처를 추가할 수 있습니다."}
+                </p>
+              </>
             ) : (
               <div className="flex flex-col items-stretch gap-1 w-full">
                 {profile.introSentences.map((sentence, index) => (

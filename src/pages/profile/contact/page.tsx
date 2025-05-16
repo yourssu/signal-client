@@ -113,27 +113,28 @@ const ContactViewPage: React.FC = () => {
                 isFlipped={true}
               />
             </div>
-
-            <Link
-              to={returnLink}
-              className={cn(
-                buttonVariants({ size: "xl" }),
-                "w-full rounded-2xl",
+            <div className="flex flex-row flex-wrap gap-4 w-full max-w-md">
+              {!ENABLE_SAVED && (
+                <Link
+                  to={"/profile/saved"}
+                  className={cn(
+                    buttonVariants({ variant: "secondary", size: "xl" }),
+                    "rounded-2xl text-primary grow",
+                  )}
+                >
+                  보낸 시그널 목록
+                </Link>
               )}
-            >
-              다른 시그널 보내기
-            </Link>
-            {!ENABLE_SAVED && (
               <Link
-                to={"/profile/saved"}
+                to={returnLink}
                 className={cn(
-                  buttonVariants({ variant: "secondary", size: "xl" }),
-                  "w-full rounded-2xl text-primary",
+                  buttonVariants({ size: "xl" }),
+                  "rounded-2xl grow",
                 )}
               >
-                보낸 시그널 목록 보기
+                다른 시그널 보내기
               </Link>
-            )}
+            </div>
           </div>
         </>
       )
