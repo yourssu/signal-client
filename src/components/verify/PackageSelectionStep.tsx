@@ -4,6 +4,7 @@ import { TICKET_PACKAGES } from "@/env";
 import { Button } from "@/components/ui/button";
 import { viewerSelfAtom } from "@/atoms/viewerSelf";
 import { useAtomValue } from "jotai";
+import { cn } from "@/lib/utils";
 
 interface PackageSelectionStepProps {
   onSelect: (ticketPackage: Package) => void;
@@ -71,7 +72,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
             </Button>
           ))}
         </div>
-        <p className="text-sm">
+        <p className={cn("text-sm", !onSale && "hidden")}>
           프로필 등록 후 첫 구매 할인이 적용된 가격입니다.
         </p>
       </div>
