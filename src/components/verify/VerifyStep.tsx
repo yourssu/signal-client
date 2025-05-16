@@ -3,7 +3,7 @@ import { ACCOUNT, ACCOUNT_OWNER, PRIVACY, TERMS } from "@/env";
 import { cn } from "@/lib/utils";
 import { useAtomValue } from "jotai";
 import { Copy, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
@@ -44,12 +44,11 @@ export const VerifyStep = ({
   const [openPrivacy, setOpenPrivacy] = useState(false); // State to track privacy modal
   const [openRenameDrawer, setOpenRenameDrawer] = useState(false); // State to track rename drawer
   const [checkFailed, setCheckFailed] = useState(false); // State to track check failure
+  const timerRef = useRef<number | null>(null); // Ref to store the timer ID
 
   useEffect(() => {
-    let timer: number | undefined;
-
     if (isChecking && remainingTime > 0) {
-      timer = window.setInterval(() => {
+      timerRef.current = window.setInterval(() => {
         setRemainingTime((prev) => prev - 1);
       }, 1000);
     } else if (remainingTime === 0) {
@@ -60,7 +59,7 @@ export const VerifyStep = ({
     }
 
     return () => {
-      if (timer) clearInterval(timer);
+      if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [isChecking, onEndCheck, remainingTime]);
 
