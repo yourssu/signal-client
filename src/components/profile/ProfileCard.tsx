@@ -95,7 +95,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                     {contact}
                   </span>
                 </a>
-                <p className="text-sm text-primary font-medium">
+                <p
+                  className={cn(
+                    "text-sm text-primary font-medium",
+                    size === "small" && "hidden",
+                  )}
+                >
                   {contact.startsWith("@")
                     ? "아이디를 누르면 인스타로 연결됩니다."
                     : "번호를 누르면 연락처를 추가할 수 있습니다."}
