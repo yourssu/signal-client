@@ -92,13 +92,13 @@ const MainContent = ({ profileRegistered, verifyNeeded }: MainContentProps) => {
       <ServiceDisabledDialog
         open={registerGuardOpen}
         onOpenChange={() => setRegisterGuardOpen(false)}
-        title="큐피드 납치 중..."
+        title="큐피드 납치 중...♥"
         content={DISABLED_REGISTER_DESC}
       />
       <ServiceDisabledDialog
         open={viewGuardOpen}
         onOpenChange={() => setViewGuardOpen(false)}
-        title="큐피드 납치 중..."
+        title="큐피드 납치 중...♥"
         content={DISABLED_PROFILE_VIEW_DESC}
       />
     </div>
