@@ -37,7 +37,7 @@ const BirthYearStep: React.FC<BirthYearStepProps> = ({
 
   return (
     // Main container - Based on Figma Frame 'Content' (1659:1810)
-    <div className="flex flex-col items-center pt-10 w-full">
+    <div className="flex flex-col items-center pt-2 w-full">
       <div className="flex flex-col items-stretch gap-10 w-full grow">
         <div className="flex flex-col items-start gap-2.5">
           {/* Progress Indicator - Based on 1412:6567 */}

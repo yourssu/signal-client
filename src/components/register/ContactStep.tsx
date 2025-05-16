@@ -61,7 +61,7 @@ const ContactStep: React.FC<ContactStepProps> = ({
 
   return (
     // Main container - Based on Figma Frame 1000011964
-    <div className="flex flex-col items-center pt-10 w-full">
+    <div className="flex flex-col items-center pt-2 w-full">
       <div className="flex flex-col items-stretch gap-[43px] w-full grow">
         <div className="flex flex-col gap-2.5">
           {/* Progress Indicator - Based on 1412:7355 */}

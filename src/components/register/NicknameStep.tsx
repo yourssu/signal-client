@@ -49,7 +49,7 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
 
   return (
     // Main container - Based on Figma Frame 1000011961
-    <div className="flex flex-col items-center pt-10 w-full">
+    <div className="flex flex-col items-center pt-2 w-full">
       <div className="flex flex-col items-stretch gap-[43px] w-full grow">
         <div className="flex flex-col gap-2.5">
           <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">

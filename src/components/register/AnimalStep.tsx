@@ -50,7 +50,7 @@ const animalIndexes = {
   ),
 };
 
-const IMAGE_WIDTH = 200; // Based on Figma Rectangles
+const IMAGE_WIDTH = 160; // Based on Figma Rectangles
 const GAP = 20; // Approximate gap from Figma
 
 const AnimalStep: React.FC<AnimalStepProps> = ({
@@ -137,7 +137,7 @@ const AnimalStep: React.FC<AnimalStepProps> = ({
 
   return (
     // Main container - Adjusted layout based on Figma Frame 1000011952
-    <div className="flex flex-col items-center pt-10 gap-6 w-full overflow-visible">
+    <div className="flex flex-col items-center pt-2 gap-6 w-full overflow-visible">
       {/* Top section: Progress and Title - Based on Frame 1426 */}
       <div className="flex flex-col items-start gap-2 w-full">
         <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">

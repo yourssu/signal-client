@@ -45,11 +45,11 @@ const RegisterConfirmationDrawer: React.FC<RegisterConfirmationDrawerProps> = ({
           <DrawerTitle className="text-xl font-semibold text-foreground">
             마지막으로 확인해주세요!
           </DrawerTitle>
-          <DrawerDescription className="text-muted-foreground">
+          <DrawerDescription className="text-muted-foreground -mt-1">
             작성한 프로필이 정확한가요?
           </DrawerDescription>
         </DrawerHeader>
-        <div className="flex flex-col items-center gap-6 px-4">
+        <div className="flex flex-col items-center gap-4 px-4 -mt-2">
           <div className="w-full max-w-sm">
             <TurnableProfileCard
               profile={profile}
@@ -58,14 +58,12 @@ const RegisterConfirmationDrawer: React.FC<RegisterConfirmationDrawerProps> = ({
             />
           </div>
 
-          <div className="flex flex-col items-center gap-2 text-center">
-            <p className="text-xs font-medium text-primary">
-              프로필은 한번 등록하면 수정할 수 없어요
-            </p>
-          </div>
+          <p className="text-center text-xs font-medium text-primary">
+            프로필은 한번 등록하면 수정할 수 없어요
+          </p>
         </div>
 
-        <DrawerFooter className="flex-row w-full max-w-md self-center">
+        <DrawerFooter className="flex-row w-full max-w-md self-center -mt-2">
           <DrawerClose asChild>
             <Button variant="secondary" size="xl">
               취소

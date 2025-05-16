@@ -13,17 +13,15 @@ const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
   onSubmit,
 }) => {
   return (
-    <div className="w-full max-w-md mx-auto flex flex-col gap-2 items-center grow">
+    <div className="w-full max-w-md mx-auto flex flex-col pt-2 gap-2 items-center grow">
       <h2 className="text-3xl font-bold text-center text-pink">
         프로필 등록 완료!
       </h2>
       <p className="text-base font-medium text-center text-black-600">
-        이 화면을 유어슈 STAFF에게 보여주면
-        <br />
-        프로필 열람 이용권을 500원 할인해 드려요
+        지금 이용권을 구매하면 30% 할인해 드려요
       </p>
 
-      <div className="grow flex flex-col justify-center items-center">
+      <div className="grow flex flex-col justify-center items-stretch self-stretch">
         <TurnableProfileCard profile={profile} contact={profile.contact} />
       </div>
       <Button type="submit" size="xl" className="w-full" onClick={onSubmit}>

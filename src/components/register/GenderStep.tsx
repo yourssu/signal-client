@@ -12,7 +12,7 @@ interface GenderStepProps {
 const GenderStep: React.FC<GenderStepProps> = ({ onSelect }) => {
   return (
     // Adjust main container layout and gap
-    <div className="flex flex-col items-center pt-10 w-full">
+    <div className="flex flex-col items-center pt-2 w-full">
       {/* Add top section for progress and title */}
       <div className="flex flex-col gap-[10px] w-full grow">
         <p className="text-xs text-[#525252] animate-in slide-in-from-bottom fade-in ease-in-out duration-300">

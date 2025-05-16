@@ -51,7 +51,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             animalType={profile.animal}
             className={cn(
               "w-full object-contain",
-              size === "small" ? "max-h-[80px]" : "max-h-[200px]",
+              size === "small" ? "max-h-[80px]" : "max-h-[140px]",
             )}
           />
         </div>
