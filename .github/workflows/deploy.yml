@@ -1,0 +1,71 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      deployment_url:
+        required: true
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy (${{ inputs.environment }})
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ inputs.deployment_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22" # Or your preferred Node.js version
+          cache: "pnpm" # Cache pnpm dependencies
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build project
+        run: pnpm build --mode=${{ inputs.environment }}
+        env:
+          VITE_API_BASE_URL: ${{ vars.API_BASE_URL }}
+          VITE_TICKET_COST: ${{ vars.TICKET_COST }}
+          VITE_ACCOUNT: ${{ vars.ACCOUNT }}
+          VITE_ACCOUNT_OWNER: ${{ vars.ACCOUNT_OWNER }}
+          VITE_PERSONALITIES: ${{ vars.PERSONALITIES }}
+          VITE_TERMS: ${{ vars.TERMS }}
+          VITE_PRIVACY: ${{ vars.PRIVACY }}
+          VITE_ENABLE_SAVED: ${{ vars.ENABLE_SAVED }}
+          VITE_ENABLE_PROFILE_VIEW: ${{ vars.ENABLE_PROFILE_VIEW }}
+          VITE_ENABLE_REGISTER: ${{ vars.ENABLE_REGISTER }}
+          VITE_DISABLED_PROFILE_VIEW_DESC: ${{ vars.DISABLED_PROFILE_VIEW_DESC }}
+          VITE_DISABLED_REGISTER_DESC: ${{ vars.DISABLED_REGISTER_DESC }}
+          VITE_SHA: ${{ github.sha }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2 # Specify your AWS region
+
+      - name: Upload to S3
+        run: |
+          aws s3 sync ./dist s3://${{ vars.S3_BUCKET_NAME }} --delete
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
