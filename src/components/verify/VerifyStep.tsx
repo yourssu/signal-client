@@ -12,6 +12,7 @@ import { RenameRequestDrawer } from "./RenameRequestDrawer";
 
 interface VerifyStepProps {
   isLoading: boolean;
+  isChecking: boolean;
   verificationCode: number | null;
   onStartCheck: () => void;
   onEndCheck: () => void;
@@ -31,6 +32,7 @@ const getCodeDigits = (code: number | null, loading: boolean): string[] => {
 
 export const VerifyStep = ({
   isLoading,
+  isChecking,
   verificationCode,
   onStartCheck,
   onEndCheck,
@@ -38,7 +40,6 @@ export const VerifyStep = ({
 }: VerifyStepProps) => {
   const gender = useAtomValue(userGenderAtom);
   const digits = getCodeDigits(verificationCode, isLoading);
-  const [isChecking, setIsChecking] = useState(false);
   const [remainingTime, setRemainingTime] = useState(30);
   const [openTerms, setOpenTerms] = useState(false); // State to track terms modal
   const [openPrivacy, setOpenPrivacy] = useState(false); // State to track privacy modal
@@ -54,7 +55,6 @@ export const VerifyStep = ({
     } else if (remainingTime === 0) {
       onEndCheck();
       setCheckFailed(true);
-      setIsChecking(false);
       setRemainingTime(30);
     }
 
@@ -79,7 +79,6 @@ export const VerifyStep = ({
 
   const handleStartCheck = () => {
     if (!isChecking) {
-      setIsChecking(true);
       onStartCheck();
     }
   };

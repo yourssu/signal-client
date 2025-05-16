@@ -83,6 +83,7 @@ const ProfileVerificationPage: React.FC = () => {
               <VerifyStep
                 isLoading={isVerificationLoading}
                 verificationCode={verificationCode}
+                isChecking={isChecking}
                 onStartCheck={() => setIsChecking(true)}
                 onEndCheck={() => setIsChecking(false)}
                 onRenameRequested={handleRenameRequested}
