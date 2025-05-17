@@ -3,7 +3,7 @@ import { ACCOUNT, ACCOUNT_OWNER, PRIVACY, TERMS } from "@/env";
 import { cn } from "@/lib/utils";
 import { useAtomValue } from "jotai";
 import { Copy, Loader2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
@@ -18,6 +18,8 @@ interface VerifyStepProps {
   onEndCheck: () => void;
   onRenameRequested: (name: string) => void;
 }
+
+const TIMEOUT_DURATION = 15;
 
 // Helper function to split the code into digits or return placeholders
 const getCodeDigits = (code: number | null, loading: boolean): string[] => {
@@ -40,28 +42,36 @@ export const VerifyStep = ({
 }: VerifyStepProps) => {
   const gender = useAtomValue(userGenderAtom);
   const digits = getCodeDigits(verificationCode, isLoading);
-  const [remainingTime, setRemainingTime] = useState(30);
+  const [remainingTime, setRemainingTime] = useState(TIMEOUT_DURATION);
   const [openTerms, setOpenTerms] = useState(false); // State to track terms modal
   const [openPrivacy, setOpenPrivacy] = useState(false); // State to track privacy modal
   const [openRenameDrawer, setOpenRenameDrawer] = useState(false); // State to track rename drawer
   const [checkFailed, setCheckFailed] = useState(false); // State to track check failure
   const timerRef = useRef<number | null>(null); // Ref to store the timer ID
 
+  const startTimer = useCallback(() => {
+    timerRef.current = window.setInterval(() => {
+      setRemainingTime((prev) => prev - 1);
+    }, 1000);
+  }, [setRemainingTime]);
+
+  const endTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
   useEffect(() => {
-    if (isChecking && remainingTime > 0) {
-      timerRef.current = window.setInterval(() => {
-        setRemainingTime((prev) => prev - 1);
-      }, 1000);
+    if (isChecking && remainingTime > 0 && timerRef.current === null) {
+      startTimer();
     } else if (remainingTime === 0) {
+      if (timerRef.current) endTimer();
       onEndCheck();
       setCheckFailed(true);
-      setRemainingTime(30);
+      setRemainingTime(TIMEOUT_DURATION);
     }
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [isChecking, onEndCheck, remainingTime]);
+  }, [isChecking, onEndCheck, remainingTime, startTimer]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(ACCOUNT).then(() => {
@@ -78,9 +88,7 @@ export const VerifyStep = ({
   };
 
   const handleStartCheck = () => {
-    if (!isChecking) {
-      onStartCheck();
-    }
+    onStartCheck();
   };
 
   const handleRenameRequested = (name: string) => {
@@ -192,7 +200,10 @@ export const VerifyStep = ({
                 {remainingTime}초 남음
               </span>
             </div>
-            <Progress value={(remainingTime / 30) * 100} className="h-1" />
+            <Progress
+              value={(remainingTime / TIMEOUT_DURATION) * 100}
+              className="h-1"
+            />
           </div>
         )}
         {checkFailed && !isChecking && (
