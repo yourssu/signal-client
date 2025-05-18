@@ -24,7 +24,11 @@ const ProfileListPage: React.FC = () => {
   const uuid = useUserUuid();
   const [gender, setGender] = useAtom(userGenderAtom);
   const desiredGender = gender === "MALE" ? "FEMALE" : "MALE";
-  const { data: viewerSelf } = useViewerSelf(uuid);
+  const { data: viewerSelf } = useViewerSelf(uuid, {
+    throwOnError: false,
+    retry: false,
+  });
+  console.log("viewerSelf", viewerSelf);
   const ticketCount = (viewerSelf?.ticket ?? 0) - (viewerSelf?.usedTicket ?? 0);
 
   // Get recently viewed profiles to exclude them from random profile fetch
@@ -46,7 +50,7 @@ const ProfileListPage: React.FC = () => {
   });
 
   useEffect(() => {
-    if (gender && ticketCount > 0 && !profile) refetch();
+    if (gender && !profile) refetch();
   }, [gender, profile, refetch, ticketCount]);
 
   // Add current profile to recently viewed profiles when it changes

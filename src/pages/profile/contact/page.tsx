@@ -50,8 +50,8 @@ const ContactViewPage: React.FC = () => {
       setProfileContact(res);
       addContact(res);
     } catch (e) {
-      console.log(e);
-      setError("이용권이 부족합니다.");
+      console.error(e);
+      navigate("/verify");
     }
   };
 
