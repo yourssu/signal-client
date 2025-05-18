@@ -18,7 +18,7 @@ const ProfileVerificationPage: React.FC = () => {
   const [viewer, setViewer] = useAtom(viewerSelfAtom);
   const funnel = useFunnel<{
     packageSelection: { package?: Package };
-    verify: { package?: Package };
+    verify: { package: Package };
   }>({
     id: "verify",
     initial: {
@@ -55,6 +55,7 @@ const ProfileVerificationPage: React.FC = () => {
   }, [viewerResponse, setViewer, navigate, viewer, isRefetching]);
 
   const handlePackageSelect = (ticketPackage: Package) => {
+    funnel.history.replace("packageSelection", { package: ticketPackage });
     funnel.history.push("verify", { package: ticketPackage });
   };
 
@@ -92,6 +93,7 @@ const ProfileVerificationPage: React.FC = () => {
             )}
             verify={() => (
               <VerifyStep
+                pkg={funnel.context.package!}
                 isLoading={isVerificationLoading}
                 verificationCode={verificationCode}
                 isChecking={isChecking}

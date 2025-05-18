@@ -9,8 +9,11 @@ import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
 import TermsDrawer from "@/components/TermsDrawer";
 import { RenameRequestDrawer } from "./RenameRequestDrawer";
+import { Package } from "@/types/viewer";
+import { viewerSelfAtom } from "@/atoms/viewerSelf";
 
 interface VerifyStepProps {
+  pkg: Package;
   isLoading: boolean;
   isChecking: boolean;
   verificationCode: number | null;
@@ -35,11 +38,14 @@ const getCodeDigits = (code: number | null, loading: boolean): string[] => {
 export const VerifyStep = ({
   isLoading,
   isChecking,
+  pkg,
   verificationCode,
   onStartCheck,
   onEndCheck,
   onRenameRequested,
 }: VerifyStepProps) => {
+  const viewer = useAtomValue(viewerSelfAtom);
+  const onSale = (viewer?.ticket ?? 0) === 0;
   const gender = useAtomValue(userGenderAtom);
   const digits = getCodeDigits(verificationCode, isLoading);
   const [remainingTime, setRemainingTime] = useState(TIMEOUT_DURATION);
@@ -170,10 +176,18 @@ export const VerifyStep = ({
             Step 3. 금액 확인
           </h2>
           <p className="bg-pink-50 border border-primary/20 rounded-lg p-4 text-center font-medium">
-            송금할 금액{" "}
-            <span className="text-primary font-semibold">
-              3,000원(이용권 4개)
-            </span>
+            송금할 금액:{" "}
+            {onSale ? (
+              <span className="text-primary">
+                <span>{pkg.price[0].toLocaleString()}원 </span>
+                <span className="text-xs">({pkg.quantity[0]}개)</span>
+              </span>
+            ) : (
+              <span className="text-primary">
+                {pkg.price[1].toLocaleString()}원
+                <span className="text-xs">({pkg.quantity[1]}개)</span>
+              </span>
+            )}
           </p>
         </div>
         {/* Terms notice */}
