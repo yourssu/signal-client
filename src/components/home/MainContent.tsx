@@ -17,7 +17,7 @@ interface MainContentProps {
   verifyNeeded: boolean;
 }
 
-const MainContent = ({ profileRegistered, verifyNeeded }: MainContentProps) => {
+const MainContent = ({ profileRegistered }: MainContentProps) => {
   const { data } = useCountProfile();
   const count = React.useMemo(() => data?.count ?? 0, [data?.count]);
   const [registerGuardOpen, setRegisterGuardOpen] = useState(false);
@@ -80,7 +80,7 @@ const MainContent = ({ profileRegistered, verifyNeeded }: MainContentProps) => {
 
         {ENABLE_PROFILE_VIEW ? (
           <Link
-            to={verifyNeeded ? "/verify" : "/profile"}
+            to="/profile"
             className={cn(
               buttonVariants({ variant: "default" }),
               "h-14 text-lg rounded-2xl bg-white text-primary hover:bg-white/90 font-medium tracking-[-0.01em]",
