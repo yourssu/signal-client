@@ -54,6 +54,8 @@ jobs:
           VITE_DISABLED_PROFILE_VIEW_DESC: ${{ vars.DISABLED_PROFILE_VIEW_DESC }}
           VITE_DISABLED_REGISTER_DESC: ${{ vars.DISABLED_REGISTER_DESC }}
           VITE_SHA: ${{ github.sha }}
+          VITE_GA_ID: ${{ vars.GA_ID }}
+          VITE_CLARITY_ID: ${{ vars.CLARITY_ID }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
