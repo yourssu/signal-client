@@ -6,6 +6,12 @@ export const SHA: string | undefined = import.meta.env.VITE_SHA;
 export const IS_LOCAL: boolean = !SHA;
 // Deployment mode. Setting this to "production" will disable devtools.
 export const MODE: string = import.meta.env.MODE;
+
+// GA4 Analytics ID
+export const GA_ID: string | undefined = import.meta.env.VITE_GA_ID;
+// Clarity Analytics ID
+export const CLARITY_ID: string | undefined = import.meta.env.VITE_CLARITY_ID;
+
 // Base URL for the API. This is used to make API calls.
 export const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 // Ticket cost for the service.
