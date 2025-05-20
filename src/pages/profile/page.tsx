@@ -29,7 +29,6 @@ const ProfileListPage: React.FC = () => {
     throwOnError: false,
     retry: false,
   });
-  console.log("viewerSelf", viewerSelf);
   const ticketCount = (viewerSelf?.ticket ?? 0) - (viewerSelf?.usedTicket ?? 0);
 
   // Get recently viewed profiles to exclude them from random profile fetch
