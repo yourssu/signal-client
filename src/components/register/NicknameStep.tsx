@@ -6,6 +6,7 @@ import { useGenerateNickname } from "@/hooks/queries/profiles";
 import { createPortal } from "react-dom";
 import generatingImg from "@/assets/register/generating.png";
 import { cn, whenPressEnter } from "@/lib/utils";
+import { buttonClick } from "@/lib/analytics";
 
 interface NicknameStepProps {
   onSubmit: (nickname: string) => void;
@@ -37,6 +38,7 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
   };
 
   const handleGenerateNickname = () => {
+    buttonClick("generate_nickname", "닉네임 생성기");
     generateNickname(
       { introSentences },
       {
