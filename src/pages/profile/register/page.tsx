@@ -189,7 +189,7 @@ const ProfileRegisterPage: React.FC = () => {
       <TopBar onBack={handleBack} />
       <div className="w-full max-w-md grow p-6 flex flex-col gap-10">
         {funnel.step !== "done" && (
-          <Progress value={((funnel.index + 1) / 6) * 100} />
+          <Progress value={((funnel.index + 1) / 8) * 100} />
         )}
         <div className="grow flex items-stretch justify-stretch">
           <funnel.Render
