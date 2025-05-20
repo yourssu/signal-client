@@ -18,6 +18,9 @@ import {
   funnelComplete,
   funnelStart,
   funnelStep,
+  purchaseTickets,
+  selectPackage,
+  viewPackages,
 } from "@/lib/analytics";
 
 const ProfileVerificationPage: React.FC = () => {
@@ -46,12 +49,14 @@ const ProfileVerificationPage: React.FC = () => {
   const { data: viewerResponse, isRefetching } = useViewerSelf(uuid, {
     refetchInterval: isChecking && 1000,
   });
+  const onSale = (viewer?.ticket ?? 0) === 0;
 
   useEffect(() => {
     if (funnel.historySteps.length === 1) {
       funnelStart("verify", "티켓 구매");
+      viewPackages(onSale);
     }
-  }, [funnel.historySteps.length]);
+  }, [funnel.historySteps.length, onSale]);
 
   useEffect(() => {
     if (viewerResponse) {
@@ -61,6 +66,7 @@ const ProfileVerificationPage: React.FC = () => {
         viewer.updatedTime !== viewerResponse.updatedTime
       ) {
         setViewer(viewerResponse);
+        purchaseTickets(funnel.context.package!, verificationCode!, onSale);
         funnelComplete("verify", "티켓 구매", funnel.context);
         navigate("/profile");
       }
@@ -72,12 +78,15 @@ const ProfileVerificationPage: React.FC = () => {
     viewer,
     isRefetching,
     funnel.context,
+    verificationCode,
+    onSale,
   ]);
 
   const handlePackageSelect = (ticketPackage: Package) => {
     funnel.history.replace("packageSelection", { package: ticketPackage });
     funnel.history.push("verify", { package: ticketPackage });
     funnelStep("verify", "티켓 구매", "packageSelection", funnel.context);
+    selectPackage(ticketPackage, onSale);
   };
 
   const handleBack = () => {
