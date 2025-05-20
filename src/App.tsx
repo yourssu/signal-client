@@ -10,6 +10,7 @@ import NotFound from "@/pages/NotFound";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import SavedProfilesPage from "@/pages/profile/saved/page";
 import { ENABLE_PROFILE_VIEW, ENABLE_REGISTER } from "@/env";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 const router = createBrowserRouter([
   {
@@ -66,6 +67,7 @@ const router = createBrowserRouter([
 ]);
 
 const App: React.FC = () => {
+  useAnalytics();
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
