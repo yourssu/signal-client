@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFunnel } from "@use-funnel/react-router";
 import GenderStep from "@/components/register/GenderStep";
 import AnimalStep from "@/components/register/AnimalStep";
@@ -25,6 +25,7 @@ import { Progress } from "@/components/ui/progress";
 import { userProfileAtom } from "@/atoms/userProfile";
 import DepartmentStep from "@/components/register/DepartmentStep";
 import BirthYearStep from "@/components/register/BirthYearStep";
+import { funnelComplete, funnelStart, funnelStep } from "@/lib/analytics";
 
 const ProfileRegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ const ProfileRegisterPage: React.FC = () => {
     contact: Partial<ProfileContactResponse>;
     done: ProfileContactResponse;
   }>({
-    id: "profile-register",
+    id: "profile.register",
     initial: profile
       ? {
           step: "done",
@@ -56,32 +57,43 @@ const ProfileRegisterPage: React.FC = () => {
         },
   });
 
+  useEffect(() => {
+    if (funnel.historySteps.length === 1) {
+      funnelStart("profile.register", "프로필 등록");
+    }
+  }, [funnel.historySteps.length]);
+
   const { mutateAsync: createProfile } = useCreateProfile();
 
   const handleGenderSelect = (gender: Gender) => {
     setGender(gender);
     funnel.history.replace("gender", { ...funnel.context, gender });
     funnel.history.push("animal", { ...funnel.context, gender });
+    funnelStep("profile.register", "프로필 등록", "gender", funnel.context);
   };
 
   const handleAnimalSelect = (animal: AnimalType) => {
     funnel.history.replace("animal", { ...funnel.context, animal });
     funnel.history.push("mbti", { ...funnel.context, animal });
+    funnelStep("profile.register", "프로필 등록", "animal", funnel.context);
   };
 
   const handleMbtiSubmit = async (mbti: Mbti) => {
     funnel.history.replace("mbti", { ...funnel.context, mbti });
     funnel.history.push("department", { ...funnel.context, mbti });
+    funnelStep("profile.register", "프로필 등록", "mbti", funnel.context);
   };
 
   const handleDepartmentSubmit = async (department: string) => {
     funnel.history.replace("department", { ...funnel.context, department });
     funnel.history.push("birthYear", { ...funnel.context, department });
+    funnelStep("profile.register", "프로필 등록", "department", funnel.context);
   };
 
   const handleBirthYearSubmit = async (birthYear: number) => {
     funnel.history.replace("birthYear", { ...funnel.context, birthYear });
     funnel.history.push("personality", { ...funnel.context, birthYear });
+    funnelStep("profile.register", "프로필 등록", "birthYear", funnel.context);
   };
 
   const handlePersonalitySubmit = async (personality: string[]) => {
@@ -93,6 +105,12 @@ const ProfileRegisterPage: React.FC = () => {
       ...funnel.context,
       introSentences: personality,
     });
+    funnelStep(
+      "profile.register",
+      "프로필 등록",
+      "personality",
+      funnel.context,
+    );
   };
 
   const handleNicknameSubmit = async (nickname: string) => {
@@ -101,6 +119,7 @@ const ProfileRegisterPage: React.FC = () => {
       ...funnel.context,
       nickname,
     });
+    funnelStep("profile.register", "프로필 등록", "nickname", funnel.context);
   };
 
   const handleContactSubmit = async (contact: string) => {
@@ -136,6 +155,15 @@ const ProfileRegisterPage: React.FC = () => {
       const res = await createProfile(finalData);
       funnel.history.replace("contact", res);
       funnel.history.push("done", res);
+      funnelComplete("profile.register", "프로필 등록", {
+        gender,
+        animal,
+        mbti,
+        department,
+        birthYear,
+        introSentences,
+        nickname,
+      });
       setProfile(res);
     }
   };

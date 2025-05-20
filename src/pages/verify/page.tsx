@@ -13,6 +13,12 @@ import { useAtom } from "jotai";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import PackageSelectionStep from "@/components/verify/PackageSelectionStep";
+import {
+  buttonClick,
+  funnelComplete,
+  funnelStart,
+  funnelStep,
+} from "@/lib/analytics";
 
 const ProfileVerificationPage: React.FC = () => {
   const [viewer, setViewer] = useAtom(viewerSelfAtom);
@@ -42,6 +48,12 @@ const ProfileVerificationPage: React.FC = () => {
   });
 
   useEffect(() => {
+    if (funnel.historySteps.length === 1) {
+      funnelStart("verify", "티켓 구매");
+    }
+  }, [funnel.historySteps.length]);
+
+  useEffect(() => {
     if (viewerResponse) {
       // Navigate if tickets are present (initial load or increase) or profile updated
       if (
@@ -49,14 +61,23 @@ const ProfileVerificationPage: React.FC = () => {
         viewer.updatedTime !== viewerResponse.updatedTime
       ) {
         setViewer(viewerResponse);
+        funnelComplete("verify", "티켓 구매", funnel.context);
         navigate("/profile");
       }
     }
-  }, [viewerResponse, setViewer, navigate, viewer, isRefetching]);
+  }, [
+    viewerResponse,
+    setViewer,
+    navigate,
+    viewer,
+    isRefetching,
+    funnel.context,
+  ]);
 
   const handlePackageSelect = (ticketPackage: Package) => {
     funnel.history.replace("packageSelection", { package: ticketPackage });
     funnel.history.push("verify", { package: ticketPackage });
+    funnelStep("verify", "티켓 구매", "packageSelection", funnel.context);
   };
 
   const handleBack = () => {
@@ -75,6 +96,7 @@ const ProfileVerificationPage: React.FC = () => {
         message: name,
         verificationCode,
       });
+      buttonClick("send_rename_request", "이름 변경 요청");
     }
     setIsChecking(true);
   };

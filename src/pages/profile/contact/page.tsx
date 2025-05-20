@@ -13,25 +13,34 @@ import {
 } from "@/atoms/viewerProfiles";
 import TurnableProfileCard from "@/components/profile/TurnableProfileCard";
 import { ENABLE_SAVED, TICKET_COST } from "@/env";
+import { buttonClick, viewContact } from "@/lib/analytics";
+import { useViewerSelf } from "@/hooks/queries/viewers";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ContactViewPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [params] = useSearchParams();
-  const idStr = params.get("id") ?? "";
+  const queryClient = useQueryClient();
 
+  const idStr = params.get("id") ?? "";
   const from = params.get("from") ?? "profile";
+
+  const id = useMemo(() => Number(idStr), [idStr]);
   const returnLink = from === "saved" ? "/profile/saved" : "/profile";
 
-  const { profile } = location.state as { profile: ProfileResponse };
-  const id = useMemo(() => Number(idStr), [idStr]);
   const uuid = useUserUuid();
-  const { mutateAsync } = useConsumeTicket();
   const contactedProfiles = useAtomValue(contactedProfilesAtom);
+  const addContact = useSetAtom(contactProfileAtom);
+
+  const { profile } = location.state as { profile: ProfileResponse };
+  const { data: viewerSelf } = useViewerSelf(uuid);
+  const { mutateAsync } = useConsumeTicket();
+
   const contactedProfile = contactedProfiles.find(
     (profile) => profile.profileId === id,
   );
-  const addContact = useSetAtom(contactProfileAtom);
+
   const [isConfirmed, setIsConfirmed] = useState(
     contactedProfile !== undefined,
   );
@@ -39,12 +48,21 @@ const ContactViewPage: React.FC = () => {
     useState<ProfileContactResponse | null>(contactedProfile ?? null);
   const [error, setError] = useState<string | null>(null);
 
+  const handleCancel = () => {
+    buttonClick("cancel_view_content", "이용권 열람 취소");
+    navigate("/profile");
+  };
+
   const handleConfirm = async () => {
     try {
       const res = await mutateAsync({
         profileId: id,
         uuid,
       });
+      await queryClient.invalidateQueries({
+        queryKey: ["viewer", "uuid", uuid],
+      });
+      if (viewerSelf) viewContact(res, viewerSelf);
       setIsConfirmed(true);
       setError(null);
       setProfileContact(res);
@@ -74,7 +92,7 @@ const ContactViewPage: React.FC = () => {
             <div className="flex gap-4 justify-center">
               <Button
                 variant="secondary"
-                onClick={() => navigate("/profile")}
+                onClick={handleCancel}
                 size="xl"
                 className="grow"
               >

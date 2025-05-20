@@ -11,6 +11,7 @@ import {
   ENABLE_PROFILE_VIEW,
   ENABLE_REGISTER,
 } from "@/env";
+import { buttonClick } from "@/lib/analytics";
 
 interface MainContentProps {
   profileRegistered: boolean;
@@ -58,6 +59,11 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
         {ENABLE_REGISTER ? (
           <Link
             to="/profile/register"
+            onClick={() =>
+              profileRegistered
+                ? buttonClick("view_my_profile", "내 프로필 보기")
+                : buttonClick("register_profile", "프로필 등록하기")
+            }
             className={cn(
               buttonVariants({ variant: "secondary" }),
               "h-14 text-lg rounded-2xl text-primary bg-[#FFF2F7] shadow-sm font-medium tracking-[-0.01em]",
@@ -72,7 +78,10 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
               buttonVariants({ variant: "secondary" }),
               "h-14 text-lg rounded-2xl text-primary bg-[#FFF2F7] shadow-sm font-medium tracking-[-0.01em]",
             )}
-            onClick={() => setRegisterGuardOpen(true)}
+            onClick={() => {
+              buttonClick("register_profile_locked", "프로필 등록하기");
+              setRegisterGuardOpen(true);
+            }}
           >
             프로필 등록하기
           </Button>
@@ -81,6 +90,7 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
         {ENABLE_PROFILE_VIEW ? (
           <Link
             to="/profile"
+            onClick={() => buttonClick("send_signal", "시그널 보내기")}
             className={cn(
               buttonVariants({ variant: "default" }),
               "h-14 text-lg rounded-2xl bg-white text-primary hover:bg-white/90 font-medium tracking-[-0.01em]",
@@ -95,7 +105,10 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
               buttonVariants({ variant: "default" }),
               "h-14 text-lg rounded-2xl bg-white text-primary hover:bg-white/90 font-medium tracking-[-0.01em]",
             )}
-            onClick={() => setViewGuardOpen(true)}
+            onClick={() => {
+              buttonClick("send_signal_locked", "시그널 보내기");
+              setViewGuardOpen(true);
+            }}
           >
             시그널 보내기
           </Button>

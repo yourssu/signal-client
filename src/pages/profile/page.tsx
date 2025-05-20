@@ -18,6 +18,7 @@ import { userGenderAtom } from "@/atoms/userGender";
 import { ENABLE_SAVED } from "@/env";
 import GenderStep from "@/components/verify/GenderSelect";
 import { Gender } from "@/types/profile";
+import { viewProfile } from "@/lib/analytics";
 
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -57,6 +58,7 @@ const ProfileListPage: React.FC = () => {
   useEffect(() => {
     if (gender && profile && countData) {
       addRecentlyViewedProfile(profile.profileId.toString(), countData.count);
+      viewProfile(profile.profileId);
     }
   }, [profile, countData, addRecentlyViewedProfile, gender]);
 

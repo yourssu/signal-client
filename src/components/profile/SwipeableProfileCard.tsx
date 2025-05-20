@@ -1,5 +1,6 @@
 import { isFirstEntranceAtom } from "@/atoms/isFirstEntrance";
 import ProfileCard from "@/components/profile/ProfileCard";
+import { swipeComplete, swipeStart, swipeStop } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { ProfileResponse } from "@/types/profile";
 import { useAtom } from "jotai";
@@ -109,6 +110,7 @@ export const SwipeableProfileCard: React.FC<{
           y.set(100);
           x.set(0);
           opacity.set(0);
+          swipeComplete(direction > 0 ? "right" : "left", profile.profileId);
           onSwipe();
           setSwiped(false);
         },
@@ -116,6 +118,7 @@ export const SwipeableProfileCard: React.FC<{
     } else {
       // If swipe is not complete, animate back to center
       animate(x, 0, { duration: 0.3 });
+      swipeStop(xDir > 0 ? "right" : "left", profile.profileId);
     }
   };
 
@@ -123,6 +126,10 @@ export const SwipeableProfileCard: React.FC<{
   const handleTouchStart = (e: React.TouchEvent) => {
     // Store initial touch position
     const touchStartX = e.touches[0].clientX;
+    swipeStart(
+      touchStartX > window.innerWidth / 2 ? "right" : "left",
+      profile.profileId,
+    );
 
     const handleTouchMove = (e: TouchEvent) => {
       const currentX = e.touches[0].clientX;
@@ -149,6 +156,10 @@ export const SwipeableProfileCard: React.FC<{
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     const mouseStartX = e.clientX;
+    swipeStart(
+      mouseStartX > window.innerWidth / 2 ? "right" : "left",
+      profile.profileId,
+    );
 
     const handleMouseMove = (e: MouseEvent) => {
       const currentX = e.clientX;
