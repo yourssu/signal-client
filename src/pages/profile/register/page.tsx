@@ -11,7 +11,7 @@ import {
   ProfileCreatedRequest,
   ProfileResponse,
 } from "@/types/profile";
-import { useCreateProfile } from "@/hooks/queries/profiles";
+import { useCreateProfile, useSelfProfile } from "@/hooks/queries/profiles";
 import { useNavigate } from "react-router";
 import { useUserUuid } from "@/hooks/useUserUuid";
 import { useAtom } from "jotai";
@@ -56,6 +56,15 @@ const ProfileRegisterPage: React.FC = () => {
           },
         },
   });
+  const { data: latestProfile } = useSelfProfile(uuid, {
+    enabled: funnel.step === "done",
+  });
+
+  useEffect(() => {
+    if (latestProfile && profile != latestProfile) {
+      setProfile(latestProfile);
+    }
+  }, [profile, latestProfile, setProfile]);
 
   useEffect(() => {
     if (funnel.historySteps.length === 1) {

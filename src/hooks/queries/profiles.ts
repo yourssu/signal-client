@@ -44,6 +44,30 @@ export const useCountProfile = (
   });
 };
 
+export const useSelfProfile = (
+  uuid: string,
+  queryOptions?: Omit<
+    UseQueryOptions<ProfileContactResponse, SignalError>,
+    "queryKey" | "queryFn"
+  >,
+) => {
+  return useQuery({
+    queryKey: ["profiles", "uuid", uuid],
+    queryFn: async () => {
+      const response = await fetch(`${profileBase}/uuid?uuid=${uuid}`);
+      const res =
+        (await response.json()) as SignalResponse<ProfileContactResponse>;
+      if (!("result" in res)) {
+        throw new SignalError(res.message, res.status, res.timestamp);
+      } else {
+        return res.result;
+      }
+    },
+    enabled: !!uuid,
+    ...queryOptions,
+  });
+};
+
 export const useRandomProfile = (
   uuid: string,
   desiredGender: Gender,
