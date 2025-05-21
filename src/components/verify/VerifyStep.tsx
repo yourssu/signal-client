@@ -10,12 +10,12 @@ import { Progress } from "../ui/progress";
 import TermsDrawer from "@/components/TermsDrawer";
 import { RenameRequestDrawer } from "./RenameRequestDrawer";
 import { Package } from "@/types/viewer";
-import { viewerSelfAtom } from "@/atoms/viewerSelf";
 
 interface VerifyStepProps {
   pkg: Package;
   isLoading: boolean;
   isChecking: boolean;
+  isOnSale: boolean;
   verificationCode: number | null;
   onStartCheck: () => void;
   onEndCheck: () => void;
@@ -38,14 +38,13 @@ const getCodeDigits = (code: number | null, loading: boolean): string[] => {
 export const VerifyStep = ({
   isLoading,
   isChecking,
+  isOnSale,
   pkg,
   verificationCode,
   onStartCheck,
   onEndCheck,
   onRenameRequested,
 }: VerifyStepProps) => {
-  const viewer = useAtomValue(viewerSelfAtom);
-  const onSale = (viewer?.ticket ?? 0) === 0;
   const gender = useAtomValue(userGenderAtom);
   const digits = getCodeDigits(verificationCode, isLoading);
   const [remainingTime, setRemainingTime] = useState(TIMEOUT_DURATION);
@@ -177,7 +176,7 @@ export const VerifyStep = ({
           </h2>
           <p className="bg-pink-50 border border-primary/20 rounded-lg p-4 text-center font-medium">
             송금할 금액:{" "}
-            {onSale ? (
+            {isOnSale ? (
               <span className="text-primary">
                 <span>{pkg.price[0].toLocaleString()}원 </span>
                 <span className="text-xs">({pkg.quantity[0]}개)</span>

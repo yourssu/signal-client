@@ -2,19 +2,17 @@ import { Package } from "@/types/viewer";
 import mainCharacter from "@/assets/home/main.png";
 import { TICKET_PACKAGES } from "@/env";
 import { Button } from "@/components/ui/button";
-import { viewerSelfAtom } from "@/atoms/viewerSelf";
-import { useAtomValue } from "jotai";
 import { cn } from "@/lib/utils";
 
 interface PackageSelectionStepProps {
   onSelect: (ticketPackage: Package) => void;
+  isOnSale: boolean;
 }
 
 const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
   onSelect,
+  isOnSale,
 }) => {
-  const viewer = useAtomValue(viewerSelfAtom);
-  const onSale = (viewer?.ticket ?? 0) === 0;
   return (
     <div className="flex flex-col gap-4 items-stretch px-4 py-6 w-full">
       {/* Progress and Title Section */}
@@ -53,7 +51,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
               className="text-primary"
               onClick={() => onSelect(pkg)}
             >
-              {onSale ? (
+              {isOnSale ? (
                 <span>
                   {pkg.name} -{" "}
                   <sup className="text-muted-foreground line-through">
@@ -72,7 +70,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
             </Button>
           ))}
         </div>
-        <p className={cn("text-sm", !onSale && "hidden")}>
+        <p className={cn("text-sm", !isOnSale && "hidden")}>
           프로필 등록 후 첫 구매 할인이 적용된 가격입니다.
         </p>
       </div>

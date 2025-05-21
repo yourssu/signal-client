@@ -9,7 +9,7 @@ import {
 import { useUserUuid } from "@/hooks/useUserUuid";
 import { Package } from "@/types/viewer";
 import { useFunnel } from "@use-funnel/react-router";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import PackageSelectionStep from "@/components/verify/PackageSelectionStep";
@@ -22,9 +22,11 @@ import {
   selectPackage,
   viewPackages,
 } from "@/lib/analytics";
+import { userProfileAtom } from "@/atoms/userProfile";
 
 const ProfileVerificationPage: React.FC = () => {
   const [viewer, setViewer] = useAtom(viewerSelfAtom);
+  const profile = useAtomValue(userProfileAtom);
   const funnel = useFunnel<{
     packageSelection: { package?: Package };
     verify: { package: Package };
@@ -49,7 +51,7 @@ const ProfileVerificationPage: React.FC = () => {
   const { data: viewerResponse, isRefetching } = useViewerSelf(uuid, {
     refetchInterval: isChecking && 1000,
   });
-  const onSale = (viewer?.ticket ?? 0) === 0;
+  const onSale = !!profile && (viewer?.ticket ?? 0) === 0;
 
   useEffect(() => {
     if (funnel.historySteps.length === 1) {
@@ -120,7 +122,10 @@ const ProfileVerificationPage: React.FC = () => {
         <div className="w-full max-w-md h-full flex flex-col grow items-stretch justify-stretch">
           <funnel.Render
             packageSelection={() => (
-              <PackageSelectionStep onSelect={handlePackageSelect} />
+              <PackageSelectionStep
+                isOnSale={onSale}
+                onSelect={handlePackageSelect}
+              />
             )}
             verify={() => (
               <VerifyStep
@@ -128,6 +133,7 @@ const ProfileVerificationPage: React.FC = () => {
                 isLoading={isVerificationLoading}
                 verificationCode={verificationCode}
                 isChecking={isChecking}
+                isOnSale={onSale}
                 onStartCheck={() => setIsChecking(true)}
                 onEndCheck={() => setIsChecking(false)}
                 onRenameRequested={handleRenameRequested}
