@@ -69,3 +69,4 @@ export const TICKET_PACKAGES: Package[] = JSON.parse(
   }
 ]`,
 ) as Package[];
+export const NOTICE: string = import.meta.env.VITE_NOTICE ?? "";

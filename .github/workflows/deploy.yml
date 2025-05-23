@@ -56,6 +56,7 @@ jobs:
           VITE_SHA: ${{ github.sha }}
           VITE_GA_ID: ${{ vars.GA_ID }}
           VITE_CLARITY_ID: ${{ vars.CLARITY_ID }}
+          VITE_NOTICE: ${{ vars.NOTICE }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4

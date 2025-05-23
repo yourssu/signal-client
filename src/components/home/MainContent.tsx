@@ -10,6 +10,7 @@ import {
   DISABLED_REGISTER_DESC,
   ENABLE_PROFILE_VIEW,
   ENABLE_REGISTER,
+  NOTICE,
 } from "@/env";
 import { buttonClick } from "@/lib/analytics";
 
@@ -52,6 +53,7 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
         <p className="text-muted-foreground text-xs font-medium">
           '시그널 보내기'를 눌러 마음을 전달하세요
         </p>
+        {NOTICE && <p className="text-xs font-medium">{NOTICE}</p>}
       </div>
 
       {/* Button section */}
