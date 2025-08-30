@@ -3,7 +3,7 @@ import { Navigate, RouterProvider, createBrowserRouter } from "react-router";
 import Layout from "@/components/Layout";
 import HomePage from "@/pages/page";
 import ProfileRegisterPage from "@/pages/profile/register/page";
-import ProfileVerificationPage from "@/pages/verify/page";
+import BankAccountPaymentsPage from "@/pages/purchase/page";
 import ProfileListPage from "@/pages/profile/page";
 import ContactViewPage from "@/pages/profile/contact/page";
 import NotFound from "@/pages/NotFound";
@@ -15,7 +15,7 @@ import {
   ENABLE_REGISTER,
 } from "@/env";
 import { useAnalytics } from "@/hooks/useAnalytics";
-import KakaoPaymentsPage from "@/pages/verify/page__kakao";
+import KakaoPayPurchasePage from "@/pages/purchase/page__kakao";
 
 const router = createBrowserRouter([
   {
@@ -28,12 +28,12 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "verify",
+        path: "purchase",
         element: ENABLE_PROFILE_VIEW ? (
           ENABLE_KAKAO_PAYMENTS ? (
-            <KakaoPaymentsPage />
+            <KakaoPayPurchasePage />
           ) : (
-            <ProfileVerificationPage />
+            <BankAccountPaymentsPage />
           )
         ) : (
           <Navigate to="/" />

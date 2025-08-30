@@ -78,7 +78,7 @@ const TopBar: React.FC<TopBarProps> = ({ onBack }) => {
           </div>
         )}
 
-        <Link to="/verify" className="flex items-center gap-1">
+        <Link to="/purchase" className="flex items-center gap-1">
           <div className="w-6 h-6 flex items-center justify-center rounded-full p-1">
             <img src={ticketIcon} alt="Ticket" className="w-4 h-4" />
           </div>

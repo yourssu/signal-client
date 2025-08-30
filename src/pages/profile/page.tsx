@@ -16,7 +16,7 @@ import { SwipeableProfileCard } from "@/components/profile/SwipeableProfileCard"
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { userGenderAtom } from "@/atoms/userGender";
 import { ENABLE_SAVED } from "@/env";
-import GenderStep from "@/components/verify/GenderSelect";
+import GenderStep from "@/components/purchase/GenderSelect";
 import { Gender } from "@/types/profile";
 import { viewProfile } from "@/lib/analytics";
 

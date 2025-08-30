@@ -5,25 +5,19 @@ import TermsDrawer from "@/components/TermsDrawer";
 import { Package } from "@/types/viewer";
 import kakaoPayCI from "@/assets/icons/kakapay_ci.svg";
 import { useKakaoPaymentInitiate } from "@/hooks/queries/viewers";
+import { purchaseTickets } from "@/lib/analytics";
 
-interface KakaoPaymentsStepProps {
+interface KakaoPaymentStepProps {
   pkg: Package;
-  isLoading: boolean;
-  isChecking: boolean;
   isAuthenticated: boolean;
   isOnSale: boolean;
-  onStartCheck: () => void;
-  onEndCheck: () => void;
 }
 
-export const KakaoPaymentsStep = ({
-  isChecking,
-  isOnSale,
+export const KakaoPaymentStep = ({
   isAuthenticated,
+  isOnSale,
   pkg,
-  onStartCheck,
-  onEndCheck,
-}: KakaoPaymentsStepProps) => {
+}: KakaoPaymentStepProps) => {
   const [openTerms, setOpenTerms] = useState(false); // State to track terms modal
   const [openPrivacy, setOpenPrivacy] = useState(false); // State to track privacy modal
   const [openRefundPolicy, setOpenRefundPolicy] = useState(false); // State to track refund policy modal
@@ -32,6 +26,7 @@ export const KakaoPaymentsStep = ({
   const paymentInitiateMutation = useKakaoPaymentInitiate({
     onSuccess: (response) => {
       // Redirect to KakaoPay payment page
+      purchaseTickets(pkg, response.orderId, isOnSale);
       const isMobile =
         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
           navigator.userAgent,
@@ -43,7 +38,6 @@ export const KakaoPaymentsStep = ({
     },
     onError: (error) => {
       console.error("Payment initiation failed:", error);
-      onEndCheck();
     },
   });
 
@@ -64,7 +58,6 @@ export const KakaoPaymentsStep = ({
   };
 
   const handleStartCheck = () => {
-    onStartCheck();
     paymentInitiateMutation.mutate({
       quantity: pkg.quantity[isOnSale ? 0 : 1],
       price: pkg.price[isOnSale ? 0 : 1],
@@ -138,9 +131,7 @@ export const KakaoPaymentsStep = ({
       <div className="w-full flex flex-col gap-2">
         <Button
           onClick={handleStartCheck}
-          disabled={
-            isChecking || paymentInitiateMutation.isPending || !isAuthenticated
-          }
+          disabled={paymentInitiateMutation.isPending || !isAuthenticated}
           className="w-full h-14 text-lg font-medium"
           variant="default"
         >

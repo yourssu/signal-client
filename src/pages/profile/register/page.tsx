@@ -178,7 +178,7 @@ const ProfileRegisterPage: React.FC = () => {
   };
 
   const handleDone = () => {
-    navigate("/verify");
+    navigate("/purchase");
   };
 
   const handleBack = () => {

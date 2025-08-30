@@ -1,18 +1,20 @@
 import { viewerSelfAtom } from "@/atoms/viewerSelf";
 import TopBar from "@/components/TopBar";
+import { BankAccountPaymentStep } from "@/components/purchase/BankAccountPaymentStep";
 import {
+  useNotificationDeposit,
   useViewerSelf,
   useViewerVerification,
-  useKakaoPaymentApprove,
 } from "@/hooks/queries/viewers";
 import { useUserUuid } from "@/hooks/useUserUuid";
 import { Package } from "@/types/viewer";
 import { useFunnel } from "@use-funnel/react-router";
 import { useAtom, useAtomValue } from "jotai";
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router";
-import PackageSelectionStep from "@/components/verify/PackageSelectionStep";
+import { useNavigate } from "react-router";
+import PackageSelectionStep from "@/components/purchase/PackageSelectionStep";
 import {
+  buttonClick,
   funnelComplete,
   funnelStart,
   funnelStep,
@@ -21,18 +23,15 @@ import {
   viewPackages,
 } from "@/lib/analytics";
 import { userProfileAtom } from "@/atoms/userProfile";
-import { KakaoPaymentsStep } from "@/components/verify/KakaoPaymentsStep";
-import { useAuth } from "@/hooks/useAuth";
 
-const KakaoPaymentsPage: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+const BankAccountPaymentsPage: React.FC = () => {
   const [viewer, setViewer] = useAtom(viewerSelfAtom);
   const profile = useAtomValue(userProfileAtom);
   const funnel = useFunnel<{
     packageSelection: { package?: Package };
-    verify: { package: Package };
+    payment: { package: Package };
   }>({
-    id: "verify",
+    id: "payment",
     initial: {
       step: "packageSelection",
       context: {},
@@ -41,7 +40,6 @@ const KakaoPaymentsPage: React.FC = () => {
   const navigate = useNavigate();
   const uuid = useUserUuid();
   const [isChecking, setIsChecking] = useState(false);
-  const [searchParams] = useSearchParams();
 
   const { data, isLoading: isVerificationLoading } =
     useViewerVerification(uuid);
@@ -55,45 +53,23 @@ const KakaoPaymentsPage: React.FC = () => {
   });
   const onSale = !!profile && (viewer?.ticket ?? 0) === 0;
 
-  const paymentApproveMutation = useKakaoPaymentApprove({
-    onSuccess: (response) => {
-      console.log("Payment approved:", response);
-      // Start checking for viewer updates
-      setIsChecking(true);
-    },
-    onError: (error) => {
-      console.error("Payment approval failed:", error);
-      setIsChecking(false);
-    },
-  });
-
-  // Handle payment callback from KakaoPay
-  useEffect(() => {
-    const orderId = searchParams.get("orderId");
-    const pgToken = searchParams.get("pg_token");
-
-    if (orderId && pgToken && !paymentApproveMutation.isPending) {
-      paymentApproveMutation.mutate({ orderId, pgToken });
-    }
-  }, [searchParams, paymentApproveMutation]);
-
   useEffect(() => {
     if (funnel.historySteps.length === 1) {
-      funnelStart("verify", "티켓 구매");
+      funnelStart("payment", "티켓 구매");
       viewPackages(onSale);
     }
   }, [funnel.historySteps.length, onSale]);
 
   useEffect(() => {
-    if (viewerResponse && isChecking) {
+    if (viewerResponse) {
       // Navigate if tickets are present (initial load or increase) or profile updated
       if (
         viewer === null ||
         viewer.updatedTime !== viewerResponse.updatedTime
       ) {
         setViewer(viewerResponse);
-        purchaseTickets(funnel.context.package!, verificationCode!, onSale);
-        funnelComplete("verify", "티켓 구매", funnel.context);
+        purchaseTickets(funnel.context.package!, `${verificationCode}`, onSale);
+        funnelComplete("payment", "티켓 구매", funnel.context);
         navigate("/profile");
       }
     }
@@ -106,13 +82,12 @@ const KakaoPaymentsPage: React.FC = () => {
     funnel.context,
     verificationCode,
     onSale,
-    isChecking,
   ]);
 
   const handlePackageSelect = (ticketPackage: Package) => {
     funnel.history.replace("packageSelection", { package: ticketPackage });
-    funnel.history.push("verify", { package: ticketPackage });
-    funnelStep("verify", "티켓 구매", "packageSelection", funnel.context);
+    funnel.history.push("payment", { package: ticketPackage });
+    funnelStep("payment", "티켓 구매", "packageSelection", funnel.context);
     selectPackage(ticketPackage, onSale);
   };
 
@@ -122,6 +97,19 @@ const KakaoPaymentsPage: React.FC = () => {
     } else {
       navigate("/");
     }
+  };
+
+  const { mutate: sendRenameRequest } = useNotificationDeposit();
+
+  const handleRenameRequested = (name: string) => {
+    if (verificationCode) {
+      sendRenameRequest({
+        message: name,
+        verificationCode,
+      });
+      buttonClick("send_rename_request", "이름 변경 요청");
+    }
+    setIsChecking(true);
   };
 
   return (
@@ -139,15 +127,16 @@ const KakaoPaymentsPage: React.FC = () => {
                 onSelect={handlePackageSelect}
               />
             )}
-            verify={() => (
-              <KakaoPaymentsStep
+            payment={() => (
+              <BankAccountPaymentStep
                 pkg={funnel.context.package!}
                 isLoading={isVerificationLoading}
+                verificationCode={verificationCode}
                 isChecking={isChecking}
-                isAuthenticated={isAuthenticated}
                 isOnSale={onSale}
                 onStartCheck={() => setIsChecking(true)}
                 onEndCheck={() => setIsChecking(false)}
+                onRenameRequested={handleRenameRequested}
               />
             )}
           />
@@ -157,4 +146,4 @@ const KakaoPaymentsPage: React.FC = () => {
   );
 };
 
-export default KakaoPaymentsPage;
+export default BankAccountPaymentsPage;

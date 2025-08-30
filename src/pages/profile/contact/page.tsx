@@ -69,7 +69,7 @@ const ContactViewPage: React.FC = () => {
       addContact(res);
     } catch (e) {
       console.error(e);
-      navigate("/verify");
+      navigate("/purchase");
     }
   };
 

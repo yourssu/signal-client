@@ -11,7 +11,7 @@ import TermsDrawer from "@/components/TermsDrawer";
 import { RenameRequestDrawer } from "./RenameRequestDrawer";
 import { Package } from "@/types/viewer";
 
-interface VerifyStepProps {
+interface BankAccountPaymentStepProps {
   pkg: Package;
   isLoading: boolean;
   isChecking: boolean;
@@ -35,7 +35,7 @@ const getCodeDigits = (code: number | null, loading: boolean): string[] => {
   return code.toString().padStart(4, "0").split("");
 };
 
-export const VerifyStep = ({
+export const BankAccountPaymentStep = ({
   isLoading,
   isChecking,
   isOnSale,
@@ -44,7 +44,7 @@ export const VerifyStep = ({
   onStartCheck,
   onEndCheck,
   onRenameRequested,
-}: VerifyStepProps) => {
+}: BankAccountPaymentStepProps) => {
   const gender = useAtomValue(userGenderAtom);
   const digits = getCodeDigits(verificationCode, isLoading);
   const [remainingTime, setRemainingTime] = useState(TIMEOUT_DURATION);
