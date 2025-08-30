@@ -5,14 +5,14 @@ import ReactGA4 from "react-ga4";
 
 export const purchaseTickets = (
   pkg: Package,
-  verificationCode: number,
+  transactionId: string,
   discounted: boolean,
 ) => {
   if (!GA_ID) return;
   ReactGA4.event("purchase", {
     currency: "KRW",
     value: pkg.price[discounted ? 0 : 1],
-    transaction_id: verificationCode.toString(),
+    transaction_id: transactionId,
     items: [
       {
         item_id: pkg.id,

@@ -68,7 +68,7 @@ const ProfileVerificationPage: React.FC = () => {
         viewer.updatedTime !== viewerResponse.updatedTime
       ) {
         setViewer(viewerResponse);
-        purchaseTickets(funnel.context.package!, verificationCode!, onSale);
+        purchaseTickets(funnel.context.package!, `${verificationCode}`, onSale);
         funnelComplete("verify", "티켓 구매", funnel.context);
         navigate("/profile");
       }

@@ -4,11 +4,13 @@ import { Button } from "../ui/button";
 import TermsDrawer from "@/components/TermsDrawer";
 import { Package } from "@/types/viewer";
 import kakaoPayCI from "@/assets/icons/kakapay_ci.svg";
+import { useKakaoPaymentInitiate } from "@/hooks/queries/viewers";
 
 interface KakaoPaymentsStepProps {
   pkg: Package;
   isLoading: boolean;
   isChecking: boolean;
+  isAuthenticated: boolean;
   isOnSale: boolean;
   onStartCheck: () => void;
   onEndCheck: () => void;
@@ -17,6 +19,7 @@ interface KakaoPaymentsStepProps {
 export const KakaoPaymentsStep = ({
   isChecking,
   isOnSale,
+  isAuthenticated,
   pkg,
   onStartCheck,
   onEndCheck,
@@ -25,6 +28,24 @@ export const KakaoPaymentsStep = ({
   const [openPrivacy, setOpenPrivacy] = useState(false); // State to track privacy modal
   const [openRefundPolicy, setOpenRefundPolicy] = useState(false); // State to track refund policy modal
   const [openBusinessInfo, setOpenBusinessInfo] = useState(false); // State to track business info modal
+
+  const paymentInitiateMutation = useKakaoPaymentInitiate({
+    onSuccess: (response) => {
+      // Redirect to KakaoPay payment page
+      const isMobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent,
+        );
+      const redirectUrl = isMobile
+        ? response.nextRedirectMobileUrl
+        : response.nextRedirectPcUrl;
+      window.location.href = redirectUrl;
+    },
+    onError: (error) => {
+      console.error("Payment initiation failed:", error);
+      onEndCheck();
+    },
+  });
 
   const handleOpenTerms = () => {
     setOpenTerms(true);
@@ -44,6 +65,10 @@ export const KakaoPaymentsStep = ({
 
   const handleStartCheck = () => {
     onStartCheck();
+    paymentInitiateMutation.mutate({
+      quantity: pkg.quantity[isOnSale ? 0 : 1],
+      price: pkg.price[isOnSale ? 0 : 1],
+    });
   };
 
   return (
@@ -113,11 +138,13 @@ export const KakaoPaymentsStep = ({
       <div className="w-full flex flex-col gap-2">
         <Button
           onClick={handleStartCheck}
-          disabled={isChecking}
+          disabled={
+            isChecking || paymentInitiateMutation.isPending || !isAuthenticated
+          }
           className="w-full h-14 text-lg font-medium"
           variant="default"
         >
-          결제하기
+          {paymentInitiateMutation.isPending ? "결제 준비 중..." : "결제하기"}
         </Button>
       </div>
       <TermsDrawer

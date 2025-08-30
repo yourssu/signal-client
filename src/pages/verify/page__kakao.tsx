@@ -1,12 +1,16 @@
 import { viewerSelfAtom } from "@/atoms/viewerSelf";
 import TopBar from "@/components/TopBar";
-import { useViewerSelf, useViewerVerification } from "@/hooks/queries/viewers";
+import {
+  useViewerSelf,
+  useViewerVerification,
+  useKakaoPaymentApprove,
+} from "@/hooks/queries/viewers";
 import { useUserUuid } from "@/hooks/useUserUuid";
 import { Package } from "@/types/viewer";
 import { useFunnel } from "@use-funnel/react-router";
 import { useAtom, useAtomValue } from "jotai";
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import PackageSelectionStep from "@/components/verify/PackageSelectionStep";
 import {
   funnelComplete,
@@ -18,8 +22,10 @@ import {
 } from "@/lib/analytics";
 import { userProfileAtom } from "@/atoms/userProfile";
 import { KakaoPaymentsStep } from "@/components/verify/KakaoPaymentsStep";
+import { useAuth } from "@/hooks/useAuth";
 
 const KakaoPaymentsPage: React.FC = () => {
+  const { isAuthenticated } = useAuth();
   const [viewer, setViewer] = useAtom(viewerSelfAtom);
   const profile = useAtomValue(userProfileAtom);
   const funnel = useFunnel<{
@@ -35,6 +41,7 @@ const KakaoPaymentsPage: React.FC = () => {
   const navigate = useNavigate();
   const uuid = useUserUuid();
   const [isChecking, setIsChecking] = useState(false);
+  const [searchParams] = useSearchParams();
 
   const { data, isLoading: isVerificationLoading } =
     useViewerVerification(uuid);
@@ -48,6 +55,28 @@ const KakaoPaymentsPage: React.FC = () => {
   });
   const onSale = !!profile && (viewer?.ticket ?? 0) === 0;
 
+  const paymentApproveMutation = useKakaoPaymentApprove({
+    onSuccess: (response) => {
+      console.log("Payment approved:", response);
+      // Start checking for viewer updates
+      setIsChecking(true);
+    },
+    onError: (error) => {
+      console.error("Payment approval failed:", error);
+      setIsChecking(false);
+    },
+  });
+
+  // Handle payment callback from KakaoPay
+  useEffect(() => {
+    const orderId = searchParams.get("orderId");
+    const pgToken = searchParams.get("pg_token");
+
+    if (orderId && pgToken && !paymentApproveMutation.isPending) {
+      paymentApproveMutation.mutate({ orderId, pgToken });
+    }
+  }, [searchParams, paymentApproveMutation]);
+
   useEffect(() => {
     if (funnel.historySteps.length === 1) {
       funnelStart("verify", "티켓 구매");
@@ -56,7 +85,7 @@ const KakaoPaymentsPage: React.FC = () => {
   }, [funnel.historySteps.length, onSale]);
 
   useEffect(() => {
-    if (viewerResponse) {
+    if (viewerResponse && isChecking) {
       // Navigate if tickets are present (initial load or increase) or profile updated
       if (
         viewer === null ||
@@ -77,6 +106,7 @@ const KakaoPaymentsPage: React.FC = () => {
     funnel.context,
     verificationCode,
     onSale,
+    isChecking,
   ]);
 
   const handlePackageSelect = (ticketPackage: Package) => {
@@ -114,6 +144,7 @@ const KakaoPaymentsPage: React.FC = () => {
                 pkg={funnel.context.package!}
                 isLoading={isVerificationLoading}
                 isChecking={isChecking}
+                isAuthenticated={isAuthenticated}
                 isOnSale={onSale}
                 onStartCheck={() => setIsChecking(true)}
                 onEndCheck={() => setIsChecking(false)}
