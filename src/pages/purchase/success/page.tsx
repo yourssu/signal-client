@@ -5,10 +5,11 @@ import TopBar from "@/components/TopBar";
 import main from "@/assets/home/main.png";
 import { useKakaoPaymentApprove } from "@/hooks/queries/viewers";
 import { ENABLE_KAKAO_PAYMENTS } from "@/env";
-import { useAuth } from "@/hooks/useAuth";
+import { useAtomValue } from "jotai";
+import { isAuthenticatedAtom } from "@/atoms/authTokens";
 
 const PurchaseSuccessPage: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const [searchParams] = useSearchParams();
   const [paymentProcessed, setPaymentProcessed] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);

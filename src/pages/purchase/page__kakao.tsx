@@ -14,10 +14,10 @@ import {
 } from "@/lib/analytics";
 import { userProfileAtom } from "@/atoms/userProfile";
 import { KakaoPaymentStep } from "@/components/purchase/KakaoPaymentStep";
-import { useAuth } from "@/hooks/useAuth";
+import { isAuthenticatedAtom } from "@/atoms/authTokens";
 
 const KakaoPayPurchasePage: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const [viewer] = useAtom(viewerSelfAtom);
   const profile = useAtomValue(userProfileAtom);
   const funnel = useFunnel<{
