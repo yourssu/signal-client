@@ -12,6 +12,7 @@ import {
   PaymentInitiationResponse,
   VerificationResponse,
   ViewerResponse,
+  ViewerDetailResponse,
 } from "@/types/viewer";
 import { SignalResponse } from "@/types/common";
 import { TicketIssuedRequest } from "@/types/admin";
@@ -22,33 +23,18 @@ import { API_BASE_URL } from "@/env";
 const viewersBase = `${API_BASE_URL ?? ""}/api/viewers`;
 
 export const useViewerVerification = (
-  uuid: string,
   queryOptions?: Omit<
     UseQueryOptions<VerificationResponse, SignalError>,
     "queryKey" | "queryFn"
   >,
 ) => {
   return useQuery({
-    queryKey: ["viewer", "verification", uuid],
+    queryKey: ["viewer", "verification"],
     queryFn: async () => {
-      const response = await fetch(`${viewersBase}/verification`, {
+      return authedFetch<VerificationResponse>(`${viewersBase}/verification`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          uuid,
-        }),
       });
-      const res =
-        (await response.json()) as SignalResponse<VerificationResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
     },
-    enabled: !!uuid,
     ...queryOptions,
   });
 };
@@ -81,49 +67,32 @@ export const useIssueTicket = (
 
 export const useNotificationDeposit = (
   mutationOptions?: Omit<
-    UseMutationOptions<string, SignalError, NotificationDepositRequest>,
+    UseMutationOptions<ViewerResponse, SignalError, NotificationDepositRequest>,
     "mutationFn"
   >,
 ) => {
   return useMutation({
     mutationFn: async (data: NotificationDepositRequest) => {
-      const response = await fetch(`${viewersBase}/deposit`, {
+      return authedFetch<ViewerResponse>(`${viewersBase}/deposit`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(data),
       });
-      const res = (await response.json()) as SignalResponse<string>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
     },
     ...mutationOptions,
   });
 };
 
 export const useViewerSelf = (
-  uuid: string,
   queryOptions?: Omit<
-    UseQueryOptions<ViewerResponse, SignalError>,
+    UseQueryOptions<ViewerDetailResponse, SignalError>,
     "queryKey" | "queryFn"
   >,
 ) => {
   return useQuery({
-    queryKey: ["viewer", "uuid", uuid],
+    queryKey: ["viewer", "me"],
     queryFn: async () => {
-      const response = await fetch(`${viewersBase}/uuid?uuid=${uuid}`);
-      const res = (await response.json()) as SignalResponse<ViewerResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
+      return authedFetch<ViewerDetailResponse>(`${viewersBase}/me`);
     },
-    enabled: !!uuid,
     ...queryOptions,
   });
 };

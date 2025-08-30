@@ -17,6 +17,7 @@ import {
 } from "@/types/profile";
 import { SignalResponse } from "@/types/common";
 import { SignalError } from "@/lib/error";
+import { authedFetch } from "@/lib/fetch";
 import { API_BASE_URL } from "@/env";
 
 const profileBase = `${API_BASE_URL ?? ""}/api/profiles`;
@@ -45,31 +46,21 @@ export const useCountProfile = (
 };
 
 export const useSelfProfile = (
-  uuid: string,
   queryOptions?: Omit<
     UseQueryOptions<ProfileContactResponse, SignalError>,
     "queryKey" | "queryFn"
   >,
 ) => {
   return useQuery({
-    queryKey: ["profiles", "uuid", uuid],
+    queryKey: ["profiles", "me"],
     queryFn: async () => {
-      const response = await fetch(`${profileBase}/uuid?uuid=${uuid}`);
-      const res =
-        (await response.json()) as SignalResponse<ProfileContactResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
+      return authedFetch<ProfileContactResponse>(`${profileBase}/me`);
     },
-    enabled: !!uuid,
     ...queryOptions,
   });
 };
 
 export const useRandomProfile = (
-  uuid: string,
   desiredGender: Gender,
   excludeProfiles?: number[],
   queryOptions?: Omit<
@@ -78,25 +69,19 @@ export const useRandomProfile = (
   >,
 ) => {
   return useQuery({
-    queryKey: ["profiles", uuid, "random", desiredGender],
+    queryKey: ["profiles", "random", desiredGender, excludeProfiles],
     queryFn: async () => {
       const params = new URLSearchParams();
-      params.append("uuid", uuid);
       params.append("gender", desiredGender);
-      if (excludeProfiles) {
-        params.append("excludeProfiles", excludeProfiles.join(","));
+      if (excludeProfiles && excludeProfiles.length > 0) {
+        excludeProfiles.forEach((id) =>
+          params.append("excludeProfiles", id.toString()),
+        );
       }
-      const response = await fetch(
+      return authedFetch<ProfileResponse>(
         `${profileBase}/random?${params.toString()}`,
       );
-      const res = (await response.json()) as SignalResponse<ProfileResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
     },
-    enabled: !!uuid,
     placeholderData: keepPreviousData,
     staleTime: Infinity,
     ...queryOptions,
@@ -115,20 +100,10 @@ export const useCreateProfile = (
 ) => {
   return useMutation({
     mutationFn: async (data: ProfileCreatedRequest) => {
-      const response = await fetch(profileBase, {
+      return authedFetch<ProfileContactResponse>(profileBase, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(data),
       });
-      const res =
-        (await response.json()) as SignalResponse<ProfileContactResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
     },
     ...mutationOptions,
   });
@@ -146,20 +121,10 @@ export const useGenerateNickname = (
 ) => {
   return useMutation({
     mutationFn: async (data: NicknameGeneratedRequest) => {
-      const response = await fetch(`${profileBase}/nickname`, {
+      return authedFetch<NicknameCreatedResponse>(`${profileBase}/nickname`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(data),
       });
-      const res =
-        (await response.json()) as SignalResponse<NicknameCreatedResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
     },
     ...mutationOptions,
   });
@@ -177,20 +142,10 @@ export const useConsumeTicket = (
 ) => {
   return useMutation({
     mutationFn: async (data: TicketConsumedRequest) => {
-      const response = await fetch(`${profileBase}/contact`, {
+      return authedFetch<ProfileContactResponse>(`${profileBase}/contact`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(data),
       });
-      const res =
-        (await response.json()) as SignalResponse<ProfileContactResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
     },
     ...mutationOptions,
   });

@@ -63,6 +63,19 @@ export interface ProfileResponse {
   introSentences: string[];
 }
 
+export interface MyProfileResponse {
+  profileId: number;
+  uuid: string;
+  gender: Gender;
+  department: string;
+  birthYear: number;
+  animal: AnimalType;
+  contact: string;
+  mbti: Mbti;
+  nickname: string;
+  introSentences: string[];
+}
+
 export interface ProfileContactResponse extends ProfileResponse {
   contact: string;
 }

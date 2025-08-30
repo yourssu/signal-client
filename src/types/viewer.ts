@@ -37,6 +37,15 @@ export interface ViewerResponse {
   updatedTime: string;
 }
 
+export interface PurchasedProfileResponse {
+  profileId: number;
+  createdTime: string;
+}
+
+export interface ViewerDetailResponse extends ViewerResponse {
+  purchasedProfiles: PurchasedProfileResponse[];
+}
+
 export interface ViewerDetailResponse extends ViewerResponse {
   purchasedProfiles: PurchasedProfileResponse[];
 }
