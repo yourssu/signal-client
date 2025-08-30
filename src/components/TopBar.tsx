@@ -11,7 +11,6 @@ import {
   savedProfilesAtom,
 } from "@/atoms/viewerProfiles";
 import { useViewerSelf } from "@/hooks/queries/viewers";
-import { useUserUuid } from "@/hooks/useUserUuid";
 import { ENABLE_SAVED } from "@/env";
 
 interface TopBarProps {
@@ -19,12 +18,11 @@ interface TopBarProps {
 }
 
 const TopBar: React.FC<TopBarProps> = ({ onBack }) => {
-  const uuid = useUserUuid();
   const savedProfiles = useAtomValue(
     ENABLE_SAVED ? savedProfilesAtom : contactedProfilesAtom,
   );
   const heartCount = savedProfiles.length;
-  const { data: self } = useViewerSelf(uuid);
+  const { data: self } = useViewerSelf();
   const ticketCount = (self?.ticket ?? 0) - (self?.usedTicket ?? 0);
   const handleBack = () => {
     if (typeof onBack === "function") {

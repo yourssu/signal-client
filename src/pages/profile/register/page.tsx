@@ -56,7 +56,7 @@ const ProfileRegisterPage: React.FC = () => {
           },
         },
   });
-  const { data: latestProfile } = useSelfProfile(uuid, {
+  const { data: latestProfile } = useSelfProfile({
     enabled: funnel.step === "done",
   });
 

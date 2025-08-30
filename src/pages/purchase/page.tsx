@@ -6,7 +6,6 @@ import {
   useViewerSelf,
   useViewerVerification,
 } from "@/hooks/queries/viewers";
-import { useUserUuid } from "@/hooks/useUserUuid";
 import { Package } from "@/types/viewer";
 import { useFunnel } from "@use-funnel/react-router";
 import { useAtom, useAtomValue } from "jotai";
@@ -38,17 +37,15 @@ const BankAccountPaymentsPage: React.FC = () => {
     },
   });
   const navigate = useNavigate();
-  const uuid = useUserUuid();
   const [isChecking, setIsChecking] = useState(false);
 
-  const { data, isLoading: isVerificationLoading } =
-    useViewerVerification(uuid);
+  const { data, isLoading: isVerificationLoading } = useViewerVerification();
   const verificationCode: number | null = useMemo(
     () => Number(data?.verificationCode ?? null) || null,
     [data],
   );
 
-  const { data: viewerResponse, isRefetching } = useViewerSelf(uuid, {
+  const { data: viewerResponse, isRefetching } = useViewerSelf({
     refetchInterval: isChecking && 1000,
   });
   const onSale = !!profile && (viewer?.ticket ?? 0) === 0;

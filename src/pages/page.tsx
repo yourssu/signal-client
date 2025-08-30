@@ -2,14 +2,12 @@ import React from "react";
 import TopBar from "@/components/TopBar";
 import MainContent from "@/components/home/MainContent";
 import { useViewerSelf } from "@/hooks/queries/viewers";
-import { useUserUuid } from "@/hooks/useUserUuid";
 import { useAtomValue } from "jotai";
 import { userProfileAtom } from "@/atoms/userProfile";
 
 const HomePage: React.FC = () => {
-  const uuid = useUserUuid();
   const profile = useAtomValue(userProfileAtom);
-  const { data: self } = useViewerSelf(uuid);
+  const { data: self } = useViewerSelf();
   return (
     <div className="flex flex-col min-h-dvh relative">
       {/* Top bar with heart and ticket icons */}

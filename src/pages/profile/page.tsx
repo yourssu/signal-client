@@ -3,7 +3,6 @@ import { useNavigate } from "react-router";
 import { useSetAtom, useAtomValue, useAtom } from "jotai";
 import { useCountProfile, useRandomProfile } from "@/hooks/queries/profiles";
 import { Button } from "@/components/ui/button";
-import { useUserUuid } from "@/hooks/useUserUuid";
 import TopBar from "@/components/TopBar";
 import { SaveDrawer } from "@/components/profile/SaveDrawer";
 import {
@@ -22,10 +21,9 @@ import { viewProfile } from "@/lib/analytics";
 
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
-  const uuid = useUserUuid();
   const [gender, setGender] = useAtom(userGenderAtom);
   const desiredGender = gender === "MALE" ? "FEMALE" : "MALE";
-  const { data: viewerSelf } = useViewerSelf(uuid, {
+  const { data: viewerSelf } = useViewerSelf({
     throwOnError: false,
     retry: false,
   });
@@ -44,7 +42,7 @@ const ProfileListPage: React.FC = () => {
     data: profile,
     refetch,
     isRefetching,
-  } = useRandomProfile(uuid, desiredGender!, excludeProfiles, {
+  } = useRandomProfile(desiredGender!, excludeProfiles, {
     enabled: false,
     staleTime: Infinity,
   });

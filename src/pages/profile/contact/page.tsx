@@ -34,7 +34,7 @@ const ContactViewPage: React.FC = () => {
   const addContact = useSetAtom(contactProfileAtom);
 
   const { profile } = location.state as { profile: ProfileResponse };
-  const { data: viewerSelf } = useViewerSelf(uuid);
+  const { data: viewerSelf } = useViewerSelf();
   const { mutateAsync } = useConsumeTicket();
 
   const contactedProfile = contactedProfiles.find(
