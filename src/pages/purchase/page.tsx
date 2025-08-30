@@ -70,7 +70,7 @@ const BankAccountPaymentsPage: React.FC = () => {
         setViewer(viewerResponse);
         purchaseTickets(funnel.context.package!, `${verificationCode}`, onSale);
         funnelComplete("payment", "티켓 구매", funnel.context);
-        navigate("/profile");
+        navigate("/purchase/success");
       }
     }
   }, [
