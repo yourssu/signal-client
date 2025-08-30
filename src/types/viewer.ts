@@ -40,3 +40,27 @@ export interface ViewerResponse {
 export interface ViewerDetailResponse extends ViewerResponse {
   purchasedProfiles: PurchasedProfileResponse[];
 }
+
+// Payment related types
+export interface PaymentInitiationRequest {
+  quantity: number;
+  price: number;
+}
+
+export interface PaymentInitiationResponse {
+  orderId: string;
+  nextRedirectPcUrl: string;
+  nextRedirectMobileUrl: string;
+}
+
+export interface PaymentApprovalRequest {
+  orderId: string;
+  pgToken: string;
+}
+
+export interface PaymentCompletionResponse {
+  orderId: string;
+  itemName: string;
+  amount: number;
+  approvedTime: string;
+}
