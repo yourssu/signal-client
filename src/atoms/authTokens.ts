@@ -6,20 +6,29 @@ import { TokenResponse } from "@/types/auth";
 export const accessTokenAtom = atomWithStorage<string | null>(
   "accessToken",
   null,
+  undefined,
+  { getOnInit: true },
 );
 export const refreshTokenAtom = atomWithStorage<string | null>(
   "refreshToken",
   null,
+  undefined,
+  { getOnInit: true },
 );
 
 // Derived atom for token expiry times
 export const tokenExpiryAtom = atomWithStorage<{
   accessTokenExpiresAt: number | null;
   refreshTokenExpiresAt: number | null;
-}>("tokenExpiry", {
-  accessTokenExpiresAt: null,
-  refreshTokenExpiresAt: null,
-});
+}>(
+  "tokenExpiry",
+  {
+    accessTokenExpiresAt: null,
+    refreshTokenExpiresAt: null,
+  },
+  undefined,
+  { getOnInit: true },
+);
 
 // Computed atom to check if tokens are valid
 export const isAuthenticatedAtom = atom((get) => {
