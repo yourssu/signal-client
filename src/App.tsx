@@ -9,8 +9,13 @@ import ContactViewPage from "@/pages/profile/contact/page";
 import NotFound from "@/pages/NotFound";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import SavedProfilesPage from "@/pages/profile/saved/page";
-import { ENABLE_PROFILE_VIEW, ENABLE_REGISTER } from "@/env";
+import {
+  ENABLE_KAKAO_PAYMENTS,
+  ENABLE_PROFILE_VIEW,
+  ENABLE_REGISTER,
+} from "@/env";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import KakaoPaymentsPage from "@/pages/verify/page__kakao";
 
 const router = createBrowserRouter([
   {
@@ -25,7 +30,11 @@ const router = createBrowserRouter([
       {
         path: "verify",
         element: ENABLE_PROFILE_VIEW ? (
-          <ProfileVerificationPage />
+          ENABLE_KAKAO_PAYMENTS ? (
+            <KakaoPaymentsPage />
+          ) : (
+            <ProfileVerificationPage />
+          )
         ) : (
           <Navigate to="/" />
         ),
