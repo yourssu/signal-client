@@ -1,73 +1,111 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router";
+import React, { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import TopBar from "@/components/TopBar";
-
-const imgU1582974531A3DMinimalFloatingCatFairyCharacterWhiteA9E4C2D54Eccd419DAcf3D1De65C8D05F01 =
-  "http://localhost:3845/assets/1c00f48c844ae173bfed694dda3a35840a04a428.png";
+import main from "@/assets/home/main.png";
+import { useKakaoPaymentApprove } from "@/hooks/queries/viewers";
+import { ENABLE_KAKAO_PAYMENTS } from "@/env";
+import { useAuth } from "@/hooks/useAuth";
 
 const PurchaseSuccessPage: React.FC = () => {
-  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const [searchParams] = useSearchParams();
+  const [paymentProcessed, setPaymentProcessed] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+
+  const orderId = searchParams.get("order_id");
+  const pgToken = searchParams.get("pg_token");
+
+  const { mutate, isPending } = useKakaoPaymentApprove({
+    onSuccess: (response) => {
+      console.log("Payment approved successfully:", response);
+      setPaymentSuccess(true);
+      setPaymentProcessed(true);
+    },
+    onError: (error) => {
+      console.error("Payment approval failed:", error);
+      setPaymentSuccess(false);
+      setPaymentProcessed(true);
+    },
+  });
 
   useEffect(() => {
-    // Auto redirect after 10 seconds if no user interaction
-    const timer = setTimeout(() => {
-      navigate("/profile", { replace: true });
-    }, 10000);
+    // Check if Kakao payments are enabled and we have the required parameters
+    if (
+      ENABLE_KAKAO_PAYMENTS &&
+      isAuthenticated &&
+      orderId &&
+      pgToken &&
+      !paymentProcessed
+    ) {
+      console.log("Initiating Kakao payment approval...", { orderId, pgToken });
+      mutate({ orderId, pgToken });
+    } else if (!ENABLE_KAKAO_PAYMENTS || !orderId || !pgToken) {
+      // If Kakao payments are disabled or no query params, mark as processed
+      setPaymentProcessed(true);
+      setPaymentSuccess(true);
+    }
+  }, [orderId, pgToken, paymentProcessed, mutate, isAuthenticated]);
 
-    return () => clearTimeout(timer);
-  }, [navigate]);
-
-  const handleSendSignal = () => {
-    navigate("/profile", { replace: true });
-  };
-
-  const handleBack = () => {
-    navigate("/", { replace: true });
-  };
+  const showSuccessContent = paymentProcessed && paymentSuccess;
+  const showErrorContent = paymentProcessed && !paymentSuccess;
 
   return (
-    <div className="bg-gradient-to-b from-[#fff2f7] to-[#ffd4e4] relative size-full min-h-dvh">
+    <div className="flex flex-col min-h-dvh">
       {/* Top Bar */}
-      <TopBar onBack={handleBack} />
-
-      {/* Main Content */}
-      <div className="flex flex-col gap-2.5 h-[calc(100vh-41.28px)] items-center justify-start px-0 py-[33px]">
-        <div className="flex-1 flex flex-col gap-5 items-center justify-start w-[315px] max-w-full px-4">
-          {/* Content Section */}
-          <div className="flex flex-col gap-[30px] items-center justify-start w-full">
-            {/* Title Section */}
-            <div className="flex flex-col gap-2.5 items-start justify-start w-full">
-              <div className="flex flex-col gap-[7px] items-start justify-start w-full">
-                <h1 className="font-['Pretendard:SemiBold',_sans-serif] leading-[1.3] text-[#44403b] text-[24px] tracking-[-0.24px]">
+      <TopBar onBack="/" />
+      {/* Content area - Takes remaining height, centers content */}
+      <div className="flex-grow flex flex-col items-center justify-center p-4">
+        <div className="w-full max-w-md h-full flex flex-col grow items-stretch justify-stretch">
+          <div className="flex flex-col items-center justify-between grow w-full px-4 py-6 gap-4">
+            {/* Header section */}
+            <div className="flex flex-col gap-2 self-stretch">
+              {isPending ? (
+                <h1 className="text-2xl font-semibold text-black-700 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
+                  결제 승인 중...
+                  <br />
+                  <span className="text-primary">잠시만 기다려주세요</span>
+                </h1>
+              ) : showErrorContent ? (
+                <h1 className="text-2xl font-semibold text-black-700 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
+                  결제 승인 실패
+                  <br />
+                  <span className="text-red-500">다시 시도해주세요</span>
+                </h1>
+              ) : (
+                <h1 className="text-2xl font-semibold text-black-700 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
                   이용권 충전 완료!
                   <br />
-                  <span className="text-[#ee518a]">
-                    시그널을 보낼 수 있어요
-                  </span>
+                  <span className="text-primary">시그널을 보낼 수 있어요</span>
                 </h1>
-              </div>
+              )}
             </div>
 
-            {/* Character Image */}
-            <div
-              className="bg-center bg-cover bg-no-repeat shrink-0 size-[193px]"
-              style={{
-                backgroundImage: `url('${imgU1582974531A3DMinimalFloatingCatFairyCharacterWhiteA9E4C2D54Eccd419DAcf3D1De65C8D05F01}')`,
-              }}
-            />
-          </div>
-        </div>
+            {/* Steps section */}
+            <div className="grow flex flex-col w-full gap-4 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500">
+              <img src={main} alt="Cat Character" className="w-full h-auto" />
+            </div>
 
-        {/* Bottom Action Section */}
-        <div className="flex flex-col gap-2.5 h-[83px] items-center justify-end">
-          <div className="flex flex-col gap-[11px] items-center justify-start">
-            <div className="flex gap-[13px] h-14 items-center justify-center w-[350px] max-w-full px-4">
+            {/* Button section */}
+            <div className="w-full flex flex-col gap-2">
               <Button
-                onClick={handleSendSignal}
-                className="flex-1 bg-[#ee518a] hover:bg-[#ee518a]/90 h-14 items-center justify-center px-4 rounded-[16px] text-white font-['Pretendard:Medium',_sans-serif] text-[18px] tracking-[-0.18px]"
+                className="w-full h-14 text-lg font-medium"
+                variant={showSuccessContent ? "default" : "secondary"}
+                disabled={
+                  ENABLE_KAKAO_PAYMENTS &&
+                  (!isAuthenticated || isPending || showErrorContent)
+                }
+                asChild
               >
-                시그널 보내기
+                {showSuccessContent ? (
+                  <Link to="/profile">시그널 보내기</Link>
+                ) : isPending ? (
+                  "처리 중..."
+                ) : showErrorContent ? (
+                  "결제 실패"
+                ) : (
+                  <Link to="/profile">시그널 보내기</Link>
+                )}
               </Button>
             </div>
           </div>
