@@ -22,6 +22,11 @@ export const TERMS: string = import.meta.env.VITE_TERMS ?? "서비스 이용약�
 // Privacy policy for the service.
 export const PRIVACY: string =
   import.meta.env.VITE_PRIVACY ?? "개인정보 처리방침";
+// Refund policy for the service.
+export const REFUND_POLICY: string =
+  import.meta.env.VITE_REFUND_POLICY ?? "환불 정책";
+export const BUSINESS_INFO: string =
+  import.meta.env.VITE_BUSINESS_INFO ?? "사업자 정보";
 // List of personality traits for the service. This is used to suggest traits to users.
 export const PERSONALITIES: string[] = JSON.parse(
   import.meta.env.VITE_PERSONALITIES ??
