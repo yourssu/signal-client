@@ -16,6 +16,7 @@ import {
 import { SignalResponse } from "@/types/common";
 import { TicketIssuedRequest } from "@/types/admin";
 import { SignalError } from "@/lib/error";
+import { authedFetch } from "@/lib/fetch";
 import { API_BASE_URL } from "@/env";
 
 const viewersBase = `${API_BASE_URL ?? ""}/api/viewers`;
@@ -139,22 +140,13 @@ export const useKakaoPaymentInitiate = (
 ) => {
   return useMutation({
     mutationFn: async (data: PaymentInitiationRequest) => {
-      const token = localStorage.getItem("accessToken");
-      const response = await fetch(`${viewersBase}/payment/kakaopay/initiate`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      return authedFetch<PaymentInitiationResponse>(
+        `${viewersBase}/payment/kakaopay/initiate`,
+        {
+          method: "POST",
+          body: JSON.stringify(data),
         },
-        body: JSON.stringify(data),
-      });
-      const res =
-        (await response.json()) as SignalResponse<PaymentInitiationResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
+      );
     },
     ...mutationOptions,
   });
@@ -172,22 +164,13 @@ export const useKakaoPaymentApprove = (
 ) => {
   return useMutation({
     mutationFn: async (data: PaymentApprovalRequest) => {
-      const token = localStorage.getItem("accessToken");
-      const response = await fetch(`${viewersBase}/payment/kakaopay/approve`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      return authedFetch<PaymentCompletionResponse>(
+        `${viewersBase}/payment/kakaopay/approve`,
+        {
+          method: "POST",
+          body: JSON.stringify(data),
         },
-        body: JSON.stringify(data),
-      });
-      const res =
-        (await response.json()) as SignalResponse<PaymentCompletionResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
+      );
     },
     ...mutationOptions,
   });
