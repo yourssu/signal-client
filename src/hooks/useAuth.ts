@@ -21,7 +21,6 @@ export const useAuth = () => {
   const registerMutation = useRegister({
     onSuccess: (data: TokenResponse) => {
       setTokens(data);
-      toast.success("회원가입이 완료되었습니다!");
     },
     onError: (error) => {
       toast.error(`회원가입 실패: ${error.message}`);
