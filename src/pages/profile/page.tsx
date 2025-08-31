@@ -18,6 +18,7 @@ import { ENABLE_SAVED } from "@/env";
 import GenderStep from "@/components/purchase/GenderSelect";
 import { Gender } from "@/types/profile";
 import { viewProfile } from "@/lib/analytics";
+import { toast } from "sonner";
 
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -42,14 +43,22 @@ const ProfileListPage: React.FC = () => {
     data: profile,
     refetch,
     isRefetching,
+    error,
   } = useRandomProfile(desiredGender!, excludeProfiles, {
     enabled: false,
     staleTime: Infinity,
   });
 
   useEffect(() => {
-    if (gender && !profile) refetch();
-  }, [gender, profile, refetch, ticketCount]);
+    if (gender && !profile) {
+      refetch();
+      if (error) {
+        toast.error(`프로필을 불러오지 못했어요.`, {
+          description: error.message,
+        });
+      }
+    }
+  }, [error, gender, profile, refetch, ticketCount]);
 
   // Add current profile to recently viewed profiles when it changes
   useEffect(() => {
@@ -145,6 +154,7 @@ const ProfileListPage: React.FC = () => {
             onClick={handleViewContact}
             size="xl"
             className="grow rounded-3xl"
+            disabled={!profile}
           >
             연락처 확인하기
           </Button>

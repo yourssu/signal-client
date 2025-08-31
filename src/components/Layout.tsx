@@ -13,7 +13,7 @@ const Layout: React.FC = () => {
       <Background />
       <main className="max-w-md mx-auto w-full h-full shadow-sm overflow-auto">
         <Outlet />
-        <Toaster />
+        <Toaster theme="light" richColors position="top-center" />
         {MODE !== "production" && <DevTools />}
       </main>
     </div>
