@@ -7,16 +7,17 @@ on:
       deployment_url:
         required: true
         type: string
-    secrets:
-      AWS_ACCESS_KEY_ID:
+      aws_role_arn:
         required: true
-      AWS_SECRET_ACCESS_KEY:
-        required: true
+        type: string
 
 jobs:
   deploy:
     name: Deploy (${{ inputs.environment }})
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Needed for AWS OIDC
+      contents: read # Needed to check out the repository
     environment:
       name: ${{ inputs.environment }}
       url: ${{ inputs.deployment_url }}
@@ -62,8 +63,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ inputs.aws_role_arn}}
           aws-region: ap-northeast-2 # Specify your AWS region
 
       - name: Upload to S3
