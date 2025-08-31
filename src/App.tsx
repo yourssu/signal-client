@@ -16,7 +16,7 @@ import {
 } from "@/env";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import KakaoPayPurchasePage from "@/pages/purchase/page__kakao";
-import PurchaseSuccessPage from "@/pages/purchase/success/page";
+import PurchaseCallbackPage from "@/pages/purchase/callback/page";
 
 const router = createBrowserRouter([
   {
@@ -41,9 +41,9 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "purchase/success",
+        path: "purchase/callback",
         element: ENABLE_PROFILE_VIEW ? (
-          <PurchaseSuccessPage />
+          <PurchaseCallbackPage />
         ) : (
           <Navigate to="/" />
         ),
