@@ -8,13 +8,12 @@ import { ENABLE_KAKAO_PAYMENTS } from "@/env";
 import { useAtomValue } from "jotai";
 import { isAuthenticatedAtom } from "@/atoms/authTokens";
 
-const PurchaseCallbackPage: React.FC = () => {
+const PurchaseSuccessPage: React.FC = () => {
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const [searchParams] = useSearchParams();
   const [paymentProcessed, setPaymentProcessed] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
-  const result = searchParams.get("result");
   const orderId = searchParams.get("order_id");
   const pgToken = searchParams.get("pg_token");
 
@@ -68,7 +67,7 @@ const PurchaseCallbackPage: React.FC = () => {
                   <br />
                   <span className="text-primary">잠시만 기다려주세요</span>
                 </h1>
-              ) : result !== "success" || showErrorContent ? (
+              ) : showErrorContent ? (
                 <h1 className="text-2xl font-semibold text-black-700 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
                   결제 승인 실패
                   <br />
@@ -95,10 +94,7 @@ const PurchaseCallbackPage: React.FC = () => {
                 variant={showSuccessContent ? "default" : "secondary"}
                 disabled={
                   ENABLE_KAKAO_PAYMENTS &&
-                  (result !== "success" ||
-                    !isAuthenticated ||
-                    isPending ||
-                    showErrorContent)
+                  (!isAuthenticated || isPending || showErrorContent)
                 }
                 asChild
               >
@@ -120,4 +116,4 @@ const PurchaseCallbackPage: React.FC = () => {
   );
 };
 
-export default PurchaseCallbackPage;
+export default PurchaseSuccessPage;
