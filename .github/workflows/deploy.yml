@@ -50,6 +50,7 @@ jobs:
           VITE_PERSONALITIES: ${{ vars.PERSONALITIES }}
           VITE_TERMS: ${{ vars.TERMS }}
           VITE_PRIVACY: ${{ vars.PRIVACY }}
+          VITE_REFUND_POLICY: ${{ vars.REFUND_POLICY }}
           VITE_ENABLE_SAVED: ${{ vars.ENABLE_SAVED }}
           VITE_ENABLE_PROFILE_VIEW: ${{ vars.ENABLE_PROFILE_VIEW }}
           VITE_ENABLE_REGISTER: ${{ vars.ENABLE_REGISTER }}
