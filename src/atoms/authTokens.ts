@@ -53,8 +53,8 @@ export const setTokensAtom = atom(
     set(accessTokenAtom, tokenResponse.accessToken);
     set(refreshTokenAtom, tokenResponse.refreshToken);
     set(tokenExpiryAtom, {
-      accessTokenExpiresAt: now + tokenResponse.accessTokenExpiresIn * 1000,
-      refreshTokenExpiresAt: now + tokenResponse.refreshTokenExpiresIn * 1000,
+      accessTokenExpiresAt: now + tokenResponse.accessTokenExpiresIn,
+      refreshTokenExpiresAt: now + tokenResponse.refreshTokenExpiresIn,
     });
   },
 );
