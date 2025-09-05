@@ -34,8 +34,14 @@ export const PERSONALITIES: string[] = JSON.parse(
 ) as string[];
 
 // Bank account information for the service.
-export const ACCOUNT: string =
-  import.meta.env.VITE_ACCOUNT ?? "카카오뱅크 034353566343";
+export const ACCOUNT_BANK: string =
+  import.meta.env.VITE_ACCOUNT_BANK ?? "카카오뱅크";
+// Bank account code for the service.
+export const ACCOUNT_BANK_CODE: string =
+  import.meta.env.VITE_ACCOUNT_BANK_CODE ?? "090";
+// Bank account number for the service.
+export const ACCOUNT_NO: string =
+  import.meta.env.VITE_ACCOUNT_NO ?? "034353566343";
 // Bank account owner information for the service.
 export const ACCOUNT_OWNER: string =
   import.meta.env.VITE_ACCOUNT_OWNER ?? "유어슈";

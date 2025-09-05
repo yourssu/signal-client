@@ -74,6 +74,7 @@ http://scripts.sil.org/OFL
   --color-black-400: var(--black-400);
   --color-white: var(--white);
   --color-bg-end: var(--bg-end);
+  --color-toss-blue: var(--toss-blue);
 }
 
 @theme {
@@ -150,6 +151,7 @@ http://scripts.sil.org/OFL
   --black-400: oklch(0.71 0 0);
   --white: oklch(1 0 0);
   --bg-end: oklch(0.91 0.0522 353.83);
+  --toss-blue: oklch(0.5597 0.2431 261.08);
 }
 
 .dark {

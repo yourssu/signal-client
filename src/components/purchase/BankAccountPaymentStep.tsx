@@ -1,5 +1,12 @@
 import { userGenderAtom } from "@/atoms/userGender";
-import { ACCOUNT, ACCOUNT_OWNER, PRIVACY, TERMS } from "@/env";
+import {
+  ACCOUNT_BANK,
+  ACCOUNT_BANK_CODE,
+  ACCOUNT_NO,
+  ACCOUNT_OWNER,
+  PRIVACY,
+  TERMS,
+} from "@/env";
 import { cn } from "@/lib/utils";
 import { useAtomValue } from "jotai";
 import { Copy, Loader2 } from "lucide-react";
@@ -35,6 +42,9 @@ const getCodeDigits = (code: number | null, loading: boolean): string[] => {
   return code.toString().padStart(4, "0").split("");
 };
 
+const tossSendUrl = (amount: number, msg: number | null) =>
+  `supertoss://send?bank=${ACCOUNT_BANK_CODE}&accountNo=${ACCOUNT_NO}&amount=${amount}&msg=${msg}`;
+
 export const BankAccountPaymentStep = ({
   isLoading,
   isChecking,
@@ -53,6 +63,8 @@ export const BankAccountPaymentStep = ({
   const [openRenameDrawer, setOpenRenameDrawer] = useState(false); // State to track rename drawer
   const [checkFailed, setCheckFailed] = useState(false); // State to track check failure
   const timerRef = useRef<number | null>(null); // Ref to store the timer ID
+  const price = isOnSale ? pkg.price[0] : pkg.price[1];
+  const quantity = isOnSale ? pkg.quantity[0] : pkg.quantity[1];
 
   const startTimer = useCallback(() => {
     timerRef.current = window.setInterval(() => {
@@ -79,7 +91,7 @@ export const BankAccountPaymentStep = ({
   }, [isChecking, onEndCheck, remainingTime, startTimer]);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(ACCOUNT).then(() => {
+    navigator.clipboard.writeText(`${ACCOUNT_BANK} ${ACCOUNT_NO}`).then(() => {
       toast.success("계좌번호가 복사되었습니다.");
     });
   };
@@ -121,6 +133,15 @@ export const BankAccountPaymentStep = ({
 
       {/* Steps section */}
       <div className="flex flex-col w-full gap-4 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500">
+        <div className="flex flex-col gap-2">
+          <Button
+            className="w-full h-14 text-lg bg-toss-blue hover:bg-toss-blue/90"
+            asChild
+          >
+            <a href={tossSendUrl(price, verificationCode)}>토스로 송금하기</a>
+          </Button>
+          <p className="text-center text-sm font-medium text-black-600">OR</p>
+        </div>
         {/* Step 1: Account copy */}
         <div className="flex flex-col gap-2">
           <h2 className="text-sm font-medium text-black-700">
@@ -132,7 +153,7 @@ export const BankAccountPaymentStep = ({
                 className="underline cursor-pointer"
                 onClick={copyToClipboard}
               >
-                {ACCOUNT}
+                {ACCOUNT_BANK} {ACCOUNT_NO}
               </span>
               {` ${ACCOUNT_OWNER}`}
             </p>
@@ -176,17 +197,10 @@ export const BankAccountPaymentStep = ({
           </h2>
           <p className="bg-pink-50 border border-primary/20 rounded-lg p-4 text-center font-medium">
             송금할 금액:{" "}
-            {isOnSale ? (
-              <span className="text-primary">
-                <span>{pkg.price[0].toLocaleString()}원 </span>
-                <span className="text-xs">({pkg.quantity[0]}개)</span>
-              </span>
-            ) : (
-              <span className="text-primary">
-                {pkg.price[1].toLocaleString()}원
-                <span className="text-xs">({pkg.quantity[1]}개)</span>
-              </span>
-            )}
+            <span className="text-primary">
+              <span>{price.toLocaleString()}원 </span>
+              <span className="text-xs">({quantity}개)</span>
+            </span>
           </p>
         </div>
         {/* Terms notice */}
