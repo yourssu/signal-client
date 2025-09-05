@@ -1,12 +1,5 @@
 import { userGenderAtom } from "@/atoms/userGender";
-import {
-  ACCOUNT_BANK,
-  ACCOUNT_BANK_CODE,
-  ACCOUNT_NO,
-  ACCOUNT_OWNER,
-  PRIVACY,
-  TERMS,
-} from "@/env";
+import { ACCOUNT_BANK, ACCOUNT_NO, ACCOUNT_OWNER, PRIVACY, TERMS } from "@/env";
 import { cn } from "@/lib/utils";
 import { useAtomValue } from "jotai";
 import { Copy, Loader2 } from "lucide-react";
@@ -43,7 +36,7 @@ const getCodeDigits = (code: number | null, loading: boolean): string[] => {
 };
 
 const tossSendUrl = (amount: number, msg: number | null) =>
-  `supertoss://send?bank=${ACCOUNT_BANK_CODE}&accountNo=${ACCOUNT_NO}&amount=${amount}&msg=${msg}`;
+  `supertoss://send?bank=${encodeURIComponent(ACCOUNT_BANK)}&accountNo=${ACCOUNT_NO}&amount=${amount}&msg=${msg}`;
 
 export const BankAccountPaymentStep = ({
   isLoading,
