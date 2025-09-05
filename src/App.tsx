@@ -17,7 +17,7 @@ import {
 import { useAnalytics } from "@/hooks/useAnalytics";
 import KakaoPayPurchasePage from "@/pages/purchase/page__kakao";
 import PurchaseSuccessPage from "@/pages/purchase/success/page";
-import PurchaseFailPage from "@/pages/purchase/{fail|cancel}/page";
+import PurchaseFailPage from "@/pages/purchase/[fail,cancel]/page";
 
 const router = createBrowserRouter([
   {
