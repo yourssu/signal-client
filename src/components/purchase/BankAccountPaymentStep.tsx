@@ -1,6 +1,6 @@
 import { userGenderAtom } from "@/atoms/userGender";
 import { ACCOUNT_BANK, ACCOUNT_NO, ACCOUNT_OWNER, PRIVACY, TERMS } from "@/env";
-import { cn } from "@/lib/utils";
+import { cn, getDeviceType } from "@/lib/utils";
 import { useAtomValue } from "jotai";
 import { Copy, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -58,6 +58,7 @@ export const BankAccountPaymentStep = ({
   const timerRef = useRef<number | null>(null); // Ref to store the timer ID
   const price = isOnSale ? pkg.price[0] : pkg.price[1];
   const quantity = isOnSale ? pkg.quantity[0] : pkg.quantity[1];
+  const deviceType = getDeviceType();
 
   const startTimer = useCallback(() => {
     timerRef.current = window.setInterval(() => {
@@ -126,7 +127,12 @@ export const BankAccountPaymentStep = ({
 
       {/* Steps section */}
       <div className="flex flex-col w-full gap-4 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500">
-        <div className="flex flex-col gap-2">
+        <div
+          className={cn(
+            "flex flex-col gap-2",
+            deviceType === "desktop" && "hidden",
+          )}
+        >
           <Button
             className="w-full h-14 text-lg bg-toss-blue hover:bg-toss-blue/90"
             asChild
