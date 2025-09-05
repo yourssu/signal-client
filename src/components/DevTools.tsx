@@ -15,7 +15,9 @@ import {
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import {
-  ACCOUNT,
+  ACCOUNT_BANK,
+  ACCOUNT_BANK_CODE,
+  ACCOUNT_NO,
   ACCOUNT_OWNER,
   API_BASE_URL,
   ENABLE_SAVED,
@@ -134,7 +136,8 @@ export const DevTools = () => {
               <p>TICKET_COST: {TICKET_COST}</p>
               <p>PERSONALITIES: {PERSONALITIES}</p>
               <p>
-                ACCOUNT/ACCOUNT_OWNER: {ACCOUNT}/{ACCOUNT_OWNER}
+                ACCOUNT/ACCOUNT_OWNER: {ACCOUNT_BANK}({ACCOUNT_BANK_CODE}){" "}
+                {ACCOUNT_NO}/{ACCOUNT_OWNER}
               </p>
               <p>ENABLE_SAVED: {ENABLE_SAVED}</p>
             </div>
