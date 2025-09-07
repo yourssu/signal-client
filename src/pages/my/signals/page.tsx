@@ -9,7 +9,7 @@ import {
 } from "@/atoms/viewerProfiles";
 import { ProfileResponse } from "@/types/profile";
 import { cn } from "@/lib/utils";
-import { ScrollableCards } from "@/components/saved/ScrollableCards";
+import { ScrollableCards } from "@/components/my/saved/ScrollableCards";
 import { ENABLE_SAVED } from "@/env";
 
 const ContactedProfilesPage: React.FC = () => {
