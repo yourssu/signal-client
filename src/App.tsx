@@ -17,6 +17,7 @@ import {
 import KakaoPayPurchasePage from "@/pages/purchase/page__kakao";
 import PurchaseSuccessPage from "@/pages/purchase/success/page";
 import PurchaseFailPage from "@/pages/purchase/[fail,cancel]/page";
+import MyProfilePage from "@/pages/my/profile/page";
 import PrivacyPage from "@/pages/privacy/page";
 
 const router = createBrowserRouter([
@@ -100,6 +101,10 @@ const router = createBrowserRouter([
         ) : (
           <Navigate to="/" />
         ),
+      },
+      {
+        path: "my/profile",
+        element: ENABLE_PROFILE_VIEW ? <MyProfilePage /> : <Navigate to="/" />,
       },
     ],
   },
