@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import { Button } from "@/components/ui/button";
-import TopBar from "@/components/TopBar";
+import TopBar from "@/components/Header";
 import main from "@/assets/home/main.png";
 import { useKakaoPaymentApprove } from "@/hooks/queries/viewers";
 import { ENABLE_KAKAO_PAYMENTS } from "@/env";

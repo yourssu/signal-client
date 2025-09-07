@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
 import { ProfileContactResponse, ProfileResponse } from "@/types/profile";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import TopBar from "@/components/TopBar";
+import TopBar from "@/components/Header";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
   contactedProfilesAtom,

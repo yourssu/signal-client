@@ -1,5 +1,5 @@
 import { viewerSelfAtom } from "@/atoms/viewerSelf";
-import TopBar from "@/components/TopBar";
+import TopBar from "@/components/Header";
 import { Package } from "@/types/viewer";
 import { useFunnel } from "@use-funnel/react-router";
 import { useAtom, useAtomValue } from "jotai";

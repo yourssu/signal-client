@@ -1,5 +1,5 @@
 import Background from "@/components/home/Background";
-import TopBar from "@/components/TopBar";
+import TopBar from "@/components/Header";
 import { buttonVariants } from "@/components/ui/button";
 import React from "react";
 import { Link } from "react-router";

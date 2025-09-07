@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAtomValue } from "jotai";
 import { Button, buttonVariants } from "@/components/ui/button";
-import TopBar from "@/components/TopBar";
+import TopBar from "@/components/Header";
 import {
   contactedProfilesAtom,
   savedProfilesAtom,

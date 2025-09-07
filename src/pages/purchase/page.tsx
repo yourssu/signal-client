@@ -1,5 +1,5 @@
 import { viewerSelfAtom } from "@/atoms/viewerSelf";
-import TopBar from "@/components/TopBar";
+import TopBar from "@/components/Header";
 import { BankAccountPaymentStep } from "@/components/purchase/BankAccountPaymentStep";
 import {
   useNotificationDeposit,

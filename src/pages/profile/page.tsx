@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { useSetAtom, useAtomValue, useAtom } from "jotai";
 import { useCountProfile, useRandomProfile } from "@/hooks/queries/profiles";
 import { Button } from "@/components/ui/button";
-import TopBar from "@/components/TopBar";
+import TopBar from "@/components/Header";
 import { SaveDrawer } from "@/components/profile/SaveDrawer";
 import {
   saveProfileAtom,
