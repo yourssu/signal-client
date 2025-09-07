@@ -40,6 +40,7 @@ const TopBar: React.FC<TopBarProps> = ({ onBack, hideInfo }) => {
                 "text-black-700",
               )}
               to={onBack}
+              replace
             >
               <ChevronLeft />
             </Link>
