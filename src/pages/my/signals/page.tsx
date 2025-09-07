@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { ScrollableCards } from "@/components/saved/ScrollableCards";
 import { ENABLE_SAVED } from "@/env";
 
-const SavedProfilesPage: React.FC = () => {
+const ContactedProfilesPage: React.FC = () => {
   const navigate = useNavigate();
   const savedProfiles: Array<ProfileResponse & { contact?: string }> =
     useAtomValue(ENABLE_SAVED ? savedProfilesAtom : contactedProfilesAtom);
@@ -109,4 +109,4 @@ const SavedProfilesPage: React.FC = () => {
   );
 };
 
-export default SavedProfilesPage;
+export default ContactedProfilesPage;

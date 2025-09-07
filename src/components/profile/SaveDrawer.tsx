@@ -46,7 +46,7 @@ export function SaveDrawer({ children }: SaveDrawerProps) {
           </DrawerHeader>
           <DrawerFooter className="mt-[27px] flex flex-col gap-[18px] p-0">
             <Link
-              to="/profile/saved"
+              to="/my/signals"
               className={cn(
                 buttonVariants(),
                 "h-auto rounded-[16px] bg-[#EE518A] py-3 text-lg font-medium text-white hover:bg-[#d8487b]",

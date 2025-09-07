@@ -27,7 +27,7 @@ const ContactViewPage: React.FC = () => {
   const from = params.get("from") ?? "profile";
 
   const id = useMemo(() => Number(idStr), [idStr]);
-  const returnLink = from === "saved" ? "/profile/saved" : "/profile";
+  const returnLink = from === "saved" ? "/my/signals" : "/profile";
 
   const { data: userInfo } = useUserInfo();
   const uuid = userInfo?.uuid;
@@ -121,7 +121,7 @@ const ContactViewPage: React.FC = () => {
           <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6">
             <div className="flex flex-col items-start w-full">
               <h1 className="text-2xl font-semibold text-stone-700">
-                <span className="text-primary">시그널 성공</span>
+                <span className="text-primary">시그널 성공!</span>
                 <br />
                 지금 바로 연결해보세요
               </h1>
@@ -136,7 +136,7 @@ const ContactViewPage: React.FC = () => {
             <div className="flex flex-row flex-wrap gap-4 w-full max-w-md">
               {!ENABLE_SAVED && (
                 <Link
-                  to={"/profile/saved"}
+                  to={"/my/signals"}
                   className={cn(
                     buttonVariants({ variant: "secondary", size: "xl" }),
                     "rounded-2xl text-primary grow",

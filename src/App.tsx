@@ -8,7 +8,7 @@ import ProfileListPage from "@/pages/profile/page";
 import ContactViewPage from "@/pages/profile/contact/page";
 import NotFound from "@/pages/NotFound";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import SavedProfilesPage from "@/pages/profile/saved/page";
+import ContactedProfilesPage from "@/pages/my/signals/page";
 import {
   ENABLE_KAKAO_PAYMENTS,
   ENABLE_PROFILE_VIEW,
@@ -89,9 +89,9 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "profile/saved",
+        path: "my/signals",
         element: ENABLE_PROFILE_VIEW ? (
-          <SavedProfilesPage />
+          <ContactedProfilesPage />
         ) : (
           <Navigate to="/" />
         ),
