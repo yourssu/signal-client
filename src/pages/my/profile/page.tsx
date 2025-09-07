@@ -3,13 +3,12 @@ import TopBar from "@/components/Header";
 import TurnableProfileCard from "@/components/profile/TurnableProfileCard";
 import { Button } from "@/components/ui/button";
 import { useAtom } from "jotai";
-import { useNavigate } from "react-router";
+import { Navigate } from "react-router";
 
 const MyProfilePage: React.FC = () => {
-  const navigate = useNavigate();
   const [profile] = useAtom(userProfileAtom);
   if (!profile || profile === null) {
-    navigate("/profile/register");
+    return <Navigate to="/profile/register" />;
   }
   return (
     <div className="min-h-dvh flex flex-col items-center">
