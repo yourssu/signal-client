@@ -11,7 +11,7 @@ export default function GoogleAuthPage() {
   const [searchParams] = useSearchParams();
   const [, setTokens] = useAtom(setTokensAtom);
 
-  const googleLogin = useGoogleLogin({
+  const { mutate, isSuccess, isPending, isError } = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       setTokens({ tokenResponse, provider: "google" });
       if (GA_ID) {
@@ -21,7 +21,7 @@ export default function GoogleAuthPage() {
       }
     },
     onError: (error) => {
-      console.error("Google 로그인 실패:", error);
+      toast.error("Google 로그인 실패", { description: error.message });
       if (GA_ID) {
         ReactGA4.event("login_error", {
           method: "구글",
@@ -36,7 +36,7 @@ export default function GoogleAuthPage() {
     const error = searchParams.get("error");
 
     if (error) {
-      toast.error("Google OAuth 에러:", { description: error });
+      toast.error("Google OAuth 에러", { description: error });
       if (GA_ID) {
         ReactGA4.event("oauth_error", {
           provider: "구글",
@@ -46,18 +46,18 @@ export default function GoogleAuthPage() {
       return;
     }
 
-    if (code && !googleLogin.isPending) {
-      googleLogin.mutate({ code });
+    if (code && !isPending) {
+      mutate({ code });
     }
-  }, [searchParams, googleLogin]);
+  }, [isPending, mutate, searchParams]);
 
   // 성공적으로 로그인되면 마이페이지로 리디렉션
-  if (googleLogin.isSuccess) {
+  if (isSuccess) {
     return <Navigate to="/my" replace />;
   }
 
   // 에러가 발생하면 홈페이지로 리디렉션
-  if (googleLogin.isError) {
+  if (isError) {
     return <Navigate to="/" replace />;
   }
 
