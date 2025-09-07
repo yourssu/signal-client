@@ -11,7 +11,7 @@ import { Package } from "@/types/viewer";
 import { useFunnel } from "@use-funnel/react-router";
 import { useAtom, useAtomValue } from "jotai";
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import PackageSelectionStep from "@/components/purchase/PackageSelectionStep";
 import {
   buttonClick,
@@ -25,6 +25,8 @@ import {
 import { userProfileAtom } from "@/atoms/userProfile";
 
 const BankAccountPaymentsPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const returnId = searchParams.get("return_id");
   const [viewer, setViewer] = useAtom(viewerSelfAtom);
   const profile = useAtomValue(userProfileAtom);
   const funnel = useFunnel<{
@@ -66,16 +68,23 @@ const BankAccountPaymentsPage: React.FC = () => {
   }, [funnel.historySteps.length, onSale, packages]);
 
   useEffect(() => {
-    if (viewerResponse) {
+    if (funnel.historySteps.length > 1 && viewerResponse) {
       // Navigate if tickets are present (initial load or increase) or profile updated
       if (
         viewer === null ||
-        viewer.updatedTime !== viewerResponse.updatedTime
+        (viewer.updatedTime !== viewerResponse.updatedTime &&
+          viewer.ticket !== viewerResponse.ticket)
       ) {
+        console.log(viewer, viewerResponse);
         setViewer(viewerResponse);
         purchaseTickets(funnel.context.package!, `${verificationCode}`, onSale);
         funnelComplete("payment", "티켓 구매", funnel.context);
-        navigate("/purchase/success");
+        console.log("funnel complete");
+        if (returnId) {
+          navigate(`/purchase/success?return_id=${returnId}`);
+        } else {
+          navigate("/purchase/success");
+        }
       }
     }
   }, [
@@ -87,6 +96,9 @@ const BankAccountPaymentsPage: React.FC = () => {
     funnel.context,
     verificationCode,
     onSale,
+    returnId,
+    profile,
+    funnel.historySteps.length,
   ]);
 
   const handlePackageSelect = async (ticketPackage: Package) => {

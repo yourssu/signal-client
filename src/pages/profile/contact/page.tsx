@@ -34,7 +34,8 @@ const ContactViewPage: React.FC = () => {
   const contactedProfiles = useAtomValue(contactedProfilesAtom);
   const addContact = useSetAtom(contactProfileAtom);
 
-  const { profile } = location.state as { profile: ProfileResponse };
+  const profile = (location.state as { profile: ProfileResponse | null } | null)
+    ?.profile;
   const { data: viewerSelf } = useViewerSelf();
   const { mutateAsync } = useConsumeTicket();
 
@@ -69,7 +70,7 @@ const ContactViewPage: React.FC = () => {
       addContact(res);
     } catch (e) {
       console.error(e);
-      navigate("/purchase");
+      navigate(`/purchase?return_id=${id}`);
     }
   };
 
@@ -87,7 +88,8 @@ const ContactViewPage: React.FC = () => {
                 이용권을 {TICKET_COST}개 소모해
                 <br />
               </span>
-              {profile.nickname}님의 연락처를 열람하시겠습니까?
+              {profile?.nickname ? `${profile.nickname} 님의` : ""} 연락처를
+              열람하시겠습니까?
             </p>
             <div className="flex gap-4 justify-center">
               <Button
@@ -126,7 +128,7 @@ const ContactViewPage: React.FC = () => {
             </div>
             <div className="grow flex flex-col justify-center items-stretch w-full">
               <TurnableProfileCard
-                profile={profile}
+                profile={profileContact}
                 contact={profileContact.contact}
                 isFlipped={true}
               />

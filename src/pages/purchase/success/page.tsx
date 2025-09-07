@@ -16,6 +16,7 @@ const PurchaseSuccessPage: React.FC = () => {
 
   const orderId = searchParams.get("order_id");
   const pgToken = searchParams.get("pg_token");
+  const returnId = searchParams.get("return_id");
 
   const { mutate, isPending } = useKakaoPaymentApprove({
     onSuccess: (response) => {
@@ -99,13 +100,25 @@ const PurchaseSuccessPage: React.FC = () => {
                 asChild
               >
                 {showSuccessContent ? (
-                  <Link to="/profile">시그널 보내기</Link>
+                  <Link
+                    to={
+                      returnId ? `/profile/contact?id=${returnId}` : "/profile"
+                    }
+                  >
+                    시그널 보내기
+                  </Link>
                 ) : isPending ? (
                   "처리 중..."
                 ) : showErrorContent ? (
                   "결제 실패"
                 ) : (
-                  <Link to="/profile">시그널 보내기</Link>
+                  <Link
+                    to={
+                      returnId ? `/profile/contact?id=${returnId}` : "/profile"
+                    }
+                  >
+                    시그널 보내기
+                  </Link>
                 )}
               </Button>
             </div>
