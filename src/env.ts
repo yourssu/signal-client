@@ -58,3 +58,6 @@ export const DISABLED_REGISTER_DESC: string =
   import.meta.env.VITE_DISABLED_REGISTER_DESC ??
   "5/19(월) 19:00부터 프로필을 등록할 수 있어요.";
 export const NOTICE: string = import.meta.env.VITE_NOTICE ?? "";
+export const GOOGLE_OAUTH_CLIENT_ID: string =
+  import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID ??
+  "423363455635-hvngr97c536f8ulcr4q514oqj5jiu1uv.apps.googleusercontent.com";
