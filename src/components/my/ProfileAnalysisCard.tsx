@@ -3,6 +3,7 @@ import card from "@/assets/images/card.png";
 import loginHeart from "@/assets/my/login_heart.svg";
 import registerCard from "@/assets/my/register_card.svg";
 import { Link } from "react-router";
+import { LoginDrawer } from "@/components/LoginDrawer";
 
 export interface ProfileAnalysisCardProps {
   isLoggedIn?: boolean;
@@ -51,6 +52,42 @@ const ProfileAnalysisHeader = ({ viewStatus }: { viewStatus: ViewStatus }) => {
         </>
       );
     }
+  }
+};
+
+const ProfileAnalysisButton = ({ viewStatus }: { viewStatus: ViewStatus }) => {
+  switch (viewStatus) {
+    case "need-register":
+      return (
+        <Button
+          size="xl"
+          className="w-full bg-primary text-white hover:bg-primary/90 rounded-2xl font-semibold text-sm tracking-tight mt-5"
+          asChild
+        >
+          <Link to="/my/profile">프로필 등록하기</Link>
+        </Button>
+      );
+    case "need-login":
+      return (
+        <LoginDrawer>
+          <Button
+            size="xl"
+            className="w-full bg-primary text-white hover:bg-primary/90 rounded-2xl font-semibold text-sm tracking-tight mt-5"
+          >
+            로그인하기
+          </Button>
+        </LoginDrawer>
+      );
+    case "ready":
+      return (
+        <Button
+          size="xl"
+          className="w-full bg-primary text-white hover:bg-primary/90 rounded-2xl font-semibold text-sm tracking-tight mt-5"
+          asChild
+        >
+          <Link to="/my/analysis">내 프로필 상위 몇 %인지 알아보기</Link>
+        </Button>
+      );
   }
 };
 
@@ -110,24 +147,7 @@ export const ProfileAnalysisCard = ({
       </div>
 
       {/* Analysis Button */}
-      <Button
-        size="xl"
-        className="w-full bg-primary text-white hover:bg-primary/90 rounded-2xl font-semibold text-sm tracking-tight mt-5"
-        asChild
-      >
-        {(() => {
-          switch (viewStatus) {
-            case "need-register":
-              return <Link to="/my/profile">프로필 등록하기</Link>;
-            case "need-login":
-              return <Link to="/login">로그인하기</Link>;
-            case "ready":
-              return (
-                <Link to="/my/analysis">내 프로필 상위 몇 %인지 알아보기</Link>
-              );
-          }
-        })()}
-      </Button>
+      <ProfileAnalysisButton viewStatus={viewStatus} />
     </div>
   );
 };
