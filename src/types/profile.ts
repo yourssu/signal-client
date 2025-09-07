@@ -61,7 +61,7 @@ export interface ProfileResponse {
   mbti: Mbti;
   nickname: string;
   introSentences: string[];
-  school: string;
+  school: string | null;
 }
 
 export interface MyProfileResponse {

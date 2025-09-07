@@ -94,9 +94,20 @@ const ProfileRegisterPage: React.FC = () => {
     funnelStep("profile.register", "프로필 등록", "mbti", funnel.context);
   };
 
-  const handleDepartmentSubmit = async (department: string) => {
-    funnel.history.replace("department", { ...funnel.context, department });
-    funnel.history.push("birthYear", { ...funnel.context, department });
+  const handleDepartmentSubmit = async (
+    department: string,
+    school?: string,
+  ) => {
+    funnel.history.replace("department", {
+      ...funnel.context,
+      department,
+      school: school ? school : null,
+    });
+    funnel.history.push("birthYear", {
+      ...funnel.context,
+      department,
+      school: school ? school : null,
+    });
     funnelStep("profile.register", "프로필 등록", "department", funnel.context);
   };
 

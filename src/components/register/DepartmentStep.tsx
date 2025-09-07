@@ -2,19 +2,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
 import { cn, whenPressEnter } from "@/lib/utils";
 import React, { useState, useMemo } from "react"; // Import useMemo
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 interface DepartmentStepProps {
   department?: string;
-  onSubmit: (department: string) => void;
+  school?: string;
+  onSubmit: (department: string, school?: string) => void;
 }
 
 const DepartmentStep: React.FC<DepartmentStepProps> = ({
   department,
+  school,
   onSubmit,
 }) => {
   const [departmentInput, setDepartmentInput] = useState<string>(
     department ?? "",
   ); // Store raw input
+  const [isAnotherSchool, setIsAnotherSchool] = useState<boolean>(false);
+  const [schoolInput, setSchoolInput] = useState<string>(school ?? "");
 
   const isEmpty = useMemo(
     () => departmentInput.length === 0,
@@ -23,7 +29,7 @@ const DepartmentStep: React.FC<DepartmentStepProps> = ({
 
   const handleSubmit = () => {
     if (isEmpty) return;
-    onSubmit(departmentInput);
+    onSubmit(departmentInput, isAnotherSchool ? schoolInput : undefined);
   };
 
   const submitOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) =>
@@ -68,6 +74,36 @@ const DepartmentStep: React.FC<DepartmentStepProps> = ({
             placeholder="학과/부 입력" // Placeholder from Figma
           />
           <p className="text-xs text-end">{departmentInput.length} / 20</p>
+          <div className="flex gap-2 items-center">
+            <Checkbox
+              id="another_school"
+              className="cursor-pointer"
+              checked={isAnotherSchool}
+              onCheckedChange={(checked) => setIsAnotherSchool(!!checked)}
+            />
+            <Label htmlFor="another_school" className="cursor-pointer">
+              다른 학교 학생인가요?
+            </Label>
+          </div>
+        </div>
+        <div
+          className={cn(
+            "flex flex-col gap-0.5 self-stretch animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500",
+            !isAnotherSchool && "hidden",
+          )}
+        >
+          <Input
+            type="text"
+            id="school"
+            name="school"
+            value={schoolInput}
+            onChange={(e) => setSchoolInput(e.target.value)}
+            disabled={!isAnotherSchool}
+            // Styling based on Figma: text-2xl, text-center, placeholder color, bottom border
+            className="w-full h-12 text-2xl px-2.5" // Adjusted styles
+            placeholder="학교 입력" // Placeholder from Figma
+          />
+          <p className="text-xs text-end">{schoolInput.length} / 20</p>
         </div>
       </div>
       <Button
