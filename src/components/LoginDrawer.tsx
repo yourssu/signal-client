@@ -31,6 +31,7 @@ export function LoginDrawer({
     redirect_uri: `${window.location.origin}/auth/google`,
     flow: "auth-code",
     ux_mode: "redirect",
+    scope: "openid email",
   });
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
