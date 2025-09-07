@@ -1,5 +1,9 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import { TokenResponse, RefreshTokenRequest, GoogleOAuthRequest } from "@/types/auth";
+import {
+  TokenResponse,
+  RefreshTokenRequest,
+  GoogleOAuthRequest,
+} from "@/types/auth";
 import { SignalResponse } from "@/types/common";
 import { SignalError } from "@/lib/error";
 import { API_BASE_URL } from "@/env";

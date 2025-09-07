@@ -202,9 +202,12 @@ export const useProfileRanking = (
     queryFn: async () => {
       const params = new URLSearchParams();
       params.append("uuid", uuid);
-      const response = await fetch(`${profileBase}/ranking?${params.toString()}`);
+      const response = await fetch(
+        `${profileBase}/ranking?${params.toString()}`,
+      );
 
-      const res = (await response.json()) as SignalResponse<ProfileRankingResponse>;
+      const res =
+        (await response.json()) as SignalResponse<ProfileRankingResponse>;
       if (!("result" in res)) {
         throw new SignalError(res.message, res.status, res.timestamp);
       } else {
@@ -227,7 +230,8 @@ export const useCountProfileByGender = (
     queryFn: async () => {
       const response = await fetch(`${profileBase}/genders/${gender}/count`);
 
-      const res = (await response.json()) as SignalResponse<ProfileCountResponse>;
+      const res =
+        (await response.json()) as SignalResponse<ProfileCountResponse>;
       if (!("result" in res)) {
         throw new SignalError(res.message, res.status, res.timestamp);
       } else {
