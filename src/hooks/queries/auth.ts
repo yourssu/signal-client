@@ -7,6 +7,7 @@ import {
 import { SignalResponse } from "@/types/common";
 import { SignalError } from "@/lib/error";
 import { API_BASE_URL } from "@/env";
+import { authedFetch } from "@/lib/fetch";
 
 const authBase = `${API_BASE_URL ?? ""}/api/auth`;
 
@@ -71,20 +72,13 @@ export const useGoogleLogin = (
 ) => {
   return useMutation({
     mutationFn: async (data: GoogleOAuthRequest) => {
-      const response = await fetch(`${authBase}/google`, {
+      return await authedFetch<TokenResponse>(`${authBase}/google`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-
-      const res = (await response.json()) as SignalResponse<TokenResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
     },
     ...mutationOptions,
   });
