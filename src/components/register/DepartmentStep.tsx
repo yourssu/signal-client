@@ -19,7 +19,9 @@ const DepartmentStep: React.FC<DepartmentStepProps> = ({
   const [departmentInput, setDepartmentInput] = useState<string>(
     department ?? "",
   ); // Store raw input
-  const [isAnotherSchool, setIsAnotherSchool] = useState<boolean>(false);
+  const [isAnotherSchool, setIsAnotherSchool] = useState<boolean>(
+    school ? true : false,
+  );
   const [schoolInput, setSchoolInput] = useState<string>(school ?? "");
 
   const isEmpty = useMemo(

@@ -152,6 +152,7 @@ const ProfileRegisterPage: React.FC = () => {
       birthYear,
       introSentences,
       nickname,
+      school,
     } = funnel.context;
     if (
       gender &&
@@ -172,7 +173,7 @@ const ProfileRegisterPage: React.FC = () => {
         introSentences,
         nickname,
         contact,
-        school: null, // TODO: 학교 정보 추가 필요
+        school: school ?? null,
       };
       const res = await createProfile(finalData);
       funnel.history.replace("contact", res);
