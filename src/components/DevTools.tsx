@@ -27,7 +27,7 @@ import {
   TICKET_COST,
 } from "@/env";
 import { useUserInfo } from "@/hooks/queries/users";
-import { useIssueTicket } from "@/hooks/queries/viewers";
+import { useIssueTicket, useTicketPackages } from "@/hooks/queries/viewers";
 import { useAtomValue } from "jotai";
 import { Code } from "lucide-react";
 import { useRef } from "react";
@@ -47,6 +47,7 @@ export const DevTools = () => {
   const verificationRef = useRef<HTMLInputElement>(null);
   const countRef = useRef<HTMLInputElement>(null);
   const { mutateAsync: issueTicket } = useIssueTicket();
+  const { data: ticketPackages } = useTicketPackages();
 
   const handleVerification = async () => {
     if (!verificationRef.current || !countRef.current) return;
@@ -141,6 +142,13 @@ export const DevTools = () => {
                 {ACCOUNT_NO}/{ACCOUNT_OWNER}
               </p>
               <p>ENABLE_SAVED: {ENABLE_SAVED}</p>
+            </div>
+            <div>
+              <h1 className="font-medium text-lg">PACKAGES</h1>
+              <p>ticketPackages</p>
+              <pre className="whitespace-pre-wrap break-all">
+                {JSON.stringify(ticketPackages)}
+              </pre>
             </div>
           </details>
         </div>
