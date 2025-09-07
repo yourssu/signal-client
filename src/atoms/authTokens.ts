@@ -4,13 +4,13 @@ import { TokenResponse } from "@/types/auth";
 
 // Storage atoms that persist to localStorage
 export const accessTokenAtom = atomWithStorage<string | null>(
-  "accessToken",
+  "auth.accessToken",
   null,
   undefined,
   { getOnInit: true },
 );
 export const refreshTokenAtom = atomWithStorage<string | null>(
-  "refreshToken",
+  "auth.refreshToken",
   null,
   undefined,
   { getOnInit: true },
@@ -21,7 +21,7 @@ export const tokenExpiryAtom = atomWithStorage<{
   accessTokenExpiresAt: number | null;
   refreshTokenExpiresAt: number | null;
 }>(
-  "tokenExpiry",
+  "auth.tokenExpiry",
   {
     accessTokenExpiresAt: null,
     refreshTokenExpiresAt: null,
