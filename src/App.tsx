@@ -14,7 +14,6 @@ import {
   ENABLE_PROFILE_VIEW,
   ENABLE_REGISTER,
 } from "@/env";
-import { useAnalytics } from "@/hooks/useAnalytics";
 import KakaoPayPurchasePage from "@/pages/purchase/page__kakao";
 import PurchaseSuccessPage from "@/pages/purchase/success/page";
 import PurchaseFailPage from "@/pages/purchase/[fail,cancel]/page";
@@ -102,7 +101,6 @@ const router = createBrowserRouter([
 ]);
 
 const App: React.FC = () => {
-  useAnalytics();
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
