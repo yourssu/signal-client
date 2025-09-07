@@ -17,6 +17,7 @@ import {
 import KakaoPayPurchasePage from "@/pages/purchase/page__kakao";
 import PurchaseSuccessPage from "@/pages/purchase/success/page";
 import PurchaseFailPage from "@/pages/purchase/[fail,cancel]/page";
+import PrivacyPage from "@/pages/privacy/page";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <HomePage />,
+      },
+      {
+        path: "privacy",
+        element: <PrivacyPage />,
       },
       {
         path: "purchase",
