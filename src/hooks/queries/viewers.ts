@@ -5,11 +5,13 @@ import {
   UseQueryOptions,
 } from "@tanstack/react-query";
 import {
+  IssuedVerificationRequest,
   NotificationDepositRequest,
   PaymentApprovalRequest,
   PaymentCompletionResponse,
   PaymentInitiationRequest,
   PaymentInitiationResponse,
+  TicketPackagesResponse,
   VerificationResponse,
   ViewerResponse,
   ViewerDetailResponse,
@@ -23,19 +25,23 @@ import { API_BASE_URL } from "@/env";
 const viewersBase = `${API_BASE_URL ?? ""}/api/viewers`;
 
 export const useViewerVerification = (
-  queryOptions?: Omit<
-    UseQueryOptions<VerificationResponse, SignalError>,
-    "queryKey" | "queryFn"
+  mutationOptions?: Omit<
+    UseMutationOptions<
+      VerificationResponse,
+      SignalError,
+      IssuedVerificationRequest
+    >,
+    "mutationFn"
   >,
 ) => {
-  return useQuery({
-    queryKey: ["viewer", "verification"],
-    queryFn: async () => {
+  return useMutation({
+    mutationFn: async (requestData: IssuedVerificationRequest) => {
       return authedFetch<VerificationResponse>(`${viewersBase}/verification`, {
         method: "POST",
+        body: JSON.stringify(requestData),
       });
     },
-    ...queryOptions,
+    ...mutationOptions,
   });
 };
 
@@ -142,5 +148,28 @@ export const useKakaoPaymentApprove = (
       );
     },
     ...mutationOptions,
+  });
+};
+
+export const useTicketPackages = (
+  queryOptions?: Omit<
+    UseQueryOptions<TicketPackagesResponse, SignalError>,
+    "queryKey" | "queryFn"
+  >,
+) => {
+  return useQuery({
+    queryKey: ["viewers", "ticket-packages"],
+    queryFn: async () => {
+      const response = await fetch(`${viewersBase}/ticket-packages`);
+
+      const res =
+        (await response.json()) as SignalResponse<TicketPackagesResponse>;
+      if (!("result" in res)) {
+        throw new SignalError(res.message, res.status, res.timestamp);
+      } else {
+        return res.result;
+      }
+    },
+    ...queryOptions,
   });
 };

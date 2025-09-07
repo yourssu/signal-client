@@ -13,6 +13,8 @@ import {
   ProfileCountResponse,
   ProfileCreatedRequest,
   ProfileResponse,
+  ProfileUpdateRequest,
+  ProfileRankingResponse,
   TicketConsumedRequest,
 } from "@/types/profile";
 import { SignalResponse } from "@/types/common";
@@ -148,5 +150,90 @@ export const useConsumeTicket = (
       });
     },
     ...mutationOptions,
+  });
+};
+
+export const useUpdateProfile = (
+  mutationOptions?: Omit<
+    UseMutationOptions<
+      ProfileContactResponse,
+      SignalError,
+      ProfileUpdateRequest
+    >,
+    "mutationFn"
+  >,
+) => {
+  return useMutation({
+    mutationFn: async (data: ProfileUpdateRequest) => {
+      return authedFetch<ProfileContactResponse>(`${profileBase}/me`, {
+        method: "PATCH",
+        body: JSON.stringify(data),
+      });
+    },
+    ...mutationOptions,
+  });
+};
+
+export const usePurchasedProfile = (
+  profileId: number,
+  queryOptions?: Omit<
+    UseQueryOptions<ProfileContactResponse, SignalError>,
+    "queryKey" | "queryFn"
+  >,
+) => {
+  return useQuery({
+    queryKey: ["profiles", profileId],
+    queryFn: async () => {
+      return authedFetch<ProfileContactResponse>(`${profileBase}/${profileId}`);
+    },
+    ...queryOptions,
+  });
+};
+
+export const useProfileRanking = (
+  uuid: string,
+  queryOptions?: Omit<
+    UseQueryOptions<ProfileRankingResponse, SignalError>,
+    "queryKey" | "queryFn"
+  >,
+) => {
+  return useQuery({
+    queryKey: ["profiles", "ranking", uuid],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      params.append("uuid", uuid);
+      const response = await fetch(`${profileBase}/ranking?${params.toString()}`);
+
+      const res = (await response.json()) as SignalResponse<ProfileRankingResponse>;
+      if (!("result" in res)) {
+        throw new SignalError(res.message, res.status, res.timestamp);
+      } else {
+        return res.result;
+      }
+    },
+    ...queryOptions,
+  });
+};
+
+export const useCountProfileByGender = (
+  gender: Gender,
+  queryOptions?: Omit<
+    UseQueryOptions<ProfileCountResponse, SignalError>,
+    "queryKey" | "queryFn"
+  >,
+) => {
+  return useQuery({
+    queryKey: ["profiles", "count", gender],
+    queryFn: async () => {
+      const response = await fetch(`${profileBase}/genders/${gender}/count`);
+
+      const res = (await response.json()) as SignalResponse<ProfileCountResponse>;
+      if (!("result" in res)) {
+        throw new SignalError(res.message, res.status, res.timestamp);
+      } else {
+        return res.result;
+      }
+    },
+    ...queryOptions,
   });
 };
