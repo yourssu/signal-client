@@ -13,6 +13,7 @@ import {
   ENABLE_KAKAO_PAYMENTS,
   ENABLE_PROFILE_VIEW,
   ENABLE_REGISTER,
+  GOOGLE_OAUTH_CLIENT_ID,
 } from "@/env";
 import KakaoPayPurchasePage from "@/pages/purchase/page__kakao";
 import PurchaseSuccessPage from "@/pages/purchase/success/page";
@@ -21,6 +22,7 @@ import MyPage from "@/pages/my/page";
 import MyProfilePage from "@/pages/my/profile/page";
 import PrivacyPage from "@/pages/privacy/page";
 import AnalysisMyProfilePage from "@/pages/my/analysis/page";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const router = createBrowserRouter([
   {
@@ -127,9 +129,11 @@ const router = createBrowserRouter([
 const App: React.FC = () => {
   const queryClient = new QueryClient();
   return (
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <GoogleOAuthProvider clientId={GOOGLE_OAUTH_CLIENT_ID}>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </GoogleOAuthProvider>
   );
 };
 

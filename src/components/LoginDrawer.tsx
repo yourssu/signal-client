@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Link } from "react-router";
 import {
   Drawer,
   DrawerContent,
@@ -12,6 +11,7 @@ import {
 import googleLogo from "@/assets/google.png";
 import loginImage from "@/assets/login.png";
 import { Button } from "@/components/ui/button";
+import { useGoogleLogin } from "@react-oauth/google";
 
 interface LoginDrawerProps {
   open?: boolean;
@@ -26,6 +26,11 @@ export function LoginDrawer({
   trigger,
   children,
 }: LoginDrawerProps) {
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => console.log(codeResponse),
+    redirect_uri: `${window.location.origin}/auth/google`,
+    flow: "auth-code",
+  });
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
@@ -58,24 +63,18 @@ export function LoginDrawer({
         <DrawerFooter className="flex-col w-full max-w-md self-center gap-3">
           {/* Google Login Button */}
           <Button
+            onClick={login}
             variant="outline"
-            className="bg-white h-14 justify-start rounded-full"
-            asChild
+            className="g-signin2 bg-white h-14 justify-start rounded-full"
           >
-            <Link to="/login">
-              <div className="flex items-center gap-2.5 pl-2 pr-5">
-                <div className="size-6 flex-shrink-0">
-                  <img
-                    src={googleLogo}
-                    alt="Google"
-                    className="w-full h-full"
-                  />
-                </div>
+            <div className="flex items-center gap-2.5 pl-2 pr-5">
+              <div className="size-6 flex-shrink-0">
+                <img src={googleLogo} alt="Google" className="w-full h-full" />
               </div>
-              <span className="text-base font-medium text-center">
-                Google 계정으로 로그인
-              </span>
-            </Link>
+            </div>
+            <span className="text-base font-medium text-center">
+              Google 계정으로 로그인
+            </span>
           </Button>
         </DrawerFooter>
       </DrawerContent>
