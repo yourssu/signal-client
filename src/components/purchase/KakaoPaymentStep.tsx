@@ -59,8 +59,7 @@ export const KakaoPaymentStep = ({
 
   const handleStartCheck = () => {
     paymentInitiateMutation.mutate({
-      quantity: pkg.quantity[isOnSale ? 0 : 1],
-      price: pkg.price[isOnSale ? 0 : 1],
+      packageId: pkg.id,
     });
   };
 

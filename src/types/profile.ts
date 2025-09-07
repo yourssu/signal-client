@@ -21,7 +21,7 @@ export interface ProfileCreatedRequest {
   // maximum 15 characters
   nickname: string;
   introSentences: string[];
-  school: string;
+  school: string | null;
 }
 
 export interface NicknameGeneratedRequest {

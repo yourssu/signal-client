@@ -1,6 +1,5 @@
 import { userGenderAtom } from "@/atoms/userGender";
 import { userProfileAtom } from "@/atoms/userProfile";
-import { userUuidAtom } from "@/atoms/userUuid";
 import { viewerSelfAtom } from "@/atoms/viewerSelf";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -27,6 +26,7 @@ import {
   SHA,
   TICKET_COST,
 } from "@/env";
+import { useUserInfo } from "@/hooks/queries/users";
 import { useIssueTicket } from "@/hooks/queries/viewers";
 import { useAtomValue } from "jotai";
 import { Code } from "lucide-react";
@@ -39,7 +39,8 @@ const resetData = () => {
 };
 
 export const DevTools = () => {
-  const userUuid = useAtomValue(userUuidAtom);
+  const { data } = useUserInfo();
+  const userUuid = data?.uuid;
   const userGender = useAtomValue(userGenderAtom);
   const userProfile = useAtomValue(userProfileAtom);
   const viewerSelf = useAtomValue(viewerSelfAtom);

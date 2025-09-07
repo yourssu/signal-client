@@ -3,7 +3,6 @@ import React, { useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
 import { ProfileContactResponse, ProfileResponse } from "@/types/profile";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { useUserUuid } from "@/hooks/useUserUuid";
 import { cn } from "@/lib/utils";
 import TopBar from "@/components/TopBar";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -16,6 +15,7 @@ import { ENABLE_SAVED, TICKET_COST } from "@/env";
 import { buttonClick, viewContact } from "@/lib/analytics";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { useQueryClient } from "@tanstack/react-query";
+import { useUserInfo } from "@/hooks/queries/users";
 
 const ContactViewPage: React.FC = () => {
   const location = useLocation();
@@ -29,7 +29,8 @@ const ContactViewPage: React.FC = () => {
   const id = useMemo(() => Number(idStr), [idStr]);
   const returnLink = from === "saved" ? "/profile/saved" : "/profile";
 
-  const uuid = useUserUuid();
+  const { data: userInfo } = useUserInfo();
+  const uuid = userInfo?.uuid;
   const contactedProfiles = useAtomValue(contactedProfilesAtom);
   const addContact = useSetAtom(contactProfileAtom);
 
@@ -57,7 +58,6 @@ const ContactViewPage: React.FC = () => {
     try {
       const res = await mutateAsync({
         profileId: id,
-        uuid,
       });
       await queryClient.invalidateQueries({
         queryKey: ["viewer", "uuid", uuid],

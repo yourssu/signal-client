@@ -13,7 +13,6 @@ import {
 } from "@/types/profile";
 import { useCreateProfile, useSelfProfile } from "@/hooks/queries/profiles";
 import { useNavigate } from "react-router";
-import { useUserUuid } from "@/hooks/useUserUuid";
 import { useAtom } from "jotai";
 import { userGenderAtom } from "@/atoms/userGender";
 import PersonalityStep from "@/components/register/PersonalityStep";
@@ -26,10 +25,12 @@ import { userProfileAtom } from "@/atoms/userProfile";
 import DepartmentStep from "@/components/register/DepartmentStep";
 import BirthYearStep from "@/components/register/BirthYearStep";
 import { funnelComplete, funnelStart, funnelStep } from "@/lib/analytics";
+import { useUserInfo } from "@/hooks/queries/users";
 
 const ProfileRegisterPage: React.FC = () => {
   const navigate = useNavigate();
-  const uuid = useUserUuid();
+  const { data: userInfo } = useUserInfo();
+  const uuid = userInfo?.uuid;
   const [gender, setGender] = useAtom(userGenderAtom);
   const [profile, setProfile] = useAtom(userProfileAtom);
   const funnel = useFunnel<{
@@ -160,6 +161,7 @@ const ProfileRegisterPage: React.FC = () => {
         introSentences,
         nickname,
         contact,
+        school: null, // TODO: 학교 정보 추가 필요
       };
       const res = await createProfile(finalData);
       funnel.history.replace("contact", res);

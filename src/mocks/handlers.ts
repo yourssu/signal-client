@@ -95,6 +95,7 @@ export const handlers = [
         nickname: getRandomNickname(randomAnimal),
         introSentences: [],
         contact: "010-1234-5678",
+        school: "숭실대",
       },
     } satisfies SuccessResponse<ProfileContactResponse>);
   }),
@@ -127,6 +128,7 @@ export const handlers = [
         mbti: getRandomMBTI(),
         nickname: getRandomNickname(randomAnimal),
         introSentences: [],
+        school: "숭실대",
       },
     } satisfies SuccessResponse<ProfileResponse>);
   }),
@@ -145,6 +147,7 @@ export const handlers = [
         nickname: body.nickname,
         contact: body.contact,
         introSentences: body.introSentences,
+        school: "숭실대",
       },
     } satisfies SuccessResponse<ProfileContactResponse>);
   }),
@@ -160,8 +163,8 @@ export const handlers = [
   }),
   http.post("/api/profiles/contact", async ({ request }) => {
     const body = (await request.json()) as TicketConsumedRequest;
-    const { profileId, uuid } = body;
-    if (!profileId || !uuid) {
+    const { profileId } = body;
+    if (!profileId) {
       return HttpResponse.json(
         {
           timestamp: new Date().toISOString(),
@@ -184,6 +187,7 @@ export const handlers = [
         nickname: "총명한 강아지",
         contact: "010-1234-5678",
         introSentences: [],
+        school: "숭실대",
       },
     } satisfies SuccessResponse<ProfileContactResponse>);
   }),

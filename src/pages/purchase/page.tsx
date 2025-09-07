@@ -39,7 +39,11 @@ const BankAccountPaymentsPage: React.FC = () => {
   const navigate = useNavigate();
   const [isChecking, setIsChecking] = useState(false);
 
-  const { data, isLoading: isVerificationLoading } = useViewerVerification();
+  const {
+    data,
+    mutateAsync,
+    isPending: isVerificationLoading,
+  } = useViewerVerification();
   const verificationCode: number | null = useMemo(
     () => Number(data?.verificationCode ?? null) || null,
     [data],
@@ -81,7 +85,8 @@ const BankAccountPaymentsPage: React.FC = () => {
     onSale,
   ]);
 
-  const handlePackageSelect = (ticketPackage: Package) => {
+  const handlePackageSelect = async (ticketPackage: Package) => {
+    await mutateAsync({}); // Ensure verification code is fetched
     funnel.history.replace("packageSelection", { package: ticketPackage });
     funnel.history.push("payment", { package: ticketPackage });
     funnelStep("payment", "티켓 구매", "packageSelection", funnel.context);
