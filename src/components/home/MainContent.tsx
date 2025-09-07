@@ -59,20 +59,29 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
       {/* Button section */}
       <div className="flex flex-col items-stretch gap-4 w-full">
         {ENABLE_REGISTER ? (
-          <Link
-            to="/profile/register"
-            onClick={() =>
-              profileRegistered
-                ? buttonClick("view_my_profile", "내 프로필 보기")
-                : buttonClick("register_profile", "프로필 등록하기")
-            }
-            className={cn(
-              buttonVariants({ variant: "secondary" }),
-              "h-14 text-lg rounded-2xl text-primary bg-[#FFF2F7] shadow-sm font-medium tracking-[-0.01em]",
-            )}
-          >
-            {profileRegistered ? "내 프로필 보기" : "프로필 등록하기"}
-          </Link>
+          profileRegistered ? (
+            <Link
+              to="/my"
+              onClick={() => buttonClick("view_my_profile", "내 프로필 보기")}
+              className={cn(
+                buttonVariants({ variant: "secondary" }),
+                "h-14 text-lg rounded-2xl text-primary bg-[#FFF2F7] shadow-sm font-medium tracking-[-0.01em]",
+              )}
+            >
+              내 프로필 보기
+            </Link>
+          ) : (
+            <Link
+              to="/profile/register"
+              onClick={() => buttonClick("register_profile", "프로필 등록하기")}
+              className={cn(
+                buttonVariants({ variant: "secondary" }),
+                "h-14 text-lg rounded-2xl text-primary bg-[#FFF2F7] shadow-sm font-medium tracking-[-0.01em]",
+              )}
+            >
+              프로필 등록하기
+            </Link>
+          )
         ) : (
           <Button
             variant="secondary"
