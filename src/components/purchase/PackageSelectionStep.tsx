@@ -21,7 +21,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
       <div className="flex flex-col gap-2">
         {/* Progress indicator */}
         <p className="text-black-600 text-xs font-normal animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
-          1 / 2
+          1 / 3
         </p>
 
         {/* Title */}

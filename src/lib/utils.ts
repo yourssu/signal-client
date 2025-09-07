@@ -1,3 +1,4 @@
+import { ACCOUNT_BANK, ACCOUNT_NO } from "@/env";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -31,3 +32,6 @@ export function getDeviceType(): "ios" | "android" | "desktop" {
   // Default to desktop for all other cases
   return "desktop";
 }
+
+export const tossSendUrl = (amount: number, msg: number | null) =>
+  `supertoss://send?bank=${encodeURIComponent(ACCOUNT_BANK)}&accountNo=${ACCOUNT_NO}&amount=${amount}&msg=${msg}`;

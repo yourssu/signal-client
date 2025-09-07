@@ -35,9 +35,6 @@ const getCodeDigits = (code: number | null, loading: boolean): string[] => {
   return code.toString().padStart(4, "0").split("");
 };
 
-const tossSendUrl = (amount: number, msg: number | null) =>
-  `supertoss://send?bank=${encodeURIComponent(ACCOUNT_BANK)}&accountNo=${ACCOUNT_NO}&amount=${amount}&msg=${msg}`;
-
 export const BankAccountPaymentStep = ({
   isLoading,
   isChecking,
@@ -116,7 +113,7 @@ export const BankAccountPaymentStep = ({
       {/* Header section */}
       <div className="flex flex-col gap-2 self-stretch">
         <p className="text-xs text-black-600 font-normal animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
-          2 / 2
+          3 / 3
         </p>
         <h1 className="text-2xl font-semibold text-black-700 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
           천천히 안내를 따르면
@@ -133,12 +130,6 @@ export const BankAccountPaymentStep = ({
             deviceType === "desktop" && "hidden",
           )}
         >
-          <Button
-            className="w-full h-14 text-lg bg-toss-blue hover:bg-toss-blue/90"
-            asChild
-          >
-            <a href={tossSendUrl(price, verificationCode)}>토스로 송금하기</a>
-          </Button>
           <p className="text-center text-sm font-medium text-black-600">OR</p>
         </div>
         {/* Step 1: Account copy */}
@@ -174,7 +165,11 @@ export const BankAccountPaymentStep = ({
           </h2>
           <div className="flex flex-col gap-2">
             <p className="text-xs font-medium text-primary">
-              ⚠️ 아래 숫자를 '받는 분 통장 표시'에 입력해야 자동 충전돼요
+              ⚠️ 꼭!{" "}
+              <u className="font-bold">
+                아래 숫자를 '받는 분 통장 표시'에 입력
+              </u>
+              해야 자동 충전돼요
             </p>
             <div className="bg-pink-50 border border-primary/20 rounded-lg p-2 flex items-center justify-center">
               <span

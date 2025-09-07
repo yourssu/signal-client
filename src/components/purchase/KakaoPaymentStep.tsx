@@ -69,7 +69,7 @@ export const KakaoPaymentStep = ({
       {/* Header section */}
       <div className="flex flex-col gap-2 self-stretch">
         <p className="text-xs text-black-600 font-normal animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
-          2 / 2
+          3 / 3
         </p>
         <h1 className="text-2xl font-semibold text-black-700 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
           시그널 이용권을
