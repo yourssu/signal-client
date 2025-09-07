@@ -1,13 +1,11 @@
 import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
 import { cn, whenPressEnter } from "@/lib/utils";
 import React, { useState, useMemo } from "react"; // Import useMemo
-import RegisterConfirmationDrawer from "./RegisterConfirmationDrawer";
-import { ProfileResponse } from "@/types/profile";
 import TermsDrawer from "@/components/TermsDrawer";
 import { PRIVACY, TERMS } from "@/env";
+import { Button } from "@/components/ui/button";
 
 interface ContactStepProps {
-  profile?: ProfileResponse;
   contact?: string;
   onSubmit: (contact: string) => void;
 }
@@ -21,7 +19,6 @@ const isValidContact = (contact: string): boolean => {
 };
 
 const ContactStep: React.FC<ContactStepProps> = ({
-  profile,
   contact: defaultContact,
   onSubmit,
 }) => {
@@ -117,12 +114,25 @@ const ContactStep: React.FC<ContactStepProps> = ({
           </a>
           에 동의하는 것으로 간주됩니다.
         </p>
+        <Button
+          disabled={!isValid || isEmpty}
+          className={`w-full h-14 rounded-2xl text-lg font-medium transition-colors ${
+            !isValid || isEmpty
+              ? "bg-gray-300 text-white cursor-not-allowed"
+              : "bg-primary text-primary-foreground hover:bg-primary/90"
+          }`}
+          onClick={handleSubmit}
+        >
+          프로필 등록하기
+        </Button>
+        {/* 
+        Removed: 2025-09-07
         <RegisterConfirmationDrawer
           disabled={!isValid || isEmpty}
           profile={profile as ProfileResponse}
           contact={contact}
           onConfirm={handleSubmit}
-        />
+        /> */}
         <TermsDrawer
           open={openTerms}
           onOpenChange={() => setOpenTerms(false)}
