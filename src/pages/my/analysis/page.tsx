@@ -53,7 +53,10 @@ const AnalysisMyProfilePage: React.FC = () => {
             </div>
           </div>
           <div className="grow flex flex-col justify-center items-stretch self-stretch">
-            <ProfileAnalysisResult />
+            <ProfileAnalysisResult
+              count={profileViewers}
+              percentage={profilePercentage}
+            />
           </div>
           <div className="flex gap-4 w-full relative z-50">
             <Button
