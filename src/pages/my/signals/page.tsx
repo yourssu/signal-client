@@ -89,7 +89,9 @@ const ContactedProfilesPage: React.FC = () => {
                 <h1 className="text-2xl font-semibold text-stone-700">
                   아직 시그널을 보낸 사람이 없어요
                   <br />
-                  마음에 드는 사람에게 시그널을 보내보세요
+                  <span className="text-primary">
+                    마음에 드는 사람에게 시그널을 보내보세요
+                  </span>
                 </h1>
               )}
             </div>
