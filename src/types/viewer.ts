@@ -52,8 +52,15 @@ export interface ViewerDetailResponse extends ViewerResponse {
 
 // Payment related types
 export interface PaymentInitiationRequest {
-  quantity: number;
-  price: number;
+  packageId: string;
+}
+
+export interface TicketPackagesResponse {
+  packages: Package[];
+}
+
+export interface IssuedVerificationRequest {
+  referralCode?: string;
 }
 
 export interface PaymentInitiationResponse {

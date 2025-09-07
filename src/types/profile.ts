@@ -21,6 +21,7 @@ export interface ProfileCreatedRequest {
   // maximum 15 characters
   nickname: string;
   introSentences: string[];
+  school: string;
 }
 
 export interface NicknameGeneratedRequest {
@@ -35,13 +36,12 @@ export interface ProfileFoundRequestParams {
  * /profile/random
  */
 export interface RandomProfileRequestParams {
-  uuid: string;
+  gender: Gender;
   excludeProfiles: number[];
 }
 
 export interface TicketConsumedRequest {
   profileId: number;
-  uuid: string;
 }
 
 export interface ProfileCountResponse {
@@ -61,6 +61,7 @@ export interface ProfileResponse {
   mbti: Mbti;
   nickname: string;
   introSentences: string[];
+  school: string;
 }
 
 export interface MyProfileResponse {
@@ -74,8 +75,28 @@ export interface MyProfileResponse {
   mbti: Mbti;
   nickname: string;
   introSentences: string[];
+  school: string;
 }
 
 export interface ProfileContactResponse extends ProfileResponse {
   contact: string;
+}
+
+export interface ProfileUpdateRequest {
+  nickname: string;
+  introSentences: string[];
+}
+
+export interface ProfileRankingResponse {
+  rank: number;
+  totalProfiles: number;
+  purchaseCount: number;
+  gender: Gender;
+  department: string;
+  birthYear: number;
+  animal: AnimalType;
+  mbti: Mbti;
+  nickname: string;
+  introSentences: string[];
+  school: string;
 }

@@ -14,3 +14,7 @@ export interface DevTokenRequest {
   uuid: string;
   accessKey: string;
 }
+
+export interface GoogleOAuthRequest {
+  code: string;
+}
