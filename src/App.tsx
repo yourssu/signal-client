@@ -20,6 +20,7 @@ import PurchaseFailPage from "@/pages/purchase/[fail,cancel]/page";
 import MyPage from "@/pages/my/page";
 import MyProfilePage from "@/pages/my/profile/page";
 import PrivacyPage from "@/pages/privacy/page";
+import AnalysisMyProfilePage from "@/pages/my/analysis/page";
 
 const router = createBrowserRouter([
   {
@@ -110,6 +111,14 @@ const router = createBrowserRouter([
       {
         path: "my/profile",
         element: ENABLE_PROFILE_VIEW ? <MyProfilePage /> : <Navigate to="/" />,
+      },
+      {
+        path: "my/analysis",
+        element: ENABLE_PROFILE_VIEW ? (
+          <AnalysisMyProfilePage />
+        ) : (
+          <Navigate to="/" />
+        ),
       },
     ],
   },
