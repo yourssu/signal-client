@@ -9,9 +9,10 @@ import userIcon from "@/assets/icons/user_icon.svg";
 
 interface TopBarProps {
   onBack?: To | (() => void);
+  hideInfo?: boolean;
 }
 
-const TopBar: React.FC<TopBarProps> = ({ onBack }) => {
+const TopBar: React.FC<TopBarProps> = ({ onBack, hideInfo }) => {
   const { data: self } = useViewerSelf();
   const ticketCount = (self?.ticket ?? 0) - (self?.usedTicket ?? 0);
   const handleBack = () => {
@@ -45,24 +46,26 @@ const TopBar: React.FC<TopBarProps> = ({ onBack }) => {
           )}
         </div>
       )}
-      <div className="flex items-center gap-2">
-        <Link
-          to="/purchase"
-          className="flex items-center gap-1 bg-white px-4 py-0.5 rounded-full"
-        >
-          <div className="w-6 h-6 flex items-center justify-center rounded-full p-1">
-            <img src={ticketIcon} alt="Ticket" className="w-4 h-4" />
-          </div>
-          <div className="flex items-center">
-            <span className="text-xs font-medium text-black-700">
-              {ticketCount.toString().padStart(2, "0")}
-            </span>
-          </div>
-        </Link>
-        <Link to="/my">
-          <img src={userIcon} alt="User" className="size-6" />
-        </Link>
-      </div>
+      {!hideInfo && (
+        <div className="flex items-center gap-2">
+          <Link
+            to="/purchase"
+            className="flex items-center gap-1 bg-white px-4 py-0.5 rounded-full"
+          >
+            <div className="w-6 h-6 flex items-center justify-center rounded-full p-1">
+              <img src={ticketIcon} alt="Ticket" className="w-4 h-4" />
+            </div>
+            <div className="flex items-center">
+              <span className="text-xs font-medium text-black-700">
+                {ticketCount.toString().padStart(2, "0")}
+              </span>
+            </div>
+          </Link>
+          <Link to="/my">
+            <img src={userIcon} alt="User" className="size-6" />
+          </Link>
+        </div>
+      )}
     </div>
   );
 };
