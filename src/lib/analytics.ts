@@ -1,4 +1,4 @@
-import { GA_ID, TICKET_COST, TICKET_PACKAGES } from "@/env";
+import { GA_ID, TICKET_COST } from "@/env";
 import { ProfileContactResponse } from "@/types/profile";
 import { Package, ViewerResponse } from "@/types/viewer";
 import ReactGA4 from "react-ga4";
@@ -30,13 +30,13 @@ export const purchaseTickets = (
   });
 };
 
-export const viewPackages = (discounted: boolean) =>
+export const viewPackages = (packages: Package[], discounted: boolean) =>
   GA_ID &&
   ReactGA4.event("view_item_list", {
     currency: "KRW",
     item_list_id: "tickets",
     item_list_name: "티켓 패키지",
-    items: TICKET_PACKAGES.map((pkg) => ({
+    items: packages.map((pkg) => ({
       item_id: pkg.id,
       item_name: pkg.name,
       price: pkg.price[discounted ? 0 : 1],

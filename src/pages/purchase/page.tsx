@@ -3,6 +3,7 @@ import TopBar from "@/components/TopBar";
 import { BankAccountPaymentStep } from "@/components/purchase/BankAccountPaymentStep";
 import {
   useNotificationDeposit,
+  useTicketPackages,
   useViewerSelf,
   useViewerVerification,
 } from "@/hooks/queries/viewers";
@@ -54,12 +55,15 @@ const BankAccountPaymentsPage: React.FC = () => {
   });
   const onSale = !!profile && (viewer?.ticket ?? 0) === 0;
 
+  const { data: packagesRes } = useTicketPackages();
+  const packages = useMemo(() => packagesRes?.packages ?? [], [packagesRes]);
+
   useEffect(() => {
     if (funnel.historySteps.length === 1) {
       funnelStart("payment", "티켓 구매");
-      viewPackages(onSale);
+      viewPackages(packages, onSale);
     }
-  }, [funnel.historySteps.length, onSale]);
+  }, [funnel.historySteps.length, onSale, packages]);
 
   useEffect(() => {
     if (viewerResponse) {

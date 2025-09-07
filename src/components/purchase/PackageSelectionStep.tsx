@@ -1,8 +1,8 @@
 import { Package } from "@/types/viewer";
 import mainCharacter from "@/assets/home/main.png";
-import { TICKET_PACKAGES } from "@/env";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTicketPackages } from "@/hooks/queries/viewers";
 
 interface PackageSelectionStepProps {
   onSelect: (ticketPackage: Package) => void;
@@ -13,6 +13,8 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
   onSelect,
   isOnSale,
 }) => {
+  const { data } = useTicketPackages();
+  const packages = data?.packages ?? [];
   return (
     <div className="flex flex-col gap-4 items-stretch px-4 py-6 w-full">
       {/* Progress and Title Section */}
@@ -43,7 +45,7 @@ const PackageSelectionStep: React.FC<PackageSelectionStepProps> = ({
 
         {/* Package Options */}
         <div className="flex flex-col gap-3 w-full">
-          {TICKET_PACKAGES.map((pkg) => (
+          {packages?.map((pkg) => (
             <Button
               key={pkg.id}
               variant="secondary"
