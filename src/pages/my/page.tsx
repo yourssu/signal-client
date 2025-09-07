@@ -33,7 +33,7 @@ const MyPage: React.FC = () => {
         <div className="bg-white rounded-3xl p-6 w-full flex items-end justify-between shadow-sm">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-1 px-0.5">
-              <p className="text-[10px] text-gray-500 font-medium tracking-tight">
+              <p className="text-[10px] text-gray-500 font-medium">
                 현재 이용권 보유
               </p>
             </div>
@@ -48,7 +48,7 @@ const MyPage: React.FC = () => {
           </div>
           <Button
             size="sm"
-            className="bg-[#FFF2F7] text-primary hover:bg-[#FFF2F7]/80 text-xs font-semibold px-4 py-2 h-9 rounded-xl tracking-tight"
+            className="bg-[#FFF2F7] text-primary hover:bg-[#FFF2F7]/80 text-xs font-semibold px-4 py-2 h-9 rounded-xl"
             asChild
           >
             <Link to="/purchase">충전</Link>
@@ -56,7 +56,7 @@ const MyPage: React.FC = () => {
         </div>
 
         {/* Profile Analysis Card */}
-        <ProfileAnalysisCard />
+        <ProfileAnalysisCard isProfileRegistered={!!profile} />
 
         {/* Menu Options */}
         <div className="bg-white rounded-3xl overflow-hidden w-full">
