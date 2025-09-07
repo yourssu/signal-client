@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import TopBar from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
@@ -12,18 +12,13 @@ import { userProfileAtom } from "@/atoms/userProfile";
 import { useAtom } from "jotai";
 
 const MyPage: React.FC = () => {
-  const navigate = useNavigate();
   const { data: self } = useViewerSelf();
   const ticketCount = (self?.ticket ?? 0) - (self?.usedTicket ?? 0);
   const [profile] = useAtom(userProfileAtom);
 
-  const handleBack = () => {
-    navigate(-1); // Go back one step in browser history
-  };
-
   return (
     <div className="w-full h-full flex flex-col items-center">
-      <TopBar onBack={handleBack} hideInfo />
+      <TopBar onBack="/" hideInfo />
       <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6">
         <div className="flex flex-col items-start w-full">
           <h1 className="text-2xl font-semibold text-stone-700">마이페이지</h1>
