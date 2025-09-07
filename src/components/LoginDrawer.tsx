@@ -26,10 +26,11 @@ export function LoginDrawer({
   trigger,
   children,
 }: LoginDrawerProps) {
+  console.log(`${window.location.origin}/auth/google`);
   const login = useGoogleLogin({
-    onSuccess: (codeResponse) => console.log(codeResponse),
     redirect_uri: `${window.location.origin}/auth/google`,
     flow: "auth-code",
+    ux_mode: "redirect",
   });
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
