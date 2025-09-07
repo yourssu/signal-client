@@ -22,6 +22,7 @@ import MyPage from "@/pages/my/page";
 import MyProfilePage from "@/pages/my/profile/page";
 import PrivacyPage from "@/pages/privacy/page";
 import AnalysisMyProfilePage from "@/pages/my/analysis/page";
+import GoogleAuthPage from "@/pages/auth/google/page";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const router = createBrowserRouter([
@@ -118,6 +119,14 @@ const router = createBrowserRouter([
         path: "my/analysis",
         element: ENABLE_PROFILE_VIEW ? (
           <AnalysisMyProfilePage />
+        ) : (
+          <Navigate to="/" />
+        ),
+      },
+      {
+        path: "auth/google",
+        element: GOOGLE_OAUTH_CLIENT_ID ? (
+          <GoogleAuthPage />
         ) : (
           <Navigate to="/" />
         ),

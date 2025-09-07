@@ -20,7 +20,7 @@ export const useAuth = () => {
 
   const registerMutation = useRegister({
     onSuccess: (data: TokenResponse) => {
-      setTokens(data);
+      setTokens({ tokenResponse: data, provider: "local" });
     },
     onError: (error) => {
       toast.error(`회원가입 실패: ${error.message}`);
@@ -29,7 +29,7 @@ export const useAuth = () => {
 
   const refreshMutation = useRefreshToken({
     onSuccess: (data: TokenResponse) => {
-      setTokens(data);
+      setTokens({ tokenResponse: data, provider: "local" });
     },
     onError: () => {
       // If refresh fails, try to register

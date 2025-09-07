@@ -9,12 +9,15 @@ import archiveIcon from "@/assets/icons/archive_icon.svg";
 import { ProfileAnalysisCard } from "@/components/my/ProfileAnalysisCard";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { userProfileAtom } from "@/atoms/userProfile";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
+import { providerAtom } from "@/atoms/authTokens";
 
 const MyPage: React.FC = () => {
   const { data: self } = useViewerSelf();
   const ticketCount = (self?.ticket ?? 0) - (self?.usedTicket ?? 0);
   const [profile] = useAtom(userProfileAtom);
+  const provider = useAtomValue(providerAtom) ?? "local";
+  const isLoggedIn = provider !== "local";
 
   return (
     <div className="w-full h-full flex flex-col items-center">
@@ -51,7 +54,10 @@ const MyPage: React.FC = () => {
         </div>
 
         {/* Profile Analysis Card */}
-        <ProfileAnalysisCard isProfileRegistered={!!profile} />
+        <ProfileAnalysisCard
+          isLoggedIn={isLoggedIn}
+          isProfileRegistered={!!profile}
+        />
 
         {/* Menu Options */}
         <div className="bg-white rounded-3xl overflow-hidden w-full">

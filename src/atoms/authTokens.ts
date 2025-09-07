@@ -16,6 +16,14 @@ export const refreshTokenAtom = atomWithStorage<string | null>(
   { getOnInit: true },
 );
 
+// Provider atom to track authentication method
+export const providerAtom = atomWithStorage<"google" | "local" | null>(
+  "auth.provider",
+  null,
+  undefined,
+  { getOnInit: true },
+);
+
 // Derived atom for token expiry times
 export const tokenExpiryAtom = atomWithStorage<{
   accessTokenExpiresAt: number | null;
@@ -47,15 +55,20 @@ export const isAuthenticatedAtom = atom((get) => {
 // Action atom to set all tokens at once
 export const setTokensAtom = atom(
   null,
-  (_get, set, tokenResponse: TokenResponse) => {
+  (
+    _get,
+    set,
+    params: { tokenResponse: TokenResponse; provider?: "google" | "local" },
+  ) => {
     const now = Date.now();
 
-    set(accessTokenAtom, tokenResponse.accessToken);
-    set(refreshTokenAtom, tokenResponse.refreshToken);
+    set(accessTokenAtom, params.tokenResponse.accessToken);
+    set(refreshTokenAtom, params.tokenResponse.refreshToken);
     set(tokenExpiryAtom, {
-      accessTokenExpiresAt: now + tokenResponse.accessTokenExpiresIn,
-      refreshTokenExpiresAt: now + tokenResponse.refreshTokenExpiresIn,
+      accessTokenExpiresAt: now + params.tokenResponse.accessTokenExpiresIn,
+      refreshTokenExpiresAt: now + params.tokenResponse.refreshTokenExpiresIn,
     });
+    set(providerAtom, params.provider || "local");
   },
 );
 
@@ -67,4 +80,5 @@ export const clearTokensAtom = atom(null, (_get, set) => {
     accessTokenExpiresAt: null,
     refreshTokenExpiresAt: null,
   });
+  set(providerAtom, null);
 });
