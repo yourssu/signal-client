@@ -55,25 +55,40 @@ const ProfileAnalysisHeader = ({ viewStatus }: { viewStatus: ViewStatus }) => {
   }
 };
 
-const ProfileAnalysisButton = ({ viewStatus }: { viewStatus: ViewStatus }) => {
+const ProfileAnalysisButton = ({
+  isLoggedIn,
+  viewStatus,
+}: {
+  isLoggedIn: boolean;
+  viewStatus: ViewStatus;
+}) => {
   switch (viewStatus) {
     case "need-register":
       return (
-        <Button
-          size="xl"
-          className="w-full bg-primary text-white hover:bg-primary/90 rounded-2xl font-semibold text-sm tracking-tight mt-5"
-          asChild
-        >
-          <Link to="/my/profile">프로필 등록하기</Link>
-        </Button>
+        <div className="flex flex-col gap-3">
+          <Button size="xl" className="font-semibold text-sm" asChild>
+            <Link to="/my/profile">프로필 등록하기</Link>
+          </Button>
+          {!isLoggedIn && (
+            <>
+              <p className="text-center text-xs">이미 가입 하셨다면?</p>
+              <LoginDrawer>
+                <Button
+                  variant="secondary"
+                  size="xl"
+                  className="text-primary font-semibold text-sm"
+                >
+                  로그인하기
+                </Button>
+              </LoginDrawer>
+            </>
+          )}
+        </div>
       );
     case "need-login":
       return (
         <LoginDrawer>
-          <Button
-            size="xl"
-            className="w-full bg-primary text-white hover:bg-primary/90 rounded-2xl font-semibold text-sm tracking-tight mt-5"
-          >
+          <Button size="xl" className="font-semibold text-sm">
             로그인하기
           </Button>
         </LoginDrawer>
@@ -147,7 +162,10 @@ export const ProfileAnalysisCard = ({
       </div>
 
       {/* Analysis Button */}
-      <ProfileAnalysisButton viewStatus={viewStatus} />
+      <ProfileAnalysisButton
+        isLoggedIn={isLoggedIn ?? false}
+        viewStatus={viewStatus}
+      />
     </div>
   );
 };
