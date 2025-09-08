@@ -45,7 +45,11 @@ const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
         이용권 구매하기
       </Button>
 
-      <LoginDrawer open={loginDrawerOpen} onOpenChange={setLoginDrawerOpen} />
+      <LoginDrawer
+        open={loginDrawerOpen}
+        onOpenChange={setLoginDrawerOpen}
+        showNextTime
+      />
     </div>
   );
 };

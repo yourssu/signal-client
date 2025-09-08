@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -16,6 +17,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 interface LoginDrawerProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  showNextTime?: boolean;
   trigger?: React.ReactNode;
   children?: React.ReactNode;
 }
@@ -23,6 +25,7 @@ interface LoginDrawerProps {
 export function LoginDrawer({
   open,
   onOpenChange,
+  showNextTime,
   trigger,
   children,
 }: LoginDrawerProps) {
@@ -78,6 +81,11 @@ export function LoginDrawer({
               Google 계정으로 로그인
             </span>
           </Button>
+          {showNextTime && (
+            <DrawerClose className="text-xs underline text-primary cursor-pointer">
+              다음에 할래요
+            </DrawerClose>
+          )}
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
