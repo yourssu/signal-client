@@ -5,9 +5,9 @@ import {
   UseQueryOptions,
 } from "@tanstack/react-query";
 import { BlacklistExistsResponse, BlacklistResponse } from "@/types/blacklist";
-import { SignalResponse } from "@/types/common";
 import { SignalError } from "@/lib/error";
 import { API_BASE_URL } from "@/env";
+import { authedFetch } from "@/lib/fetch";
 
 const blacklistsBase = `${API_BASE_URL ?? ""}/api/blacklists`;
 
@@ -20,15 +20,7 @@ export const useCheckMyBlacklistStatus = (
   return useQuery({
     queryKey: ["blacklists", "me", "status"],
     queryFn: async () => {
-      const response = await fetch(blacklistsBase);
-
-      const res =
-        (await response.json()) as SignalResponse<BlacklistExistsResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
+      return await authedFetch<BlacklistExistsResponse>(blacklistsBase);
     },
     ...queryOptions,
   });
@@ -42,19 +34,12 @@ export const useAddMyToBlacklist = (
 ) => {
   return useMutation({
     mutationFn: async () => {
-      const response = await fetch(`${blacklistsBase}/me`, {
+      return await authedFetch<BlacklistResponse>(`${blacklistsBase}/me`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
       });
-
-      const res = (await response.json()) as SignalResponse<BlacklistResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
     },
     ...mutationOptions,
   });
@@ -68,21 +53,12 @@ export const useRemoveMyFromBlacklist = (
 ) => {
   return useMutation({
     mutationFn: async () => {
-      const response = await fetch(`${blacklistsBase}/me`, {
+      await authedFetch(`${blacklistsBase}/me`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new SignalError(
-          errorData.message || "Failed to remove from blacklist",
-          response.status,
-          new Date().toISOString(),
-        );
-      }
     },
     ...mutationOptions,
   });
