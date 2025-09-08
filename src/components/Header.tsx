@@ -21,7 +21,7 @@ const TopBar: React.FC<TopBarProps> = ({ onBack, hideInfo }) => {
     }
   };
   return (
-    <div className="w-full h-11 pl-2 pr-6 flex justify-end items-center">
+    <div className="w-full h-11 pl-2 pr-6 shrink-0 flex justify-end items-center">
       {onBack && (
         <div className="grow flex items-center justify-start">
           {typeof onBack === "function" ? (
