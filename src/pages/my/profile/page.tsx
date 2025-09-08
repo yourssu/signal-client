@@ -73,7 +73,7 @@ const MyProfilePage: React.FC = () => {
     <div className="min-h-dvh flex flex-col items-center">
       <TopBar onBack="/my" />
       <div className="w-full max-w-md grow p-6 flex flex-col gap-10">
-        <div className="w-full max-w-md mx-auto flex flex-col pt-2 gap-2 grow">
+        <div className="w-full max-w-md mx-auto flex flex-col gap-2 grow">
           <h1 className="text-2xl font-semibold text-stone-700">나의 프로필</h1>
           <div className="grow flex flex-col justify-center items-stretch self-stretch">
             {isEditing ? (
