@@ -70,18 +70,14 @@ const ProfileAnalysisButton = ({
             <Link to="/my/profile">프로필 등록하기</Link>
           </Button>
           {!isLoggedIn && (
-            <>
-              <p className="text-center text-xs">이미 가입 하셨다면?</p>
+            <div className="flex gap-1 items-center justify-center text-center text-xs">
+              <p className="text-center">이미 가입하셨다면?</p>
               <LoginDrawer>
-                <Button
-                  variant="secondary"
-                  size="xl"
-                  className="text-primary font-semibold text-sm"
-                >
+                <button className="underline text-primary cursor-pointer">
                   로그인하기
-                </Button>
+                </button>
               </LoginDrawer>
-            </>
+            </div>
           )}
         </div>
       );
