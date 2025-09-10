@@ -51,7 +51,7 @@ const TopBar: React.FC<TopBarProps> = ({ onBack, hideInfo }) => {
         <div className="flex items-center gap-2">
           <Link
             to="/purchase"
-            className="flex items-center gap-1 bg-white px-4 py-0.5 rounded-full"
+            className="flex items-center gap-1 bg-white px-4 py-0.5 rounded-full hover:bg-[#FFDFEB] transition-colors"
           >
             <div className="w-6 h-6 flex items-center justify-center rounded-full p-1">
               <img src={ticketIcon} alt="Ticket" className="w-4 h-4" />
