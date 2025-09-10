@@ -6,11 +6,13 @@ import { setTokensAtom } from "@/atoms/authTokens";
 import ReactGA4 from "react-ga4";
 import { GA_ID } from "@/env";
 import { toast } from "sonner";
+import { useUserRefresh } from "@/hooks/useUserRefresh";
 
 export default function GoogleAuthPage() {
   const [searchParams] = useSearchParams();
   const [, setTokens] = useAtom(setTokensAtom);
   const loginRequested = useRef(false);
+  const { refreshUser, isRefreshed } = useUserRefresh();
 
   const { mutate, isSuccess, isIdle, isError } = useGoogleLogin({
     onSuccess: (tokenResponse) => {
@@ -20,6 +22,7 @@ export default function GoogleAuthPage() {
           method: "구글",
         });
       }
+      refreshUser();
     },
     onError: (error) => {
       toast.error("Google 로그인 실패", { description: error.message });
@@ -54,7 +57,7 @@ export default function GoogleAuthPage() {
   }, [isIdle, mutate, searchParams]);
 
   // 성공적으로 로그인되면 마이페이지로 리디렉션
-  if (isSuccess) {
+  if (isSuccess && isRefreshed) {
     return <Navigate to="/my" replace />;
   }
 
