@@ -17,8 +17,12 @@ export const useUserRefresh = () => {
 
   const queryClient = useQueryClient();
 
-  const { data: profile, isFetched: profileFetched } = useSelfProfile();
-  const { data: viewerSelf, isFetched: viewerFetched } = useViewerSelf();
+  const { data: profile, isFetched: profileFetched } = useSelfProfile({
+    retry: false,
+  });
+  const { data: viewerSelf, isFetched: viewerFetched } = useViewerSelf({
+    retry: false,
+  });
 
   const refreshUser = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ["profiles", "me"] });

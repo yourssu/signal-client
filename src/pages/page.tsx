@@ -7,7 +7,7 @@ import { userProfileAtom } from "@/atoms/userProfile";
 
 const HomePage: React.FC = () => {
   const profile = useAtomValue(userProfileAtom);
-  const { data: self } = useViewerSelf();
+  const { data: self } = useViewerSelf({ retry: false });
   return (
     <div className="flex flex-col min-h-dvh relative">
       {/* Top bar with heart and ticket icons */}

@@ -43,8 +43,12 @@ export const useAuth = () => {
     },
   });
 
-  const { data: profile, refetch: refetchProfile } = useSelfProfile();
-  const { data: viewerSelf, refetch: refetchViewerSelf } = useViewerSelf();
+  const { data: profile, refetch: refetchProfile } = useSelfProfile({
+    retry: false,
+  });
+  const { data: viewerSelf, refetch: refetchViewerSelf } = useViewerSelf({
+    retry: false,
+  });
 
   const refreshUser = useCallback(() => {
     refetchProfile();
