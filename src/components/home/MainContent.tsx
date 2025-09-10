@@ -124,6 +124,12 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
             시그널 보내기
           </Button>
         )}
+        <Link
+          to="/privacy"
+          className="text-center underline text-xs text-primary"
+        >
+          개인정보처리방침
+        </Link>
       </div>
       <ServiceDisabledDialog
         open={registerGuardOpen}
