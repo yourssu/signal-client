@@ -10,6 +10,10 @@ import {
   tokenExpiryAtom,
 } from "@/atoms/authTokens";
 import { TokenResponse } from "@/types/auth";
+import { useSelfProfile } from "@/hooks/queries/profiles";
+import { userProfileAtom } from "@/atoms/userProfile";
+import { viewerSelfAtom } from "@/atoms/viewerSelf";
+import { useViewerSelf } from "@/hooks/queries/viewers";
 
 export const useAuth = () => {
   const [accessToken] = useAtom(accessTokenAtom);
@@ -17,6 +21,8 @@ export const useAuth = () => {
   const [isAuthenticated] = useAtom(isAuthenticatedAtom);
   const [, setTokens] = useAtom(setTokensAtom);
   const [tokenExpiry] = useAtom(tokenExpiryAtom);
+  const [, setProfile] = useAtom(userProfileAtom);
+  const [, setViewerSelf] = useAtom(viewerSelfAtom);
 
   const registerMutation = useRegister({
     onSuccess: (data: TokenResponse) => {
@@ -36,6 +42,23 @@ export const useAuth = () => {
       registerMutation.mutate();
     },
   });
+
+  const { data: profile, refetch: refetchProfile } = useSelfProfile();
+  const { data: viewerSelf, refetch: refetchViewerSelf } = useViewerSelf();
+
+  const refreshUser = useCallback(() => {
+    refetchProfile();
+    refetchViewerSelf();
+    if (profile) setProfile(profile);
+    if (viewerSelf) setViewerSelf(viewerSelf);
+  }, [
+    profile,
+    refetchProfile,
+    refetchViewerSelf,
+    setProfile,
+    setViewerSelf,
+    viewerSelf,
+  ]);
 
   const tryRefreshToken = useCallback(async () => {
     if (!refreshToken) {
@@ -85,6 +108,7 @@ export const useAuth = () => {
   // Auto-register or auto-refresh on mount
   useEffect(() => {
     initializeAuth();
+    refreshUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run once on mount
 
