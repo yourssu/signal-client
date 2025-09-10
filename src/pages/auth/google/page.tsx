@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useSearchParams, Navigate } from "react-router";
 import { useAtom } from "jotai";
 import { useGoogleLogin } from "@/hooks/queries/auth";
@@ -10,8 +10,9 @@ import { toast } from "sonner";
 export default function GoogleAuthPage() {
   const [searchParams] = useSearchParams();
   const [, setTokens] = useAtom(setTokensAtom);
+  const loginRequested = useRef(false);
 
-  const { mutate, isSuccess, isPending, isError } = useGoogleLogin({
+  const { mutate, isSuccess, isIdle, isError } = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       setTokens({ tokenResponse, provider: "google" });
       if (GA_ID) {
@@ -46,10 +47,11 @@ export default function GoogleAuthPage() {
       return;
     }
 
-    if (code && !isPending) {
+    if (code && isIdle && !loginRequested.current) {
+      loginRequested.current = true;
       mutate({ code });
     }
-  }, [isPending, mutate, searchParams]);
+  }, [isIdle, mutate, searchParams]);
 
   // 성공적으로 로그인되면 마이페이지로 리디렉션
   if (isSuccess) {
