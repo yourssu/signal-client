@@ -1,7 +1,9 @@
+import { userGenderAtom } from "@/atoms/userGender";
 import { userProfileAtom } from "@/atoms/userProfile";
 import { viewerSelfAtom } from "@/atoms/viewerSelf";
 import { useSelfProfile } from "@/hooks/queries/profiles";
 import { useViewerSelf } from "@/hooks/queries/viewers";
+import { Gender } from "@/types/profile";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
@@ -11,6 +13,7 @@ export const useUserRefresh = () => {
   const [isRefreshed, setIsRefreshed] = useState(false);
   const setProfile = useSetAtom(userProfileAtom);
   const setViewerSelf = useSetAtom(viewerSelfAtom);
+  const setGender = useSetAtom(userGenderAtom);
 
   const queryClient = useQueryClient();
 
@@ -25,7 +28,10 @@ export const useUserRefresh = () => {
 
   useEffect(() => {
     if (refreshInitiated) {
-      if (profile && profileFetched) setProfile(profile);
+      if (profile && profileFetched) {
+        setProfile(profile);
+        setGender(profile.gender as Gender);
+      }
       if (viewerSelf && viewerFetched) setViewerSelf(viewerSelf);
       if (profileFetched && viewerFetched) setIsRefreshed(true);
     }
@@ -37,6 +43,7 @@ export const useUserRefresh = () => {
     viewerFetched,
     setViewerSelf,
     refreshInitiated,
+    setGender,
   ]);
 
   return { refreshUser, isRefreshed };
