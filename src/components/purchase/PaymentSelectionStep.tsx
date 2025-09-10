@@ -1,8 +1,18 @@
 import mainCharacter from "@/assets/home/main.png";
+import TermsDrawer from "@/components/TermsDrawer";
 import { Button } from "@/components/ui/button";
-import { ENABLE_KAKAO_PAYMENTS } from "@/env";
+import {
+  ACCOUNT_BANK,
+  ACCOUNT_NO,
+  ACCOUNT_OWNER,
+  ENABLE_KAKAO_PAYMENTS,
+  PRIVACY,
+  TERMS,
+} from "@/env";
 import { cn, getDeviceType, tossSendUrl } from "@/lib/utils";
 import { Package } from "@/types/viewer";
+import { ShieldCheck } from "lucide-react";
+import { useState } from "react";
 
 interface PaymentSelectionStepProps {
   pkg?: Package;
@@ -19,6 +29,17 @@ const PaymentSelectionStep: React.FC<PaymentSelectionStepProps> = ({
 }) => {
   const price = isOnSale ? pkg?.price[0] : pkg?.price[1];
   const deviceType = getDeviceType();
+  const [openTerms, setOpenTerms] = useState(false); // State to track terms modal
+  const [openPrivacy, setOpenPrivacy] = useState(false); // State to track privacy modal
+
+  const handleOpenTerms = () => {
+    setOpenTerms(true);
+  };
+
+  const handleOpenPrivacy = () => {
+    setOpenPrivacy(true);
+  };
+
   return (
     <div className="flex flex-col gap-4 items-stretch px-4 py-6 w-full">
       {/* Progress and Title Section */}
@@ -49,6 +70,21 @@ const PaymentSelectionStep: React.FC<PaymentSelectionStepProps> = ({
 
         {/* Package Options */}
         <div className="flex flex-col gap-3 w-full">
+          {ENABLE_KAKAO_PAYMENTS && (
+            <Button
+              className="w-full h-14 text-lg bg-kakao-yellow hover:bg-kakao-yellow/90 text-black-700"
+              onClick={() => onSelect("kakao")}
+            >
+              카카오페이로 송금하기
+            </Button>
+          )}
+          <Button
+            className="w-full h-14 text-lg text-primary"
+            variant="secondary"
+            onClick={() => onSelect("bank")}
+          >
+            직접 계좌로 입금하기
+          </Button>
           <Button
             disabled={!price || !verificationCode}
             className={cn(
@@ -66,23 +102,41 @@ const PaymentSelectionStep: React.FC<PaymentSelectionStepProps> = ({
               토스로 송금하기
             </a>
           </Button>
-          {ENABLE_KAKAO_PAYMENTS && (
-            <Button
-              className="w-full h-14 text-lg bg-kakao-yellow hover:bg-kakao-yellow/90 text-black-700"
-              onClick={() => onSelect("kakao")}
-            >
-              카카오페이로 송금하기
-            </Button>
-          )}
-          <Button
-            className="w-full h-14 text-lg text-primary"
-            variant="secondary"
-            onClick={() => onSelect("bank")}
+          <p
+            className={cn(
+              "text-xs text-gray-500 flex items-center gap-1",
+              deviceType === "desktop" && "hidden",
+            )}
           >
-            직접 계좌로 입금하기
-          </Button>
+            <ShieldCheck className="inline size-3" />
+            토스 송금 정보 | {ACCOUNT_BANK} {ACCOUNT_NO} {ACCOUNT_OWNER}
+          </p>
+          {/* Terms notice */}
+          <p className="text-xs text-center mt-8">
+            결제 진행 시, '시그널'{" "}
+            <a onClick={handleOpenTerms} className="underline cursor-pointer">
+              서비스 이용약관
+            </a>
+            과<br />
+            <a onClick={handleOpenPrivacy} className="underline cursor-pointer">
+              개인정보 처리방침
+            </a>
+            에 동의하는 것으로 간주됩니다.
+          </p>
         </div>
       </div>
+      <TermsDrawer
+        open={openTerms}
+        onOpenChange={() => setOpenTerms(false)}
+        title="서비스 이용약관"
+        terms={TERMS}
+      />
+      <TermsDrawer
+        open={openPrivacy}
+        onOpenChange={() => setOpenPrivacy(false)}
+        title="개인정보 처리방침"
+        terms={PRIVACY}
+      />
     </div>
   );
 };
