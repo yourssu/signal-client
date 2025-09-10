@@ -1,16 +1,10 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link } from "react-router";
 import TopBar from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { PRIVACY } from "@/env";
 
 const PrivacyPage: React.FC = () => {
-  const navigate = useNavigate();
-
-  const handleBack = () => {
-    navigate(-1); // Go back one step in browser history
-  };
-
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
 
@@ -63,7 +57,7 @@ const PrivacyPage: React.FC = () => {
 
   return (
     <div className="w-full h-full flex flex-col items-center">
-      <TopBar onBack={handleBack} />
+      <TopBar onBack="/" />
       <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6">
         <div className="flex flex-col items-start w-full">
           <h1 className="text-2xl font-semibold text-stone-700">
@@ -82,8 +76,10 @@ const PrivacyPage: React.FC = () => {
           </div>
         </div>
         {isScrolledToBottom ? (
-          <Button size="xl" className="w-full" onClick={handleBack}>
-            닫기
+          <Button size="xl" className="w-full" asChild>
+            <Link to="/" className="w-full">
+              닫기
+            </Link>
           </Button>
         ) : (
           <Button size="xl" className="w-full" onClick={scrollDown}>
