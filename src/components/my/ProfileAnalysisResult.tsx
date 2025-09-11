@@ -34,7 +34,7 @@ export default function ProfileAnalysisResult({
       </div>
       <div className="flex flex-col gap-[3px] items-center justify-center leading-[0] not-italic relative shrink-0">
         <div className="font-medium relative shrink-0 text-[#7a7a7a] text-[16px] tracking-[-0.32px]">
-          <p className="leading-[1.3] text-nowrap whitespace-pre">{quote}</p>
+          <p className="leading-[1.3] text-nowrap whitespace-pre">"{quote}"</p>
         </div>
         <div className="font-semibold relative shrink-0 text-[20px] text-neutral-700 tracking-[-0.4px]">
           <p className="leading-[1.3] text-nowrap whitespace-pre">{title}</p>
