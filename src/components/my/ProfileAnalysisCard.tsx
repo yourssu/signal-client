@@ -146,7 +146,7 @@ export const ProfileAnalysisCard = ({
       ? "need-login"
       : "ready";
   return (
-    <div className="bg-[#FFF2F7] rounded-[32px] p-8 w-full shadow-sm">
+    <div className="bg-[#FFF2F7] rounded-[32px] p-8 w-full shadow-sm flex flex-col">
       <div className="flex flex-col items-center gap-5">
         {/* Title and Description */}
         <div className="flex flex-col items-center gap-1.5">
