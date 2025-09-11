@@ -2,8 +2,7 @@ import { useConsumeTicket } from "@/hooks/queries/profiles";
 import React, { useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
 import { ProfileContactResponse, ProfileResponse } from "@/types/profile";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
@@ -16,6 +15,7 @@ import { buttonClick, viewContact } from "@/lib/analytics";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUserInfo } from "@/hooks/queries/users";
+import listHeartOutline from "@/assets/icons/list_heart_outline.svg";
 
 const ContactViewPage: React.FC = () => {
   const location = useLocation();
@@ -135,25 +135,20 @@ const ContactViewPage: React.FC = () => {
             </div>
             <div className="flex flex-row flex-wrap gap-4 w-full max-w-md">
               {!ENABLE_SAVED && (
-                <Link
-                  to={"/my/signals"}
-                  className={cn(
-                    buttonVariants({ variant: "secondary", size: "xl" }),
-                    "rounded-2xl text-primary grow",
-                  )}
+                <Button
+                  variant="secondary"
+                  size="xl"
+                  className="rounded-2xl text-primary px-3.5"
+                  asChild
                 >
-                  보낸 시그널 목록
-                </Link>
+                  <Link to="/my/signals">
+                    <img src={listHeartOutline} className="inline size-8" />
+                  </Link>
+                </Button>
               )}
-              <Link
-                to={returnLink}
-                className={cn(
-                  buttonVariants({ size: "xl" }),
-                  "rounded-2xl grow",
-                )}
-              >
-                다른 시그널 보내기
-              </Link>
+              <Button size="xl" className="rounded-2xl grow" asChild>
+                <Link to={returnLink}>다른 시그널 보내기</Link>
+              </Button>
             </div>
           </div>
         </>

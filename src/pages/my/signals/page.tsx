@@ -36,7 +36,7 @@ const ContactedProfilesPage: React.FC = () => {
 
   return (
     <div className="w-full h-full flex flex-col items-center">
-      <TopBar onBack="/my" />
+      <TopBar onBack={() => navigate(-1)} />
       {profile ? (
         <>
           <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6">
