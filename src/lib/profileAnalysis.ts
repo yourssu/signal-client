@@ -31,9 +31,26 @@ export const shareProfileAnalysis = async (
   profileViewers: number,
   profilePercentage: number,
 ) => {
-  await navigator.share({
-    title: `${selectWriting(profileCount, profilePercentage)[1]}`,
+  const data = await getProfileAnalysisShareData(
+    profileCount,
+    profileViewers,
+    profilePercentage,
+  );
+  if (typeof navigator.canShare !== "function" || !navigator.canShare(data)) {
+    throw new Error("이 브라우저에서는 공유할 수 없습니다.");
+  }
+  await navigator.share(data);
+};
+
+export const getProfileAnalysisShareData = async (
+  profileCount: number,
+  profileViewers: number,
+  profilePercentage: number,
+) => {
+  // TODO: Render image with satori
+  return {
+    title: `${selectWriting(profileCount, profilePercentage)[1]} - 시그널`,
     text: `지금까지 ${profileViewers}명이 내 프로필을 열람했어요!\n지금 시그널에서 내 프로필을 등록해보세요!`,
     url: window.location.origin,
-  });
+  };
 };

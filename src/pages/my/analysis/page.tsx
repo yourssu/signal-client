@@ -9,15 +9,14 @@ import { useCountProfile, useProfileRanking } from "@/hooks/queries/profiles";
 import { useUserInfo } from "@/hooks/queries/users";
 import { providerAtom } from "@/atoms/authTokens";
 import { IS_LOCAL } from "@/env";
-import { cn } from "@/lib/utils";
-import { shareProfileAnalysis } from "@/lib/profileAnalysis";
 import { toast } from "sonner";
+import { shareProfileAnalysis } from "@/lib/profileAnalysis";
+import { useState } from "react";
 
 const AnalysisMyProfilePage: React.FC = () => {
   const profile = useAtomValue(userProfileAtom);
   const authProvider = useAtomValue(providerAtom);
-  const canShare =
-    typeof navigator.canShare === "function" && navigator.canShare();
+  const [isSharing, setIsSharing] = useState(false);
 
   // 사용자 정보 가져오기 (UUID 필요)
   const { data: userInfo } = useUserInfo();
@@ -38,13 +37,17 @@ const AnalysisMyProfilePage: React.FC = () => {
 
   if (authProvider === "local" && !IS_LOCAL) return <Navigate to="/my" />;
 
-  const handleShare = () => {
-    shareProfileAnalysis(profileCount, profileViewers, profilePercentage).catch(
-      (error) => {
-        toast.error("공유 중 오류가 발생했어요.");
-        console.error("Error sharing profile analysis:", error);
-      },
-    );
+  const handleShare = async () => {
+    setIsSharing(true);
+    await shareProfileAnalysis(
+      profileCount,
+      profileViewers,
+      profilePercentage,
+    ).catch((error) => {
+      toast.error("공유 중 오류가 발생했어요.");
+      console.error("Error sharing profile analysis:", error);
+    });
+    setIsSharing(false);
   };
 
   return (
@@ -77,16 +80,11 @@ const AnalysisMyProfilePage: React.FC = () => {
               percentage={profilePercentage}
             />
           </div>
-          <div
-            className={cn(
-              "flex gap-4 w-full relative z-50",
-              !canShare && "hidden",
-            )}
-          >
+          <div className="flex gap-4 w-full relative z-50">
             <Button
               size="xl"
               className="grow rounded-2xl"
-              disabled={!profile}
+              disabled={!profile || isSharing}
               onClick={handleShare}
             >
               스크린샷 저장 후 자랑하기
