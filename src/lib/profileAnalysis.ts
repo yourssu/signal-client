@@ -6,23 +6,23 @@ export const selectWriting = (
 ): [string, string] => {
   const rand = Math.floor(Math.random() * 100);
   if (percentage >= 70)
-    return PROFILE_ANALYSIS_WRITINGS[70][
-      rand % PROFILE_ANALYSIS_WRITINGS[70].length
+    return PROFILE_ANALYSIS_WRITINGS["70"][
+      rand % PROFILE_ANALYSIS_WRITINGS["70"].length
     ] as [string, string];
   if (percentage >= 30)
-    return PROFILE_ANALYSIS_WRITINGS[30][
-      rand % PROFILE_ANALYSIS_WRITINGS[30].length
+    return PROFILE_ANALYSIS_WRITINGS["30"][
+      rand % PROFILE_ANALYSIS_WRITINGS["30"].length
     ] as [string, string];
   if (percentage >= 10)
-    return PROFILE_ANALYSIS_WRITINGS[10][
-      rand % PROFILE_ANALYSIS_WRITINGS[10].length
+    return PROFILE_ANALYSIS_WRITINGS["10"][
+      rand % PROFILE_ANALYSIS_WRITINGS["10"].length
     ] as [string, string];
   if (percentage >= 5)
-    return PROFILE_ANALYSIS_WRITINGS[5][
-      rand % PROFILE_ANALYSIS_WRITINGS[5].length
+    return PROFILE_ANALYSIS_WRITINGS["5"][
+      rand % PROFILE_ANALYSIS_WRITINGS["5"].length
     ] as [string, string];
-  return PROFILE_ANALYSIS_WRITINGS[1][
-    rand % PROFILE_ANALYSIS_WRITINGS[1].length
+  return PROFILE_ANALYSIS_WRITINGS["1"][
+    rand % PROFILE_ANALYSIS_WRITINGS["1"].length
   ] as [string, string];
 };
 
