@@ -1,5 +1,5 @@
-import satori from "satori";
-import heartIcon from "@/assets/my/analysis/heart.svg";
+import satori from "satori/wasm";
+import heartIcon from "@/assets/icons/heart_icon.svg";
 import ProfileAnalysisResult from "@/components/my/ProfileAnalysisResult";
 
 export const renderAnalysisSvg = async (
@@ -38,9 +38,20 @@ export const renderAnalysisSvg = async (
       </div>
     </div>,
     {
-      width: 640,
-      height: 360,
-      fonts: [],
+      width: 1080,
+      height: 1920,
+      fonts: [
+        {
+          name: "Pretendard",
+          data: await fetch("/fonts/PretendardVariable.subset.woff").then(
+            (res) => res.arrayBuffer(),
+          ),
+          weight: 400,
+          style: "normal",
+        },
+      ],
+      pointScaleFactor: 3,
+      debug: true,
     },
   );
 };
