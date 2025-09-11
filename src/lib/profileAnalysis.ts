@@ -1,4 +1,5 @@
 import { PROFILE_ANALYSIS_WRITINGS } from "@/env";
+import { renderAnalysisSvg } from "./renderAnalysisImage";
 
 export const selectWriting = (
   _count: number,
@@ -47,10 +48,23 @@ export const getProfileAnalysisShareData = async (
   profileViewers: number,
   profilePercentage: number,
 ) => {
-  // TODO: Render image with satori
+  // SVG 텍스트 생성
+  const svgText = await renderAnalysisSvg(
+    profileCount,
+    profileViewers,
+    profilePercentage,
+  );
+
+  // SVG를 File 객체로 변환
+  const svgBlob = new Blob([svgText], { type: "image/svg+xml" });
+  const svgFile = new File([svgBlob], "profile-analysis.svg", {
+    type: "image/svg+xml",
+  });
+
   return {
     title: `${selectWriting(profileCount, profilePercentage)[1]} - 시그널`,
     text: `지금까지 ${profileViewers}명이 내 프로필을 열람했어요!\n지금 시그널에서 내 프로필을 등록해보세요!`,
     url: window.location.origin,
+    files: [svgFile],
   };
 };
