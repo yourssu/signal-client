@@ -61,3 +61,13 @@ export const NOTICE: string = import.meta.env.VITE_NOTICE ?? "";
 export const GOOGLE_OAUTH_CLIENT_ID: string =
   import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID ??
   "423363455635-hvngr97c536f8ulcr4q514oqj5jiu1uv.apps.googleusercontent.com";
+export const PROFILE_ANALYSIS_WRITINGS: Record<number, [string, string][]> =
+  JSON.parse(
+    import.meta.env.VITE_PROFILE_ANALYSIS_WRITINGS ??
+      `{
+  1: [["\\"축제를 뒤집어 버렸다\\"", "압도적인 매력의 소유자"]],
+  5: [["\\"보는 순간 빠져든다\\"", "사람 마음을 흔드는 매력의 소유자"]],
+  30: [["\\"호감 가득 매력 넘치는\\"", "모두가 궁금해하는 당신"]],
+  70: [["\\"숨은 보석 같은 매력\\"", "아직 발견되지 않은 가능성의 소유자"]],
+}`,
+  );

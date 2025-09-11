@@ -2,14 +2,22 @@ import { userProfileAtom } from "@/atoms/userProfile";
 import TopBar from "@/components/Header";
 import heartIcon from "@/assets/icons/heart_icon.svg";
 import { Button } from "@/components/ui/button";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { Navigate } from "react-router";
 import ProfileAnalysisResult from "@/components/my/ProfileAnalysisResult";
 import { useCountProfile, useProfileRanking } from "@/hooks/queries/profiles";
 import { useUserInfo } from "@/hooks/queries/users";
+import { providerAtom } from "@/atoms/authTokens";
+import { IS_LOCAL } from "@/env";
+import { cn } from "@/lib/utils";
+import { shareProfileAnalysis } from "@/lib/profileAnalysis";
+import { toast } from "sonner";
 
 const AnalysisMyProfilePage: React.FC = () => {
-  const [profile] = useAtom(userProfileAtom);
+  const profile = useAtomValue(userProfileAtom);
+  const authProvider = useAtomValue(providerAtom);
+  const canShare =
+    typeof navigator.canShare === "function" && navigator.canShare();
 
   // 사용자 정보 가져오기 (UUID 필요)
   const { data: userInfo } = useUserInfo();
@@ -28,6 +36,17 @@ const AnalysisMyProfilePage: React.FC = () => {
 
   if (!profile || profile === null) return <Navigate to="/profile/register" />;
 
+  if (authProvider === "local" && !IS_LOCAL) return <Navigate to="/my" />;
+
+  const handleShare = () => {
+    shareProfileAnalysis(profileCount, profileViewers, profilePercentage).catch(
+      (error) => {
+        toast.error("공유 중 오류가 발생했어요.");
+        console.error("Error sharing profile analysis:", error);
+      },
+    );
+  };
+
   return (
     <div className="min-h-dvh flex flex-col items-center">
       <TopBar onBack="/my" />
@@ -38,7 +57,7 @@ const AnalysisMyProfilePage: React.FC = () => {
             <br />
             프로필을 열람했어요
           </h1>
-          <div className="bg-white rounded-3xl p-6 w-full flex gap-3 items-start shadow-sm">
+          <div className="bg-white rounded-[18px] p-4 w-full flex gap-3 items-start">
             <div className="flex items-center justify-center p-2 bg-[#FFC9DE] rounded-xl self-stretch aspect-square">
               <img src={heartIcon} alt="하트" className="size-5" />
             </div>
@@ -58,17 +77,19 @@ const AnalysisMyProfilePage: React.FC = () => {
               percentage={profilePercentage}
             />
           </div>
-          <div className="flex gap-4 w-full relative z-50">
+          <div
+            className={cn(
+              "flex gap-4 w-full relative z-50",
+              !canShare && "hidden",
+            )}
+          >
             <Button
-              variant="secondary"
               size="xl"
-              className="basis-1/3 rounded-3xl text-primary"
+              className="grow rounded-2xl"
+              disabled={!profile}
+              onClick={handleShare}
             >
-              저장
-            </Button>
-
-            <Button size="xl" className="grow rounded-3xl" disabled={!profile}>
-              공유하기
+              스크린샷 저장 후 자랑하기
             </Button>
           </div>
         </div>
