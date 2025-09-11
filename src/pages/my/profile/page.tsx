@@ -1,6 +1,6 @@
 import { userProfileAtom } from "@/atoms/userProfile";
 import TopBar from "@/components/Header";
-import { DeleteConfirmationDialog } from "@/components/my/DeleteConfirmationDialog";
+import { BlacklistConfirmationDialog } from "@/components/my/BlacklistConfirmationDialog";
 import ProfileCardEditor from "@/components/profile/ProfileCardEditor";
 import TurnableProfileCard from "@/components/profile/TurnableProfileCard";
 import { Button } from "@/components/ui/button";
@@ -139,7 +139,7 @@ const MyProfilePage: React.FC = () => {
           )}
         </div>
       </div>
-      <DeleteConfirmationDialog
+      <BlacklistConfirmationDialog
         open={isDeleteConfirmOpen}
         onOpenChange={setIsDeleteConfirmOpen}
         onConfirm={handleAddProfileToBlacklist}

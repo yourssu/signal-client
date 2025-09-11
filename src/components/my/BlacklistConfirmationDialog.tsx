@@ -9,17 +9,17 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-interface DeleteConfirmationDialogProps {
+interface BlacklistConfirmationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm?: () => void;
 }
 
-export function DeleteConfirmationDialog({
+export function BlacklistConfirmationDialog({
   open,
   onOpenChange,
   onConfirm,
-}: DeleteConfirmationDialogProps) {
+}: BlacklistConfirmationDialogProps) {
   const handleConfirm = () => {
     if (onConfirm) {
       onConfirm();
@@ -31,14 +31,14 @@ export function DeleteConfirmationDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-background p-6 flex flex-col items-center">
         <DialogHeader className="w-full text-center space-y-2">
-          <DialogTitle className="text-primary text-xl font-bold text-center">
-            정말 삭제하시겠어요?
+          <DialogTitle className="text-xl font-bold text-center">
+            프로필을 비공개 하시겠어요?
           </DialogTitle>
           <DialogDescription className="text-black-600 text-base font-medium text-center">
-            삭제하면 되돌릴 수 없어요.
+            비공개하면 더 이상 시그널을 받을 수 없어요.
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="w-full">
+        <DialogFooter className="w-full flex flex-row">
           <DialogClose asChild>
             <Button size="xl" className="grow">
               취소
@@ -50,7 +50,7 @@ export function DeleteConfirmationDialog({
             className="grow text-primary"
             size="xl"
           >
-            삭제
+            확인
           </Button>
         </DialogFooter>
       </DialogContent>
