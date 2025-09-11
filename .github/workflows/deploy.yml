@@ -63,6 +63,7 @@ jobs:
           VITE_CLARITY_ID: ${{ vars.CLARITY_ID }}
           VITE_NOTICE: ${{ vars.NOTICE }}
           VITE_GOOGLE_OAUTH_CLIENT_ID: ${{ vars.GOOGLE_OAUTH_CLIENT_ID }}
+          VITE_PROFILE_ANALYSIS_WRITINGS: ${{ vars.PROFILE_ANALYSIS_WRITINGS }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
