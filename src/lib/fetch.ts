@@ -23,6 +23,13 @@ export const authedFetch = async <T>(
     },
   });
 
+  // Assume no content if the content type is not JSON
+  if (
+    response.headers.get("Content-Type")?.includes("application/json") !== true
+  ) {
+    return undefined as T;
+  }
+
   const res = (await response.json()) as SignalResponse<T>;
 
   if (!("result" in res)) {
