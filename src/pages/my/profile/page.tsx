@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import {
   useAddMyToBlacklist,
   useCheckMyBlacklistStatus,
+  useRemoveMyFromBlacklist,
 } from "@/hooks/queries/blacklists";
 import { useUpdateProfile } from "@/hooks/queries/profiles";
 import { ProfileUpdateRequest } from "@/types/profile";
@@ -28,9 +29,16 @@ const MyProfilePage: React.FC = () => {
     onError: (error) =>
       toast.error("프로필 수정이 실패했어요.", { description: error.message }),
   });
-  const { mutateAsync: deleteProfile } = useAddMyToBlacklist({
+  const { mutateAsync: addToBlacklist } = useAddMyToBlacklist({
     onError: (error) =>
-      toast.error("프로필 삭제가 실패했어요.", { description: error.message }),
+      toast.error("프로필 비공개에 실패했어요.", {
+        description: error.message,
+      }),
+  });
+
+  const { mutateAsync: removeFromBlacklist } = useRemoveMyFromBlacklist({
+    onError: (error) =>
+      toast.error("프로필 공개에 실패했어요.", { description: error.message }),
   });
 
   if (!profile || profile === null) {
@@ -46,11 +54,17 @@ const MyProfilePage: React.FC = () => {
     setProfileDraft((prev) => ({ ...prev!, ...updated }));
   };
 
-  const handleProfileDelete = async () => {
-    await deleteProfile();
+  const handleAddProfileToBlacklist = async () => {
+    await addToBlacklist();
     queryClient.invalidateQueries({ queryKey: ["blacklists", "me", "status"] });
     setIsDeleteConfirmOpen(false);
-    toast.success("프로필이 삭제되었어요.");
+    toast.success("프로필이 비공개되었어요.");
+  };
+
+  const handleRemoveProfileFromBlacklist = async () => {
+    await removeFromBlacklist();
+    queryClient.invalidateQueries({ queryKey: ["blacklists", "me", "status"] });
+    toast.success("프로필이 공개되었어요.");
   };
 
   const handleUpdateCancelled = () => {
@@ -90,8 +104,8 @@ const MyProfilePage: React.FC = () => {
             )}
           </div>
           {isDeleted ? (
-            <Button size="xl" disabled>
-              삭제된 프로필이에요
+            <Button size="xl" onClick={handleRemoveProfileFromBlacklist}>
+              프로필 공개
             </Button>
           ) : isEditing ? (
             <>
@@ -119,7 +133,7 @@ const MyProfilePage: React.FC = () => {
                 className="text-primary underline text-xs cursor-pointer"
                 onClick={() => setIsDeleteConfirmOpen(true)}
               >
-                삭제하기
+                프로필 비공개
               </button>
             </>
           )}
@@ -128,7 +142,7 @@ const MyProfilePage: React.FC = () => {
       <DeleteConfirmationDialog
         open={isDeleteConfirmOpen}
         onOpenChange={setIsDeleteConfirmOpen}
-        onConfirm={handleProfileDelete}
+        onConfirm={handleAddProfileToBlacklist}
       />
     </div>
   );
