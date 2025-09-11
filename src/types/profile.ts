@@ -85,6 +85,7 @@ export interface ProfileContactResponse extends ProfileResponse {
 export interface ProfileUpdateRequest {
   nickname: string;
   introSentences: string[];
+  contact: string;
 }
 
 export interface ProfileRankingResponse {

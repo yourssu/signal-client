@@ -62,6 +62,7 @@ const MyProfilePage: React.FC = () => {
     const ret = await updateProfile({
       nickname: profileDraft!.nickname,
       introSentences: profileDraft!.introSentences,
+      contact: profileDraft!.contact,
     });
     setProfile(ret);
     setProfileDraft(ret);
