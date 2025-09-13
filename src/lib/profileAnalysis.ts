@@ -1,5 +1,5 @@
 import { PROFILE_ANALYSIS_WRITINGS } from "@/env";
-import { renderAnalysisSvg } from "./renderAnalysisImage";
+import { renderAnalysisPng } from "./renderAnalysisImage";
 import p1 from "@/assets/my/analysis/p1.png";
 import p5 from "@/assets/my/analysis/p5.png";
 import p10 from "@/assets/my/analysis/p10.png";
@@ -63,17 +63,19 @@ export const getProfileAnalysisShareData = async (
   profileViewers: number,
   profilePercentage: number,
 ) => {
-  // SVG 텍스트 생성
-  const svgText = await renderAnalysisSvg(
+  // PNG 생성
+  const pngBuffer = await renderAnalysisPng(
     profileCount,
     profileViewers,
     profilePercentage,
   );
 
   // SVG를 File 객체로 변환
-  const svgBlob = new Blob([svgText], { type: "image/svg+xml" });
-  const svgFile = new File([svgBlob], "profile-analysis.svg", {
-    type: "image/svg+xml",
+  const svgBlob = new Blob([pngBuffer.buffer as ArrayBuffer], {
+    type: "image/png",
+  });
+  const svgFile = new File([svgBlob], "profile-analysis.png", {
+    type: "image/png",
   });
 
   return {
