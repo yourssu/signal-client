@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAtomValue } from "jotai";
 import { Navigate } from "react-router";
 import ProfileAnalysisResult from "@/components/my/ProfileAnalysisResult";
-import { useCountProfile, useProfileRanking } from "@/hooks/queries/profiles";
+import { useProfileRanking } from "@/hooks/queries/profiles";
 import { useUserInfo } from "@/hooks/queries/users";
 import { providerAtom } from "@/atoms/authTokens";
 import { IS_LOCAL } from "@/env";
@@ -21,17 +21,16 @@ const AnalysisMyProfilePage: React.FC = () => {
   // 사용자 정보 가져오기 (UUID 필요)
   const { data: userInfo } = useUserInfo();
 
-  // 전체 프로필 수 가져오기
-  const { data: profileCountData } = useCountProfile();
-
   // 프로필 랭킹 정보 가져오기 (UUID가 있을 때만)
   const { data: profileRankingData } = useProfileRanking(userInfo?.uuid || "", {
     enabled: !!userInfo?.uuid,
   });
 
-  const profileCount = profileCountData?.count ?? 0;
+  const totalProfiles = profileRankingData?.totalProfiles ?? 1;
   const profileViewers = profileRankingData?.purchaseCount ?? 0;
-  const profilePercentage = profileRankingData?.rank ?? 100;
+  const profileRank = profileRankingData?.rank ?? totalProfiles;
+  const profilePercentage =
+    Math.floor((profileRank / totalProfiles) * 1000) / 10;
 
   if (!profile || profile === null) return <Navigate to="/profile/register" />;
 
@@ -40,7 +39,7 @@ const AnalysisMyProfilePage: React.FC = () => {
   const handleShare = async () => {
     setIsSharing(true);
     await shareProfileAnalysis(
-      profileCount,
+      totalProfiles,
       profileViewers,
       profilePercentage,
     ).catch((error) => {
@@ -66,7 +65,7 @@ const AnalysisMyProfilePage: React.FC = () => {
             </div>
             <div className="flex flex-col gap-1">
               <p className="text-xs text-neutral-500 font-medium">
-                등록된 {profileCount}개의 프로필 중
+                등록된 {totalProfiles}개의 프로필 중
               </p>
               <p className="text-sm font-semibold text-neutral-700">
                 <span className="text-primary">상위 {profilePercentage}%</span>{" "}

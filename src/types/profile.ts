@@ -89,9 +89,13 @@ export interface ProfileUpdateRequest {
 }
 
 export interface ProfileRankingResponse {
+  /** 본인의 순위, 동률이라면 낮은 숫자로 */
   rank: number;
+  /** 사용자 성별의 총 프로필 수 */
   totalProfiles: number;
+  /** 사용자 프로필 열람 수 */
   purchaseCount: number;
+  /** 사용자 성별 */
   gender: Gender;
   department: string;
   birthYear: number;

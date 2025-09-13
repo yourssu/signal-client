@@ -7,12 +7,12 @@ import heartIcon from "@/assets/icons/heart_icon.svg";
 import { selectImage, selectWriting } from "@/lib/profileAnalysis";
 
 export const renderAnalysisSvg = async (
-  count: number,
+  totalProfiles: number,
   viewers: number,
   percentage: number,
 ): Promise<string> => {
-  const image = selectImage(count, percentage);
-  const [quote, title] = selectWriting(count, percentage);
+  const image = selectImage(viewers, percentage);
+  const [quote, title] = selectWriting(viewers, percentage);
 
   return await satori(
     <div
@@ -37,7 +37,7 @@ export const renderAnalysisSvg = async (
           </div>
           <div tw="flex flex-col gap-1">
             <div tw="flex text-xs text-neutral-500 font-medium mb-1">
-              등록된 {count}개의 프로필 중
+              등록된 {totalProfiles}개의 프로필 중
             </div>
             <div tw="flex text-sm font-semibold text-neutral-700">
               <span style={{ color: "#ef558d" }}>상위 {percentage}%</span>{" "}
@@ -82,12 +82,12 @@ export const renderAnalysisSvg = async (
 };
 
 export const renderAnalysisPng = async (
-  count: number,
+  totalProfiles: number,
   viewers: number,
   percentage: number,
 ): Promise<Uint8Array> => {
   // 먼저 SVG를 생성
-  const svg = await renderAnalysisSvg(count, viewers, percentage);
+  const svg = await renderAnalysisSvg(totalProfiles, viewers, percentage);
 
   // resvg를 사용해서 SVG를 PNG로 변환
   const resvg = new Resvg(svg, {
