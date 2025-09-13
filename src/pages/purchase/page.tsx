@@ -179,6 +179,7 @@ const BankAccountPaymentsPage: React.FC = () => {
             )}
             paymentSelection={() => (
               <PaymentSelectionStep
+                pkg={funnel.context.package!}
                 verificationCode={verificationCode}
                 onSelect={handlePaymentSelect}
                 isOnSale={onSale}

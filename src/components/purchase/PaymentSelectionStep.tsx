@@ -15,7 +15,7 @@ import { ShieldCheck } from "lucide-react";
 import { useState } from "react";
 
 interface PaymentSelectionStepProps {
-  pkg?: Package;
+  pkg: Package;
   verificationCode: number | null;
   isOnSale: boolean;
   onSelect: (method: string) => void;
@@ -27,7 +27,7 @@ const PaymentSelectionStep: React.FC<PaymentSelectionStepProps> = ({
   isOnSale,
   onSelect,
 }) => {
-  const price = isOnSale ? pkg?.price[0] : pkg?.price[1];
+  const price = isOnSale ? pkg.price[0] : pkg.price[1];
   const deviceType = getDeviceType();
   const [openTerms, setOpenTerms] = useState(false); // State to track terms modal
   const [openPrivacy, setOpenPrivacy] = useState(false); // State to track privacy modal
@@ -95,7 +95,7 @@ const PaymentSelectionStep: React.FC<PaymentSelectionStepProps> = ({
             asChild
           >
             <a
-              href={tossSendUrl(price!, verificationCode!)}
+              href={tossSendUrl(price, verificationCode!)}
               target="_blank"
               rel="noopener noreferrer"
             >
