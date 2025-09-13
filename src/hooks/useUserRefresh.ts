@@ -32,13 +32,6 @@ export const useUserRefresh = () => {
 
   useEffect(() => {
     if (refreshInitiated) {
-      console.log(
-        "refreshing user data...",
-        profile,
-        viewerSelf,
-        isProfilePending,
-        isViewerSelfPending,
-      );
       if (profile && !isProfilePending) {
         setProfile(profile);
         setGender(profile.gender as Gender);
