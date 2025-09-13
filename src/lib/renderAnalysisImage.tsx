@@ -2,6 +2,7 @@
 // @ts-nocheck
 // Disable type checking for this file due to satori's complex types
 import satori from "satori/wasm";
+import { Resvg } from "@resvg/resvg-wasm";
 import heartIcon from "@/assets/icons/heart_icon.svg";
 import { selectImage, selectWriting } from "@/lib/profileAnalysis";
 
@@ -16,13 +17,16 @@ export const renderAnalysisSvg = async (
   return await satori(
     <div
       tw="w-full h-full p-6 flex flex-col gap-10"
-      style={{ backgroundColor: "oklch(0.98 0.0076 7.28)" }}
+      style={{
+        backgroundColor: "#fdf6f7",
+        fontFamily: "Pretendard",
+      }}
     >
       <div tw="w-full mx-auto flex flex-col pt-2 gap-2 grow">
         <div tw="flex flex-col items-center text-2xl font-semibold text-stone-700 self-center text-center mb-2">
           <div tw="flex gap-2 items-center justify-center">
             <span tw="mr-1">지금까지</span>
-            <span style={{ color: "oklch(0.67 0.1952 1.4)" }}>{viewers}명</span>
+            <span style={{ color: "#ef558d" }}>{viewers}명</span>
             <span>이</span>
           </div>
           <div>프로필을 열람했어요</div>
@@ -36,9 +40,7 @@ export const renderAnalysisSvg = async (
               등록된 {count}개의 프로필 중
             </div>
             <div tw="flex text-sm font-semibold text-neutral-700">
-              <span style={{ color: "oklch(0.67 0.1952 1.4)" }}>
-                상위 {percentage}%
-              </span>{" "}
+              <span style={{ color: "#ef558d" }}>상위 {percentage}%</span>{" "}
               프로필이에요
             </div>
           </div>
@@ -73,8 +75,29 @@ export const renderAnalysisSvg = async (
           style: "normal",
         },
       ],
-      embedFont: false,
+      embedFont: true,
       pointScaleFactor: 3,
     },
   );
+};
+
+export const renderAnalysisPng = async (
+  count: number,
+  viewers: number,
+  percentage: number,
+): Promise<Uint8Array> => {
+  // 먼저 SVG를 생성
+  const svg = await renderAnalysisSvg(count, viewers, percentage);
+
+  // resvg를 사용해서 SVG를 PNG로 변환
+  const resvg = new Resvg(svg, {
+    fitTo: {
+      mode: "width",
+      value: 1080,
+    },
+    background: "#fdf6f7",
+  });
+
+  const pngData = resvg.render();
+  return pngData.asPng();
 };
