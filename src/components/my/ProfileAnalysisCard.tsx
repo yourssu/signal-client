@@ -106,7 +106,7 @@ const ProfileAnalysisImage = ({ viewStatus }: { viewStatus: ViewStatus }) => {
   switch (viewStatus) {
     case "ready":
       return (
-        <div className="relative h-[190px] w-full flex items-center justify-center">
+        <div className="overflow-hidden relative h-[190px] w-full flex items-center justify-center">
           <div className="absolute top-1/2 left-1/2 w-24 -translate-x-18 opacity-50">
             <img src={card} className="-translate-x-1/2 -translate-y-1/2" />
           </div>
