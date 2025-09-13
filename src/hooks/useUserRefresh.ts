@@ -17,18 +17,10 @@ export const useUserRefresh = () => {
 
   const queryClient = useQueryClient();
 
-  const {
-    data: profile,
-    isFetched: profileFetched,
-    refetch: refetchProfile,
-  } = useSelfProfile({
+  const { data: profile, isPending: isProfilePending } = useSelfProfile({
     retry: false,
   });
-  const {
-    data: viewerSelf,
-    isFetched: viewerFetched,
-    refetch: refetchViewerSelf,
-  } = useViewerSelf({
+  const { data: viewerSelf, isPending: isViewerSelfPending } = useViewerSelf({
     retry: false,
   });
 
@@ -36,9 +28,7 @@ export const useUserRefresh = () => {
     queryClient.invalidateQueries({ queryKey: ["profiles", "me"] });
     queryClient.invalidateQueries({ queryKey: ["viewer", "me"] });
     setRefreshInitiated(true);
-    refetchProfile();
-    refetchViewerSelf();
-  }, [queryClient, refetchProfile, refetchViewerSelf]);
+  }, [queryClient]);
 
   useEffect(() => {
     if (refreshInitiated) {
@@ -46,25 +36,25 @@ export const useUserRefresh = () => {
         "refreshing user data...",
         profile,
         viewerSelf,
-        profileFetched,
-        viewerFetched,
+        isProfilePending,
+        isViewerSelfPending,
       );
-      if (profile && profileFetched) {
+      if (profile && !isProfilePending) {
         setProfile(profile);
         setGender(profile.gender as Gender);
       }
-      if (viewerSelf && viewerFetched) setViewerSelf(viewerSelf);
-      if (profileFetched && viewerFetched) setIsRefreshed(true);
+      if (viewerSelf && !isViewerSelfPending) setViewerSelf(viewerSelf);
+      if (!isProfilePending && !isViewerSelfPending) setIsRefreshed(true);
     }
   }, [
     profile,
-    profileFetched,
+    isProfilePending,
     setProfile,
     viewerSelf,
-    viewerFetched,
     setViewerSelf,
     refreshInitiated,
     setGender,
+    isViewerSelfPending,
   ]);
 
   return { refreshUser, isRefreshed };
