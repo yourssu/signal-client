@@ -71,10 +71,10 @@ export const getProfileAnalysisShareData = async (
   );
 
   // SVG를 File 객체로 변환
-  const svgBlob = new Blob([pngBuffer.buffer as ArrayBuffer], {
+  const pngBlob = new Blob([pngBuffer.buffer as ArrayBuffer], {
     type: "image/png",
   });
-  const svgFile = new File([svgBlob], "profile-analysis.png", {
+  const pngFile = new File([pngBlob], "profile-analysis.png", {
     type: "image/png",
   });
 
@@ -82,6 +82,6 @@ export const getProfileAnalysisShareData = async (
     title: `${selectWriting(profileCount, profilePercentage)[1]} - 시그널`,
     text: `지금까지 ${profileViewers}명이 내 프로필을 열람했어요!\n지금 시그널에서 내 프로필을 등록해보세요!`,
     url: window.location.origin,
-    files: [svgFile],
+    files: [pngFile],
   };
 };
