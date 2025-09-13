@@ -17,10 +17,18 @@ export const useUserRefresh = () => {
 
   const queryClient = useQueryClient();
 
-  const { data: profile, isFetched: profileFetched } = useSelfProfile({
+  const {
+    data: profile,
+    isFetched: profileFetched,
+    refetch: refetchProfile,
+  } = useSelfProfile({
     retry: false,
   });
-  const { data: viewerSelf, isFetched: viewerFetched } = useViewerSelf({
+  const {
+    data: viewerSelf,
+    isFetched: viewerFetched,
+    refetch: refetchViewerSelf,
+  } = useViewerSelf({
     retry: false,
   });
 
@@ -28,7 +36,9 @@ export const useUserRefresh = () => {
     queryClient.invalidateQueries({ queryKey: ["profiles", "me"] });
     queryClient.invalidateQueries({ queryKey: ["viewer", "me"] });
     setRefreshInitiated(true);
-  }, [queryClient]);
+    refetchProfile();
+    refetchViewerSelf();
+  }, [queryClient, refetchProfile, refetchViewerSelf]);
 
   useEffect(() => {
     if (refreshInitiated) {

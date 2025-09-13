@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useSearchParams, Navigate } from "react-router";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useGoogleLogin } from "@/hooks/queries/auth";
 import { setTokensAtom } from "@/atoms/authTokens";
 import ReactGA4 from "react-ga4";
@@ -10,7 +10,7 @@ import { useUserRefresh } from "@/hooks/useUserRefresh";
 
 export default function GoogleAuthPage() {
   const [searchParams] = useSearchParams();
-  const [, setTokens] = useAtom(setTokensAtom);
+  const setTokens = useSetAtom(setTokensAtom);
   const loginRequested = useRef(false);
   const { refreshUser, isRefreshed } = useUserRefresh();
 
