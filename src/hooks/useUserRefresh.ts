@@ -42,6 +42,13 @@ export const useUserRefresh = () => {
 
   useEffect(() => {
     if (refreshInitiated) {
+      console.log(
+        "refreshing user data...",
+        profile,
+        viewerSelf,
+        profileFetched,
+        viewerFetched,
+      );
       if (profile && profileFetched) {
         setProfile(profile);
         setGender(profile.gender as Gender);
