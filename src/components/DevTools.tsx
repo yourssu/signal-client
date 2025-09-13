@@ -28,6 +28,7 @@ import {
 } from "@/env";
 import { useUserInfo } from "@/hooks/queries/users";
 import { useIssueTicket, useTicketPackages } from "@/hooks/queries/viewers";
+import { renderAnalysisSvg } from "@/lib/renderAnalysisImage";
 import { useAtomValue } from "jotai";
 import { Code } from "lucide-react";
 import { useRef } from "react";
@@ -65,6 +66,37 @@ export const DevTools = () => {
     } catch (error) {
       console.error(error);
       alert("티켓 발급 실패");
+    }
+  };
+
+  const handleGenerateShareImage = async () => {
+    try {
+      // DevTools용 샘플 데이터 사용
+      const profileCount = 1000;
+      const profileViewers = 150;
+      const profilePercentage = 15;
+
+      const svgString = await renderAnalysisSvg(
+        profileCount,
+        profileViewers,
+        profilePercentage,
+      );
+
+      // Blob 생성 및 다운로드
+      const blob = new Blob([svgString], { type: "image/svg+xml" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "profile-analysis.svg";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      alert("SVG 다운로드 완료");
+    } catch (error) {
+      console.error("SVG 생성 실패:", error);
+      alert("SVG 생성 실패");
     }
   };
   return createPortal(
@@ -153,6 +185,7 @@ export const DevTools = () => {
           </details>
         </div>
         <DrawerFooter>
+          <Button onClick={handleGenerateShareImage}>공유 이미지 생성</Button>
           <Button onClick={resetData}>데이터 초기화</Button>
           <a
             href="https://www.notion.so/yourssu/Signal-QA-1ef6915d697880d8bf4cfef48e6aeb19"
