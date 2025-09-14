@@ -11,7 +11,7 @@ const Layout: React.FC = () => {
   useAnalytics();
   useAuth();
   return (
-    <div className="h-dvh min-h-dvh overflow-hidden">
+    <div className="h-dvh min-h-dvh overflow-hidden tracking-tight">
       <Background />
       <main className="max-w-md mx-auto w-full h-full shadow-sm overflow-auto">
         <Outlet />
