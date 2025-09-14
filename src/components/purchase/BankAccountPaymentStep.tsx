@@ -1,6 +1,6 @@
 import { userGenderAtom } from "@/atoms/userGender";
 import { ACCOUNT_BANK, ACCOUNT_NO, ACCOUNT_OWNER, PRIVACY, TERMS } from "@/env";
-import { cn, getDeviceType } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useAtomValue } from "jotai";
 import { Copy, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -55,7 +55,6 @@ export const BankAccountPaymentStep = ({
   const timerRef = useRef<number | null>(null); // Ref to store the timer ID
   const price = isOnSale ? pkg.price[0] : pkg.price[1];
   const quantity = isOnSale ? pkg.quantity[0] : pkg.quantity[1];
-  const deviceType = getDeviceType();
 
   const startTimer = useCallback(() => {
     timerRef.current = window.setInterval(() => {
@@ -124,21 +123,13 @@ export const BankAccountPaymentStep = ({
 
       {/* Steps section */}
       <div className="flex flex-col w-full gap-4 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500">
-        <div
-          className={cn(
-            "flex flex-col gap-2",
-            deviceType === "desktop" && "hidden",
-          )}
-        >
-          <p className="text-center text-sm font-medium text-black-600">OR</p>
-        </div>
         {/* Step 1: Account copy */}
         <div className="flex flex-col gap-2">
           <h2 className="text-sm font-medium text-black-700">
             Step 1. 계좌 복사
           </h2>
-          <div className="bg-pink-50 border border-primary/20 rounded-lg p-4 flex items-center">
-            <p className="grow text-sm font-medium text-black-600">
+          <div className="bg-pink-50 border border-primary/20 rounded-lg p-2 flex items-center justify-center">
+            <p className="text-sm font-medium text-black-600">
               <span
                 className="underline cursor-pointer"
                 onClick={copyToClipboard}
@@ -189,7 +180,7 @@ export const BankAccountPaymentStep = ({
           <h2 className="text-sm font-medium text-black-700">
             Step 3. 금액 확인
           </h2>
-          <p className="bg-pink-50 border border-primary/20 rounded-lg p-4 text-center font-medium">
+          <p className="bg-pink-50 border border-primary/20 rounded-lg p-2 text-center font-medium">
             송금할 금액:{" "}
             <span className="text-primary">
               <span>{price.toLocaleString()}원 </span>
