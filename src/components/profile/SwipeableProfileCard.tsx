@@ -83,7 +83,7 @@ export const SwipeableProfileCard: React.FC<{
     // If already swiped, ignore further gestures
     if (swiped) return;
 
-    const swipeThreshold = 100;
+    const swipeThreshold = 90;
     const isSwipedRight = mx > swipeThreshold;
     const isSwipedLeft = mx < -swipeThreshold;
     const isSwipeComplete = isSwipedRight || isSwipedLeft;
