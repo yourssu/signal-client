@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { useRegister, useRefreshToken } from "@/hooks/queries/auth";
@@ -16,13 +16,13 @@ import { viewerSelfAtom } from "@/atoms/viewerSelf";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 
 export const useAuth = () => {
-  const [accessToken] = useAtom(accessTokenAtom);
-  const [refreshToken] = useAtom(refreshTokenAtom);
-  const [isAuthenticated] = useAtom(isAuthenticatedAtom);
-  const [, setTokens] = useAtom(setTokensAtom);
-  const [tokenExpiry] = useAtom(tokenExpiryAtom);
-  const [, setProfile] = useAtom(userProfileAtom);
-  const [, setViewerSelf] = useAtom(viewerSelfAtom);
+  const accessToken = useAtomValue(accessTokenAtom);
+  const refreshToken = useAtomValue(refreshTokenAtom);
+  const isAuthenticated = useAtomValue(isAuthenticatedAtom);
+  const setTokens = useSetAtom(setTokensAtom);
+  const tokenExpiry = useAtomValue(tokenExpiryAtom);
+  const setProfile = useSetAtom(userProfileAtom);
+  const setViewerSelf = useSetAtom(viewerSelfAtom);
 
   const registerMutation = useRegister({
     onSuccess: (data: TokenResponse) => {
