@@ -2,6 +2,11 @@ import AnimalImage from "@/components/profile/AnimalImage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { animalDisplayMap } from "@/lib/animal";
 import { cn } from "@/lib/utils";
 import { ProfileContactResponse, ProfileUpdateRequest } from "@/types/profile";
@@ -23,6 +28,7 @@ const ProfileCardEditor: React.FC<ProfileCardEditorProps> = ({
   isFlipped: defaultFlipped = false,
 }) => {
   const [isFlipped, setIsFlipped] = useState(defaultFlipped);
+  const [isFlipping, setIsFlipping] = useState(false);
   // Use Inverted value for the initial rotation
   const rotateY = useMotionValue(defaultFlipped ? 0 : 180);
 
@@ -59,6 +65,8 @@ const ProfileCardEditor: React.FC<ProfileCardEditorProps> = ({
       damping: 20,
       stiffness: 100,
       delay: 1,
+      onPlay: () => setIsFlipping(true),
+      onComplete: () => setIsFlipping(false),
     });
   }, [defaultFlipped, rotateY]);
 
@@ -68,6 +76,8 @@ const ProfileCardEditor: React.FC<ProfileCardEditorProps> = ({
       duration: 0.6,
       damping: 20,
       stiffness: 100,
+      onPlay: () => setIsFlipping(true),
+      onComplete: () => setIsFlipping(false),
     });
   }, [isFlipped, rotateY]);
 
@@ -97,6 +107,8 @@ const ProfileCardEditor: React.FC<ProfileCardEditorProps> = ({
           <ProfileCardEditorFront
             profile={profile}
             className={className}
+            isShown={!isFlipped}
+            isFlipping={isFlipping}
             onNicknameChange={handleNicknameChange}
             onIntroSentenceChange={handleIntroSentenceChange}
             onFlip={() => setIsFlipped(true)}
@@ -124,7 +136,12 @@ const ProfileCardEditor: React.FC<ProfileCardEditorProps> = ({
 
         {/* Invisible element to maintain container size */}
         <div className="invisible">
-          <ProfileCardEditorFront profile={profile} className={className} />
+          <ProfileCardEditorFront
+            isFlipping={isFlipping}
+            isShown={false}
+            profile={profile}
+            className={className}
+          />
         </div>
       </motion.div>
     </div>
@@ -133,6 +150,8 @@ const ProfileCardEditor: React.FC<ProfileCardEditorProps> = ({
 
 interface ProfileCardEditorFrontProps {
   profile: ProfileContactResponse;
+  isFlipping: boolean;
+  isShown: boolean;
   className?: string;
   onNicknameChange?: (nickname: string) => void;
   onIntroSentenceChange?: (index: number, sentence: string) => void;
@@ -142,6 +161,8 @@ interface ProfileCardEditorFrontProps {
 const ProfileCardEditorFront: React.FC<ProfileCardEditorFrontProps> = ({
   profile,
   className,
+  isShown,
+  isFlipping,
   onNicknameChange,
   onIntroSentenceChange,
   onFlip,
@@ -222,14 +243,19 @@ const ProfileCardEditorFront: React.FC<ProfileCardEditorFrontProps> = ({
         </div>
       </div>
       <div className="absolute right-3 h-full flex flex-col justify-center">
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={onFlip}
-          className="border-primary text-primary rounded-full size-6 opacity-75 hover:text-primary"
-        >
-          <ChevronRight className="size-3" />
-        </Button>
+        <Tooltip open={!isFlipping && isShown}>
+          <TooltipTrigger asChild>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={onFlip}
+              className="border-primary text-primary rounded-full size-6 opacity-75 hover:text-primary"
+            >
+              <ChevronRight className="size-3" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>연락처 수정하기</TooltipContent>
+        </Tooltip>
       </div>
     </div>
   );
