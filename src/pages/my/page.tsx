@@ -78,7 +78,7 @@ const MyPage: React.FC = () => {
                 <ChevronRight className="w-5 h-5 text-gray-400" />
               </Link>
             )}
-            {self?.purchasedProfiles.length && (
+            {(self?.purchasedProfiles.length ?? 0) > 0 && (
               <Link
                 to="/my/signals"
                 className="flex items-center justify-between w-full p-4 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
