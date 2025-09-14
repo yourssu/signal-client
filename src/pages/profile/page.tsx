@@ -142,7 +142,7 @@ const ProfileListPage: React.FC = () => {
                 onClick={handleSave}
                 variant="secondary"
                 size="xl"
-                className="basis-1/3 rounded-3xl text-primary"
+                className="basis-1/3 text-primary"
                 disabled={isSaved} // Disable button if already saved
               >
                 {isSaved ? "저장됨" : "저장"}
@@ -153,7 +153,7 @@ const ProfileListPage: React.FC = () => {
           <Button
             onClick={handleViewContact}
             size="xl"
-            className="grow rounded-3xl"
+            className="grow"
             disabled={!profile}
           >
             연락처 확인하기
