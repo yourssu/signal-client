@@ -45,8 +45,13 @@ const AnalysisMyProfilePage: React.FC = () => {
       profileViewers,
       profilePercentage,
     ).catch((error) => {
-      toast.error("공유 중 오류가 발생했어요.");
-      console.error("Error sharing profile analysis:", error);
+      if (error instanceof Error && error.name === "AbortError") {
+        toast.error("공유가 취소되었어요.");
+        return;
+      } else {
+        toast.error("공유 중 오류가 발생했어요.");
+        console.error("Error sharing profile analysis:", error);
+      }
     });
     setIsSharing(false);
   };
