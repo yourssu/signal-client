@@ -1,22 +1,15 @@
-import { checkAndCleanExpiredDataAtom } from "@/atoms/entranceCheck";
 import { DevTools } from "@/components/DevTools";
 import Background from "@/components/home/Background";
 import { Toaster } from "@/components/ui/sonner";
 import { MODE } from "@/env";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { useAuth } from "@/hooks/useAuth";
-import { useSetAtom } from "jotai";
-import React, { useEffect } from "react";
+import React from "react";
 import { Outlet } from "react-router";
 
 const Layout: React.FC = () => {
-  const dataCheckAtom = useSetAtom(checkAndCleanExpiredDataAtom);
   useAnalytics();
   useAuth();
-
-  useEffect(() => {
-    dataCheckAtom();
-  });
   return (
     <div className="h-dvh min-h-dvh overflow-hidden">
       <Background />

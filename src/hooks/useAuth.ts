@@ -14,6 +14,7 @@ import { useSelfProfile } from "@/hooks/queries/profiles";
 import { userProfileAtom } from "@/atoms/userProfile";
 import { viewerSelfAtom } from "@/atoms/viewerSelf";
 import { useViewerSelf } from "@/hooks/queries/viewers";
+import { checkAndCleanExpiredDataAtom } from "@/atoms/entranceCheck";
 
 export const useAuth = () => {
   const accessToken = useAtomValue(accessTokenAtom);
@@ -23,6 +24,7 @@ export const useAuth = () => {
   const tokenExpiry = useAtomValue(tokenExpiryAtom);
   const setProfile = useSetAtom(userProfileAtom);
   const setViewerSelf = useSetAtom(viewerSelfAtom);
+  const dataCheckAtom = useSetAtom(checkAndCleanExpiredDataAtom);
 
   const registerMutation = useRegister({
     onSuccess: (data: TokenResponse) => {
@@ -111,6 +113,7 @@ export const useAuth = () => {
 
   // Auto-register or auto-refresh on mount
   useEffect(() => {
+    dataCheckAtom();
     initializeAuth();
     refreshUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
