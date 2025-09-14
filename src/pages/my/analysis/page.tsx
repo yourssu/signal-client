@@ -32,9 +32,11 @@ const AnalysisMyProfilePage: React.FC = () => {
   const profilePercentage =
     Math.floor((profileRank / totalProfiles) * 1000) / 10;
 
-  if (!profile || profile === null) return <Navigate to="/profile/register" />;
+  if (!profile || profile === null)
+    return <Navigate to="/profile/register" replace />;
 
-  if (authProvider === "local" && !IS_LOCAL) return <Navigate to="/my" />;
+  if (authProvider === "local" && !IS_LOCAL)
+    return <Navigate to="/my" replace />;
 
   const handleShare = async () => {
     setIsSharing(true);

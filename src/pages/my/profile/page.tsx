@@ -42,7 +42,7 @@ const MyProfilePage: React.FC = () => {
   });
 
   if (!profile || profile === null) {
-    return <Navigate to="/profile/register" />;
+    return <Navigate to="/profile/register" replace />;
   }
 
   const handleUpdateStart = () => {
