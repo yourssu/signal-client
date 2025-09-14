@@ -62,7 +62,7 @@ const BankAccountPaymentsPage: React.FC = () => {
   );
 
   const { data: viewerResponse, isRefetching } = useViewerSelf({
-    refetchInterval: isChecking && 1000,
+    refetchInterval: isChecking && 300,
   });
   const onSale = !!profile && (viewer?.ticket ?? 0) === 0;
 
