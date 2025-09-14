@@ -18,10 +18,10 @@ export default function ProfileAnalysisResult({
         />
       </div>
       <div className="flex flex-col gap-[3px] items-center justify-center leading-[0] not-italic relative shrink-0">
-        <p className="text-[#7a7a7a] text-base font-medium shrink-0 leading-[1.3] text-nowrap whitespace-pre">
+        <p className="text-[#7a7a7a] text-base font-medium shrink-0 leading-[1.3] text-nowrap tracking-tight">
           "{quote}"
         </p>
-        <p className="font-semibold text-xl text-neutral-700 leading-[1.3] text-nowrap whitespace-pre">
+        <p className="font-semibold text-xl text-neutral-700 leading-[1.3] text-nowrap tracking-tight">
           {title}
         </p>
       </div>

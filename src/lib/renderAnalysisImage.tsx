@@ -51,10 +51,10 @@ export const renderAnalysisSvg = async (
               <img src={image} tw="w-[309px] h-[309px]" />
             </div>
             <div tw="flex flex-col items-center justify-center leading-[0] not-italic relative shrink-0">
-              <div tw="flex text-[#7a7a7a] text-base font-medium shrink-0 leading-[1.3] text-nowrap whitespace-pre mb-2">
+              <div tw="flex text-[#7a7a7a] text-base font-medium shrink-0 leading-[1.3] text-nowrap tracking-tight mb-2">
                 "{quote}"
               </div>
-              <div tw="flex font-semibold text-xl text-neutral-700 leading-[1.3] text-nowrap whitespace-pre">
+              <div tw="flex font-semibold text-xl text-neutral-700 leading-[1.3] text-nowrap tracking-tight">
                 {title}
               </div>
             </div>
