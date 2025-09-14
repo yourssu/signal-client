@@ -2,9 +2,13 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import TopBar from "@/components/Header";
 import { Button } from "@/components/ui/button";
-import { PRIVACY } from "@/env";
 
-const PrivacyPage: React.FC = () => {
+interface TermsPrivacyPageProps {
+  title: string;
+  text: string;
+}
+
+const TermPrivacyPage: React.FC<TermsPrivacyPageProps> = ({ title, text }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
 
@@ -60,9 +64,7 @@ const PrivacyPage: React.FC = () => {
       <TopBar onBack="/" />
       <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6">
         <div className="flex flex-col items-start w-full">
-          <h1 className="text-2xl font-semibold text-stone-700">
-            개인정보처리방침
-          </h1>
+          <h1 className="text-2xl font-semibold text-stone-700">{title}</h1>
         </div>
         <div className="px-4 mb-4 self-stretch grow flex items-center">
           <div
@@ -70,9 +72,7 @@ const PrivacyPage: React.FC = () => {
             onScroll={handleScroll}
             className="h-[60vh] w-full rounded-md border overflow-auto p-4 bg-white"
           >
-            <pre className="whitespace-pre-wrap font-sans text-xs">
-              {PRIVACY}
-            </pre>
+            <pre className="whitespace-pre-wrap font-sans text-xs">{text}</pre>
           </div>
         </div>
         {isScrolledToBottom ? (
@@ -91,4 +91,4 @@ const PrivacyPage: React.FC = () => {
   );
 };
 
-export default PrivacyPage;
+export default TermPrivacyPage;

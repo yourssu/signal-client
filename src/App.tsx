@@ -14,13 +14,15 @@ import {
   ENABLE_PROFILE_VIEW,
   ENABLE_REGISTER,
   GOOGLE_OAUTH_CLIENT_ID,
+  PRIVACY,
+  TERMS,
 } from "@/env";
 import KakaoPayPurchasePage from "@/pages/purchase/page__kakao";
 import PurchaseSuccessPage from "@/pages/purchase/success/page";
 import PurchaseFailPage from "@/pages/purchase/[fail,cancel]/page";
 import MyPage from "@/pages/my/page";
 import MyProfilePage from "@/pages/my/profile/page";
-import PrivacyPage from "@/pages/privacy/page";
+import TermPrivacyPage from "@/pages/[privacy,terms]/page";
 import AnalysisMyProfilePage from "@/pages/my/analysis/page";
 import GoogleAuthPage from "@/pages/auth/google/page";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -36,8 +38,12 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
+        path: "terms",
+        element: <TermPrivacyPage title="이용약관" text={TERMS} />,
+      },
+      {
         path: "privacy",
-        element: <PrivacyPage />,
+        element: <TermPrivacyPage title="개인정보처리방침" text={PRIVACY} />,
       },
       {
         path: "purchase",

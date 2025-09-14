@@ -124,12 +124,21 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
             시그널 보내기
           </Button>
         )}
-        <Link
-          to="/privacy"
-          className="text-center underline text-xs text-primary"
-        >
-          개인정보처리방침
-        </Link>
+        <div className="flex justify-center items-center gap-2">
+          <Link
+            to="/terms"
+            className="text-center underline text-xs text-primary"
+          >
+            이용약관
+          </Link>
+          <span className=" text-xs">·</span>
+          <Link
+            to="/privacy"
+            className="text-center underline text-xs text-primary"
+          >
+            개인정보처리방침
+          </Link>
+        </div>
       </div>
       <ServiceDisabledDialog
         open={registerGuardOpen}
