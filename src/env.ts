@@ -72,3 +72,6 @@ export const PROFILE_ANALYSIS_WRITINGS: Record<number, [string, string][]> =
   "70": [["숨은 보석 같은 매력", "아직 발견되지 않은 가능성의 소유자"]]
 }`,
   );
+
+export const DATA_EXPIRY: string =
+  import.meta.env.VITE_DATA_EXPIRY ?? "2025-09-13T15:00:00.000Z"; // 2025-09-14 00:00:00+09:00

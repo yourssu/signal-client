@@ -64,6 +64,7 @@ jobs:
           VITE_NOTICE: ${{ vars.NOTICE }}
           VITE_GOOGLE_OAUTH_CLIENT_ID: ${{ vars.GOOGLE_OAUTH_CLIENT_ID }}
           VITE_PROFILE_ANALYSIS_WRITINGS: ${{ vars.PROFILE_ANALYSIS_WRITINGS }}
+          VITE_DATA_EXPIRY: ${{ vars.DATA_EXPIRY }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
