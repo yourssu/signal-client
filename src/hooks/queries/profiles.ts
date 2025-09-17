@@ -241,3 +241,20 @@ export const useCountProfileByGender = (
     ...queryOptions,
   });
 };
+
+export const usePurchasedProfiles = (
+  queryOptions?: Omit<
+    UseQueryOptions<ProfileContactResponse[], SignalError>,
+    "queryKey" | "queryFn"
+  >,
+) => {
+  return useQuery({
+    queryKey: ["profiles", "me", "purchased"],
+    queryFn: async () => {
+      return authedFetch<ProfileContactResponse[]>(
+        `${profileBase}/me/purchased`,
+      );
+    },
+    ...queryOptions,
+  });
+};
