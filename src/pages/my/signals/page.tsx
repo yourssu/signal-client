@@ -39,8 +39,8 @@ const ContactedProfilesPage: React.FC = () => {
       <TopBar onBack={() => navigate(-1)} />
       {profile ? (
         <>
-          <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6">
-            <div className="flex flex-col items-start w-full">
+          <div className="flex flex-col gap-4 items-center w-full max-w-md grow py-6">
+            <div className="flex flex-col items-start w-full px-6">
               {ENABLE_SAVED ? (
                 <h1 className="text-2xl font-semibold text-stone-700">
                   내 마음 속에 <span className="text-primary">{count}명</span>이

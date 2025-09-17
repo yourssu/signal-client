@@ -1,5 +1,6 @@
 import ProfileCard from "@/components/profile/ProfileCard";
 import TurnableProfileCard from "@/components/profile/TurnableProfileCard";
+import { cn } from "@/lib/utils";
 import { ProfileResponse } from "@/types/profile";
 import { useRef, useEffect, useCallback, useState } from "react";
 
@@ -85,7 +86,11 @@ export const ScrollableCards = ({
         <div
           key={p.profileId}
           ref={(el) => setProfileRef(el, index)}
-          className="snap-center flex-shrink-0 w-[calc(100%-2rem)]"
+          className={cn(
+            "snap-center flex-shrink-0 w-[calc(100%-3rem)]",
+            index === 0 && "ml-6",
+            index > 0 && index === profiles.length - 1 && "mr-6",
+          )}
         >
           {p.contact ? (
             <TurnableProfileCard
