@@ -1,7 +1,8 @@
 import { userGenderAtom } from "@/atoms/userGender";
 import { userProfileAtom } from "@/atoms/userProfile";
+import { purchasedProfilesAtom } from "@/atoms/viewerProfiles";
 import { viewerSelfAtom } from "@/atoms/viewerSelf";
-import { useSelfProfile } from "@/hooks/queries/profiles";
+import { usePurchasedProfiles, useSelfProfile } from "@/hooks/queries/profiles";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { Gender } from "@/types/profile";
 import { useQueryClient } from "@tanstack/react-query";
@@ -13,6 +14,7 @@ export const useUserRefresh = () => {
   const [isRefreshed, setIsRefreshed] = useState(false);
   const setProfile = useSetAtom(userProfileAtom);
   const setViewerSelf = useSetAtom(viewerSelfAtom);
+  const setPurchasedProfiles = useSetAtom(purchasedProfilesAtom);
   const setGender = useSetAtom(userGenderAtom);
 
   const queryClient = useQueryClient();
@@ -23,10 +25,15 @@ export const useUserRefresh = () => {
   const { data: viewerSelf, isPending: isViewerSelfPending } = useViewerSelf({
     retry: false,
   });
+  const { data: purchasedProfiles, isPending: isPurchasedProfilesPending } =
+    usePurchasedProfiles({
+      retry: false,
+    });
 
   const refreshUser = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ["profiles", "me"] });
     queryClient.invalidateQueries({ queryKey: ["viewer", "me"] });
+    queryClient.invalidateQueries({ queryKey: ["profiles", "purchased"] });
     setRefreshInitiated(true);
   }, [queryClient]);
 
@@ -37,7 +44,14 @@ export const useUserRefresh = () => {
         setGender(profile.gender as Gender);
       }
       if (viewerSelf && !isViewerSelfPending) setViewerSelf(viewerSelf);
-      if (!isProfilePending && !isViewerSelfPending) setIsRefreshed(true);
+      if (purchasedProfiles && !isPurchasedProfilesPending)
+        setPurchasedProfiles(purchasedProfiles);
+      if (
+        !isProfilePending &&
+        !isViewerSelfPending &&
+        !isPurchasedProfilesPending
+      )
+        setIsRefreshed(true);
     }
   }, [
     profile,
@@ -48,6 +62,9 @@ export const useUserRefresh = () => {
     refreshInitiated,
     setGender,
     isViewerSelfPending,
+    purchasedProfiles,
+    isPurchasedProfilesPending,
+    setPurchasedProfiles,
   ]);
 
   return { refreshUser, isRefreshed };

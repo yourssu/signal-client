@@ -2,7 +2,7 @@ import { clearTokensAtom } from "@/atoms/authTokens";
 import { userGenderAtom } from "@/atoms/userGender";
 import { userProfileAtom } from "@/atoms/userProfile";
 import {
-  contactedProfilesAtom,
+  purchasedProfilesAtom,
   recentlyViewedProfilesAtom,
   savedProfilesAtom,
 } from "@/atoms/viewerProfiles";
@@ -39,7 +39,7 @@ export const checkAndCleanExpiredDataAtom = atom(null, (get, set) => {
   set(userGenderAtom, null);
   set(userProfileAtom, null);
   set(savedProfilesAtom, []);
-  set(contactedProfilesAtom, []);
+  set(purchasedProfilesAtom, []);
   set(recentlyViewedProfilesAtom, []);
   set(viewerSelfAtom, null);
 

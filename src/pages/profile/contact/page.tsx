@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
-  contactedProfilesAtom,
-  contactProfileAtom,
+  purchasedProfilesAtom,
+  purchaseProfileAtom,
 } from "@/atoms/viewerProfiles";
 import TurnableProfileCard from "@/components/profile/TurnableProfileCard";
 import { ENABLE_SAVED, TICKET_COST } from "@/env";
@@ -31,8 +31,8 @@ const ContactViewPage: React.FC = () => {
 
   const { data: userInfo } = useUserInfo();
   const uuid = userInfo?.uuid;
-  const contactedProfiles = useAtomValue(contactedProfilesAtom);
-  const addContact = useSetAtom(contactProfileAtom);
+  const contactedProfiles = useAtomValue(purchasedProfilesAtom);
+  const addContact = useSetAtom(purchaseProfileAtom);
 
   const profile = (location.state as { profile: ProfileResponse | null } | null)
     ?.profile;

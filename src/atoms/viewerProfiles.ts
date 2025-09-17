@@ -25,7 +25,7 @@ export const saveProfileAtom = atom(
 );
 
 // Base atom to store the array of profiles
-export const contactedProfilesAtom = atomWithStorage<ProfileContactResponse[]>(
+export const purchasedProfilesAtom = atomWithStorage<ProfileContactResponse[]>(
   "profile.contacted",
   [],
   undefined,
@@ -33,11 +33,11 @@ export const contactedProfilesAtom = atomWithStorage<ProfileContactResponse[]>(
 );
 
 // Write-only atom to handle the 'SAVE' action (appending a profile)
-export const contactProfileAtom = atom(
+export const purchaseProfileAtom = atom(
   null, // Read function is null because this is write-only for this specific action
   (get, set, newProfile: ProfileContactResponse) => {
-    const currentProfiles = get(contactedProfilesAtom);
-    set(contactedProfilesAtom, [
+    const currentProfiles = get(purchasedProfilesAtom);
+    set(purchasedProfilesAtom, [
       ...currentProfiles.filter(
         (profile) => profile.profileId != newProfile.profileId,
       ),

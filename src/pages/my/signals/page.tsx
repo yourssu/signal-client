@@ -4,7 +4,7 @@ import { useAtomValue } from "jotai";
 import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
 import {
-  contactedProfilesAtom,
+  purchasedProfilesAtom,
   savedProfilesAtom,
 } from "@/atoms/viewerProfiles";
 import { ProfileResponse } from "@/types/profile";
@@ -15,7 +15,7 @@ import main from "@/assets/home/main.png";
 const ContactedProfilesPage: React.FC = () => {
   const navigate = useNavigate();
   const savedProfiles: Array<ProfileResponse & { contact?: string }> =
-    useAtomValue(ENABLE_SAVED ? savedProfilesAtom : contactedProfilesAtom);
+    useAtomValue(ENABLE_SAVED ? savedProfilesAtom : purchasedProfilesAtom);
 
   const [profile, setProfile] = useState<
     (ProfileResponse & { contact?: string }) | null

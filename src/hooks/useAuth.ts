@@ -10,11 +10,12 @@ import {
   tokenExpiryAtom,
 } from "@/atoms/authTokens";
 import { TokenResponse } from "@/types/auth";
-import { useSelfProfile } from "@/hooks/queries/profiles";
+import { usePurchasedProfiles, useSelfProfile } from "@/hooks/queries/profiles";
 import { userProfileAtom } from "@/atoms/userProfile";
 import { viewerSelfAtom } from "@/atoms/viewerSelf";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { checkAndCleanExpiredDataAtom } from "@/atoms/entranceCheck";
+import { purchasedProfilesAtom } from "@/atoms/viewerProfiles";
 
 export const useAuth = () => {
   const accessToken = useAtomValue(accessTokenAtom);
@@ -24,6 +25,7 @@ export const useAuth = () => {
   const tokenExpiry = useAtomValue(tokenExpiryAtom);
   const setProfile = useSetAtom(userProfileAtom);
   const setViewerSelf = useSetAtom(viewerSelfAtom);
+  const setPurchasedProfiles = useSetAtom(purchasedProfilesAtom);
   const dataCheckAtom = useSetAtom(checkAndCleanExpiredDataAtom);
 
   const registerMutation = useRegister({
@@ -52,16 +54,26 @@ export const useAuth = () => {
     retry: false,
   });
 
+  const { data: purchasedProfiles, refetch: refetchPurchasedProfiles } =
+    usePurchasedProfiles({
+      retry: false,
+    });
+
   const refreshUser = useCallback(() => {
     refetchProfile();
     refetchViewerSelf();
+    refetchPurchasedProfiles();
+    if (purchasedProfiles) setPurchasedProfiles(purchasedProfiles);
     if (profile) setProfile(profile);
     if (viewerSelf) setViewerSelf(viewerSelf);
   }, [
     profile,
+    purchasedProfiles,
     refetchProfile,
+    refetchPurchasedProfiles,
     refetchViewerSelf,
     setProfile,
+    setPurchasedProfiles,
     setViewerSelf,
     viewerSelf,
   ]);
