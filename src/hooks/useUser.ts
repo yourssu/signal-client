@@ -81,7 +81,9 @@ export const useUser = (): UserData & {
     } else {
       setLastEntranceTime(Date.now());
     }
-  }, [clearDataAtom, lastEntranceTime, setLastEntranceTime]);
+    // This hook runs only once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
