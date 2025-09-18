@@ -158,6 +158,7 @@ const ContactViewPage: React.FC = () => {
 
   return (
     <div className="h-full w-full flex flex-col items-center">
+      <title>연락처 열람하기 - 시그널</title>
       {renderContent()}
     </div>
   );

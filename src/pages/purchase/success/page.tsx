@@ -54,6 +54,7 @@ const PurchaseSuccessPage: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-dvh">
+      <title>티켓 구매 성공! - 시그널</title>
       {/* Top Bar */}
       <TopBar onBack="/" />
       {/* Content area - Takes remaining height, centers content */}

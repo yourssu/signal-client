@@ -86,6 +86,7 @@ const MyProfilePage: React.FC = () => {
 
   return (
     <div className="min-h-dvh flex flex-col items-center">
+      <title>나의 프로필 - 시그널</title>
       <TopBar onBack="/my" />
       <div className="w-full max-w-md grow p-6 flex flex-col gap-10">
         <div className="w-full max-w-md mx-auto flex flex-col gap-2 grow">

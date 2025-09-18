@@ -7,6 +7,7 @@ import main from "@/assets/home/main.png";
 const PurchaseFailPage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-dvh">
+      <title>티켓 구매 실패 - 시그널</title>
       {/* Top Bar */}
       <TopBar onBack="/" />
       {/* Content area - Takes remaining height, centers content */}

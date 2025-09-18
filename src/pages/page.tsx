@@ -10,6 +10,7 @@ const HomePage: React.FC = () => {
   const { data: self } = useViewerSelf({ retry: false });
   return (
     <div className="flex flex-col min-h-dvh relative">
+      <title>시그널 by YOURSSU</title>
       {/* Top bar with heart and ticket icons */}
       <TopBar />
 

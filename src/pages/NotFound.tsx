@@ -8,6 +8,7 @@ const NotFound: React.FC = () => {
   return (
     <div className="h-dvh min-h-dvh">
       <Background />
+      <title>페이지를 찾을 수 없어요 - 시그널</title>
       <main className="max-w-md mx-auto w-full h-full shadow-sm">
         {/* Top bar with heart and ticket icons */}
         <TopBar />

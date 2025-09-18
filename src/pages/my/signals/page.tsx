@@ -36,6 +36,7 @@ const ContactedProfilesPage: React.FC = () => {
 
   return (
     <div className="w-full h-full flex flex-col items-center">
+      <title>내가 보낸 시그널 - 시그널</title>
       <TopBar onBack={() => navigate(-1)} />
       {profile ? (
         <>

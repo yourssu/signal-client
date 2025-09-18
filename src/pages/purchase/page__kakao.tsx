@@ -63,6 +63,7 @@ const KakaoPayPurchasePage: React.FC = () => {
   return (
     // Main page container - Flex column, min height screen
     <div className="flex flex-col min-h-dvh">
+      <title>티켓 구매하기 - 시그널</title>
       <TopBar onBack={handleBack} />
       {/* Content area - Takes remaining height, centers content */}
       <div className="flex-grow flex flex-col items-center justify-center p-4">

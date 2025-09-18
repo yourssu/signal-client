@@ -208,6 +208,7 @@ const ProfileRegisterPage: React.FC = () => {
 
   return (
     <div className="min-h-dvh flex flex-col items-center">
+      <title>프로필 등록하기 - 시그널</title>
       <TopBar onBack={handleBack} />
       <div className="w-full max-w-md grow p-6 flex flex-col gap-10">
         {funnel.step !== "done" && (

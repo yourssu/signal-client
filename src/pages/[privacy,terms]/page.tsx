@@ -61,6 +61,7 @@ const TermPrivacyPage: React.FC<TermsPrivacyPageProps> = ({ title, text }) => {
 
   return (
     <div className="w-full h-full flex flex-col items-center">
+      <title>{title} - 시그널</title>
       <TopBar onBack="/" />
       <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6">
         <div className="flex flex-col items-start w-full">

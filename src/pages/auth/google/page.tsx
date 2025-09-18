@@ -69,6 +69,7 @@ export default function GoogleAuthPage() {
   // 로딩 중이거나 처리 중일 때 로딩 화면
   return (
     <div className="min-h-dvh flex flex-col items-center justify-center p-4">
+      <title>구글 로그인 중... - 시그널</title>
       <div className="flex flex-col items-center gap-4">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
         <p className="text-gray-600 text-center">
