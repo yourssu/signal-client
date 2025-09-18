@@ -1,17 +1,11 @@
-import { userGenderAtom, userProfileAtom, viewerAtom } from "@/atoms/user";
 import { CLARITY_ID, GA_ID } from "@/env";
-import { useAtomValue } from "jotai";
 import { useEffect } from "react";
 import ReactGA4 from "react-ga4";
 import Clarity from "@microsoft/clarity";
-import { useUserInfo } from "./queries/users";
+import { useUser } from "@/hooks/useUser";
 
 export const useAnalytics = () => {
-  const { data } = useUserInfo();
-  const uuid = data?.uuid;
-  const gender = useAtomValue(userGenderAtom);
-  const profile = useAtomValue(userProfileAtom);
-  const viewerSelf = useAtomValue(viewerAtom);
+  const { uuid, gender, profile, viewer } = useUser();
 
   useEffect(() => {
     if (GA_ID)
@@ -33,9 +27,9 @@ export const useAnalytics = () => {
           mbti: profile?.mbti ?? undefined,
           department: profile?.department ?? undefined,
           birth_year: profile?.birthYear?.toString() ?? undefined,
-          ticket: viewerSelf?.ticket ?? undefined,
-          used_ticket: viewerSelf?.usedTicket ?? undefined,
+          ticket: viewer?.ticket ?? undefined,
+          used_ticket: viewer?.usedTicket ?? undefined,
         },
       });
-  }, [gender, profile, viewerSelf]);
+  }, [gender, profile, viewer]);
 };

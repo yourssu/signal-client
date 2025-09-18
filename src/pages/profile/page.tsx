@@ -1,14 +1,12 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useSetAtom, useAtomValue, useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useCountProfile, useRandomProfile } from "@/hooks/queries/profiles";
 import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
 import { SaveDrawer } from "@/components/profile/SaveDrawer";
 import {
   saveProfileAtom,
-  savedProfilesAtom,
-  recentlyViewedProfilesAtom,
   addRecentlyViewedProfileAtom,
 } from "@/atoms/profiles";
 import { SwipeableProfileCard } from "@/components/profile/SwipeableProfileCard";
@@ -19,10 +17,13 @@ import GenderStep from "@/components/purchase/GenderSelect";
 import { Gender } from "@/types/profile";
 import { viewProfile } from "@/lib/analytics";
 import { toast } from "sonner";
+import { useUser } from "@/hooks/useUser";
 
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
-  const [gender, setGender] = useAtom(userGenderAtom);
+  const { gender, savedProfiles, recentlyViewedProfileIds } = useUser();
+  const setGender = useSetAtom(userGenderAtom);
+  const saveProfile = useSetAtom(saveProfileAtom); // Corrected usage
   const desiredGender = gender === "MALE" ? "FEMALE" : "MALE";
   const { data: viewerSelf } = useViewerSelf({
     throwOnError: false,
@@ -31,11 +32,12 @@ const ProfileListPage: React.FC = () => {
   const ticketCount = (viewerSelf?.ticket ?? 0) - (viewerSelf?.usedTicket ?? 0);
 
   // Get recently viewed profiles to exclude them from random profile fetch
-  const recentlyViewedProfiles = useAtomValue(recentlyViewedProfilesAtom);
   const addRecentlyViewedProfile = useSetAtom(addRecentlyViewedProfileAtom);
 
   // Convert string IDs to numbers for the API
-  const excludeProfiles = recentlyViewedProfiles.map((id) => parseInt(id, 10));
+  const excludeProfiles = recentlyViewedProfileIds.map((id) =>
+    parseInt(id, 10),
+  );
 
   const { data: countData } = useCountProfile();
 
@@ -68,12 +70,10 @@ const ProfileListPage: React.FC = () => {
     }
   }, [profile, countData, addRecentlyViewedProfile, gender]);
 
-  const saveProfile = useSetAtom(saveProfileAtom); // Corrected usage
-  const savedProfiles = useAtomValue(savedProfilesAtom); // Read the saved profiles
-
   // Check if the current profile is already saved
   const isSaved =
-    !!profile && savedProfiles.some((p) => p.profileId === profile.profileId);
+    !!profile &&
+    (savedProfiles ?? []).some((p) => p.profileId === profile.profileId);
 
   const handleGenderSelect = (selectedGender: Gender) => {
     setGender(selectedGender);

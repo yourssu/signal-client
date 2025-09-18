@@ -1,4 +1,4 @@
-import { viewerAtom, userProfileAtom } from "@/atoms/user";
+import { viewerAtom } from "@/atoms/user";
 import TopBar from "@/components/Header";
 import { BankAccountPaymentStep } from "@/components/purchase/BankAccountPaymentStep";
 import {
@@ -9,7 +9,7 @@ import {
 } from "@/hooks/queries/viewers";
 import { Package } from "@/types/viewer";
 import { useFunnel } from "@use-funnel/react-router";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import PackageSelectionStep from "@/components/purchase/PackageSelectionStep";
@@ -27,13 +27,14 @@ import PaymentSelectionStep from "@/components/purchase/PaymentSelectionStep";
 import { ENABLE_KAKAO_PAYMENTS } from "@/env";
 import { KakaoPaymentStep } from "@/components/purchase/KakaoPaymentStep";
 import { TossPaymentStep } from "@/components/purchase/TossPaymentStep";
+import { useUser } from "@/hooks/useUser";
 
 const BankAccountPaymentsPage: React.FC = () => {
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const [searchParams] = useSearchParams();
   const returnId = searchParams.get("return_id");
-  const [viewer, setViewer] = useAtom(viewerAtom);
-  const profile = useAtomValue(userProfileAtom);
+  const setViewer = useSetAtom(viewerAtom);
+  const { viewer, profile } = useUser();
   const funnel = useFunnel<{
     packageSelection: { package?: Package };
     paymentSelection: { package: Package };

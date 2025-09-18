@@ -7,7 +7,7 @@ import { useRef, useEffect, useCallback, useState } from "react";
 interface ScrollableCardsProps {
   profiles: Array<ProfileResponse & { contact?: string }>;
   selectedId: number;
-  onSelect: (profile: ProfileResponse & { contact?: string }) => void;
+  onSelect: (profile: ProfileResponse) => void;
 }
 
 export const ScrollableCards = ({

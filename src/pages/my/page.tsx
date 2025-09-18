@@ -7,15 +7,13 @@ import ticketIcon from "@/assets/icons/ticket_icon.svg";
 import userIcon from "@/assets/icons/user_icon.svg";
 import archiveIcon from "@/assets/icons/archive_icon.svg";
 import { ProfileAnalysisCard } from "@/components/my/ProfileAnalysisCard";
-import { useViewerSelf } from "@/hooks/queries/viewers";
-import { userProfileAtom } from "@/atoms/user";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import { providerAtom } from "@/atoms/authTokens";
+import { useUser } from "@/hooks/useUser";
 
 const MyPage: React.FC = () => {
-  const { data: self } = useViewerSelf();
-  const ticketCount = (self?.ticket ?? 0) - (self?.usedTicket ?? 0);
-  const [profile] = useAtom(userProfileAtom);
+  const { profile, viewer, purchasedProfiles } = useUser();
+  const ticketCount = (viewer?.ticket ?? 0) - (viewer?.usedTicket ?? 0);
   const provider = useAtomValue(providerAtom) ?? "local";
   const isLoggedIn = provider !== "local";
 
@@ -79,7 +77,7 @@ const MyPage: React.FC = () => {
                 <ChevronRight className="w-5 h-5 text-gray-400" />
               </Link>
             )}
-            {(self?.purchasedProfiles.length ?? 0) > 0 && (
+            {(purchasedProfiles?.length ?? 0) > 0 && (
               <Link
                 to="/my/signals"
                 className="flex items-center justify-between w-full p-4 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"

@@ -12,7 +12,7 @@ import {
 } from "@/types/profile";
 import { useCreateProfile, useSelfProfile } from "@/hooks/queries/profiles";
 import { useNavigate } from "react-router";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { userGenderAtom, userProfileAtom } from "@/atoms/user";
 import PersonalityStep from "@/components/register/PersonalityStep";
 import NicknameStep from "@/components/register/NicknameStep";
@@ -23,14 +23,13 @@ import { Progress } from "@/components/ui/progress";
 import DepartmentStep from "@/components/register/DepartmentStep";
 import BirthYearStep from "@/components/register/BirthYearStep";
 import { funnelComplete, funnelStart, funnelStep } from "@/lib/analytics";
-import { useUserInfo } from "@/hooks/queries/users";
+import { useUser } from "@/hooks/useUser";
 
 const ProfileRegisterPage: React.FC = () => {
   const navigate = useNavigate();
-  const { data: userInfo } = useUserInfo();
-  const uuid = userInfo?.uuid;
-  const [gender, setGender] = useAtom(userGenderAtom);
-  const [profile, setProfile] = useAtom(userProfileAtom);
+  const { uuid, gender, profile } = useUser();
+  const setGender = useSetAtom(userGenderAtom);
+  const setProfile = useSetAtom(userProfileAtom);
   const funnel = useFunnel<{
     gender: Partial<ProfileContactResponse>;
     animal: Partial<ProfileContactResponse>;
@@ -162,7 +161,7 @@ const ProfileRegisterPage: React.FC = () => {
       nickname
     ) {
       const finalData: ProfileCreatedRequest = {
-        uuid,
+        uuid: uuid ?? undefined,
         gender,
         animal,
         mbti,

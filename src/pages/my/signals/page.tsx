@@ -1,26 +1,24 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { useAtomValue } from "jotai";
 import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
-import { purchasedProfilesAtom, savedProfilesAtom } from "@/atoms/profiles";
 import { ProfileResponse } from "@/types/profile";
 import { ScrollableCards } from "@/components/my/saved/ScrollableCards";
 import { ENABLE_SAVED } from "@/env";
 import main from "@/assets/home/main.png";
+import { useUser } from "@/hooks/useUser";
 
 const ContactedProfilesPage: React.FC = () => {
   const navigate = useNavigate();
-  const savedProfiles: Array<ProfileResponse & { contact?: string }> =
-    useAtomValue(ENABLE_SAVED ? savedProfilesAtom : purchasedProfilesAtom);
+  const { purchasedProfiles } = useUser();
 
   const [profile, setProfile] = useState<
     (ProfileResponse & { contact?: string }) | null
-  >(savedProfiles[0] || null);
+  >(purchasedProfiles?.[0] || null);
 
   // Update profile state when index changes
 
-  const count = `${savedProfiles.length}`.padStart(2, "0");
+  const count = `${purchasedProfiles?.length ?? 0}`.padStart(2, "0");
 
   const handleViewContact = () => {
     if (!profile?.profileId) return;
@@ -54,7 +52,7 @@ const ContactedProfilesPage: React.FC = () => {
               )}
             </div>
             <ScrollableCards
-              profiles={savedProfiles}
+              profiles={purchasedProfiles ?? []}
               selectedId={profile?.profileId}
               onSelect={setProfile}
             />

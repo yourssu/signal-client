@@ -1,8 +1,7 @@
-import { viewerAtom, userProfileAtom } from "@/atoms/user";
 import TopBar from "@/components/Header";
 import { Package } from "@/types/viewer";
 import { useFunnel } from "@use-funnel/react-router";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import React, { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
 import PackageSelectionStep from "@/components/purchase/PackageSelectionStep";
@@ -15,11 +14,11 @@ import {
 import { KakaoPaymentStep } from "@/components/purchase/KakaoPaymentStep";
 import { isAuthenticatedAtom } from "@/atoms/authTokens";
 import { useTicketPackages } from "@/hooks/queries/viewers";
+import { useUser } from "@/hooks/useUser";
 
 const KakaoPayPurchasePage: React.FC = () => {
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
-  const [viewer] = useAtom(viewerAtom);
-  const profile = useAtomValue(userProfileAtom);
+  const { viewer, profile } = useUser();
   const funnel = useFunnel<{
     packageSelection: { package?: Package };
     payment: { package: Package };

@@ -1,4 +1,3 @@
-import { userProfileAtom } from "@/atoms/user";
 import TopBar from "@/components/Header";
 import heartIcon from "@/assets/icons/heart_icon.svg";
 import { Button } from "@/components/ui/button";
@@ -12,9 +11,10 @@ import { IS_LOCAL } from "@/env";
 import { toast } from "sonner";
 import { shareProfileAnalysis } from "@/lib/profileAnalysis";
 import { useState } from "react";
+import { useUser } from "@/hooks/useUser";
 
 const AnalysisMyProfilePage: React.FC = () => {
-  const profile = useAtomValue(userProfileAtom);
+  const { profile } = useUser();
   const authProvider = useAtomValue(providerAtom);
   const [isSharing, setIsSharing] = useState(false);
 

@@ -1,9 +1,10 @@
 import { isFirstProfileViewAtom } from "@/atoms/user";
 import ProfileCard from "@/components/profile/ProfileCard";
+import { useUser } from "@/hooks/useUser";
 import { swipeComplete, swipeStart, swipeStop } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { ProfileResponse } from "@/types/profile";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { MoveHorizontal } from "lucide-react";
 import {
   useMotionValue,
@@ -20,7 +21,8 @@ export const SwipeableProfileCard: React.FC<{
   isRefetching: boolean;
   onSwipe: () => void;
 }> = ({ profile, isRefetching, onSwipe }) => {
-  const [isFirstEntrance, setIsFirstEntrance] = useAtom(isFirstProfileViewAtom);
+  const setIsFirstProfileView = useSetAtom(isFirstProfileViewAtom);
+  const { isFirstProfileView } = useUser();
   const [swiped, setSwiped] = useState(false);
 
   // Motion values for tracking card position and rotation
@@ -32,11 +34,11 @@ export const SwipeableProfileCard: React.FC<{
   const opacityY = useTransform(y, [0, 100], [1, 0]);
   const opacity = useTransform(() => opacityX.get() * opacityY.get());
 
-  // Setup guide animation when isFirstEntrance changes
+  // Setup guide animation when isFirstProfileView changes
   useEffect(() => {
     let animation: AnimationPlaybackControls | undefined;
 
-    if (isFirstEntrance) {
+    if (isFirstProfileView) {
       animation = animate(x, 20, {
         type: "spring",
         stiffness: 400,
@@ -59,7 +61,7 @@ export const SwipeableProfileCard: React.FC<{
         animation.stop();
       }
     };
-  }, [isFirstEntrance, x]);
+  }, [isFirstProfileView, x]);
 
   // Animation for profile change
   useEffect(() => {
@@ -76,8 +78,8 @@ export const SwipeableProfileCard: React.FC<{
 
   // Function to handle drag movement
   const handleDrag = (mx: number, down: boolean, xDir: number) => {
-    if (isFirstEntrance) {
-      setIsFirstEntrance(false);
+    if (isFirstProfileView) {
+      setIsFirstProfileView(false);
       return;
     }
     // If already swiped, ignore further gestures
@@ -193,7 +195,7 @@ export const SwipeableProfileCard: React.FC<{
       <div
         className={cn(
           "opacity-0 absolute inset-0 bg-black/75 rounded-4xl flex flex-col items-center justify-center transition-opacity",
-          isFirstEntrance && "opacity-100",
+          isFirstProfileView && "opacity-100",
         )}
       >
         <MoveHorizontal className="text-pale-pink" />

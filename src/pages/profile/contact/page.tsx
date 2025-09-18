@@ -4,15 +4,15 @@ import { Link, useLocation, useNavigate, useSearchParams } from "react-router";
 import { ProfileContactResponse, ProfileResponse } from "@/types/profile";
 import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
-import { useAtomValue, useSetAtom } from "jotai";
-import { purchasedProfilesAtom, purchaseProfileAtom } from "@/atoms/profiles";
+import { useSetAtom } from "jotai";
+import { purchaseProfileAtom } from "@/atoms/profiles";
 import TurnableProfileCard from "@/components/profile/TurnableProfileCard";
 import { ENABLE_SAVED, TICKET_COST } from "@/env";
 import { buttonClick, viewContact } from "@/lib/analytics";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { useQueryClient } from "@tanstack/react-query";
-import { useUserInfo } from "@/hooks/queries/users";
 import listHeartOutline from "@/assets/icons/list_heart_outline.svg";
+import { useUser } from "@/hooks/useUser";
 
 const ContactViewPage: React.FC = () => {
   const location = useLocation();
@@ -26,9 +26,7 @@ const ContactViewPage: React.FC = () => {
   const id = useMemo(() => Number(idStr), [idStr]);
   const returnLink = from === "saved" ? "/my/signals" : "/profile";
 
-  const { data: userInfo } = useUserInfo();
-  const uuid = userInfo?.uuid;
-  const contactedProfiles = useAtomValue(purchasedProfilesAtom);
+  const { uuid, purchasedProfiles } = useUser();
   const addContact = useSetAtom(purchaseProfileAtom);
 
   const profile = (location.state as { profile: ProfileResponse | null } | null)
@@ -36,7 +34,7 @@ const ContactViewPage: React.FC = () => {
   const { data: viewerSelf } = useViewerSelf();
   const { mutateAsync } = useConsumeTicket();
 
-  const contactedProfile = contactedProfiles.find(
+  const contactedProfile = (purchasedProfiles ?? []).find(
     (profile) => profile.profileId === id,
   );
 

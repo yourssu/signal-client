@@ -10,15 +10,17 @@ import {
   useRemoveMyFromBlacklist,
 } from "@/hooks/queries/blacklists";
 import { useUpdateProfile } from "@/hooks/queries/profiles";
+import { useUser } from "@/hooks/useUser";
 import { ProfileUpdateRequest } from "@/types/profile";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useState } from "react";
 import { Navigate } from "react-router";
 import { toast } from "sonner";
 
 const MyProfilePage: React.FC = () => {
-  const [profile, setProfile] = useAtom(userProfileAtom);
+  const { profile } = useUser();
+  const setProfile = useSetAtom(userProfileAtom);
   const [isEditing, setIsEditing] = useState(false);
   const [profileDraft, setProfileDraft] = useState(profile);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);

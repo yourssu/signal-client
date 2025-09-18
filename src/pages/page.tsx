@@ -1,13 +1,10 @@
 import React from "react";
 import TopBar from "@/components/Header";
 import MainContent from "@/components/home/MainContent";
-import { useViewerSelf } from "@/hooks/queries/viewers";
-import { useAtomValue } from "jotai";
-import { userProfileAtom } from "@/atoms/user";
+import { useUser } from "@/hooks/useUser";
 
 const HomePage: React.FC = () => {
-  const profile = useAtomValue(userProfileAtom);
-  const { data: self } = useViewerSelf({ retry: false });
+  const { viewer, profile } = useUser();
   return (
     <div className="flex flex-col min-h-dvh relative">
       <title>시그널 by YOURSSU</title>
@@ -17,7 +14,7 @@ const HomePage: React.FC = () => {
       {/* Main content with text, image, and buttons */}
       <MainContent
         profileRegistered={!!profile}
-        verifyNeeded={!self || self.ticket - self.usedTicket === 0}
+        verifyNeeded={!viewer || viewer.ticket - viewer.usedTicket === 0}
       />
     </div>
   );
