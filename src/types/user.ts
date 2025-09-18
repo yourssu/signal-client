@@ -3,7 +3,7 @@ import {
   ProfileContactResponse,
   ProfileResponse,
 } from "@/types/profile";
-import { PurchasedProfileResponse, ViewerResponse } from "@/types/viewer";
+import { ViewerResponse } from "@/types/viewer";
 
 export interface UserInfoResponse {
   uuid: string;
@@ -16,7 +16,7 @@ export interface UserData {
   gender: Gender | null;
   viewer: ViewerResponse | null;
   profile: ProfileContactResponse | null;
-  purchasedProfiles: PurchasedProfileResponse[] | null;
+  purchasedProfiles: ProfileContactResponse[] | null;
   savedProfiles: ProfileResponse[] | null;
   recentlyViewedProfileIds: string[];
 }
