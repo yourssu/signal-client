@@ -1,4 +1,4 @@
-import { isFirstEntranceAtom } from "@/atoms/user";
+import { isFirstProfileViewAtom } from "@/atoms/user";
 import ProfileCard from "@/components/profile/ProfileCard";
 import { swipeComplete, swipeStart, swipeStop } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
@@ -20,7 +20,7 @@ export const SwipeableProfileCard: React.FC<{
   isRefetching: boolean;
   onSwipe: () => void;
 }> = ({ profile, isRefetching, onSwipe }) => {
-  const [isFirstEntrance, setIsFirstEntrance] = useAtom(isFirstEntranceAtom);
+  const [isFirstEntrance, setIsFirstEntrance] = useAtom(isFirstProfileViewAtom);
   const [swiped, setSwiped] = useState(false);
 
   // Motion values for tracking card position and rotation

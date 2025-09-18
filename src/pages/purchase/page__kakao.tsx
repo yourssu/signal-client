@@ -1,4 +1,4 @@
-import { viewerSelfAtom, userProfileAtom } from "@/atoms/user";
+import { viewerAtom, userProfileAtom } from "@/atoms/user";
 import TopBar from "@/components/Header";
 import { Package } from "@/types/viewer";
 import { useFunnel } from "@use-funnel/react-router";
@@ -18,7 +18,7 @@ import { useTicketPackages } from "@/hooks/queries/viewers";
 
 const KakaoPayPurchasePage: React.FC = () => {
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
-  const [viewer] = useAtom(viewerSelfAtom);
+  const [viewer] = useAtom(viewerAtom);
   const profile = useAtomValue(userProfileAtom);
   const funnel = useFunnel<{
     packageSelection: { package?: Package };

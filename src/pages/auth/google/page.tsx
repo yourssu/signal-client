@@ -6,13 +6,13 @@ import { setTokensAtom } from "@/atoms/authTokens";
 import ReactGA4 from "react-ga4";
 import { GA_ID } from "@/env";
 import { toast } from "sonner";
-import { useUserRefresh } from "@/hooks/useUserRefresh";
+import { useUser } from "@/hooks/useUser";
 
 export default function GoogleAuthPage() {
   const [searchParams] = useSearchParams();
   const setTokens = useSetAtom(setTokensAtom);
   const loginRequested = useRef(false);
-  const { refreshUser, isRefreshed } = useUserRefresh();
+  const { refreshUser, isRefreshed } = useUser();
 
   const { mutate, isSuccess, isIdle, isError } = useGoogleLogin({
     onSuccess: (tokenResponse) => {

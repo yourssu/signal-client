@@ -21,6 +21,7 @@ import { SignalResponse } from "@/types/common";
 import { SignalError } from "@/lib/error";
 import { authedFetch } from "@/lib/fetch";
 import { API_BASE_URL } from "@/env";
+import { PurchasedProfileResponse } from "@/types/viewer";
 
 const profileBase = `${API_BASE_URL ?? ""}/api/profiles`;
 
@@ -244,14 +245,14 @@ export const useCountProfileByGender = (
 
 export const usePurchasedProfiles = (
   queryOptions?: Omit<
-    UseQueryOptions<ProfileContactResponse[], SignalError>,
+    UseQueryOptions<PurchasedProfileResponse[], SignalError>,
     "queryKey" | "queryFn"
   >,
 ) => {
   return useQuery({
     queryKey: ["profiles", "me", "purchased"],
     queryFn: async () => {
-      return authedFetch<ProfileContactResponse[]>(
+      return authedFetch<PurchasedProfileResponse[]>(
         `${profileBase}/me/purchased`,
       );
     },

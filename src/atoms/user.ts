@@ -25,8 +25,8 @@ export const userProfileAtom = atomWithStorage<ProfileContactResponse | null>(
   { getOnInit: true },
 );
 
-export const isFirstEntranceAtom = atomWithStorage<boolean>(
-  "user.lastEntrance",
+export const isFirstProfileViewAtom = atomWithStorage<boolean>(
+  "user.isFirstProfileView",
   true,
   undefined,
   { getOnInit: true },
@@ -38,7 +38,7 @@ export const lastEntranceAtom = atomWithStorage<number | null>(
   { getOnInit: true },
 );
 
-export const viewerSelfAtom = atomWithStorage<ViewerResponse | null>(
+export const viewerAtom = atomWithStorage<ViewerResponse | null>(
   "user.viewerInfo",
   null,
   undefined,
@@ -54,7 +54,7 @@ export const checkAndCleanExpiredDataAtom = atom(null, (get, set) => {
 
   // Clear all user-related data
   set(clearTokensAtom);
-  set(isFirstEntranceAtom, true);
+  set(isFirstProfileViewAtom, true);
 
   // Clear all user-related atoms
   set(userGenderAtom, null);
@@ -62,7 +62,7 @@ export const checkAndCleanExpiredDataAtom = atom(null, (get, set) => {
   set(savedProfilesAtom, []);
   set(purchasedProfilesAtom, []);
   set(recentlyViewedProfilesAtom, []);
-  set(viewerSelfAtom, null);
+  set(viewerAtom, null);
 
   // Update last entrance time
   set(lastEntranceAtom, Date.now());

@@ -1,4 +1,4 @@
-import { userGenderAtom, userProfileAtom, viewerSelfAtom } from "@/atoms/user";
+import { userGenderAtom, userProfileAtom, viewerAtom } from "@/atoms/user";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Drawer,
@@ -45,7 +45,7 @@ export const DevTools = () => {
   const userUuid = data?.uuid;
   const userGender = useAtomValue(userGenderAtom);
   const userProfile = useAtomValue(userProfileAtom);
-  const viewerSelf = useAtomValue(viewerSelfAtom);
+  const viewerSelf = useAtomValue(viewerAtom);
   const verificationRef = useRef<HTMLInputElement>(null);
   const countRef = useRef<HTMLInputElement>(null);
   const { mutateAsync: issueTicket } = useIssueTicket();

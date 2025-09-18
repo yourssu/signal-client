@@ -10,9 +10,9 @@ export interface UserInfoResponse {
 }
 
 export interface UserData {
-  uuid: string;
+  uuid: string | null;
   isFirstProfileView: boolean;
-  lastEntranceTime: number;
+  lastEntranceTime: number | null;
   gender: Gender | null;
   viewer: ViewerResponse | null;
   profile: ProfileContactResponse | null;

@@ -1,4 +1,4 @@
-import { userGenderAtom, userProfileAtom, viewerSelfAtom } from "@/atoms/user";
+import { userGenderAtom, userProfileAtom, viewerAtom } from "@/atoms/user";
 import { CLARITY_ID, GA_ID } from "@/env";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";
@@ -11,7 +11,7 @@ export const useAnalytics = () => {
   const uuid = data?.uuid;
   const gender = useAtomValue(userGenderAtom);
   const profile = useAtomValue(userProfileAtom);
-  const viewerSelf = useAtomValue(viewerSelfAtom);
+  const viewerSelf = useAtomValue(viewerAtom);
 
   useEffect(() => {
     if (GA_ID)

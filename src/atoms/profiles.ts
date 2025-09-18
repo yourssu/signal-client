@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import type { ProfileContactResponse, ProfileResponse } from "@/types/profile"; // Assuming the type is here
+import type { ProfileResponse } from "@/types/profile"; // Assuming the type is here
+import { PurchasedProfileResponse } from "@/types/viewer";
 
 // Base atom to store the array of profiles
 export const savedProfilesAtom = atomWithStorage<ProfileResponse[]>(
@@ -25,17 +26,14 @@ export const saveProfileAtom = atom(
 );
 
 // Base atom to store the array of profiles
-export const purchasedProfilesAtom = atomWithStorage<ProfileContactResponse[]>(
-  "user.purchasedProfiles",
-  [],
-  undefined,
-  { getOnInit: true },
-);
+export const purchasedProfilesAtom = atomWithStorage<
+  PurchasedProfileResponse[]
+>("user.purchasedProfiles", [], undefined, { getOnInit: true });
 
 // Write-only atom to handle the 'SAVE' action (appending a profile)
 export const purchaseProfileAtom = atom(
   null, // Read function is null because this is write-only for this specific action
-  (get, set, newProfile: ProfileContactResponse) => {
+  (get, set, newProfile: PurchasedProfileResponse) => {
     const currentProfiles = get(purchasedProfilesAtom);
     set(purchasedProfilesAtom, [
       ...currentProfiles.filter(

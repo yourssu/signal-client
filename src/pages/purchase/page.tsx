@@ -1,4 +1,4 @@
-import { viewerSelfAtom, userProfileAtom } from "@/atoms/user";
+import { viewerAtom, userProfileAtom } from "@/atoms/user";
 import TopBar from "@/components/Header";
 import { BankAccountPaymentStep } from "@/components/purchase/BankAccountPaymentStep";
 import {
@@ -32,7 +32,7 @@ const BankAccountPaymentsPage: React.FC = () => {
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const [searchParams] = useSearchParams();
   const returnId = searchParams.get("return_id");
-  const [viewer, setViewer] = useAtom(viewerSelfAtom);
+  const [viewer, setViewer] = useAtom(viewerAtom);
   const profile = useAtomValue(userProfileAtom);
   const funnel = useFunnel<{
     packageSelection: { package?: Package };

@@ -10,14 +10,6 @@ import {
   tokenExpiryAtom,
 } from "@/atoms/authTokens";
 import { TokenResponse } from "@/types/auth";
-import { usePurchasedProfiles, useSelfProfile } from "@/hooks/queries/profiles";
-import {
-  userProfileAtom,
-  viewerSelfAtom,
-  checkAndCleanExpiredDataAtom,
-} from "@/atoms/user";
-import { useViewerSelf } from "@/hooks/queries/viewers";
-import { purchasedProfilesAtom } from "@/atoms/profiles";
 
 export const useAuth = () => {
   const accessToken = useAtomValue(accessTokenAtom);
@@ -25,10 +17,6 @@ export const useAuth = () => {
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const setTokens = useSetAtom(setTokensAtom);
   const tokenExpiry = useAtomValue(tokenExpiryAtom);
-  const setProfile = useSetAtom(userProfileAtom);
-  const setViewerSelf = useSetAtom(viewerSelfAtom);
-  const setPurchasedProfiles = useSetAtom(purchasedProfilesAtom);
-  const dataCheckAtom = useSetAtom(checkAndCleanExpiredDataAtom);
 
   const registerMutation = useRegister({
     onSuccess: (data: TokenResponse) => {
@@ -48,37 +36,6 @@ export const useAuth = () => {
       registerMutation.mutate();
     },
   });
-
-  const { data: profile, refetch: refetchProfile } = useSelfProfile({
-    retry: false,
-  });
-  const { data: viewerSelf, refetch: refetchViewerSelf } = useViewerSelf({
-    retry: false,
-  });
-
-  const { data: purchasedProfiles, refetch: refetchPurchasedProfiles } =
-    usePurchasedProfiles({
-      retry: false,
-    });
-
-  const refreshUser = useCallback(() => {
-    refetchProfile();
-    refetchViewerSelf();
-    refetchPurchasedProfiles();
-    if (purchasedProfiles) setPurchasedProfiles(purchasedProfiles);
-    if (profile) setProfile(profile);
-    if (viewerSelf) setViewerSelf(viewerSelf);
-  }, [
-    profile,
-    purchasedProfiles,
-    refetchProfile,
-    refetchPurchasedProfiles,
-    refetchViewerSelf,
-    setProfile,
-    setPurchasedProfiles,
-    setViewerSelf,
-    viewerSelf,
-  ]);
 
   const tryRefreshToken = useCallback(async () => {
     if (!refreshToken) {
@@ -127,9 +84,7 @@ export const useAuth = () => {
 
   // Auto-register or auto-refresh on mount
   useEffect(() => {
-    dataCheckAtom();
     initializeAuth();
-    refreshUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run once on mount
 
