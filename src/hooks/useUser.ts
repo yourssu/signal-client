@@ -1,5 +1,5 @@
 import {
-  checkAndCleanExpiredDataAtom,
+  cleanDataAtom,
   isFirstProfileViewAtom,
   lastEntranceAtom,
   userGenderAtom,
@@ -20,6 +20,7 @@ import { useCallback, useEffect, useState } from "react";
 import { UserData } from "@/types/user";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserInfo } from "@/hooks/queries/users";
+import { DATA_EXPIRY } from "@/env";
 
 export const useUser = (): UserData & {
   setIsFirstProfileView: (value: boolean) => void;
@@ -46,10 +47,10 @@ export const useUser = (): UserData & {
   const [purchasedProfiles, setPurchasedProfiles] = useAtom(
     purchasedProfilesAtom,
   );
-  const lastEntranceTime = useAtomValue(lastEntranceAtom);
+  const [lastEntranceTime, setLastEntranceTime] = useAtom(lastEntranceAtom);
   const savedProfiles = useAtomValue(savedProfilesAtom);
   const recentlyViewedProfileIds = useAtomValue(recentlyViewedProfilesAtom);
-  const dataCheckAtom = useSetAtom(checkAndCleanExpiredDataAtom);
+  const clearDataAtom = useSetAtom(cleanDataAtom);
 
   const queryClient = useQueryClient();
 
@@ -72,8 +73,15 @@ export const useUser = (): UserData & {
   }, [queryClient]);
 
   useEffect(() => {
-    dataCheckAtom();
-  }, [dataCheckAtom]);
+    if (
+      lastEntranceTime === null ||
+      lastEntranceTime < new Date(DATA_EXPIRY).getTime()
+    ) {
+      clearDataAtom();
+    } else {
+      setLastEntranceTime(Date.now());
+    }
+  }, [clearDataAtom, lastEntranceTime, setLastEntranceTime]);
 
   useEffect(() => {
     if (isAuthenticated) {

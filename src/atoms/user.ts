@@ -7,7 +7,6 @@ import {
   savedProfilesAtom,
 } from "@/atoms/profiles";
 import { ViewerResponse } from "@/types/viewer";
-import { DATA_EXPIRY } from "@/env";
 import { atom } from "jotai";
 import { ProfileContactResponse } from "@/types/profile";
 
@@ -45,14 +44,7 @@ export const viewerAtom = atomWithStorage<ViewerResponse | null>(
   { getOnInit: true },
 );
 
-export const checkAndCleanExpiredDataAtom = atom(null, (get, set) => {
-  const lastEntrance = get(lastEntranceAtom);
-  if (lastEntrance !== null && lastEntrance > new Date(DATA_EXPIRY).getTime()) {
-    set(lastEntranceAtom, Date.now());
-    return;
-  }
-  console.log("Clearing expired user data");
-
+export const cleanDataAtom = atom(null, (_get, set) => {
   // Clear all user-related data
   set(clearTokensAtom);
   set(isFirstProfileViewAtom, true);

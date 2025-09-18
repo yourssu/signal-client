@@ -17,7 +17,6 @@ export default function GoogleAuthPage() {
 
   const { mutate, isSuccess, isIdle, isError } = useGoogleLogin({
     onSuccess: (tokenResponse) => {
-      console.log("Google login successful:", tokenResponse);
       setTokens({ tokenResponse, provider: "google" });
       if (GA_ID) {
         ReactGA4.event("login", {
@@ -54,7 +53,6 @@ export default function GoogleAuthPage() {
 
     if (code && isIdle && !loginRequested.current) {
       loginRequested.current = true;
-      console.log("token", accessToken);
       mutate({ code });
     }
   }, [accessToken, isIdle, mutate, searchParams]);

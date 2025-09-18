@@ -29,7 +29,6 @@ export function LoginDrawer({
   trigger,
   children,
 }: LoginDrawerProps) {
-  console.log(`${window.location.origin}/auth/google`);
   const login = useGoogleLogin({
     redirect_uri: `${window.location.origin}/auth/google`,
     flow: "auth-code",

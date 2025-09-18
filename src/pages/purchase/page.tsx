@@ -84,7 +84,6 @@ const BankAccountPaymentsPage: React.FC = () => {
         (viewer.updatedTime !== viewerResponse.updatedTime &&
           viewer.ticket !== viewerResponse.ticket)
       ) {
-        console.log(viewer, viewerResponse);
         setViewer(viewerResponse);
         purchaseTickets(funnel.context.package!, `${verificationCode}`, onSale);
         funnelComplete("payment", "티켓 구매", funnel.context);
