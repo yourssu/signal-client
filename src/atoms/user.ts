@@ -51,6 +51,7 @@ export const checkAndCleanExpiredDataAtom = atom(null, (get, set) => {
     set(lastEntranceAtom, Date.now());
     return;
   }
+  console.log("Clearing expired user data");
 
   // Clear all user-related data
   set(clearTokensAtom);
