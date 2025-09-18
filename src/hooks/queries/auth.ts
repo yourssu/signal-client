@@ -45,20 +45,13 @@ export const useRefreshToken = (
 ) => {
   return useMutation({
     mutationFn: async (data: RefreshTokenRequest) => {
-      const response = await fetch(`${authBase}/refresh`, {
+      return await authedFetch<TokenResponse>(`${authBase}/refresh`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-
-      const res = (await response.json()) as SignalResponse<TokenResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
     },
     ...mutationOptions,
   });
