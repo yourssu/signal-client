@@ -1,5 +1,4 @@
 import {
-  cleanDataAtom,
   isFirstProfileViewAtom,
   lastEntranceAtom,
   userGenderAtom,
@@ -15,12 +14,11 @@ import { usePurchasedProfiles, useSelfProfile } from "@/hooks/queries/profiles";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { Gender } from "@/types/profile";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 import { UserData } from "@/types/user";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserInfo } from "@/hooks/queries/users";
-import { DATA_EXPIRY } from "@/env";
 
 export const useUser = (): UserData & {
   setIsFirstProfileView: (value: boolean) => void;
@@ -43,15 +41,13 @@ export const useUser = (): UserData & {
   const [isFirstProfileView, setIsFirstProfileView] = useAtom(
     isFirstProfileViewAtom,
   );
+  const lastEntranceTime = useAtomValue(lastEntranceAtom);
   const [viewer, setViewer] = useAtom(viewerAtom);
   const [purchasedProfiles, setPurchasedProfiles] = useAtom(
     purchasedProfilesAtom,
   );
-  const [lastEntranceTime, setLastEntranceTime] = useAtom(lastEntranceAtom);
   const savedProfiles = useAtomValue(savedProfilesAtom);
   const recentlyViewedProfileIds = useAtomValue(recentlyViewedProfilesAtom);
-  const clearDataAtom = useSetAtom(cleanDataAtom);
-
   const queryClient = useQueryClient();
 
   const { data: profileRes, isPending: isProfilePending } = useSelfProfile({
@@ -71,19 +67,6 @@ export const useUser = (): UserData & {
     queryClient.invalidateQueries({ queryKey: ["profiles", "purchased"] });
     setRefreshInitiated(true);
   }, [queryClient]);
-
-  useEffect(() => {
-    if (
-      lastEntranceTime === null ||
-      lastEntranceTime < new Date(DATA_EXPIRY).getTime()
-    ) {
-      clearDataAtom();
-    } else {
-      setLastEntranceTime(Date.now());
-    }
-    // This hook runs only once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
