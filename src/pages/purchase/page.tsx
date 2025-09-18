@@ -1,4 +1,4 @@
-import { viewerSelfAtom } from "@/atoms/viewerSelf";
+import { viewerSelfAtom, userProfileAtom } from "@/atoms/user";
 import TopBar from "@/components/Header";
 import { BankAccountPaymentStep } from "@/components/purchase/BankAccountPaymentStep";
 import {
@@ -22,7 +22,6 @@ import {
   selectPackage,
   viewPackages,
 } from "@/lib/analytics";
-import { userProfileAtom } from "@/atoms/userProfile";
 import { isAuthenticatedAtom } from "@/atoms/authTokens";
 import PaymentSelectionStep from "@/components/purchase/PaymentSelectionStep";
 import { ENABLE_KAKAO_PAYMENTS } from "@/env";

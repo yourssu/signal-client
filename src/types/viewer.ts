@@ -46,10 +46,6 @@ export interface ViewerDetailResponse extends ViewerResponse {
   purchasedProfiles: PurchasedProfileResponse[];
 }
 
-export interface ViewerDetailResponse extends ViewerResponse {
-  purchasedProfiles: PurchasedProfileResponse[];
-}
-
 // Payment related types
 export interface PaymentInitiationRequest {
   packageId: string;

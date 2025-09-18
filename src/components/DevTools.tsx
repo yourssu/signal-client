@@ -1,6 +1,4 @@
-import { userGenderAtom } from "@/atoms/userGender";
-import { userProfileAtom } from "@/atoms/userProfile";
-import { viewerSelfAtom } from "@/atoms/viewerSelf";
+import { userGenderAtom, userProfileAtom, viewerSelfAtom } from "@/atoms/user";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Drawer,

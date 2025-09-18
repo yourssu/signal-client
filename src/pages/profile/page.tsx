@@ -10,10 +10,10 @@ import {
   savedProfilesAtom,
   recentlyViewedProfilesAtom,
   addRecentlyViewedProfileAtom,
-} from "@/atoms/viewerProfiles";
+} from "@/atoms/profiles";
 import { SwipeableProfileCard } from "@/components/profile/SwipeableProfileCard";
 import { useViewerSelf } from "@/hooks/queries/viewers";
-import { userGenderAtom } from "@/atoms/userGender";
+import { userGenderAtom } from "@/atoms/user";
 import { ENABLE_SAVED } from "@/env";
 import GenderStep from "@/components/purchase/GenderSelect";
 import { Gender } from "@/types/profile";

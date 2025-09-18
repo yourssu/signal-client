@@ -11,11 +11,13 @@ import {
 } from "@/atoms/authTokens";
 import { TokenResponse } from "@/types/auth";
 import { usePurchasedProfiles, useSelfProfile } from "@/hooks/queries/profiles";
-import { userProfileAtom } from "@/atoms/userProfile";
-import { viewerSelfAtom } from "@/atoms/viewerSelf";
+import {
+  userProfileAtom,
+  viewerSelfAtom,
+  checkAndCleanExpiredDataAtom,
+} from "@/atoms/user";
 import { useViewerSelf } from "@/hooks/queries/viewers";
-import { checkAndCleanExpiredDataAtom } from "@/atoms/entranceCheck";
-import { purchasedProfilesAtom } from "@/atoms/viewerProfiles";
+import { purchasedProfilesAtom } from "@/atoms/profiles";
 
 export const useAuth = () => {
   const accessToken = useAtomValue(accessTokenAtom);

@@ -1,4 +1,4 @@
-import { userGenderAtom } from "@/atoms/userGender";
+import { userGenderAtom } from "@/atoms/user";
 import { ACCOUNT_BANK, ACCOUNT_NO, ACCOUNT_OWNER, PRIVACY, TERMS } from "@/env";
 import { cn } from "@/lib/utils";
 import { useAtomValue } from "jotai";

@@ -1,4 +1,4 @@
-import { isFirstEntranceAtom } from "@/atoms/entranceCheck";
+import { isFirstEntranceAtom } from "@/atoms/user";
 import ProfileCard from "@/components/profile/ProfileCard";
 import { swipeComplete, swipeStart, swipeStop } from "@/lib/analytics";
 import { cn } from "@/lib/utils";

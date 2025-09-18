@@ -1,4 +1,4 @@
-import { viewerSelfAtom } from "@/atoms/viewerSelf";
+import { viewerSelfAtom, userProfileAtom } from "@/atoms/user";
 import TopBar from "@/components/Header";
 import { Package } from "@/types/viewer";
 import { useFunnel } from "@use-funnel/react-router";
@@ -12,7 +12,6 @@ import {
   selectPackage,
   viewPackages,
 } from "@/lib/analytics";
-import { userProfileAtom } from "@/atoms/userProfile";
 import { KakaoPaymentStep } from "@/components/purchase/KakaoPaymentStep";
 import { isAuthenticatedAtom } from "@/atoms/authTokens";
 import { useTicketPackages } from "@/hooks/queries/viewers";

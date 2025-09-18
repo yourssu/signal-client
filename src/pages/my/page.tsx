@@ -8,7 +8,7 @@ import userIcon from "@/assets/icons/user_icon.svg";
 import archiveIcon from "@/assets/icons/archive_icon.svg";
 import { ProfileAnalysisCard } from "@/components/my/ProfileAnalysisCard";
 import { useViewerSelf } from "@/hooks/queries/viewers";
-import { userProfileAtom } from "@/atoms/userProfile";
+import { userProfileAtom } from "@/atoms/user";
 import { useAtom, useAtomValue } from "jotai";
 import { providerAtom } from "@/atoms/authTokens";
 

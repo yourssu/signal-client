@@ -3,7 +3,7 @@ import TopBar from "@/components/Header";
 import MainContent from "@/components/home/MainContent";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { useAtomValue } from "jotai";
-import { userProfileAtom } from "@/atoms/userProfile";
+import { userProfileAtom } from "@/atoms/user";
 
 const HomePage: React.FC = () => {
   const profile = useAtomValue(userProfileAtom);

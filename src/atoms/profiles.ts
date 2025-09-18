@@ -4,7 +4,7 @@ import type { ProfileContactResponse, ProfileResponse } from "@/types/profile"; 
 
 // Base atom to store the array of profiles
 export const savedProfilesAtom = atomWithStorage<ProfileResponse[]>(
-  "profile.saved",
+  "user.savedProfiles",
   [],
   undefined,
   { getOnInit: true },
@@ -26,7 +26,7 @@ export const saveProfileAtom = atom(
 
 // Base atom to store the array of profiles
 export const purchasedProfilesAtom = atomWithStorage<ProfileContactResponse[]>(
-  "profile.contacted",
+  "user.purchasedProfiles",
   [],
   undefined,
   { getOnInit: true },
@@ -48,7 +48,7 @@ export const purchaseProfileAtom = atom(
 
 // Atom to store the recently viewed profile IDs (max 10)
 export const recentlyViewedProfilesAtom = atomWithStorage<string[]>(
-  "profile.viewed",
+  "user.recentlyViewedProfiles",
   [],
   undefined,
   { getOnInit: true },

@@ -5,10 +5,7 @@ import { ProfileContactResponse, ProfileResponse } from "@/types/profile";
 import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
 import { useAtomValue, useSetAtom } from "jotai";
-import {
-  purchasedProfilesAtom,
-  purchaseProfileAtom,
-} from "@/atoms/viewerProfiles";
+import { purchasedProfilesAtom, purchaseProfileAtom } from "@/atoms/profiles";
 import TurnableProfileCard from "@/components/profile/TurnableProfileCard";
 import { ENABLE_SAVED, TICKET_COST } from "@/env";
 import { buttonClick, viewContact } from "@/lib/analytics";

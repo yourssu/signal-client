@@ -1,15 +1,29 @@
+import { Gender } from "@/types/profile";
+import { atomWithStorage } from "jotai/utils";
 import { clearTokensAtom } from "@/atoms/authTokens";
-import { userGenderAtom } from "@/atoms/userGender";
-import { userProfileAtom } from "@/atoms/userProfile";
 import {
   purchasedProfilesAtom,
   recentlyViewedProfilesAtom,
   savedProfilesAtom,
-} from "@/atoms/viewerProfiles";
-import { viewerSelfAtom } from "@/atoms/viewerSelf";
+} from "@/atoms/profiles";
+import { ViewerResponse } from "@/types/viewer";
 import { DATA_EXPIRY } from "@/env";
 import { atom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
+import { ProfileContactResponse } from "@/types/profile";
+
+export const userGenderAtom = atomWithStorage<Gender | null>(
+  "user.gender",
+  null,
+  undefined,
+  { getOnInit: true },
+);
+
+export const userProfileAtom = atomWithStorage<ProfileContactResponse | null>(
+  "user.profile",
+  null,
+  undefined,
+  { getOnInit: true },
+);
 
 export const isFirstEntranceAtom = atomWithStorage<boolean>(
   "user.lastEntrance",
@@ -19,6 +33,13 @@ export const isFirstEntranceAtom = atomWithStorage<boolean>(
 );
 export const lastEntranceAtom = atomWithStorage<number | null>(
   "user.lastEntranceTime",
+  null,
+  undefined,
+  { getOnInit: true },
+);
+
+export const viewerSelfAtom = atomWithStorage<ViewerResponse | null>(
+  "user.viewerInfo",
   null,
   undefined,
   { getOnInit: true },

@@ -1,4 +1,4 @@
-import { userProfileAtom } from "@/atoms/userProfile";
+import { userProfileAtom } from "@/atoms/user";
 import TopBar from "@/components/Header";
 import { BlacklistConfirmationDialog } from "@/components/my/BlacklistConfirmationDialog";
 import ProfileCardEditor from "@/components/profile/ProfileCardEditor";

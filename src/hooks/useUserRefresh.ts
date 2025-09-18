@@ -1,7 +1,5 @@
-import { userGenderAtom } from "@/atoms/userGender";
-import { userProfileAtom } from "@/atoms/userProfile";
-import { purchasedProfilesAtom } from "@/atoms/viewerProfiles";
-import { viewerSelfAtom } from "@/atoms/viewerSelf";
+import { userGenderAtom, userProfileAtom, viewerSelfAtom } from "@/atoms/user";
+import { purchasedProfilesAtom } from "@/atoms/profiles";
 import { usePurchasedProfiles, useSelfProfile } from "@/hooks/queries/profiles";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { Gender } from "@/types/profile";

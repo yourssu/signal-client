@@ -3,10 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { useAtomValue } from "jotai";
 import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
-import {
-  purchasedProfilesAtom,
-  savedProfilesAtom,
-} from "@/atoms/viewerProfiles";
+import { purchasedProfilesAtom, savedProfilesAtom } from "@/atoms/profiles";
 import { ProfileResponse } from "@/types/profile";
 import { ScrollableCards } from "@/components/my/saved/ScrollableCards";
 import { ENABLE_SAVED } from "@/env";

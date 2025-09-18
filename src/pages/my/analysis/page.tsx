@@ -1,4 +1,4 @@
-import { userProfileAtom } from "@/atoms/userProfile";
+import { userProfileAtom } from "@/atoms/user";
 import TopBar from "@/components/Header";
 import heartIcon from "@/assets/icons/heart_icon.svg";
 import { Button } from "@/components/ui/button";

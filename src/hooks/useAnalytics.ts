@@ -1,11 +1,9 @@
-import { userGenderAtom } from "@/atoms/userGender";
-import { userProfileAtom } from "@/atoms/userProfile";
+import { userGenderAtom, userProfileAtom, viewerSelfAtom } from "@/atoms/user";
 import { CLARITY_ID, GA_ID } from "@/env";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";
 import ReactGA4 from "react-ga4";
 import Clarity from "@microsoft/clarity";
-import { viewerSelfAtom } from "@/atoms/viewerSelf";
 import { useUserInfo } from "./queries/users";
 
 export const useAnalytics = () => {

@@ -13,14 +13,13 @@ import {
 import { useCreateProfile, useSelfProfile } from "@/hooks/queries/profiles";
 import { useNavigate } from "react-router";
 import { useAtom } from "jotai";
-import { userGenderAtom } from "@/atoms/userGender";
+import { userGenderAtom, userProfileAtom } from "@/atoms/user";
 import PersonalityStep from "@/components/register/PersonalityStep";
 import NicknameStep from "@/components/register/NicknameStep";
 import ContactStep from "@/components/register/ContactStep";
 import RegisterDoneStep from "@/components/register/RegisterDoneStep";
 import TopBar from "@/components/Header";
 import { Progress } from "@/components/ui/progress";
-import { userProfileAtom } from "@/atoms/userProfile";
 import DepartmentStep from "@/components/register/DepartmentStep";
 import BirthYearStep from "@/components/register/BirthYearStep";
 import { funnelComplete, funnelStart, funnelStep } from "@/lib/analytics";
