@@ -83,6 +83,7 @@ const ProfileListPage: React.FC = () => {
     return (
       // Main page container - Flex column, min height screen
       <div className="flex flex-col min-h-dvh">
+        <title>성별 선택하기 - 시그널</title>
         <TopBar onBack="/" />
         {/* Content area - Takes remaining height, centers content */}
         <div className="flex-grow flex flex-col items-center justify-center p-4">
