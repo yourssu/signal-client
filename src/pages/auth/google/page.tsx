@@ -7,6 +7,7 @@ import ReactGA4 from "react-ga4";
 import { GA_ID } from "@/env";
 import { toast } from "sonner";
 import { useUser } from "@/hooks/useUser";
+import { login } from "@/lib/analytics";
 
 export default function GoogleAuthPage() {
   const [searchParams] = useSearchParams();
@@ -18,18 +19,14 @@ export default function GoogleAuthPage() {
   const { mutate, isSuccess, isIdle, isError } = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       setTokens({ tokenResponse, provider: "google" });
-      if (GA_ID) {
-        ReactGA4.event("login", {
-          method: "구글",
-        });
-      }
+      login("Google");
       refreshUser();
     },
     onError: (error) => {
       toast.error("Google 로그인 실패", { description: error.message });
       if (GA_ID) {
         ReactGA4.event("login_error", {
-          method: "구글",
+          method: "Google",
           error: error.message,
         });
       }
