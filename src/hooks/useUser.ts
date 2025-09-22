@@ -19,6 +19,7 @@ import { useCallback, useEffect, useState } from "react";
 import { UserData } from "@/types/user";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserInfo } from "@/hooks/queries/users";
+import { providerAtom } from "@/atoms/authTokens";
 
 export const useUser = (): UserData & {
   setIsFirstProfileView: (value: boolean) => void;
@@ -48,6 +49,7 @@ export const useUser = (): UserData & {
   );
   const savedProfiles = useAtomValue(savedProfilesAtom);
   const recentlyViewedProfileIds = useAtomValue(recentlyViewedProfilesAtom);
+  const authProvider = useAtomValue(providerAtom);
   const queryClient = useQueryClient();
 
   const { data: profileRes, isPending: isProfilePending } = useSelfProfile({
@@ -108,6 +110,7 @@ export const useUser = (): UserData & {
 
   return {
     uuid,
+    authProvider,
     isFirstProfileView,
     lastEntranceTime,
     gender,

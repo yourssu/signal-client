@@ -5,7 +5,7 @@ import Clarity from "@microsoft/clarity";
 import { useUser } from "@/hooks/useUser";
 
 export const useAnalytics = () => {
-  const { uuid, gender, profile, viewer } = useUser();
+  const { uuid, gender, profile, viewer, authProvider } = useUser();
 
   useEffect(() => {
     if (GA_ID)
@@ -29,7 +29,9 @@ export const useAnalytics = () => {
           birth_year: profile?.birthYear?.toString() ?? undefined,
           ticket: viewer?.ticket ?? undefined,
           used_ticket: viewer?.usedTicket ?? undefined,
+          school: profile?.school ?? undefined,
+          auth_provider: authProvider ?? undefined,
         },
       });
-  }, [gender, profile, viewer]);
+  }, [authProvider, gender, profile, viewer]);
 };

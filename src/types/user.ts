@@ -12,6 +12,7 @@ export interface UserInfoResponse {
 export interface UserData {
   uuid: string | null;
   isFirstProfileView: boolean;
+  authProvider: string | null;
   lastEntranceTime: number | null;
   gender: Gender | null;
   viewer: ViewerResponse | null;
