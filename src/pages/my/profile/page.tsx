@@ -11,6 +11,7 @@ import {
 } from "@/hooks/queries/blacklists";
 import { useUpdateProfile } from "@/hooks/queries/profiles";
 import { useUser } from "@/hooks/useUser";
+import { buttonClick } from "@/lib/analytics";
 import { ProfileUpdateRequest } from "@/types/profile";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
@@ -65,6 +66,7 @@ const MyProfilePage: React.FC = () => {
 
   const handleRemoveProfileFromBlacklist = async () => {
     await removeFromBlacklist();
+    buttonClick("remove_from_blacklist", "프로필 공개");
     queryClient.invalidateQueries({ queryKey: ["blacklists", "me", "status"] });
     toast.success("프로필이 공개되었어요.");
   };
@@ -80,6 +82,7 @@ const MyProfilePage: React.FC = () => {
       introSentences: profileDraft!.introSentences,
       contact: profileDraft!.contact,
     });
+    buttonClick("complete_profile_edit", "프로필 수정 완료");
     setProfile(ret);
     setProfileDraft(ret);
     toast.success("프로필이 수정되었어요.");
