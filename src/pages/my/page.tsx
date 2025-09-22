@@ -60,10 +60,12 @@ const MyPage: React.FC = () => {
         </div>
 
         {/* Profile Analysis Card */}
-        <ProfileAnalysisCard
-          isLoggedIn={isLoggedIn}
-          isProfileRegistered={!!profile}
-        />
+        {(ENABLE_PROFILE_VIEW || !isLoggedIn || !profile) && (
+          <ProfileAnalysisCard
+            isLoggedIn={isLoggedIn}
+            isProfileRegistered={!!profile}
+          />
+        )}
 
         {/* Menu Options */}
         <div className="bg-white rounded-3xl overflow-hidden w-full">
