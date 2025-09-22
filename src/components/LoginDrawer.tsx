@@ -13,6 +13,7 @@ import googleLogo from "@/assets/google.png";
 import loginImage from "@/assets/login.png";
 import { Button } from "@/components/ui/button";
 import { useGoogleLogin } from "@react-oauth/google";
+import { buttonClick } from "@/lib/analytics";
 
 interface LoginDrawerProps {
   open?: boolean;
@@ -35,6 +36,11 @@ export function LoginDrawer({
     ux_mode: "redirect",
     scope: "openid email",
   });
+
+  const handleLogin = () => {
+    login();
+    buttonClick("google_login", "Google 계정으로 로그인");
+  };
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
@@ -67,7 +73,7 @@ export function LoginDrawer({
         <DrawerFooter className="flex-col w-full max-w-md self-center gap-3">
           {/* Google Login Button */}
           <Button
-            onClick={login}
+            onClick={handleLogin}
             variant="outline"
             className="g-signin2 bg-white h-14 justify-start rounded-full"
           >
@@ -81,7 +87,10 @@ export function LoginDrawer({
             </span>
           </Button>
           {showNextTime && (
-            <DrawerClose className="text-xs underline text-primary cursor-pointer">
+            <DrawerClose
+              className="text-xs underline text-primary cursor-pointer"
+              onClick={() => buttonClick("login_drawer_close", "로그인 취소")}
+            >
               다음에 할래요
             </DrawerClose>
           )}
