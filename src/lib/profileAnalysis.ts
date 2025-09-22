@@ -81,7 +81,7 @@ export const getProfileAnalysisShareData = async (
   return {
     title: `${selectWriting(profileCount, profilePercentage)[1]} - 시그널`,
     text: `지금까지 ${profileViewers}명이 내 프로필을 열람했어요!\n지금 시그널에서 내 프로필을 등록해보세요!`,
-    url: window.location.origin,
+    url: `${window.location.origin}?utm_source=share`,
     files: [pngFile],
   };
 };
