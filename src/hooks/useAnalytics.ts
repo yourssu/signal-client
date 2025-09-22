@@ -3,9 +3,11 @@ import { useEffect } from "react";
 import ReactGA4 from "react-ga4";
 import Clarity from "@microsoft/clarity";
 import { useUser } from "@/hooks/useUser";
+import { useLocation } from "react-router";
 
 export const useAnalytics = () => {
   const { uuid, gender, profile, viewer, authProvider } = useUser();
+  const location = useLocation();
 
   useEffect(() => {
     if (GA_ID)
@@ -33,5 +35,5 @@ export const useAnalytics = () => {
           auth_provider: authProvider ?? undefined,
         },
       });
-  }, [authProvider, gender, profile, viewer]);
+  }, [authProvider, gender, profile, viewer, location]);
 };
