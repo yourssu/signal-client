@@ -129,3 +129,9 @@ export const swipeStop = (direction: "left" | "right", profileId: number) =>
     direction,
     profile_id: profileId,
   });
+
+export const login = (method: string) =>
+  GA_ID && ReactGA4.event("login", { method });
+
+export const share = (method: string, profileId: number) =>
+  GA_ID && ReactGA4.event("share", { method, item_id: profileId });
