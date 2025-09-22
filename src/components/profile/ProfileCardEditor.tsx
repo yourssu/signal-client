@@ -200,6 +200,7 @@ const ProfileCardEditorFront: React.FC<ProfileCardEditorFrontProps> = ({
               profile.gender === "MALE" ? "fill-blue" : "fill-primary",
             )}
           />
+          {profile.school ? <>{profile.school} · </> : null}
           {profile.department}
         </Badge>
         <div className="flex flex-col items-center w-full">
