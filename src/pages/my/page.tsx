@@ -12,6 +12,7 @@ import { providerAtom } from "@/atoms/authTokens";
 import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/utils";
 import { ENABLE_PROFILE_VIEW } from "@/env";
+import { buttonClick } from "@/lib/analytics";
 
 const MyPage: React.FC = () => {
   const { profile, viewer, purchasedProfiles } = useUser();
@@ -55,7 +56,12 @@ const MyPage: React.FC = () => {
             className="bg-[#FFF2F7] text-primary hover:bg-[#FFF2F7]/80 text-xs font-semibold px-4 py-2 h-9 rounded-xl"
             asChild
           >
-            <Link to="/purchase">충전</Link>
+            <Link
+              to="/purchase"
+              onClick={() => buttonClick("purchase_ticket_mypage", "티켓 충전")}
+            >
+              충전
+            </Link>
           </Button>
         </div>
 
