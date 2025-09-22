@@ -1,6 +1,5 @@
 import { Gender } from "@/types/profile";
 import { atomWithStorage } from "jotai/utils";
-import { clearTokensAtom } from "@/atoms/authTokens";
 import {
   purchasedProfilesAtom,
   recentlyViewedProfilesAtom,
@@ -46,7 +45,6 @@ export const viewerAtom = atomWithStorage<ViewerResponse | null>(
 
 export const cleanDataAtom = atom(null, (_get, set) => {
   // Clear all user-related data
-  set(clearTokensAtom);
   set(isFirstProfileViewAtom, true);
 
   // Clear all user-related atoms
