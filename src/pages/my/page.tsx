@@ -10,6 +10,8 @@ import { ProfileAnalysisCard } from "@/components/my/ProfileAnalysisCard";
 import { useAtomValue } from "jotai";
 import { providerAtom } from "@/atoms/authTokens";
 import { useUser } from "@/hooks/useUser";
+import { cn } from "@/lib/utils";
+import { ENABLE_PROFILE_VIEW } from "@/env";
 
 const MyPage: React.FC = () => {
   const { profile, viewer, purchasedProfiles } = useUser();
@@ -27,7 +29,12 @@ const MyPage: React.FC = () => {
         </div>
 
         {/* Ticket Info Card */}
-        <div className="bg-white rounded-3xl p-6 w-full flex items-end justify-between shadow-sm">
+        <div
+          className={cn(
+            "bg-white rounded-3xl p-6 w-full flex items-end justify-between shadow-sm",
+            !ENABLE_PROFILE_VIEW && "hidden",
+          )}
+        >
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-1 px-0.5">
               <p className="text-[10px] text-gray-500 font-medium">
@@ -77,7 +84,7 @@ const MyPage: React.FC = () => {
                 <ChevronRight className="w-5 h-5 text-gray-400" />
               </Link>
             )}
-            {(purchasedProfiles?.length ?? 0) > 0 && (
+            {ENABLE_PROFILE_VIEW && (purchasedProfiles?.length ?? 0) > 0 && (
               <Link
                 to="/my/signals"
                 className="flex items-center justify-between w-full p-4 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"

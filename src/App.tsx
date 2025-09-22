@@ -107,7 +107,7 @@ const router = createBrowserRouter([
       },
       {
         path: "my",
-        element: ENABLE_PROFILE_VIEW ? <MyPage /> : <Navigate to="/" />,
+        element: ENABLE_REGISTER ? <MyPage /> : <Navigate to="/" />,
       },
       {
         path: "my/signals",
@@ -119,7 +119,7 @@ const router = createBrowserRouter([
       },
       {
         path: "my/profile",
-        element: ENABLE_PROFILE_VIEW ? <MyProfilePage /> : <Navigate to="/" />,
+        element: ENABLE_REGISTER ? <MyProfilePage /> : <Navigate to="/" />,
       },
       {
         path: "my/analysis",
