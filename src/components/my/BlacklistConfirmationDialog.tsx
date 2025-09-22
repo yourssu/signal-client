@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { buttonClick } from "@/lib/analytics";
 
 interface BlacklistConfirmationDialogProps {
   open: boolean;
@@ -22,6 +23,7 @@ export function BlacklistConfirmationDialog({
 }: BlacklistConfirmationDialogProps) {
   const handleConfirm = () => {
     if (onConfirm) {
+      buttonClick("confirm_add_blacklist", "프로필 비공개 확인");
       onConfirm();
     }
     onOpenChange(false);
