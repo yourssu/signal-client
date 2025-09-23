@@ -18,9 +18,21 @@ export default function GoogleAuthPage() {
 
   const { mutate, isSuccess, isIdle, isError } = useGoogleLogin({
     onSuccess: (tokenResponse) => {
-      setTokens({ tokenResponse, provider: "google" });
-      login("Google");
-      refreshUser();
+      if (tokenResponse.accessToken && tokenResponse.refreshToken) {
+        setTokens({ tokenResponse, provider: "google" });
+        login("Google");
+        refreshUser();
+      } else {
+        toast.error("Google 로그인 응답 오류", {
+          description: "토큰 정보를 받아올 수 없습니다. 다시 시도해주세요.",
+        });
+        if (GA_ID) {
+          ReactGA4.event("login_error", {
+            method: "Google",
+            error: "토큰 정보를 받아올 수 없습니다.",
+          });
+        }
+      }
     },
     onError: (error) => {
       toast.error("Google 로그인 실패", { description: error.message });
