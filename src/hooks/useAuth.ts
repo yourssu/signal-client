@@ -23,15 +23,23 @@ export const useAuth = () => {
       setTokens({ tokenResponse: data, provider: "local" });
     },
     onError: (error) => {
-      toast.error(`회원가입 실패: ${error.message}`);
+      toast.error("회원가입 실패", { description: error.message });
     },
   });
 
   const refreshMutation = useRefreshToken({
     onSuccess: (data: TokenResponse) => {
-      setTokens({ tokenResponse: data, provider: "local" });
+      if (data.accessToken && data.refreshToken) {
+        setTokens({ tokenResponse: data, provider: "local" });
+      } else {
+        toast.error("토큰 갱신 실패", {
+          description:
+            "토큰 정보를 받아오는 데 실패했습니다. 새로고침 해주세요.",
+        });
+      }
     },
-    onError: () => {
+    onError: (error) => {
+      toast.error("토큰 갱신 실패", { description: error.message });
       // If refresh fails, try to register
       registerMutation.mutate();
     },
