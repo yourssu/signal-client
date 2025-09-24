@@ -1,7 +1,7 @@
 import { getDefaultStore } from "jotai";
 import { accessTokenAtom } from "@/atoms/authTokens";
 import { SignalError } from "@/lib/error";
-import { SignalResponse } from "@/types/common";
+import { ErrorResponse, SignalResponse } from "@/types/common";
 
 const store = getDefaultStore();
 
@@ -32,8 +32,13 @@ export const authedFetch = async <T>(
 
   const res = (await response.json()) as SignalResponse<T>;
 
-  if (!("result" in res)) {
-    throw new SignalError(res.message, res.status, res.timestamp);
+  if (!("result" in res) || response.status >= 400) {
+    const errorRes = res as ErrorResponse;
+    throw new SignalError(
+      errorRes.message ?? "알 수 없는 오류",
+      errorRes.status ?? response.status,
+      errorRes.timestamp ?? new Date().toISOString(),
+    );
   }
 
   return res.result;
