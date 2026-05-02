@@ -65,7 +65,7 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
               onClick={() => buttonClick("view_my_profile", "내 프로필 보기")}
               className={cn(
                 buttonVariants({ variant: "secondary" }),
-                "h-14 text-lg rounded-2xl shadow-sm font-medium tracking-[-0.01em]",
+                "h-14 text-lg rounded-2xl font-medium tracking-[-0.01em]",
               )}
             >
               내 프로필 보기
@@ -76,7 +76,7 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
               onClick={() => buttonClick("register_profile", "프로필 등록하기")}
               className={cn(
                 buttonVariants({ variant: "secondary" }),
-                "h-14 text-lg rounded-2xl shadow-sm font-medium tracking-[-0.01em]",
+                "h-14 text-lg rounded-2xl font-medium tracking-[-0.01em]",
               )}
             >
               프로필 등록하기
@@ -127,7 +127,7 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
           >
             이용약관
           </Link>
-          <span className=" text-xs">·</span>
+          <span className="text-primary text-xs">및</span>
           <Link
             to="/privacy"
             className="text-center underline text-xs text-primary"
