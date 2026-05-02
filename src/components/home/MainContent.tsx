@@ -65,7 +65,7 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
               onClick={() => buttonClick("view_my_profile", "내 프로필 보기")}
               className={cn(
                 buttonVariants({ variant: "secondary" }),
-                "h-14 text-lg rounded-2xl text-primary bg-[#FFF2F7] shadow-sm font-medium tracking-[-0.01em]",
+                "h-14 text-lg rounded-2xl shadow-sm font-medium tracking-[-0.01em]",
               )}
             >
               내 프로필 보기
@@ -76,7 +76,7 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
               onClick={() => buttonClick("register_profile", "프로필 등록하기")}
               className={cn(
                 buttonVariants({ variant: "secondary" }),
-                "h-14 text-lg rounded-2xl text-primary bg-[#FFF2F7] shadow-sm font-medium tracking-[-0.01em]",
+                "h-14 text-lg rounded-2xl shadow-sm font-medium tracking-[-0.01em]",
               )}
             >
               프로필 등록하기
@@ -87,7 +87,7 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
             variant="secondary"
             className={cn(
               buttonVariants({ variant: "secondary" }),
-              "h-14 text-lg rounded-2xl text-primary bg-[#FFF2F7] shadow-sm font-medium tracking-[-0.01em]",
+              "h-14 text-lg rounded-2xl hover:bg-white/90 font-medium tracking-[-0.01em]",
             )}
             onClick={() => {
               buttonClick("register_profile_locked", "프로필 등록하기");
@@ -103,19 +103,15 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
             to="/profile"
             onClick={() => buttonClick("send_signal", "시그널 보내기")}
             className={cn(
-              buttonVariants({ variant: "default" }),
-              "h-14 text-lg rounded-2xl bg-white text-primary hover:bg-white/90 font-medium tracking-[-0.01em]",
+              buttonVariants(),
+              "h-14 text-lg rounded-2xl hover:bg-white/90 font-medium tracking-[-0.01em]",
             )}
           >
             시그널 보내기
           </Link>
         ) : (
           <Button
-            variant="default"
-            className={cn(
-              buttonVariants({ variant: "default" }),
-              "h-14 text-lg rounded-2xl bg-white text-primary hover:bg-white/90 font-medium tracking-[-0.01em]",
-            )}
+            className="h-14 text-lg rounded-2xl hover:bg-white/90 font-medium tracking-[-0.01em]"
             onClick={() => {
               buttonClick("send_signal_locked", "시그널 보내기");
               setViewGuardOpen(true);

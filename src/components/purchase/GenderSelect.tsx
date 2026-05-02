@@ -24,7 +24,7 @@ const GenderStep: React.FC<GenderStepProps> = ({ onSelect }) => {
           className="flex flex-col items-center gap-6 cursor-pointer group"
           onClick={() => onSelect("MALE")}
         >
-          <div className="relative w-[129px] h-[129px] rounded-full border-2 border-[#51A2FF] bg-white flex items-center justify-center overflow-hidden group-hover:opacity-80 transition-opacity">
+          <div className="relative w-[129px] h-[129px] rounded-full border-2 border-secondary bg-white flex items-center justify-center overflow-hidden group-hover:opacity-80 transition-opacity">
             <img
               src={maleCharacter}
               alt="남성 캐릭터"
@@ -38,14 +38,14 @@ const GenderStep: React.FC<GenderStepProps> = ({ onSelect }) => {
           className="flex flex-col items-center gap-6 cursor-pointer group"
           onClick={() => onSelect("FEMALE")}
         >
-          <div className="relative w-[129px] h-[129px] rounded-full border-2 border-[#EE518A] bg-white flex items-center justify-center overflow-hidden group-hover:opacity-80 transition-opacity">
+          <div className="relative w-[129px] h-[129px] rounded-full border-2 border-pink-600 bg-white flex items-center justify-center overflow-hidden group-hover:opacity-80 transition-opacity">
             <img
               src={femaleCharacter}
               alt="여성 캐릭터"
               className="object-cover w-full h-full" // Adjusted scale to cover
             />
           </div>
-          <p className="text-base font-medium text-[#404040]">여성</p>
+          <p className="text-base font-medium text-label-neutral">여성</p>
         </div>
       </div>
     </div>

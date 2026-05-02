@@ -111,7 +111,6 @@ export const TossPaymentStep = ({
           onClick={handleStartCheck}
           disabled={isChecking}
           className="w-full h-14 text-lg font-medium"
-          variant="default"
         >
           {isChecking ? (
             <>

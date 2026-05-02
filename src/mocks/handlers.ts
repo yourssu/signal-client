@@ -1,5 +1,6 @@
 import { animalDisplayMap } from "@/lib/animal";
 import { TicketIssuedRequest } from "@/types/admin";
+import { TokenResponse } from "@/types/auth";
 import { ErrorResponse, SuccessResponse } from "@/types/common";
 import {
   AnimalType,
@@ -13,12 +14,23 @@ import {
   ProfileResponse,
   TicketConsumedRequest,
 } from "@/types/profile";
+import { UserInfoResponse } from "@/types/user";
 import {
+  TicketPackagesResponse,
   VerificationResponse,
   ViewerDetailResponse,
   ViewerResponse,
 } from "@/types/viewer";
 import { http, HttpResponse } from "msw";
+
+const MOCK_UUID = "mock-uuid-1234-5678";
+const MOCK_TOKEN: TokenResponse = {
+  accessToken: "mock-access-token",
+  refreshToken: "mock-refresh-token",
+  tokenType: "Bearer",
+  accessTokenExpiresIn: 1000 * 60 * 60,
+  refreshTokenExpiresIn: 1000 * 60 * 60 * 24 * 7,
+};
 
 const getRandomAnimal = (): AnimalType => {
   const animals: AnimalType[] = [
@@ -61,6 +73,74 @@ const getRandomNickname = (animal: AnimalType): string => {
 };
 
 export const handlers = [
+  /** Auth */
+  http.post("/api/auth/register", () => {
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: MOCK_TOKEN,
+    } satisfies SuccessResponse<TokenResponse>);
+  }),
+  http.post("/api/auth/refresh", () => {
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: MOCK_TOKEN,
+    } satisfies SuccessResponse<TokenResponse>);
+  }),
+
+  /** Users */
+  http.get("/api/users/me", () => {
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: { uuid: MOCK_UUID },
+    } satisfies SuccessResponse<UserInfoResponse>);
+  }),
+
+  /** Viewers (me) */
+  http.get("/api/viewers/me", () => {
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: {
+        id: 1,
+        uuid: MOCK_UUID,
+        ticket: 3,
+        usedTicket: 0,
+        updatedTime: new Date().toISOString(),
+        purchasedProfiles: [],
+      },
+    } satisfies SuccessResponse<ViewerDetailResponse>);
+  }),
+  http.get("/api/viewers/ticket-packages", () => {
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: {
+        packages: [
+          { id: "pkg-1", name: "시작 패키지", quantity: [3, 3], price: [3000, 3000] },
+          { id: "pkg-2", name: "인기 패키지", quantity: [5, 5], price: [4500, 5000] },
+          { id: "pkg-3", name: "프리미엄 패키지", quantity: [10, 10], price: [8000, 10000] },
+        ],
+      },
+    } satisfies SuccessResponse<TicketPackagesResponse>);
+  }),
+
+  /** Profiles (me) */
+  http.get("/api/profiles/me", () => {
+    // 프로필 미등록 상태를 시뮬레이션 (등록 테스트를 위해 404 반환)
+    return HttpResponse.json(
+      {
+        timestamp: new Date().toISOString(),
+        status: 404,
+        message: "프로필이 존재하지 않습니다.",
+      } satisfies ErrorResponse,
+      { status: 404 },
+    );
+  }),
+  http.get("/api/profiles/me/purchased", () => {
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: [],
+    } satisfies SuccessResponse<[]>);
+  }),
+
   http.get("/api/profiles/count", () => {
     return HttpResponse.json({
       timestamp: new Date().toISOString(),
@@ -99,17 +179,15 @@ export const handlers = [
       },
     } satisfies SuccessResponse<ProfileContactResponse>);
   }),
-  // Example handler
   http.get("/api/profiles/random", ({ request }) => {
     const url = new URL(request.url);
-    const uuid = url.searchParams.get("uuid");
     const gender = url.searchParams.get("gender") as Gender;
-    if (!uuid || !gender) {
+    if (!gender) {
       return HttpResponse.json(
         {
           timestamp: new Date().toISOString(),
           status: 403,
-          message: "ID가 필요합니다.",
+          message: "gender가 필요합니다.",
         } satisfies ErrorResponse,
         { status: 403 },
       );

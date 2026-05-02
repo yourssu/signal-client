@@ -27,10 +27,10 @@ export function SaveDrawer({ children }: SaveDrawerProps) {
           <DrawerHeader className="p-0">
             <div className="flex flex-col items-center gap-[17px]">
               <div className="flex flex-col items-center gap-[10px] py-[7px]">
-                <DrawerTitle className="text-2xl font-semibold text-[#404040]">
+                <DrawerTitle className="text-2xl font-semibold text-label-neutral">
                   저장 완료
                 </DrawerTitle>
-                <DrawerDescription className="text-center text-lg font-medium text-[#525252]">
+                <DrawerDescription className="text-center text-lg font-medium text-label-alternative">
                   상단 하트 아이콘을 누르면
                   <br />
                   저장 목록을 확인할 수 있어요
@@ -49,7 +49,7 @@ export function SaveDrawer({ children }: SaveDrawerProps) {
               to="/my/signals"
               className={cn(
                 buttonVariants(),
-                "h-auto rounded-[16px] bg-[#EE518A] py-3 text-lg font-medium text-white hover:bg-[#d8487b]",
+                "h-auto rounded-2xl bg-pink-600 py-3 text-lg font-medium text-white hover:bg-pink-600/85",
               )} /* Style first button */
             >
               저장 목록 보기
@@ -58,7 +58,7 @@ export function SaveDrawer({ children }: SaveDrawerProps) {
             <DrawerClose asChild>
               <Button
                 variant="outline" // Use outline or style manually
-                className="h-auto rounded-[16px] border-none bg-[#FFF2F7] py-3 text-lg font-medium text-[#EE518A] hover:bg-[#fdeaf1]" /* Style second button */
+                className="h-auto rounded-2xl border-none bg-pink-200 py-3 text-lg font-medium text-pink-600 hover:bg-pink-200/80" /* Style second button */
               >
                 이어서 시그널 보내기
               </Button>

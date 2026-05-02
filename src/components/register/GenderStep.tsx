@@ -15,11 +15,11 @@ const GenderStep: React.FC<GenderStepProps> = ({ onSelect }) => {
     <div className="flex flex-col items-center pt-2 w-full">
       {/* Add top section for progress and title */}
       <div className="flex flex-col gap-[10px] w-full grow">
-        <p className="text-xs text-[#525252] animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
+        <p className="text-xs text-label-alternative animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
           1 / 8
         </p>
         {/* Update title text and style */}
-        <h2 className="text-2xl font-semibold text-[#44403B] whitespace-pre-line animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
+        <h2 className="text-2xl font-semibold text-label-neutral whitespace-pre-line animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
           안녕하세요 :)
           <br />
           <span className="text-primary">성별을 알려주세요</span>

@@ -30,16 +30,84 @@ http://scripts.sil.org/OFL
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --color-background: var(--pale-pink);
-  --color-foreground: var(--black-700);
+
+  /* Typography: Head */
+  --text-h1: 1.5rem;
+  --text-h1--line-height: 1.35;
+  --text-h2: 1.25rem;
+  --text-h2--line-height: 1.2;
+  --text-h3: 1.125rem;
+  --text-h3--line-height: 1.2;
+  --text-h4: 0.875rem;
+  --text-h4--line-height: 1.35;
+
+  /* Typography: Body */
+  --text-body1: 1rem;
+  --text-body1--line-height: 1.35;
+  --text-body2: 0.75rem;
+  --text-body2--line-height: 1.2;
+
+  /* Typography: Button */
+  --text-button-l: 1rem;
+  --text-button-m: 0.875rem;
+  --text-button-s: 0.75rem;
+
+  /* Typography: Caption */
+  --text-caption1: 0.75rem;
+  --text-caption2: 0.625rem;
+
+  /* Semantic: Background */
+  --color-background: var(--semantic-bg-normal);
+  --color-background-strong: var(--semantic-bg-strong);
+
+  /* Semantic: Foreground (Label) */
+  --color-foreground: var(--semantic-label-strong);
+  --color-label-strong: var(--semantic-label-strong);
+  --color-label-normal: var(--semantic-label-normal);
+  --color-label-neutral: var(--semantic-label-neutral);
+  --color-label-alternative: var(--semantic-label-alternative);
+  --color-label-assistive: var(--semantic-label-assistive);
+  --color-label-disable: var(--semantic-label-disable);
+
+  /* Semantic: Primary */
+  --color-primary: var(--semantic-primary);
+  --color-primary-foreground: var(--semantic-primary-foreground);
+  --color-primary-light: var(--semantic-primary-light);
+  --color-primary-strong: var(--semantic-primary-strong);
+  --color-primary-heavy: var(--semantic-primary-heavy);
+
+  /* Semantic: Secondary */
+  --color-secondary: var(--semantic-secondary);
+  --color-secondary-foreground: var(--semantic-secondary-foreground);
+  --color-secondary-light: var(--semantic-secondary-light);
+  --color-secondary-strong: var(--semantic-secondary-strong);
+  --color-secondary-heavy: var(--semantic-secondary-heavy);
+
+  /* Semantic: Line */
+  --color-line-normal: var(--semantic-line-normal);
+  --color-line-strong: var(--semantic-line-strong);
+
+  /* Semantic: Fill */
+  --color-fill-normal: var(--semantic-fill-normal);
+  --color-fill-pink-light: var(--semantic-fill-pink-light);
+  --color-fill-pink: var(--semantic-fill-pink);
+  --color-fill-blue-light: var(--semantic-fill-blue-light);
+  --color-fill-blue: var(--semantic-fill-blue);
+
+  /* Semantic: Negative */
+  --color-negative: var(--semantic-negative);
+
+  /* Semantic: Static */
+  --color-static-white: var(--semantic-static-white);
+  --color-static-black: var(--semantic-static-black);
+
+  /* shadcn/ui compat */
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--pink);
-  --color-primary-foreground: var(--color-white);
-  --color-secondary: var(--light-pink);
-  --color-secondary-foreground: var(--black);
+  --color-primary-foreground: var(--semantic-primary-foreground);
+  --color-secondary-foreground: var(--semantic-secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
@@ -62,6 +130,7 @@ http://scripts.sil.org/OFL
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
+  /* Legacy Signal colors (keep for backward compat) */
   --color-pink: var(--pink);
   --color-light-pink: var(--light-pink);
   --color-pale-pink: var(--pale-pink);
@@ -75,6 +144,28 @@ http://scripts.sil.org/OFL
   --color-white: var(--white);
   --color-bg-end: var(--bg-end);
   --color-toss-blue: var(--toss-blue);
+
+  /* Primitive colors */
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-700: var(--neutral-700);
+  --color-blue-100: var(--blue-100);
+  --color-blue-200: var(--blue-200);
+  --color-blue-300: var(--blue-300);
+  --color-blue-primitive-400: var(--blue-primitive-400);
+  --color-blue-600: var(--blue-600);
+  --color-blue-700: var(--blue-700);
+  --color-pink-100: var(--pink-100);
+  --color-pink-200: var(--pink-200);
+  --color-pink-300: var(--pink-300);
+  --color-pink-primitive-400: var(--pink-primitive-400);
+  --color-pink-600: var(--pink-600);
+  --color-pink-700: var(--pink-700);
+  --color-red-600: var(--red-600);
 }
 
 @theme {
@@ -106,14 +197,59 @@ http://scripts.sil.org/OFL
 
 :root {
   --radius: 0.625rem;
+
+  /* Semantic tokens (referencing primitives) */
+  /* Background */
+  --semantic-bg-normal: var(--static-white);
+  --semantic-bg-strong: var(--neutral-100);
+
+  /* Label */
+  --semantic-label-strong: var(--neutral-700);
+  --semantic-label-normal: var(--neutral-600);
+  --semantic-label-neutral: var(--neutral-500);
+  --semantic-label-alternative: var(--neutral-400);
+  --semantic-label-assistive: var(--neutral-300);
+  --semantic-label-disable: var(--neutral-200);
+
+  /* Primary (Pink) */
+  --semantic-primary: var(--pink-600);
+  --semantic-primary-foreground: var(--static-white);
+  --semantic-primary-light: var(--pink-200);
+  --semantic-primary-strong: var(--pink-600);
+  --semantic-primary-heavy: var(--pink-700);
+
+  /* Secondary (Blue) */
+  --semantic-secondary: var(--blue-primitive-400);
+  --semantic-secondary-foreground: var(--static-white);
+  --semantic-secondary-light: var(--blue-200);
+  --semantic-secondary-strong: var(--blue-600);
+  --semantic-secondary-heavy: var(--blue-700);
+
+  /* Line */
+  --semantic-line-normal: var(--neutral-200);
+  --semantic-line-strong: var(--neutral-300);
+
+  /* Fill */
+  --semantic-fill-normal: var(--neutral-100);
+  --semantic-fill-pink-light: var(--pink-200);
+  --semantic-fill-pink: var(--pink-300);
+  --semantic-fill-blue-light: var(--blue-200);
+  --semantic-fill-blue: var(--blue-300);
+
+  /* Negative */
+  --semantic-negative: var(--red-600);
+
+  /* Static */
+  --semantic-static-white: var(--static-white);
+  --semantic-static-black: var(--static-black);
+
+  /* shadcn/ui compat */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.67 0.1952 1.4);
-  --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -138,7 +274,7 @@ http://scripts.sil.org/OFL
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  /* Signal colors */
+  /* Signal colors (legacy) */
   --pink: oklch(0.66 0.1974 1.85);
   --light-pink: oklch(0.97 0.0154 351.96);
   --pale-pink: oklch(0.98 0.0076 7.28);
@@ -152,17 +288,42 @@ http://scripts.sil.org/OFL
   --white: oklch(1 0 0);
   --bg-end: oklch(0.91 0.0522 353.83);
   --toss-blue: oklch(0.5597 0.2431 261.08);
+
+  /* Primitive colors */
+  --static-white: #FFFFFF;
+  --static-black: #000000;
+  --neutral-100: #F9FAFC;
+  --neutral-200: #E3E4E6;
+  --neutral-300: #767A83;
+  --neutral-400: #5A5C64;
+  --neutral-500: #46474E;
+  --neutral-600: #212225;
+  --neutral-700: #171719;
+  --blue-100: #F0F7FF;
+  --blue-200: #E8F3FF;
+  --blue-300: #D8EAFF;
+  --blue-primitive-400: #A9D1FF;
+  --blue-600: #51A2FF;
+  --blue-700: #2189FF;
+  --pink-100: #FFF9FE;
+  --pink-200: #FFF2FC;
+  --pink-300: #FFE7FA;
+  --pink-primitive-400: #FFD3F7;
+  --pink-600: #FF71B6;
+  --pink-700: #FF449E;
+  --red-600: #FF4242;
 }
 
 .dark {
+  --semantic-bg-normal: oklch(0.98 0.0076 7.28);
+  --semantic-bg-strong: oklch(0.95 0.0076 7.28);
+
   --background: oklch(0.98 0.0076 7.28);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.67 0.1952 1.4);
-  --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -195,6 +356,68 @@ http://scripts.sil.org/OFL
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Typography system utilities */
+@utility h1 {
+  font-size: var(--text-h1);
+  line-height: var(--text-h1--line-height);
+  font-weight: 600;
+}
+
+@utility h2 {
+  font-size: var(--text-h2);
+  line-height: var(--text-h2--line-height);
+  font-weight: 600;
+}
+
+@utility h3 {
+  font-size: var(--text-h3);
+  line-height: var(--text-h3--line-height);
+  font-weight: 600;
+}
+
+@utility h4 {
+  font-size: var(--text-h4);
+  line-height: var(--text-h4--line-height);
+  font-weight: 600;
+}
+
+@utility body1 {
+  font-size: var(--text-body1);
+  line-height: var(--text-body1--line-height);
+  font-weight: 500;
+}
+
+@utility body2 {
+  font-size: var(--text-body2);
+  line-height: var(--text-body2--line-height);
+  font-weight: 500;
+}
+
+@utility button-l {
+  font-size: var(--text-button-l);
+  font-weight: 600;
+}
+
+@utility button-m {
+  font-size: var(--text-button-m);
+  font-weight: 600;
+}
+
+@utility button-s {
+  font-size: var(--text-button-s);
+  font-weight: 500;
+}
+
+@utility caption1 {
+  font-size: var(--text-caption1);
+  font-weight: 500;
+}
+
+@utility caption2 {
+  font-size: var(--text-caption2);
+  font-weight: 600;
 }
 
 @utility no-scrollbar {

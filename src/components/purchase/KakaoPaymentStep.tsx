@@ -132,7 +132,6 @@ export const KakaoPaymentStep = ({
           onClick={handleStartCheck}
           disabled={paymentInitiateMutation.isPending || !isAuthenticated}
           className="w-full h-14 text-lg font-medium"
-          variant="default"
         >
           {paymentInitiateMutation.isPending ? "결제 준비 중..." : "결제하기"}
         </Button>
