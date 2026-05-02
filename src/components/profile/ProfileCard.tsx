@@ -21,25 +21,22 @@ const genderConfig: Record<
     cardBg: string;
     tagBg: string;
     tagText: string;
-    heartFill: string;
   }
 > = {
   MALE: {
-    cardBg: "bg-[#E8F3FF]",
-    tagBg: "bg-[#D8EAFF]",
-    tagText: "text-[#51A2FF]",
-    heartFill: "fill-[#51A2FF]",
+    cardBg: "bg-fill-blue-light",
+    tagBg: "bg-fill-blue",
+    tagText: "text-secondary",
   },
   FEMALE: {
-    cardBg: "bg-[#FFF2FC]",
-    tagBg: "bg-[#FFE7FA]",
-    tagText: "text-[#FF71B6]",
-    heartFill: "fill-[#FF71B6]",
+    cardBg: "bg-fill-pink-light",
+    tagBg: "bg-fill-pink",
+    tagText: "text-primary",
   },
 };
 
 const ProfileCardFront: React.FC<
-  ProfileCardProps & { gender: Gender; size: CardSize }
+  { profile: ProfileResponse; gender: Gender; size: CardSize }
 > = ({ profile, gender, size }) => {
   const config = genderConfig[gender];
   const shortenedYear = profile.birthYear.toString().slice(-2);
@@ -57,7 +54,7 @@ const ProfileCardFront: React.FC<
       >
         <p
           className={cn(
-            "text-[#5A5C64] font-medium leading-tight whitespace-nowrap",
+            "text-label-neutral font-medium leading-tight whitespace-nowrap",
             isSmall ? "text-[10px]" : "text-xs",
           )}
         >
@@ -65,7 +62,7 @@ const ProfileCardFront: React.FC<
         </p>
         <p
           className={cn(
-            "text-[#171719] font-semibold leading-tight whitespace-nowrap",
+            "text-label-strong font-semibold leading-tight whitespace-nowrap",
             isSmall ? "text-base" : "text-xl",
           )}
         >
@@ -117,27 +114,27 @@ const ProfileCardFront: React.FC<
 };
 
 const ProfileCardBack: React.FC<
-  ProfileCardProps & { gender: Gender; size: CardSize }
+  { profile: ProfileResponse; contact?: string; size: CardSize }
 > = ({ profile, contact, size }) => {
   const isSmall = size === "S";
 
   if (contact) {
     return (
-      <div className="flex flex-col items-center gap-3 px-3 pt-6 pb-4">
+      <div className={cn("flex flex-col items-center gap-3 px-3", isSmall ? "pt-4 pb-3" : "pt-6 pb-4")}>
         <div className="flex flex-col items-center gap-1 w-full px-1">
-          <p className="text-[#5A5C64] font-medium text-xs leading-tight whitespace-nowrap">
+          <p className="text-label-neutral font-medium text-xs leading-tight whitespace-nowrap">
             {profile.birthYear.toString().slice(-2)}년생 ·{" "}
             {animalDisplayMap[profile.animal]}상
           </p>
-          <p className="text-[#171719] font-semibold text-xl leading-tight whitespace-nowrap">
+          <p className="text-label-strong font-semibold text-xl leading-tight whitespace-nowrap">
             {profile.nickname}
           </p>
         </div>
 
-        <div className="flex items-center justify-center w-full h-[126px]">
+        <div className={cn("flex items-center justify-center w-full", isSmall ? "h-[80px]" : "h-[126px]")}>
           <AnimalImage
             animalType={profile.animal}
-            className="object-contain max-h-[126px]"
+            className={cn("object-contain", isSmall ? "max-h-[80px]" : "max-h-[126px]")}
           />
         </div>
 
@@ -174,21 +171,21 @@ const ProfileCardBack: React.FC<
   }
 
   return (
-    <div className="flex flex-col items-center gap-3 px-3 pt-6 pb-4">
+    <div className={cn("flex flex-col items-center gap-3 px-3", isSmall ? "pt-4 pb-3" : "pt-6 pb-4")}>
       <div className="flex flex-col items-center gap-1 w-full px-1">
-        <p className="text-[#5A5C64] font-medium text-xs leading-tight whitespace-nowrap">
+        <p className="text-label-neutral font-medium text-xs leading-tight whitespace-nowrap">
           {profile.birthYear.toString().slice(-2)}년생 ·{" "}
           {animalDisplayMap[profile.animal]}상
         </p>
-        <p className="text-[#171719] font-semibold text-xl leading-tight whitespace-nowrap">
+        <p className="text-label-strong font-semibold text-xl leading-tight whitespace-nowrap">
           {profile.nickname}
         </p>
       </div>
 
-      <div className="flex items-center justify-center w-full h-[126px]">
+      <div className={cn("flex items-center justify-center w-full", isSmall ? "h-[80px]" : "h-[126px]")}>
         <AnimalImage
           animalType={profile.animal}
-          className="object-contain max-h-[126px]"
+          className={cn("object-contain", isSmall ? "max-h-[80px]" : "max-h-[126px]")}
         />
       </div>
     </div>
@@ -199,16 +196,16 @@ const ProfileCardBody: React.FC<{ profile: ProfileResponse }> = ({
   profile,
 }) => {
   return (
-    <div className="bg-white rounded-3xl w-full px-3 py-2 lex flex-col justify-center">
+    <div className="bg-white rounded-3xl w-full px-3 py-2 flex flex-col justify-center">
       {profile.introSentences.map((sentence, index) => (
         <div
           key={index}
           className="flex flex-col gap-1.5 px-2 py-1.5 w-full"
         >
-          <p className="text-[#5A5C64] text-[10px] font-semibold leading-[1.35]">
+          <p className="text-label-neutral text-[10px] font-semibold leading-[1.35]">
             특징 {index + 1}
           </p>
-          <p className="text-[#171719] text-base font-medium leading-[1.35]">
+          <p className="text-label-strong text-base font-medium leading-[1.35]">
             {sentence}
           </p>
         </div>
@@ -239,8 +236,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         <>
           <ProfileCardFront
             profile={profile}
-            contact={contact}
-            side={side}
             size={size}
             gender={gender}
           />
@@ -250,9 +245,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         <ProfileCardBack
           profile={profile}
           contact={contact}
-          side={side}
           size={size}
-          gender={gender}
         />
       )}
     </div>

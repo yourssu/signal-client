@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
+import { FormField } from "@/components/ui/form-field";
 import { cn, whenPressEnter } from "@/lib/utils";
 import React, { useState, useMemo } from "react"; // Import useMemo
 import { Checkbox } from "@/components/ui/checkbox";
@@ -62,20 +62,19 @@ const DepartmentStep: React.FC<DepartmentStepProps> = ({
           </h2>
         </div>
         <div className="flex flex-col gap-0.5 self-stretch animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500">
-          <Input
+          <FormField
             type="text"
             id="department"
             name="department"
+            label="학과/부"
             value={departmentInput}
             onChange={handleChange}
             onKeyDown={submitOnEnter}
-            maxLength={20} // Enforce max length
+            maxLength={20}
             required
-            // Styling based on Figma: text-2xl, text-center, placeholder color, bottom border
-            className="w-full h-12 text-2xl px-2.5" // Adjusted styles
-            placeholder="학과/부 입력" // Placeholder from Figma
+            placeholder="재학중인 학과/부를 입력해주세요"
+            helperText={`${departmentInput.length} / 20`}
           />
-          <p className="text-xs text-end">{departmentInput.length} / 20</p>
           <div className="flex gap-2 items-center">
             <Checkbox
               id="another_school"
@@ -94,18 +93,16 @@ const DepartmentStep: React.FC<DepartmentStepProps> = ({
             !isAnotherSchool && "hidden",
           )}
         >
-          <Input
+          <FormField
             type="text"
             id="school"
             name="school"
             value={schoolInput}
             onChange={(e) => setSchoolInput(e.target.value)}
             disabled={!isAnotherSchool}
-            // Styling based on Figma: text-2xl, text-center, placeholder color, bottom border
-            className="w-full h-12 text-2xl px-2.5" // Adjusted styles
-            placeholder="학교 입력" // Placeholder from Figma
+            placeholder="학교 입력"
+            helperText={`${schoolInput.length} / 20`}
           />
-          <p className="text-xs text-end">{schoolInput.length} / 20</p>
         </div>
       </div>
       <Button

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
+import { FormField } from "@/components/ui/form-field";
 import { cn, whenPressEnter } from "@/lib/utils";
 import { Mbti } from "@/types/profile"; // Assuming isValidMbti exists or needs creation
 import React, { useState, useMemo } from "react"; // Import useMemo
@@ -65,18 +65,18 @@ const MbtiStep: React.FC<MbtiStepProps> = ({ mbti, onSubmit }) => {
             <span className="text-primary">MBTI를 적어주세요</span>
           </h2>
         </div>
-        <Input
+        <FormField
           type="text"
           id="mbti"
+          label="MBTI"
           name="mbti"
           value={mbtiInput}
           onChange={handleChange}
           onKeyDown={submitOnEnter}
-          maxLength={4} // Enforce max length
+          maxLength={4}
           required
-          // Styling based on Figma: text-2xl, text-center, placeholder color, bottom border
-          className="w-full h-12 text-2xl px-2.5 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500" // Adjusted styles
-          placeholder="MBTI 입력 ex.ENFP" // Placeholder from Figma
+          className="animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500"
+          placeholder="MBTI를 입력해주세요"
         />
       </div>
       <Button

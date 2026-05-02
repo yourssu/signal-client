@@ -1,5 +1,5 @@
-import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
-import { cn, whenPressEnter } from "@/lib/utils";
+import { FormField } from "@/components/ui/form-field";
+import { whenPressEnter } from "@/lib/utils";
 import React, { useState, useMemo } from "react"; // Import useMemo
 import TermsDrawer from "@/components/TermsDrawer";
 import { PRIVACY, TERMS } from "@/env";
@@ -31,8 +31,9 @@ const ContactStep: React.FC<ContactStepProps> = ({
   const isEmpty = useMemo(() => contact.trim() === "", [contact]);
 
   const handleSubmit = () => {
-    handleValidation(contact);
-    if (isEmpty || !isValid) return;
+    const valid = isValidContact(contact);
+    setIsValid(valid);
+    if (isEmpty || !valid) return;
     onSubmit(contact.trim());
   };
 
@@ -76,7 +77,7 @@ const ContactStep: React.FC<ContactStepProps> = ({
           </h2>
         </div>
         <div className="animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500">
-          <Input
+          <FormField
             type="text"
             id="contact"
             name="contact"
@@ -85,20 +86,11 @@ const ContactStep: React.FC<ContactStepProps> = ({
             onKeyDown={submitOnEnter}
             onBlur={(e) => handleValidation(e.target.value)}
             required
-            className="w-full h-12 text-2xl px-2.5"
             placeholder="ex. @yourssu_official"
+            state={isValid === false && !isEmpty ? "error" : undefined}
+            helperText="전화번호는 숫자만, 인스타그램 아이디는 @를 붙여 입력해주세요."
+            errorText="전화번호는 숫자만, 인스타그램 아이디는 @를 붙여 입력해주세요."
           />
-          <p
-            className={cn(
-              "text-xs text-muted-foreground",
-              isValid === false &&
-                !isEmpty &&
-                "text-red-500 font-bold animate-shake",
-            )}
-          >
-            전화번호는 숫자만, 인스타그램 아이디는 <strong>@</strong>를 붙여
-            입력해주세요.
-          </p>
         </div>
       </div>
 

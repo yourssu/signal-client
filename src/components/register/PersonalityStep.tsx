@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
-// import { PERSONALITIES } from "@/env";
+import { FormField } from "@/components/ui/form-field";
 import { whenPressEnter } from "@/lib/utils";
-import React, { useState, useMemo } from "react"; // Import useMemo
+import React, { useState, useMemo } from "react";
 
 // const shuffle = <T,>(array: T[]) =>
 //   array
@@ -30,6 +29,12 @@ const getPersonalityExamples = (): string[] => {
     "이런 사람 만나고 싶어요 (ex. 키 큰 사람)",
   ];
 };
+
+const LABEL_LIST: string[] = [
+  "첫번째",
+  "두번째",
+  "세번째",
+];
 
 interface PersonalityStepProps {
   traits?: string[];
@@ -95,23 +100,23 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
         <div className="flex flex-col gap-4 w-full">
           {traits.map((trait, index) => (
             <div
-              className="animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500 flex flex-col gap-0.5"
+              className="animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500"
               key={index}
             >
-              <Input
+              <FormField
                 type="text"
                 id={`personality-${index}`}
                 name={`personality-${index}`}
+                label={LABEL_LIST[index]}
                 value={trait}
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => proceedWithEnter(index, e)}
                 maxLength={20}
-                required={true}
-                // Styling based on Figma INPUT instances (style_TGM91S, fill_HGA9Q2, stroke_BLRCWW)
-                className="w-full h-12 text-lg font-medium px-2.5" // Adjusted styles, placeholder style
-                placeholder={personalityExamples[index]} // Placeholder from Figma
+                required
+                state={trait.trim() !== "" ? "filled" : "default"}
+                placeholder={personalityExamples[index]}
+                helperText={`${trait.length}/20`}
               />
-              <p className="text-xs text-end">{trait.length}/20</p>
             </div>
           ))}
         </div>

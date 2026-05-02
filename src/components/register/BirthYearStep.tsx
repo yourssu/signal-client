@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"; // Import shadcn/ui Input
+import { FormField } from "@/components/ui/form-field";
 import { cn, whenPressEnter } from "@/lib/utils";
 import React, { useState, useMemo } from "react"; // Import useMemo
 
@@ -18,7 +18,7 @@ const BirthYearStep: React.FC<BirthYearStepProps> = ({
 
   // Validate MBTI input
   const isValid = useMemo(
-    () => birthYearInput && birthYearInput < 2007,
+    () => birthYearInput !== null && birthYearInput > 0 && birthYearInput < 2007,
     [birthYearInput],
   );
 
@@ -31,7 +31,9 @@ const BirthYearStep: React.FC<BirthYearStepProps> = ({
     whenPressEnter(e, handleSubmit);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
+    const digitsOnly = e.target.value.replace(/\D/g, "");
+    if (digitsOnly.length > 4) return;
+    const value = digitsOnly === "" ? null : parseInt(digitsOnly);
     setBirthYearInput(value);
   };
 
@@ -52,19 +54,19 @@ const BirthYearStep: React.FC<BirthYearStepProps> = ({
             <span className="text-primary">출생년도를 입력해주세요</span>
           </h2>
         </div>
-        <Input
-          type="number"
-          id="mbti"
-          name="mbti"
-          value={birthYearInput ?? undefined}
+        <FormField
+          type="text"
+          inputMode="numeric"
+          id="birthYear"
+          name="birthYear"
+          label="나이"
+          value={birthYearInput ?? ""}
           onChange={handleChange}
           onKeyDown={submitOnEnter}
-          maxLength={4} // Enforce max length
-          max={2006}
+          maxLength={4}
           required
-          // Styling based on Figma: text-2xl, text-center, placeholder color, bottom border
-          className="w-full h-12 text-2xl px-2.5 animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500" // Adjusted styles
-          placeholder="출생년도 ex. 2003" // Placeholder from Figma
+          className="animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500"
+          placeholder="태어난 연도를 입력해주세요 (ex:2002)"
         />
       </div>
       <Button

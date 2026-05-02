@@ -39,7 +39,7 @@ const GenderStep: React.FC<GenderStepProps> = ({ onSelect }) => {
         <Button
           onClick={() => onSelect("FEMALE")}
           // Remove size="card", update classes for Figma style
-          className=" w-full h-14 text-xl font-medium hover:bg-pale-pink"
+          className="w-full h-14 text-xl font-medium hover:bg-pale-pink"
         >
           여성
         </Button>
