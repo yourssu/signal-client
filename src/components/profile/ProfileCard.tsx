@@ -1,130 +1,260 @@
 import AnimalImage from "@/components/profile/AnimalImage";
-import { Badge } from "@/components/ui/badge";
 import { animalDisplayMap } from "@/lib/animal";
 import { cn } from "@/lib/utils";
-import { ProfileResponse } from "@/types/profile";
-import { Heart } from "lucide-react";
+import { Gender, ProfileResponse } from "@/types/profile";
 import React from "react";
+
+type CardSide = "front" | "back";
+type CardSize = "L" | "S";
 
 interface ProfileCardProps {
   profile: ProfileResponse;
   contact?: string;
   className?: string;
-  size?: "full" | "small";
+  side?: CardSide;
+  size?: CardSize;
 }
+
+const genderConfig: Record<
+  Gender,
+  {
+    cardBg: string;
+    tagBg: string;
+    tagText: string;
+    heartFill: string;
+  }
+> = {
+  MALE: {
+    cardBg: "bg-[#E8F3FF]",
+    tagBg: "bg-[#D8EAFF]",
+    tagText: "text-[#51A2FF]",
+    heartFill: "fill-[#51A2FF]",
+  },
+  FEMALE: {
+    cardBg: "bg-[#FFF2FC]",
+    tagBg: "bg-[#FFE7FA]",
+    tagText: "text-[#FF71B6]",
+    heartFill: "fill-[#FF71B6]",
+  },
+};
+
+const ProfileCardFront: React.FC<
+  ProfileCardProps & { gender: Gender; size: CardSize }
+> = ({ profile, gender, size }) => {
+  const config = genderConfig[gender];
+  const shortenedYear = profile.birthYear.toString().slice(-2);
+  const isSmall = size === "S";
+
+  return (
+    <div
+      className={cn(
+        "flex flex-col items-center gap-3",
+        isSmall ? "px-2 py-3" : "px-3 pt-5 pb-4",
+      )}
+    >
+      <div
+        className="flex flex-col items-center gap-1 w-full px-1"
+      >
+        <p
+          className={cn(
+            "text-[#5A5C64] font-medium leading-tight whitespace-nowrap",
+            isSmall ? "text-[10px]" : "text-xs",
+          )}
+        >
+          {shortenedYear}년생 · {animalDisplayMap[profile.animal]}상
+        </p>
+        <p
+          className={cn(
+            "text-[#171719] font-semibold leading-tight whitespace-nowrap",
+            isSmall ? "text-base" : "text-xl",
+          )}
+        >
+          {profile.nickname}
+        </p>
+      </div>
+
+      <div
+        className={cn(
+          "flex items-center justify-center w-full",
+          isSmall ? "h-[80px]" : "h-[126px]",
+        )}
+      >
+        <AnimalImage
+          animalType={profile.animal}
+          className={cn(
+            "object-contain",
+            isSmall ? "max-h-[80px]" : "max-h-[126px]",
+          )}
+        />
+      </div>
+
+      <div className="flex gap-1 items-center justify-center w-full">
+        <span
+          className={cn(
+            config.tagBg,
+            config.tagText,
+            "rounded-lg font-medium whitespace-nowrap",
+            isSmall ? "px-2 py-1 text-[10px]" : "px-2.5 py-1.5 text-xs",
+          )}
+        >
+          #{profile.mbti}
+        </span>
+        {profile.department && (
+          <span
+            className={cn(
+              config.tagBg,
+              config.tagText,
+              "rounded-lg font-medium whitespace-nowrap",
+              isSmall ? "px-2 py-1 text-[10px]" : "px-2.5 py-1.5 text-xs",
+            )}
+          >
+            #{profile.department}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const ProfileCardBack: React.FC<
+  ProfileCardProps & { gender: Gender; size: CardSize }
+> = ({ profile, contact, size }) => {
+  const isSmall = size === "S";
+
+  if (contact) {
+    return (
+      <div className="flex flex-col items-center gap-3 px-3 pt-6 pb-4">
+        <div className="flex flex-col items-center gap-1 w-full px-1">
+          <p className="text-[#5A5C64] font-medium text-xs leading-tight whitespace-nowrap">
+            {profile.birthYear.toString().slice(-2)}년생 ·{" "}
+            {animalDisplayMap[profile.animal]}상
+          </p>
+          <p className="text-[#171719] font-semibold text-xl leading-tight whitespace-nowrap">
+            {profile.nickname}
+          </p>
+        </div>
+
+        <div className="flex items-center justify-center w-full h-[126px]">
+          <AnimalImage
+            animalType={profile.animal}
+            className="object-contain max-h-[126px]"
+          />
+        </div>
+
+        <a
+          href={
+            contact.startsWith("@")
+              ? `https://instagram.com/${contact.substring(1)}`
+              : `tel:${contact}`
+          }
+          target="_blank"
+          className="w-full flex justify-center items-center gap-1 p-4 bg-fill-pink-light border border-primary/20 rounded-2xl"
+        >
+          <span
+            className={cn(
+              "font-medium leading-5 text-primary text-center underline",
+              isSmall ? "text-base" : "text-lg",
+            )}
+          >
+            {contact}
+          </span>
+        </a>
+        <p
+          className={cn(
+            "text-sm text-primary font-medium",
+            isSmall && "hidden",
+          )}
+        >
+          {contact.startsWith("@")
+            ? "아이디를 누르면 인스타로 연결됩니다."
+            : "번호를 누르면 연락처를 추가할 수 있습니다."}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-3 px-3 pt-6 pb-4">
+      <div className="flex flex-col items-center gap-1 w-full px-1">
+        <p className="text-[#5A5C64] font-medium text-xs leading-tight whitespace-nowrap">
+          {profile.birthYear.toString().slice(-2)}년생 ·{" "}
+          {animalDisplayMap[profile.animal]}상
+        </p>
+        <p className="text-[#171719] font-semibold text-xl leading-tight whitespace-nowrap">
+          {profile.nickname}
+        </p>
+      </div>
+
+      <div className="flex items-center justify-center w-full h-[126px]">
+        <AnimalImage
+          animalType={profile.animal}
+          className="object-contain max-h-[126px]"
+        />
+      </div>
+    </div>
+  );
+};
+
+const ProfileCardBody: React.FC<{ profile: ProfileResponse }> = ({
+  profile,
+}) => {
+  return (
+    <div className="bg-white rounded-3xl w-full px-3 py-2 lex flex-col justify-center">
+      {profile.introSentences.map((sentence, index) => (
+        <div
+          key={index}
+          className="flex flex-col gap-1.5 px-2 py-1.5 w-full"
+        >
+          <p className="text-[#5A5C64] text-[10px] font-semibold leading-[1.35]">
+            특징 {index + 1}
+          </p>
+          <p className="text-[#171719] text-base font-medium leading-[1.35]">
+            {sentence}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
   profile,
   contact,
   className,
-  size,
+  side = "front",
+  size = "L",
 }) => {
-  const shortenedYear = profile.birthYear.toString().slice(-2);
+  const gender: Gender = profile.gender;
+  const config = genderConfig[gender];
+
   return (
     <div
       className={cn(
-        "profile-card-background rounded-4xl shadow-md overflow-hidden flex flex-col justify-center items-center gap-2 p-5 select-none",
+        config.cardBg,
+        "rounded-[36px] overflow-hidden flex flex-col p-3 items-center w-full select-none",
         className,
       )}
     >
-      <div className="flex flex-col items-center gap-2">
-        <Badge
-          variant="outline"
-          className={cn(
-            "profile-badge rounded-full px-3 py-1 flex justify-center items-center gap-1",
-            profile.gender === "MALE"
-              ? "border-blue/50 text-blue"
-              : "border-primary/50 text-primary",
-          )}
-        >
-          {shortenedYear}년생
-          <Heart
-            className={cn(
-              "size-2",
-              profile.gender === "MALE" ? "fill-blue" : "fill-primary",
-            )}
+      {side === "front" ? (
+        <>
+          <ProfileCardFront
+            profile={profile}
+            contact={contact}
+            side={side}
+            size={size}
+            gender={gender}
           />
-          {profile.school ? <>{profile.school} · </> : null}
-          {profile.department}
-        </Badge>
-        <div className="flex flex-col items-center w-full">
-          <AnimalImage
-            animalType={profile.animal}
-            className={cn(
-              "w-full object-contain",
-              size === "small" ? "max-h-[80px]" : "max-h-[140px]",
-            )}
-          />
-        </div>
-        <div className="flex flex-col items-stretch w-full">
-          <div className="flex flex-col items-stretch gap-3 w-full">
-            <div className="flex flex-col gap-1">
-              <h3
-                className={cn(
-                  "text-foreground font-semibold leading-5 text-center w-full text-xl",
-                  size === "small" && "text-base",
-                )}
-              >
-                {profile.nickname}
-              </h3>
-              <p
-                className={cn(
-                  "text-muted-foreground text-center text-sm font-medium",
-                  size === "small" && "text-xs",
-                )}
-              >
-                {animalDisplayMap[profile.animal]}·{profile.mbti}
-              </p>
-            </div>
-            {contact ? (
-              <>
-                <a
-                  href={
-                    contact.startsWith("@")
-                      ? `https://instagram.com/${contact.substring(1)}`
-                      : `tel:${contact}`
-                  }
-                  target="_blank"
-                  className="w-full flex flex-row justify-center items-center gap-1 p-4 bg-fill-pink-light border border-primary/20 rounded-2xl"
-                >
-                  <span
-                    className={cn(
-                      "font-medium leading-5 text-primary text-center underline text-lg",
-                      size === "small" && "text-base",
-                    )}
-                  >
-                    {contact}
-                  </span>
-                </a>
-                <p
-                  className={cn(
-                    "text-sm text-primary font-medium",
-                    size === "small" && "hidden",
-                  )}
-                >
-                  {contact.startsWith("@")
-                    ? "아이디를 누르면 인스타로 연결됩니다."
-                    : "번호를 누르면 연락처를 추가할 수 있습니다."}
-                </p>
-              </>
-            ) : (
-              <div className="flex flex-col items-stretch gap-1 w-full">
-                {profile.introSentences.map((sentence, index) => (
-                  <p
-                    key={index}
-                    className={cn(
-                      "text-foreground font-medium text-start w-full",
-                      size === "small" && "text-xs",
-                    )}
-                  >
-                    {sentence}
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+          <ProfileCardBody profile={profile} />
+        </>
+      ) : (
+        <ProfileCardBack
+          profile={profile}
+          contact={contact}
+          side={side}
+          size={size}
+          gender={gender}
+        />
+      )}
     </div>
   );
 };

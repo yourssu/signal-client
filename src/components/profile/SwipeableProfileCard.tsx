@@ -191,7 +191,7 @@ export const SwipeableProfileCard: React.FC<{
       onMouseDown={handleMouseDown}
       className="w-full h-auto touch-none cursor-grab active:cursor-grabbing relative"
     >
-      <ProfileCard profile={profile} className="grow h-auto" />
+      <ProfileCard profile={profile} className="grow h-auto" side="front" size="L" />
       <div
         className={cn(
           "opacity-0 absolute inset-0 bg-black/75 rounded-4xl flex flex-col items-center justify-center transition-opacity",

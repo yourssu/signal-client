@@ -179,7 +179,7 @@ const ProfileCardEditorFront: React.FC<ProfileCardEditorFrontProps> = ({
   return (
     <div
       className={cn(
-        "relative profile-card-background rounded-4xl shadow-md overflow-hidden flex flex-col justify-center items-center gap-2 p-5 select-none",
+        "relative profile-card-background rounded-4xl overflow-hidden flex flex-col justify-center items-center gap-2 p-5 select-none",
         className,
       )}
     >
@@ -282,7 +282,7 @@ const ProfileCardEditorBack: React.FC<ProfileCardEditorBackProps> = ({
   return (
     <div
       className={cn(
-        "relative profile-card-background rounded-4xl shadow-md overflow-hidden flex flex-col justify-center items-center gap-2 p-5 select-none",
+        "relative profile-card-background rounded-4xl overflow-hidden flex flex-col justify-center items-center gap-2 p-5 select-none",
         className,
       )}
     >
