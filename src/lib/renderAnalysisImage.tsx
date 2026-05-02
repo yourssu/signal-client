@@ -1,6 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 // Disable type checking for this file due to satori's complex types
+//
+// NOTE: satori does not support Tailwind/CSS variables, so hex colors are hardcoded below.
+// If design tokens change, these values must be updated manually:
+//   #FFE7FA → --color-fill-pink (pink-300)
+//   #767A83 → --color-neutral-300
+//   #ef558d → primary accent (pink-600 range)
+//   #fdf6f7 → background
 import satori from "satori/wasm";
 import { Resvg } from "@resvg/resvg-wasm";
 import heartIcon from "@/assets/icons/heart_icon.svg";
@@ -32,7 +39,7 @@ export const renderAnalysisSvg = async (
           <div>프로필을 열람했어요</div>
         </div>
         <div tw="bg-white rounded-[18px] p-4 w-full flex items-start">
-          <div tw="flex items-center justify-center p-2 bg-pink-300 rounded-xl w-10 h-10 mr-2">
+          <div tw="flex items-center justify-center p-2 bg-[#FFE7FA] rounded-xl w-10 h-10 mr-2">
             <img src={heartIcon} alt="하트" tw="w-[18px] h-[15.5px]" />
           </div>
           <div tw="flex flex-col gap-1">
@@ -51,7 +58,7 @@ export const renderAnalysisSvg = async (
               <img src={image} tw="w-[309px] h-[309px]" />
             </div>
             <div tw="flex flex-col items-center justify-center leading-[0] not-italic relative shrink-0">
-              <div tw="flex text-label-assistive text-base font-medium shrink-0 leading-[1.3] text-nowrap tracking-tight mb-2">
+              <div tw="flex text-[#767A83] text-base font-medium shrink-0 leading-[1.3] text-nowrap tracking-tight mb-2">
                 "{quote}"
               </div>
               <div tw="flex font-semibold text-xl text-neutral-700 leading-[1.3] text-nowrap tracking-tight">

@@ -85,7 +85,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                       : `tel:${contact}`
                   }
                   target="_blank"
-                  className="w-full flex flex-row justify-center items-center gap-1 p-4 bg-pink-200 border border-primary/20 rounded-2xl"
+                  className="w-full flex flex-row justify-center items-center gap-1 p-4 bg-fill-pink-light border border-primary/20 rounded-2xl"
                 >
                   <span
                     className={cn(

@@ -70,7 +70,7 @@ const AnalysisMyProfilePage: React.FC = () => {
             프로필을 열람했어요
           </h1>
           <div className="bg-white rounded-[18px] p-4 w-full flex gap-3 items-start">
-            <div className="flex items-center justify-center p-2 bg-pink-300 rounded-xl self-stretch aspect-square">
+            <div className="flex items-center justify-center p-2 bg-fill-pink rounded-xl self-stretch aspect-square">
               <img src={heartIcon} alt="하트" className="size-5" />
             </div>
             <div className="flex flex-col gap-1">

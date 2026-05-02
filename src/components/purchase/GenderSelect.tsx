@@ -38,7 +38,7 @@ const GenderStep: React.FC<GenderStepProps> = ({ onSelect }) => {
           className="flex flex-col items-center gap-6 cursor-pointer group"
           onClick={() => onSelect("FEMALE")}
         >
-          <div className="relative w-[129px] h-[129px] rounded-full border-2 border-pink-600 bg-white flex items-center justify-center overflow-hidden group-hover:opacity-80 transition-opacity">
+          <div className="relative w-[129px] h-[129px] rounded-full border-2 border-primary bg-white flex items-center justify-center overflow-hidden group-hover:opacity-80 transition-opacity">
             <img
               src={femaleCharacter}
               alt="여성 캐릭터"

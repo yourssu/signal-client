@@ -49,7 +49,7 @@ export function SaveDrawer({ children }: SaveDrawerProps) {
               to="/my/signals"
               className={cn(
                 buttonVariants(),
-                "h-auto rounded-2xl bg-pink-600 py-3 text-lg font-medium text-white hover:bg-pink-600/85",
+                "h-auto rounded-2xl bg-primary py-3 text-lg font-medium text-white hover:bg-primary/85",
               )} /* Style first button */
             >
               저장 목록 보기
@@ -58,7 +58,7 @@ export function SaveDrawer({ children }: SaveDrawerProps) {
             <DrawerClose asChild>
               <Button
                 variant="outline" // Use outline or style manually
-                className="h-auto rounded-2xl border-none bg-pink-200 py-3 text-lg font-medium text-pink-600 hover:bg-pink-200/80" /* Style second button */
+                className="h-auto rounded-2xl border-none bg-fill-pink-light py-3 text-lg font-medium text-primary hover:bg-fill-pink-light/80" /* Style second button */
               >
                 이어서 시그널 보내기
               </Button>

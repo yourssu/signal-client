@@ -53,7 +53,7 @@ const MyPage: React.FC = () => {
           </div>
           <Button
             size="sm"
-            className="bg-pink-200 text-primary hover:bg-pink-200/80 text-xs font-semibold px-4 py-2 h-9 rounded-xl"
+            className="bg-fill-pink-light text-primary hover:bg-fill-pink-light/80 text-xs font-semibold px-4 py-2 h-9 rounded-xl"
             asChild
           >
             <Link
@@ -82,7 +82,7 @@ const MyPage: React.FC = () => {
                 className="flex items-center justify-between w-full p-4 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
               >
                 <div className="flex items-center gap-2">
-                  <div className="bg-pink-200 rounded-lg w-6 h-6 flex items-center justify-center">
+                  <div className="bg-fill-pink-light rounded-lg w-6 h-6 flex items-center justify-center">
                     <img src={userIcon} alt="프로필" className="w-3.5 h-3.5" />
                   </div>
                   <span className="text-sm font-semibold text-neutral-700 tracking-tight">
@@ -98,7 +98,7 @@ const MyPage: React.FC = () => {
                 className="flex items-center justify-between w-full p-4 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
               >
                 <div className="flex items-center gap-2">
-                  <div className="bg-pink-200 rounded-lg w-6 h-6 flex items-center justify-center">
+                  <div className="bg-fill-pink-light rounded-lg w-6 h-6 flex items-center justify-center">
                     <img
                       src={archiveIcon}
                       alt="구매 목록"
