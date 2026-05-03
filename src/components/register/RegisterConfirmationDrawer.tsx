@@ -54,7 +54,7 @@ const RegisterConfirmationDrawer: React.FC<RegisterConfirmationDrawerProps> = ({
             <TurnableProfileCard
               profile={profile}
               contact={contact}
-              size="small"
+              size="S"
             />
           </div>
 
