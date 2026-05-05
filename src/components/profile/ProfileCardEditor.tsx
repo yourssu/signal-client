@@ -1,4 +1,5 @@
 import AnimalImage from "@/components/profile/AnimalImage";
+import ProfileTags from "@/components/profile/ProfileTags";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,7 +13,6 @@ import {
   Gender,
   ProfileContactResponse,
   ProfileUpdateRequest,
-  StyleType,
 } from "@/types/profile";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMotionValue, animate, motion } from "motion/react";
@@ -25,29 +25,9 @@ interface ProfileCardEditorProps {
   isFlipped?: boolean;
 }
 
-const genderConfig: Record<
-  Gender,
-  {
-    cardBg: string;
-    tagBg: string;
-    tagText: string;
-  }
-> = {
-  MALE: {
-    cardBg: "bg-fill-blue-light",
-    tagBg: "bg-fill-blue",
-    tagText: "text-secondary-strong",
-  },
-  FEMALE: {
-    cardBg: "bg-fill-pink-light",
-    tagBg: "bg-fill-pink",
-    tagText: "text-primary",
-  },
-};
-
-const styleLabelMap: Record<StyleType, string> = {
-  TETO: "테토",
-  EGEN: "에겐",
+const cardBgConfig: Record<Gender, string> = {
+  MALE: "bg-fill-blue-light",
+  FEMALE: "bg-fill-pink-light",
 };
 
 const ProfileCardEditor: React.FC<ProfileCardEditorProps> = ({
@@ -195,13 +175,13 @@ const ProfileCardEditorFront: React.FC<ProfileCardEditorFrontProps> = ({
   onFlip,
 }) => {
   const gender = profile.gender;
-  const config = genderConfig[gender];
+  const cardBg = cardBgConfig[gender];
   const displayYear = profile.birthYear.toString();
 
   return (
     <div
       className={cn(
-        config.cardBg,
+        cardBg,
         "relative rounded-[36px] overflow-hidden flex flex-col p-3 items-center w-full select-none",
         className,
       )}
@@ -228,40 +208,7 @@ const ProfileCardEditorFront: React.FC<ProfileCardEditorFrontProps> = ({
           />
         </div>
 
-        <div className="flex gap-1 items-center justify-center w-full">
-          <span
-            className={cn(
-              config.tagBg,
-              config.tagText,
-              "rounded-lg font-medium whitespace-nowrap px-2.5 py-1.5 text-xs",
-            )}
-          >
-            #{profile.mbti}
-          </span>
-          {profile.department && (
-            <span
-              className={cn(
-                config.tagBg,
-                config.tagText,
-                "rounded-lg font-medium whitespace-nowrap px-2.5 py-1.5 text-xs",
-              )}
-            >
-              #{profile.department}
-            </span>
-          )}
-          {profile.style && (
-            <span
-              className={cn(
-                profile.style === "TETO"
-                  ? "bg-fill-blue text-secondary-strong"
-                  : "bg-fill-pink text-primary",
-                "rounded-lg font-medium whitespace-nowrap px-2.5 py-1.5 text-xs",
-              )}
-            >
-              #{styleLabelMap[profile.style]}
-            </span>
-          )}
-        </div>
+        <ProfileTags profile={profile} gender={gender} />
       </div>
 
       <div className="bg-white rounded-3xl w-full px-3 py-2 flex flex-col justify-center">
@@ -316,13 +263,13 @@ const ProfileCardEditorBack: React.FC<ProfileCardEditorBackProps> = ({
   onFlip,
 }) => {
   const gender = profile.gender;
-  const config = genderConfig[gender];
+  const cardBg = cardBgConfig[gender];
   const displayYear = profile.birthYear.toString();
 
   return (
     <div
       className={cn(
-        config.cardBg,
+        cardBg,
         "relative rounded-[36px] overflow-hidden flex flex-col p-3 items-center w-full select-none",
         className,
       )}
@@ -348,13 +295,7 @@ const ProfileCardEditorBack: React.FC<ProfileCardEditorBackProps> = ({
         <Input
           value={profile.contact}
           onChange={(e) => onContactChange(e.target.value)}
-          className={cn(
-            "w-full text-center text-lg font-medium leading-5 rounded-2xl p-4 underline",
-            gender === "MALE"
-              ? "bg-fill-blue-light border border-secondary-strong/20 text-secondary-strong"
-              : "bg-fill-pink-light border border-primary/20 text-primary",
-          )}
-          style={{ fontSize: "1.125rem" }}
+          className="w-full text-base text-center"
           maxLength={15}
         />
         <p
