@@ -83,6 +83,7 @@ const MyProfilePage: React.FC = () => {
       contact: profileDraft!.contact,
     });
     buttonClick("complete_profile_edit", "프로필 수정 완료");
+    queryClient.setQueryData(["profiles", "me"], ret);
     setProfile(ret);
     setProfileDraft(ret);
     toast.success("프로필이 수정되었어요.");
@@ -128,9 +129,9 @@ const MyProfilePage: React.FC = () => {
           ) : (
             <>
               <Button
-                variant="secondary"
+                variant="default"
                 size="xl"
-                className="w-full text-primary"
+                className="w-full text-white"
                 onClick={handleUpdateStart}
               >
                 수정하기

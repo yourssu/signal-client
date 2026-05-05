@@ -12,6 +12,7 @@ import {
   ProfileCountResponse,
   ProfileCreatedRequest,
   ProfileResponse,
+  ProfileUpdateRequest,
   TicketConsumedRequest,
 } from "@/types/profile";
 import { UserInfoResponse } from "@/types/user";
@@ -22,6 +23,8 @@ import {
   ViewerResponse,
 } from "@/types/viewer";
 import { http, HttpResponse } from "msw";
+
+let storedProfile: ProfileContactResponse | null = null;
 
 const MOCK_UUID = "mock-uuid-1234-5678";
 const MOCK_TOKEN: TokenResponse = {
@@ -119,15 +122,20 @@ export const handlers = [
 
   /** Profiles (me) */
   http.get("/api/profiles/me", () => {
-    // 프로필 미등록 상태를 시뮬레이션 (등록 테스트를 위해 404 반환)
-    return HttpResponse.json(
-      {
-        timestamp: new Date().toISOString(),
-        status: 404,
-        message: "프로필이 존재하지 않습니다.",
-      } satisfies ErrorResponse,
-      { status: 404 },
-    );
+    if (!storedProfile) {
+      return HttpResponse.json(
+        {
+          timestamp: new Date().toISOString(),
+          status: 404,
+          message: "프로필이 존재하지 않습니다.",
+        } satisfies ErrorResponse,
+        { status: 404 },
+      );
+    }
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: storedProfile,
+    } satisfies SuccessResponse<ProfileContactResponse>);
   }),
   http.get("/api/profiles/me/purchased", () => {
     return HttpResponse.json({
@@ -211,21 +219,42 @@ export const handlers = [
   http.post("/api/profiles", async ({ request }) => {
     const body = (await request.json()) as ProfileCreatedRequest;
 
+    storedProfile = {
+      profileId: 1234,
+      gender: body.gender,
+      department: "테스트학과",
+      birthYear: 2002,
+      animal: body.animal,
+      mbti: body.mbti,
+      nickname: body.nickname,
+      contact: body.contact,
+      introSentences: body.introSentences,
+      school: "숭실대",
+      style: body.style,
+    };
+
     return HttpResponse.json({
       timestamp: new Date().toISOString(),
-      result: {
-        profileId: 1234,
-        gender: body.gender,
-        department: "테스트학과",
-        birthYear: 2002,
-        animal: body.animal,
-        mbti: body.mbti,
-        nickname: body.nickname,
-        contact: body.contact,
-        introSentences: body.introSentences,
-        school: "숭실대",
-        style: body.style,
-      },
+      result: storedProfile,
+    } satisfies SuccessResponse<ProfileContactResponse>);
+  }),
+  http.patch("/api/profiles/me", async ({ request }) => {
+    if (!storedProfile) {
+      return HttpResponse.json(
+        {
+          timestamp: new Date().toISOString(),
+          status: 404,
+          message: "프로필이 존재하지 않습니다.",
+        } satisfies ErrorResponse,
+        { status: 404 },
+      );
+    }
+    const body = (await request.json()) as ProfileUpdateRequest;
+    storedProfile = { ...storedProfile, ...body } as ProfileContactResponse;
+
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: storedProfile,
     } satisfies SuccessResponse<ProfileContactResponse>);
   }),
   http.post("/api/profiles/nickname", async ({ request }) => {
