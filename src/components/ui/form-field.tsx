@@ -37,7 +37,8 @@ const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
 
     const textFieldClasses = cn(
       "bg-fill-normal flex items-center h-[65px] w-full px-4 rounded-xl gap-2",
-      isActive && "border border-line-strong",
+      !isError && "focus-within:border focus-within:border-line-strong",
+      isActive && !isError && "border border-line-strong",
       isError && "border border-negative",
     );
 

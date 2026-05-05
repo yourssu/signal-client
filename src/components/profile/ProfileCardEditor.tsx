@@ -206,6 +206,7 @@ const ProfileCardEditorFront: React.FC<ProfileCardEditorFrontProps> = ({
         <div className="flex flex-col items-center w-full">
           <AnimalImage
             animalType={profile.animal}
+            gender={profile.gender}
             className={cn("w-full object-contain max-h-[140px]")}
           />
         </div>

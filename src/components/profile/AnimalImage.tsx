@@ -1,7 +1,6 @@
 import React from "react";
-import { AnimalType } from "@/types/profile";
+import { AnimalType, Gender } from "@/types/profile";
 
-// Import downloaded animal images
 import dogImg from "@/assets/animals/dog.png";
 import bearImg from "@/assets/animals/bear.png";
 import dinosaurImg from "@/assets/animals/dinosaur.png";
@@ -12,7 +11,16 @@ import foxImg from "@/assets/animals/fox.png";
 import rabbitImg from "@/assets/animals/rabbit.png";
 import turtleImg from "@/assets/animals/turtle.png";
 
-// Mapping from AnimalType to image source
+import bearMaleImg from "@/assets/animals/male/bear.png";
+import deerMaleImg from "@/assets/animals/male/Deer.png";
+import dinosaurMaleImg from "@/assets/animals/male/Dinosaur.png";
+import foxFemaleImg from "@/assets/animals/female/fox.png";
+import rabbitFemaleImg from "@/assets/animals/female/rabbit.png";
+import turtleFemaleImg from "@/assets/animals/female/turtle.png";
+import dogCommonImg from "@/assets/animals/common/dog.png";
+import catCommonImg from "@/assets/animals/common/cat.png";
+import hamsterCommonImg from "@/assets/animals/common/hamster.png";
+
 const animalImageMap: Record<AnimalType, string> = {
   DOG: dogImg,
   BEAR: bearImg,
@@ -25,25 +33,56 @@ const animalImageMap: Record<AnimalType, string> = {
   RABBIT: rabbitImg,
 };
 
+const genderedAnimalImageMap: Record<Gender, Record<AnimalType, string>> = {
+  MALE: {
+    DOG: dogCommonImg,
+    CAT: catCommonImg,
+    HAMSTER: hamsterCommonImg,
+    BEAR: bearMaleImg,
+    DEER: deerMaleImg,
+    DINOSAUR: dinosaurMaleImg,
+    FOX: foxImg,
+    TURTLE: turtleImg,
+    RABBIT: rabbitImg,
+  },
+  FEMALE: {
+    DOG: dogCommonImg,
+    CAT: catCommonImg,
+    HAMSTER: hamsterCommonImg,
+    FOX: foxFemaleImg,
+    TURTLE: turtleFemaleImg,
+    RABBIT: rabbitFemaleImg,
+    BEAR: bearImg,
+    DEER: deerImg,
+    DINOSAUR: dinosaurImg,
+  },
+};
+
 interface AnimalImageProps {
   animalType: AnimalType;
-  className?: string; // Allow passing custom classes for styling
+  gender?: Gender;
+  className?: string;
 }
 
-const AnimalImage: React.FC<AnimalImageProps> = ({ animalType, className }) => {
-  const imgSrc = animalImageMap[animalType];
+const AnimalImage: React.FC<AnimalImageProps> = ({
+  animalType,
+  gender,
+  className,
+}) => {
+  const imgSrc = gender
+    ? genderedAnimalImageMap[gender][animalType]
+    : animalImageMap[animalType];
 
-  // Optional: Handle cases where the animalType might not have a corresponding image
   if (!imgSrc) {
     console.warn(`Image not found for animal type: ${animalType}`);
-    return null; // Or return a default placeholder image/component
+    return null;
   }
 
   return (
     <img
       src={imgSrc}
-      alt={`${animalType.toLowerCase()} animal`} // Generate alt text based on type
-      className={className} // Apply any passed class names
+      alt={`${animalType.toLowerCase()} animal`}
+      className={className}
     />
   );
 };

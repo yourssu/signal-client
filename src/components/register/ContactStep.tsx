@@ -64,7 +64,7 @@ const ContactStep: React.FC<ContactStepProps> = ({
         <div className="flex flex-col gap-2.5">
           {/* Progress Indicator - Based on 1412:7355 */}
           <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
-            8 / 8
+            6 / 6
           </p>
           {/* Using muted-foreground for #525252 */}
           {/* Title - Based on 1412:7357 */}

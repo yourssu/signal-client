@@ -55,7 +55,7 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
       <div className="flex flex-col items-stretch gap-[43px] w-full grow">
         <div className="flex flex-col gap-2.5">
           <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
-            7 / 8
+            5 / 6
           </p>
           <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
             나를 잘 뽐낼 수 있는
@@ -78,16 +78,16 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
             />
             <p className="text-xs text-end">{nickname.length} / 15</p>
           </div>
-          <Button
-            variant="ghost" // Use ghost variant for background blur effect potentially
+          <button
+            type="button"
             onClick={handleGenerateNickname}
-            className="flex justify-center items-center gap-1 h-10 w-auto px-4 rounded-full bg-white/50 backdrop-blur-md shadow-sm hover:bg-white/70" // Adjusted styles based on Figma
+            className="flex justify-center items-center gap-0.5 h-auto px-3 py-1.5 rounded-lg bg-[#ffe7fa] backdrop-blur-[6.5px] cursor-pointer transition-colors hover:bg-[#ffd4f3]"
           >
-            <Sparkles className="text-primary fill-primary" />
-            <span className="text-base font-medium text-primary">
-              닉네임 생성기
+            <Sparkles className="size-5 text-pink-600" />
+            <span className="text-xs font-medium text-pink-600 whitespace-nowrap">
+              닉네임 AI 생성
             </span>
-          </Button>
+          </button>
         </div>
       </div>
       <Button

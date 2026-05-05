@@ -1,4 +1,5 @@
 export type Gender = "MALE" | "FEMALE";
+export type StyleType = "TETO" | "EGEN";
 export type AnimalType =
   | "DOG"
   | "BEAR"
@@ -18,10 +19,10 @@ export interface ProfileCreatedRequest {
   animal: AnimalType;
   contact: string;
   mbti: Mbti;
-  // maximum 15 characters
   nickname: string;
   introSentences: string[];
   school: string | null;
+  style: StyleType;
 }
 
 export interface NicknameGeneratedRequest {
@@ -62,6 +63,7 @@ export interface ProfileResponse {
   nickname: string;
   introSentences: string[];
   school: string | null;
+  style: StyleType;
 }
 
 export interface MyProfileResponse {
@@ -76,6 +78,7 @@ export interface MyProfileResponse {
   nickname: string;
   introSentences: string[];
   school: string;
+  style: StyleType;
 }
 
 export interface ProfileContactResponse extends ProfileResponse {
@@ -104,4 +107,5 @@ export interface ProfileRankingResponse {
   nickname: string;
   introSentences: string[];
   school: string;
+  style: StyleType;
 }

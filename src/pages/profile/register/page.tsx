@@ -2,13 +2,14 @@ import React, { useEffect } from "react";
 import { useFunnel } from "@use-funnel/react-router";
 import GenderStep from "@/components/register/GenderStep";
 import AnimalStep from "@/components/register/AnimalStep";
-import MbtiStep from "@/components/register/MbtiStep";
+import EssentialInfoStep from "@/components/register/EssentialInfoStep";
 import {
   AnimalType,
   Gender,
   Mbti,
   ProfileContactResponse,
   ProfileCreatedRequest,
+  StyleType,
 } from "@/types/profile";
 import { useCreateProfile, useSelfProfile } from "@/hooks/queries/profiles";
 import { useNavigate } from "react-router";
@@ -20,27 +21,35 @@ import ContactStep from "@/components/register/ContactStep";
 import RegisterDoneStep from "@/components/register/RegisterDoneStep";
 import TopBar from "@/components/Header";
 import { Progress } from "@/components/ui/progress";
-import DepartmentStep from "@/components/register/DepartmentStep";
-import BirthYearStep from "@/components/register/BirthYearStep";
 import { funnelComplete, funnelStart, funnelStep } from "@/lib/analytics";
 import { useUser } from "@/hooks/useUser";
+
+type RegisterFunnel = {
+  gender: Partial<ProfileContactResponse>;
+  essentialInfo: Partial<ProfileContactResponse>;
+  animal: Partial<ProfileContactResponse>;
+  personality: Partial<ProfileContactResponse>;
+  nickname: Partial<ProfileContactResponse>;
+  contact: Partial<ProfileContactResponse>;
+  done: ProfileContactResponse;
+};
+
+const REGISTER_STEPS = [
+  "gender",
+  "essentialInfo",
+  "animal",
+  "personality",
+  "nickname",
+  "contact",
+] as const;
+const REGISTER_STEPS_COUNT = REGISTER_STEPS.length;
 
 const ProfileRegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const { uuid, gender, profile } = useUser();
   const setGender = useSetAtom(userGenderAtom);
   const setProfile = useSetAtom(userProfileAtom);
-  const funnel = useFunnel<{
-    gender: Partial<ProfileContactResponse>;
-    animal: Partial<ProfileContactResponse>;
-    mbti: Partial<ProfileContactResponse>;
-    department: Partial<ProfileContactResponse>;
-    birthYear: Partial<ProfileContactResponse>;
-    personality: Partial<ProfileContactResponse>;
-    nickname: Partial<ProfileContactResponse>;
-    contact: Partial<ProfileContactResponse>;
-    done: ProfileContactResponse;
-  }>({
+  const funnel = useFunnel<RegisterFunnel>({
     id: "profile.register",
     initial: profile
       ? {
@@ -75,43 +84,34 @@ const ProfileRegisterPage: React.FC = () => {
   const handleGenderSelect = (gender: Gender) => {
     setGender(gender);
     funnel.history.replace("gender", { ...funnel.context, gender });
-    funnel.history.push("animal", { ...funnel.context, gender });
+    funnel.history.push("essentialInfo", { ...funnel.context, gender });
     funnelStep("profile.register", "프로필 등록", "gender", funnel.context);
+  };
+
+  const handleEssentialInfoSubmit = (data: {
+    birthYear: number;
+    mbti: Mbti;
+    department: string;
+    school?: string;
+    style: StyleType;
+  }) => {
+    const context = {
+      ...funnel.context,
+      birthYear: data.birthYear,
+      mbti: data.mbti,
+      department: data.department,
+      school: data.school ? data.school : null,
+      style: data.style,
+    };
+    funnel.history.replace("essentialInfo", context);
+    funnel.history.push("animal", context);
+    funnelStep("profile.register", "프로필 등록", "essentialInfo", context);
   };
 
   const handleAnimalSelect = (animal: AnimalType) => {
     funnel.history.replace("animal", { ...funnel.context, animal });
-    funnel.history.push("mbti", { ...funnel.context, animal });
+    funnel.history.push("personality", { ...funnel.context, animal });
     funnelStep("profile.register", "프로필 등록", "animal", funnel.context);
-  };
-
-  const handleMbtiSubmit = async (mbti: Mbti) => {
-    funnel.history.replace("mbti", { ...funnel.context, mbti });
-    funnel.history.push("department", { ...funnel.context, mbti });
-    funnelStep("profile.register", "프로필 등록", "mbti", funnel.context);
-  };
-
-  const handleDepartmentSubmit = async (
-    department: string,
-    school?: string,
-  ) => {
-    funnel.history.replace("department", {
-      ...funnel.context,
-      department,
-      school: school ? school : null,
-    });
-    funnel.history.push("birthYear", {
-      ...funnel.context,
-      department,
-      school: school ? school : null,
-    });
-    funnelStep("profile.register", "프로필 등록", "department", funnel.context);
-  };
-
-  const handleBirthYearSubmit = async (birthYear: number) => {
-    funnel.history.replace("birthYear", { ...funnel.context, birthYear });
-    funnel.history.push("personality", { ...funnel.context, birthYear });
-    funnelStep("profile.register", "프로필 등록", "birthYear", funnel.context);
   };
 
   const handlePersonalitySubmit = async (personality: string[]) => {
@@ -150,6 +150,7 @@ const ProfileRegisterPage: React.FC = () => {
       introSentences,
       nickname,
       school,
+      style,
     } = funnel.context;
     if (
       gender &&
@@ -158,7 +159,8 @@ const ProfileRegisterPage: React.FC = () => {
       department &&
       birthYear &&
       introSentences &&
-      nickname
+      nickname &&
+      style
     ) {
       const finalData: ProfileCreatedRequest = {
         uuid: uuid ?? undefined,
@@ -171,6 +173,7 @@ const ProfileRegisterPage: React.FC = () => {
         nickname,
         contact,
         school: school ?? null,
+        style,
       };
       const res = await createProfile(finalData);
       funnel.history.replace("contact", res);
@@ -210,34 +213,26 @@ const ProfileRegisterPage: React.FC = () => {
       <TopBar onBack={handleBack} />
       <div className="w-full max-w-md grow p-6 flex flex-col gap-10">
         {funnel.step !== "done" && (
-          <Progress value={((funnel.index + 1) / 8) * 100} />
+          <Progress value={((funnel.index + 1) / REGISTER_STEPS_COUNT) * 100} />
         )}
         <div className="grow flex items-stretch justify-stretch">
           <funnel.Render
             gender={() => <GenderStep onSelect={handleGenderSelect} />}
+            essentialInfo={() => (
+              <EssentialInfoStep
+                birthYear={funnel.context.birthYear}
+                mbti={funnel.context.mbti}
+                department={funnel.context.department}
+                school={funnel.context.school ?? undefined}
+                style={funnel.context.style}
+                onSubmit={handleEssentialInfoSubmit}
+              />
+            )}
             animal={() => (
               <AnimalStep
                 gender={funnel.context.gender ?? "MALE"}
                 animal={funnel.context.animal}
                 onSelect={handleAnimalSelect}
-              />
-            )}
-            mbti={() => (
-              <MbtiStep
-                mbti={funnel.context.mbti}
-                onSubmit={handleMbtiSubmit}
-              />
-            )}
-            department={() => (
-              <DepartmentStep
-                department={funnel.context.department}
-                onSubmit={handleDepartmentSubmit}
-              />
-            )}
-            birthYear={() => (
-              <BirthYearStep
-                birthYear={funnel.context.birthYear}
-                onSubmit={handleBirthYearSubmit}
               />
             )}
             personality={() => (
