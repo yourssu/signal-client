@@ -8,18 +8,19 @@ import { LoginDrawer } from "@/components/LoginDrawer";
 
 interface RegisterDoneStepProps {
   profile: ProfileContactResponse;
+  profileNumber?: number;
   onSubmit: () => void;
 }
 
 const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
   profile,
+  profileNumber = 183,
   onSubmit,
 }) => {
   const provider = useAtomValue(providerAtom);
   const [loginDrawerOpen, setLoginDrawerOpen] = useState(false);
 
   useEffect(() => {
-    // provider가 local이거나 null일 경우 300ms 후에 LoginDrawer 열기
     if (provider === "local" || provider === null) {
       const timer = setTimeout(() => {
         setLoginDrawerOpen(true);
@@ -30,20 +31,32 @@ const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
   }, [provider]);
 
   return (
-    <div className="w-full max-w-md mx-auto flex flex-col pt-2 gap-2 items-center grow">
-      <h2 className="text-3xl font-bold text-center text-pink">
-        프로필 등록 완료!
-      </h2>
-      <p className="text-base font-medium text-center text-black-600">
-        지금 이용권을 구매하면 30% 할인해 드려요
-      </p>
+    <div className="w-full max-w-md mx-auto flex flex-col items-center grow">
+      <div className="flex flex-col gap-2 items-center text-center">
+        <h2 className="text-2xl font-semibold text-[#212225]">
+          <span className="text-primary">{profileNumber}번</span>째로
+          <br />
+          프로필 등록 완료!
+        </h2>
+        <p className="text-base font-medium text-[#5a5c64]">
+          이용권 30% 할인 혜택을 받을 수 있어요
+        </p>
+      </div>
 
-      <div className="grow flex flex-col justify-center items-stretch self-stretch">
+      <div className="grow flex flex-col justify-center items-stretch self-stretch py-6">
         <TurnableProfileCard profile={profile} contact={profile.contact} />
       </div>
-      <Button type="submit" size="xl" className="w-full" onClick={onSubmit}>
-        이용권 구매하기
-      </Button>
+      <div className="flex flex-col gap-3 items-center w-full">
+        <p className="text-xs font-medium text-[#5a5c64]">
+          당신의 이상형이 기다리고 있어요
+        </p>
+        <Button
+          onClick={onSubmit}
+          className="w-full h-14 rounded-2xl bg-primary text-primary-foreground text-base font-semibold backdrop-blur-[6.5px]"
+        >
+          이성 프로필 구경가기
+        </Button>
+      </div>
 
       <LoginDrawer
         open={loginDrawerOpen}

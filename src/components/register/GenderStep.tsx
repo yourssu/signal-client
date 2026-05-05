@@ -11,13 +11,13 @@ const GenderStep: React.FC<GenderStepProps> = ({ onSelect }) => {
   return (
     <div className="flex flex-col gap-5 items-center pt-2 w-full">
       <div className="flex flex-col gap-[10px] w-full">
-        <p className="text-xs text-label-alternative animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
+        <p className="text-lg text-label-alternative animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
           1 / 6
         </p>
         <h2 className="text-2xl font-semibold text-label-neutral whitespace-pre-line animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
-          안녕하세요 :)
+          나의 성별을
           <br />
-          <span className="text-primary">성별을 알려주세요</span>
+          선택해주세요
         </h2>
       </div>
       <div className="flex gap-2 items-center w-full">

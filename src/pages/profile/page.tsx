@@ -4,15 +4,10 @@ import { useSetAtom } from "jotai";
 import { useCountProfile, useRandomProfile } from "@/hooks/queries/profiles";
 import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
-import { SaveDrawer } from "@/components/profile/SaveDrawer";
-import {
-  saveProfileAtom,
-  addRecentlyViewedProfileAtom,
-} from "@/atoms/profiles";
+import { addRecentlyViewedProfileAtom } from "@/atoms/profiles";
 import { SwipeableProfileCard } from "@/components/profile/SwipeableProfileCard";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { userGenderAtom } from "@/atoms/user";
-import { ENABLE_SAVED } from "@/env";
 import GenderStep from "@/components/purchase/GenderSelect";
 import { Gender } from "@/types/profile";
 import { viewProfile } from "@/lib/analytics";
@@ -21,9 +16,8 @@ import { useUser } from "@/hooks/useUser";
 
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
-  const { gender, savedProfiles, recentlyViewedProfileIds } = useUser();
+  const { gender, recentlyViewedProfileIds } = useUser();
   const setGender = useSetAtom(userGenderAtom);
-  const saveProfile = useSetAtom(saveProfileAtom); // Corrected usage
   const desiredGender = gender === "MALE" ? "FEMALE" : "MALE";
   const { data: viewerSelf } = useViewerSelf({
     throwOnError: false,
@@ -70,11 +64,6 @@ const ProfileListPage: React.FC = () => {
     }
   }, [profile, countData, addRecentlyViewedProfile, gender]);
 
-  // Check if the current profile is already saved
-  const isSaved =
-    !!profile &&
-    (savedProfiles ?? []).some((p) => p.profileId === profile.profileId);
-
   const handleGenderSelect = (selectedGender: Gender) => {
     setGender(selectedGender);
   };
@@ -97,11 +86,6 @@ const ProfileListPage: React.FC = () => {
   }
 
   const count = `${countData?.count ?? 0}`.padStart(2, "0");
-
-  const handleSave = () => {
-    if (!profile) return; // Make sure profile data exists
-    saveProfile(profile);
-  };
 
   const handleViewContact = () => {
     if (!profile?.profileId) return;
@@ -138,24 +122,10 @@ const ProfileListPage: React.FC = () => {
           )}
         </div>
         <div className="flex gap-4 w-full relative z-50">
-          {ENABLE_SAVED && (
-            <SaveDrawer>
-              <Button
-                onClick={handleSave}
-                variant="secondary"
-                size="xl"
-                className="basis-1/3 text-primary"
-                disabled={isSaved} // Disable button if already saved
-              >
-                {isSaved ? "저장됨" : "저장"}
-              </Button>
-            </SaveDrawer>
-          )}
-
           <Button
             onClick={handleViewContact}
             size="xl"
-            className="grow"
+            className="w-full"
             disabled={!profile}
           >
             연락처 확인하기

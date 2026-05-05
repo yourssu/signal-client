@@ -60,13 +60,13 @@ const AnimalStep: React.FC<AnimalStepProps> = ({
   return (
     <div className="flex flex-col items-center pt-2 gap-6 w-full">
       <div className="flex flex-col items-start gap-2 w-full">
-        <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
+        <p className="text-lg text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
           3 / 6
         </p>
         <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
-          자신을 닮은
+          닮은 동물을
           <br />
-          <span className="text-primary">동물을 골라주세요</span>
+          선택해주세요
         </h2>
       </div>
 

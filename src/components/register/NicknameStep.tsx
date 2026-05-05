@@ -54,13 +54,13 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
     <div className="flex flex-col items-center pt-2 w-full">
       <div className="flex flex-col items-stretch gap-[43px] w-full grow">
         <div className="flex flex-col gap-2.5">
-          <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
+          <p className="text-lg text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
             5 / 6
           </p>
           <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
-            나를 잘 뽐낼 수 있는
+            나의 닉네임을
             <br />
-            <span className="text-primary">닉네임을 만들어주세요</span>
+            설정해주세요
           </h2>
         </div>
         <div className="flex flex-col items-end gap-4 w-full animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500">

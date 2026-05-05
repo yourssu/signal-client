@@ -1,3 +1,4 @@
+import { ChevronLeft } from "lucide-react";
 import React, { useEffect } from "react";
 import { useFunnel } from "@use-funnel/react-router";
 import GenderStep from "@/components/register/GenderStep";
@@ -12,7 +13,7 @@ import {
   StyleType,
 } from "@/types/profile";
 import { useCreateProfile, useSelfProfile } from "@/hooks/queries/profiles";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 import { useSetAtom } from "jotai";
 import { userGenderAtom, userProfileAtom } from "@/atoms/user";
 import PersonalityStep from "@/components/register/PersonalityStep";
@@ -20,6 +21,7 @@ import NicknameStep from "@/components/register/NicknameStep";
 import ContactStep from "@/components/register/ContactStep";
 import RegisterDoneStep from "@/components/register/RegisterDoneStep";
 import TopBar from "@/components/Header";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { funnelComplete, funnelStart, funnelStep } from "@/lib/analytics";
 import { useUser } from "@/hooks/useUser";
@@ -192,7 +194,7 @@ const ProfileRegisterPage: React.FC = () => {
   };
 
   const handleDone = () => {
-    navigate("/purchase");
+    navigate("/profile");
   };
 
   const handleBack = () => {
@@ -210,7 +212,21 @@ const ProfileRegisterPage: React.FC = () => {
   return (
     <div className="min-h-dvh flex flex-col items-center bg-static-white">
       <title>프로필 등록하기 - 시그널</title>
-      <TopBar onBack={handleBack} />
+      {funnel.step === "done" ? (
+        <div className="w-full h-11 shrink-0 flex items-center justify-between px-2">
+          <Button variant="ghost" size="icon" onClick={() => navigate("/")} className="text-black-700">
+            <ChevronLeft />
+          </Button>
+          <Link
+            to="/purchase"
+            className="bg-white border border-gray-200 rounded-full px-2.5 py-1 text-[10px] font-semibold text-[#767a83]"
+          >
+            이용권 구매
+          </Link>
+        </div>
+      ) : (
+        <TopBar onBack={handleBack} hideInfo />
+      )}
       <div className="w-full max-w-md grow p-6 flex flex-col gap-10">
         {funnel.step !== "done" && (
           <Progress value={((funnel.index + 1) / REGISTER_STEPS_COUNT) * 100} />

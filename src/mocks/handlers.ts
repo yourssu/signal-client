@@ -32,18 +32,13 @@ const MOCK_TOKEN: TokenResponse = {
   refreshTokenExpiresIn: 1000 * 60 * 60 * 24 * 7,
 };
 
-const getRandomAnimal = (): AnimalType => {
-  const animals: AnimalType[] = [
-    "DOG",
-    "BEAR",
-    "DINOSAUR",
-    "HAMSTER",
-    "DEER",
-    "CAT",
-    "FOX",
-    "TURTLE",
-    "RABBIT",
-  ];
+const maleAnimals: AnimalType[] = ["BEAR", "DEER", "DINOSAUR", "DOG", "CAT", "HAMSTER"];
+const femaleAnimals: AnimalType[] = ["FOX", "RABBIT", "TURTLE", "DOG", "CAT", "HAMSTER"];
+
+const getRandomAnimal = (gender?: Gender): AnimalType => {
+  const animals = gender
+    ? gender === "MALE" ? maleAnimals : femaleAnimals
+    : [...maleAnimals, ...femaleAnimals];
   return animals[Math.floor(Math.random() * animals.length)];
 };
 
@@ -194,13 +189,14 @@ export const handlers = [
       );
     }
 
-    const randomAnimal = getRandomAnimal();
+    const profileGender = gender === "MALE" ? "FEMALE" : "MALE";
+    const randomAnimal = getRandomAnimal(profileGender);
 
     return HttpResponse.json({
       timestamp: new Date().toISOString(),
       result: {
         profileId: Math.floor(Math.random() * 10000) + 1,
-        gender: gender === "MALE" ? "FEMALE" : "MALE",
+        gender: profileGender,
         department: "테스트학과",
         birthYear: 2002,
         animal: randomAnimal,

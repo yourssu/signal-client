@@ -63,17 +63,15 @@ const ContactStep: React.FC<ContactStepProps> = ({
       <div className="flex flex-col items-stretch gap-[43px] w-full grow">
         <div className="flex flex-col gap-2.5">
           {/* Progress Indicator - Based on 1412:7355 */}
-          <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
+          <p className="text-lg text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
             6 / 6
           </p>
           {/* Using muted-foreground for #525252 */}
           {/* Title - Based on 1412:7357 */}
           <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
-            시그널이 닿을 수 있도록
+            연락처를
             <br />
-            <span className="text-primary">
-              인스타그램 or 전화번호를 알려주세요
-            </span>
+            적어주세요
           </h2>
         </div>
         <div className="animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-500">
@@ -86,10 +84,10 @@ const ContactStep: React.FC<ContactStepProps> = ({
             onKeyDown={submitOnEnter}
             onBlur={(e) => handleValidation(e.target.value)}
             required
-            placeholder="ex. @yourssu_official"
+            placeholder="연락처를 입력해주세요"
             state={isValid === false && !isEmpty ? "error" : undefined}
-            helperText="전화번호는 숫자만, 인스타그램 아이디는 @를 붙여 입력해주세요."
-            errorText="전화번호는 숫자만, 인스타그램 아이디는 @를 붙여 입력해주세요."
+            helperText="입력 형식 예시: @yourssu_offical 또는 01011119999"
+            errorText="입력 형식 예시: @yourssu_offical 또는 01011119999"
           />
         </div>
       </div>

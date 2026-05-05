@@ -54,7 +54,7 @@ const MbtiStep: React.FC<MbtiStepProps> = ({ mbti, onSubmit }) => {
       <div className="flex flex-col items-stretch gap-10 w-full grow">
         <div className="flex flex-col items-start gap-2.5">
           {/* Progress Indicator - Based on 1412:6567 */}
-          <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
+          <p className="text-lg text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
             3 / 8
           </p>
           {/* Using muted-foreground for #525252 */}

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import main from "@/assets/home/main.png";
+import signalTextSvg from "@/assets/home/signal_text.svg";
 import { useCountProfile } from "@/hooks/queries/profiles";
-import { cn } from "@/lib/utils";
 import { ServiceDisabledDialog } from "@/components/home/ServiceDisabledDialog";
 import {
   DISABLED_PROFILE_VIEW_DESC,
@@ -16,7 +16,6 @@ import { buttonClick } from "@/lib/analytics";
 
 interface MainContentProps {
   profileRegistered: boolean;
-  verifyNeeded: boolean;
 }
 
 const MainContent = ({ profileRegistered }: MainContentProps) => {
@@ -26,114 +25,92 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
   const [viewGuardOpen, setViewGuardOpen] = useState(false);
 
   return (
-    <div className="flex flex-col items-center justify-center flex-1 p-6 grow gap-5">
-      {/* Top section with title and subtitle */}
-      <div className="flex flex-col items-center gap-2 py-4">
-        <p className="text-primary font-semibold text-sm leading-tight">
-          숭실대생을 위한 소개팅 서비스, 시그널
-        </p>
-        <h1 className="text-3xl font-semibold text-center leading-tight text-black-600">
-          시그널을 보내면
-          <br />
-          운명의 상대와 연결돼요
-        </h1>
+    <div className="flex flex-col items-center justify-between flex-1 px-[18px] pb-8 grow">
+      <div className="entry_content flex flex-col items-center gap-3 w-[300px] my-auto">
+        <div className="flex flex-col gap-2 items-center text-center w-[234px]">
+          <p className="text-sm font-semibold text-[#70757d] leading-[1.35]">
+            숭실대생을 위한 소개팅 서비스
+          </p>
+          <div className="flex flex-col gap-1 items-center whitespace-nowrap">
+            <div className="flex gap-1 items-center justify-center">
+              <img src={signalTextSvg} alt="시그널" className="h-[34px]" />
+              <span className="text-2xl font-semibold text-[#212225] leading-[1.25]">
+                을 보내면
+              </span>
+            </div>
+            <p className="text-2xl font-semibold text-[#212225] leading-[1.25]">
+              운명의 상대와 연결돼요
+            </p>
+          </div>
+        </div>
+        <div className="size-[250px]">
+          <img src={main} alt="Main Character" className="w-full h-auto" />
+        </div>
       </div>
 
-      {/* Middle section with image */}
-      <div className="w-full max-w-[280px]">
-        <img src={main} alt="Cat Character" className="w-full h-auto" />
-      </div>
-
-      {/* Text section before buttons */}
-      <div className="flex flex-col w-full gap-1 text-center grow">
-        <p className="text-black-600 text-base font-medium">
-          <span className="text-primary">{count}명</span>이 당신을 기다리고
-          있어요
-        </p>
-        <p className="text-muted-foreground text-xs font-medium">
-          '시그널 보내기'를 눌러 마음을 전달하세요
+      <div className="flex flex-col gap-2 items-center w-full">
+        <p className="text-sm font-semibold text-center">
+          <span className="text-primary">{count}명</span>
+          <span className="text-[#525252]">이 당신을 기다리고 있어요</span>
         </p>
         {NOTICE && <p className="text-xs font-medium">{NOTICE}</p>}
-      </div>
 
-      {/* Button section */}
-      <div className="flex flex-col items-stretch gap-4 w-full">
-        {ENABLE_REGISTER ? (
-          profileRegistered ? (
-            <Link
-              to="/my"
-              onClick={() => buttonClick("view_my_profile", "내 프로필 보기")}
-              className={cn(
-                buttonVariants({ variant: "secondary" }),
-                "h-14 text-lg rounded-2xl font-medium tracking-[-0.01em]",
-              )}
-            >
-              내 프로필 보기
-            </Link>
+        <div className="flex flex-col gap-2 w-full">
+          {ENABLE_REGISTER ? (
+            profileRegistered ? (
+              <Link
+                to="/my"
+                onClick={() => buttonClick("view_my_profile", "내 프로필 보기")}
+                className="flex h-14 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary hover:bg-[#ffd4f3] transition-colors"
+              >
+                내 프로필 보기
+              </Link>
+            ) : (
+              <Link
+                to="/profile/register"
+                onClick={() => buttonClick("register_profile", "프로필 등록하기")}
+                className="flex h-14 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary hover:bg-[#ffd4f3] transition-colors"
+              >
+                프로필 등록하기
+              </Link>
+            )
           ) : (
-            <Link
-              to="/profile/register"
-              onClick={() => buttonClick("register_profile", "프로필 등록하기")}
-              className={cn(
-                buttonVariants({ variant: "secondary" }),
-                "h-14 text-lg rounded-2xl font-medium tracking-[-0.01em]",
-              )}
+            <Button
+              className="flex h-14 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary hover:bg-[#ffd4f3]"
+              onClick={() => {
+                buttonClick("register_profile_locked", "프로필 등록하기");
+                setRegisterGuardOpen(true);
+              }}
             >
               프로필 등록하기
-            </Link>
-          )
-        ) : (
-          <Button
-            variant="secondary"
-            className={cn(
-              buttonVariants({ variant: "secondary" }),
-              "h-14 text-lg rounded-2xl hover:bg-white/90 font-medium tracking-[-0.01em]",
-            )}
-            onClick={() => {
-              buttonClick("register_profile_locked", "프로필 등록하기");
-              setRegisterGuardOpen(true);
-            }}
-          >
-            프로필 등록하기
-          </Button>
-        )}
+            </Button>
+          )}
 
-        {ENABLE_PROFILE_VIEW ? (
-          <Link
-            to="/profile"
-            onClick={() => buttonClick("send_signal", "시그널 보내기")}
-            className={cn(
-              buttonVariants(),
-              "h-14 text-lg rounded-2xl hover:bg-white/90 font-medium tracking-[-0.01em]",
-            )}
-          >
-            시그널 보내기
-          </Link>
-        ) : (
-          <Button
-            className="h-14 text-lg rounded-2xl hover:bg-white/90 font-medium tracking-[-0.01em]"
-            onClick={() => {
-              buttonClick("send_signal_locked", "시그널 보내기");
-              setViewGuardOpen(true);
-            }}
-          >
-            시그널 보내기
-          </Button>
-        )}
-        <div className="flex justify-center items-center gap-2">
-          <Link
-            to="/terms"
-            className="text-center underline text-xs text-primary"
-          >
-            이용약관
-          </Link>
-          <span className="text-primary text-xs">및</span>
-          <Link
-            to="/privacy"
-            className="text-center underline text-xs text-primary"
-          >
-            개인정보처리방침
-          </Link>
+          {ENABLE_PROFILE_VIEW ? (
+            <Link
+              to="/profile"
+              onClick={() => buttonClick("send_signal", "시그널 보내기")}
+              className="flex h-14 items-center justify-center rounded-2xl bg-[#ff71b6] backdrop-blur-[6.5px] text-base font-semibold text-white hover:bg-[#ff5aa8] transition-colors"
+            >
+              시그널 보내기
+            </Link>
+          ) : (
+            <Button
+              className="flex h-14 items-center justify-center rounded-2xl bg-[#ff71b6] backdrop-blur-[6.5px] text-base font-semibold text-white hover:bg-[#ff5aa8]"
+              onClick={() => {
+                buttonClick("send_signal_locked", "시그널 보내기");
+                setViewGuardOpen(true);
+              }}
+            >
+              시그널 보내기
+            </Button>
+          )}
+
+          <p className="text-xs font-medium text-[#8c8c8c] text-center">
+            <Link to="/privacy" className="underline">개인정보처리방침</Link>
+            <span> 및 </span>
+            <Link to="/terms" className="underline">이용약관</Link>
+          </p>
         </div>
       </div>
       <ServiceDisabledDialog

@@ -62,7 +62,7 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
 
   // Validation: Check if at least 2 traits are entered
   const isValid = useMemo(() => {
-    return traits.filter((trait) => trait.trim() !== "").length >= 2;
+    return traits.every((trait) => trait.trim() !== "") && traits.every((trait) => trait.trim().length <= 20);
   }, [traits]);
 
   const handleSubmit = () => {
@@ -101,7 +101,7 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
     <div className="flex flex-col items-center pt-2 w-full">
       <div className="flex flex-col gap-[43px] w-full grow">
         <div className="flex flex-col items-start gap-2.5">
-          <p className="text-xs text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
+          <p className="text-lg text-muted-foreground animate-in slide-in-from-bottom fade-in ease-in-out duration-300">
             4 / 6
           </p>
           <h2 className="text-2xl font-semibold text-stone-700 whitespace-pre-line animate-in slide-in-from-bottom-8 fade-in ease-in-out duration-400">
