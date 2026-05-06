@@ -2,7 +2,7 @@ import AnimalImage from "@/components/profile/AnimalImage";
 import ProfileTags from "@/components/profile/ProfileTags";
 import { animalDisplayMap } from "@/lib/animal";
 import { cardBgConfig } from "@/lib/card";
-import { cn } from "@/lib/utils";
+import { cn, formatPhone } from "@/lib/utils";
 import { Gender, ProfileResponse } from "@/types/profile";
 import React from "react";
 
@@ -118,7 +118,7 @@ const ProfileCardBack: React.FC<
                 isSmall ? "text-base" : "text-lg",
               )}
             >
-              {contact}
+              {contact.startsWith("@") ? contact : formatPhone(contact)}
             </span>
           </a>
           {!isSmall && (
