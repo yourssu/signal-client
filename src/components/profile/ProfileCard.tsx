@@ -58,7 +58,7 @@ const ProfileCardFront: React.FC<
       <div
         className={cn(
           "flex items-center justify-center w-full",
-          isSmall ? "h-[80px]" : "h-[126px]",
+          isSmall ? "h-[80px]" : "h-[126px] max-[440px]:h-[100px]",
         )}
       >
         <AnimalImage
@@ -66,7 +66,7 @@ const ProfileCardFront: React.FC<
           gender={gender}
           className={cn(
             "object-contain",
-            isSmall ? "max-h-[80px]" : "max-h-[126px]",
+            isSmall ? "max-h-[80px]" : "max-h-[126px] max-[440px]:max-h-[100px]",
           )}
         />
       </div>
@@ -95,11 +95,11 @@ const ProfileCardBack: React.FC<
             </p>
           </div>
 
-          <div className={cn("flex items-center justify-center w-full", isSmall ? "h-[80px]" : "h-[126px]")}>
+          <div className={cn("flex items-center justify-center w-full", isSmall ? "h-[80px]" : "h-[126px] max-[440px]:h-[100px]")}>
             <AnimalImage
               animalType={profile.animal}
               gender={gender}
-              className={cn("object-contain", isSmall ? "max-h-[80px]" : "max-h-[126px]")}
+              className={cn("object-contain", isSmall ? "max-h-[80px]" : "max-h-[126px] max-[440px]:max-h-[100px]")}
             />
           </div>
 
@@ -149,11 +149,11 @@ const ProfileCardBack: React.FC<
         </p>
       </div>
 
-      <div className={cn("flex items-center justify-center w-full", isSmall ? "h-[80px]" : "h-[126px]")}>
+      <div className={cn("flex items-center justify-center w-full", isSmall ? "h-[80px]" : "h-[126px] max-[440px]:h-[100px]")}>
         <AnimalImage
           animalType={profile.animal}
           gender={gender}
-          className={cn("object-contain", isSmall ? "max-h-[80px]" : "max-h-[126px]")}
+          className={cn("object-contain", isSmall ? "max-h-[80px]" : "max-h-[126px] max-[440px]:max-h-[100px]")}
         />
       </div>
 

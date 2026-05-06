@@ -46,7 +46,7 @@ export function LoginDrawer({
       {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
       {children && <DrawerTrigger asChild>{children}</DrawerTrigger>}
 
-      <DrawerContent className="px-6">
+      <DrawerContent className="px-6 mb-3">
         <DrawerHeader className="text-center">
           <DrawerDescription className="text-muted-foreground -mt-1">
             나의 프로필이 얼마나 열람됐는지 궁금하다면?
@@ -65,7 +65,7 @@ export function LoginDrawer({
         <div className="flex flex-col gap-10 items-center justify-start px-4 py-6">
           {/* Image */}
           <div
-            className="w-[213px] h-[143px] bg-no-repeat bg-center bg-cover"
+            className="w-full aspect-[3/2] bg-no-repeat bg-center bg-contain"
             style={{ backgroundImage: `url('${loginImage}')` }}
           />
         </div>
@@ -86,14 +86,14 @@ export function LoginDrawer({
               Google 계정으로 로그인
             </span>
           </Button>
-          {showNextTime && (
+          {/* {showNextTime && (
             <DrawerClose
               className="text-xs underline text-primary cursor-pointer"
               onClick={() => buttonClick("login_drawer_close", "로그인 취소")}
             >
               다음에 할래요
             </DrawerClose>
-          )}
+          )} */}
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
