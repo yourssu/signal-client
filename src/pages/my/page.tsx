@@ -3,7 +3,6 @@ import { Link } from "react-router";
 import TopBar from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
-import ticketIcon from "@/assets/icons/ticket_icon.svg";
 import userIcon from "@/assets/icons/user_icon.svg";
 import archiveIcon from "@/assets/icons/archive_icon.svg";
 import { ProfileAnalysisCard } from "@/components/my/ProfileAnalysisCard";
@@ -15,13 +14,13 @@ import { ENABLE_PROFILE_VIEW } from "@/env";
 import { buttonClick } from "@/lib/analytics";
 
 const MyPage: React.FC = () => {
-  const { profile, viewer, purchasedProfiles } = useUser();
+  const { profile, viewer } = useUser();
   const ticketCount = (viewer?.ticket ?? 0) - (viewer?.usedTicket ?? 0);
   const provider = useAtomValue(providerAtom) ?? "local";
   const isLoggedIn = provider !== "local";
 
   return (
-    <div className="w-full h-full flex flex-col items-center">
+    <div className="w-full h-full flex flex-col items-center bg-neutral-100">
       <title>마이페이지 - 시그널</title>
       <TopBar onBack="/" hideInfo />
       <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6">
@@ -32,37 +31,26 @@ const MyPage: React.FC = () => {
         {/* Ticket Info Card */}
         <div
           className={cn(
-            "bg-white rounded-3xl p-6 w-full flex items-end justify-between shadow-sm",
+            "bg-white rounded-2xl px-4 pt-3 pb-3.5 w-full flex items-center justify-between",
             !ENABLE_PROFILE_VIEW && "hidden",
           )}
         >
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-1 px-0.5">
-              <p className="text-[10px] text-gray-500 font-medium">
-                현재 이용권 보유
-              </p>
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="w-5 h-5 flex items-center justify-center">
-                <img src={ticketIcon} alt="티켓" className="w-4 h-4" />
-              </div>
-              <p className="text-base font-semibold text-neutral-700">
-                {ticketCount}장
-              </p>
-            </div>
-          </div>
-          <Button
-            size="sm"
-            className="bg-fill-pink-light text-primary hover:bg-fill-pink-light/80 text-xs font-semibold px-4 py-2 h-9 rounded-xl"
-            asChild
-          >
-            <Link
-              to="/purchase"
-              onClick={() => buttonClick("purchase_ticket_mypage", "티켓 충전")}
+          <p className="h4 text-label-neutral">남은 이용권</p>
+          <div className="flex items-center gap-3">
+            <p className="h4 text-label-strong">{ticketCount}장</p>
+            <Button
+              variant="default"
+              className="button-s rounded-lg px-3 py-1.5 h-auto"
+              asChild
             >
-              충전
-            </Link>
-          </Button>
+              <Link
+                to="/purchase"
+                onClick={() => buttonClick("purchase_ticket_mypage", "티켓 충전")}
+              >
+                충전
+              </Link>
+            </Button>
+          </div>
         </div>
 
         {/* Profile Analysis Card */}
@@ -74,45 +62,36 @@ const MyPage: React.FC = () => {
         )}
 
         {/* Menu Options */}
-        <div className="bg-white rounded-3xl overflow-hidden w-full">
-          <div className="flex flex-col">
-            {profile && (
-              <Link
-                to="/my/profile"
-                className="flex items-center justify-between w-full p-4 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
-              >
-                <div className="flex items-center gap-2">
-                  <div className="bg-fill-pink-light rounded-lg w-6 h-6 flex items-center justify-center">
-                    <img src={userIcon} alt="프로필" className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="text-sm font-semibold text-neutral-700 tracking-tight">
-                    내 프로필 보기
-                  </span>
-                </div>
-                <ChevronRight className="w-5 h-5 text-gray-400" />
-              </Link>
-            )}
-            {ENABLE_PROFILE_VIEW && (purchasedProfiles?.length ?? 0) > 0 && (
-              <Link
-                to="/my/signals"
-                className="flex items-center justify-between w-full p-4 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
-              >
-                <div className="flex items-center gap-2">
-                  <div className="bg-fill-pink-light rounded-lg w-6 h-6 flex items-center justify-center">
-                    <img
-                      src={archiveIcon}
-                      alt="구매 목록"
-                      className="w-3.5 h-3.5"
-                    />
-                  </div>
-                  <span className="text-sm font-semibold text-neutral-700 tracking-tight">
-                    구매한 프로필 목록
-                  </span>
-                </div>
-                <ChevronRight className="w-5 h-5 text-gray-400" />
-              </Link>
-            )}
-          </div>
+        <div className="bg-white rounded-2xl px-4 py-3 w-full flex flex-col gap-2.5">
+          <p className="caption2 text-label-neutral">나의 정보</p>
+          {profile && (
+            <Link
+              to="/my/profile"
+              className="flex items-center justify-between w-full py-1 cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <img src={userIcon} alt="프로필" className="size-4" />
+                <span className="caption1 text-label-neutral">
+                  내 프로필 보기
+                </span>
+              </div>
+              <ChevronRight className="size-5 text-label-neutral" />
+            </Link>
+          )}
+          {ENABLE_PROFILE_VIEW && (
+            <Link
+              to="/my/signals"
+              className="flex items-center justify-between w-full py-1 cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <img src={archiveIcon} alt="구매 목록" className="size-4" />
+                <span className="caption1 text-label-neutral">
+                  구매한 프로필 목록
+                </span>
+              </div>
+              <ChevronRight className="size-5 text-label-neutral" />
+            </Link>
+          )}
         </div>
       </div>
     </div>

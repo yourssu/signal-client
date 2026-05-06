@@ -138,10 +138,38 @@ export const handlers = [
     } satisfies SuccessResponse<ProfileContactResponse>);
   }),
   http.get("/api/profiles/me/purchased", () => {
+    const purchasedProfiles: ProfileContactResponse[] = [
+      {
+        profileId: 101,
+        gender: "FEMALE",
+        department: "경영학과",
+        birthYear: 2003,
+        animal: "RABBIT",
+        mbti: "ENFP",
+        nickname: "토끼같은미소",
+        introSentences: ["커피 한 잔과 함께 대화 나누기 좋아해요", "봄날 산책을 좋아해요", "재미있는 이야기 잘 해요"],
+        school: "숭실대학교",
+        style: "STYLE_1",
+        contact: "https://instagram.com/example1",
+      },
+      {
+        profileId: 102,
+        gender: "FEMALE",
+        department: "미디어커뮤니케이션학과",
+        birthYear: 2002,
+        animal: "CAT",
+        mbti: "INFJ",
+        nickname: "고양이눈빛",
+        introSentences: ["조용한 카페를 좋아해요", "독서와 영화 감상이 취미예요", "깊은 대화를 나눠요"],
+        school: "숭실대학교",
+        style: "STYLE_2",
+        contact: "https://instagram.com/example2",
+      },
+    ];
     return HttpResponse.json({
       timestamp: new Date().toISOString(),
-      result: [],
-    } satisfies SuccessResponse<[]>);
+      result: purchasedProfiles,
+    } satisfies SuccessResponse<ProfileContactResponse[]>);
   }),
 
   http.get("/api/profiles/count", () => {
