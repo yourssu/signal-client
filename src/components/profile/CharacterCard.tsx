@@ -10,6 +10,7 @@ interface CharacterCardProps {
   selected?: boolean;
   onClick?: () => void;
   className?: string;
+  imgClassName?: string;
 }
 
 const CharacterCard: React.FC<CharacterCardProps> = ({
@@ -19,6 +20,7 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
   selected,
   onClick,
   className,
+  imgClassName,
 }) => {
   const displayName = name ?? `${animalDisplayMap[animalType]}상`;
 
@@ -31,9 +33,9 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
         ${className ?? ""}`}
     >
       {imgSrc ? (
-        <img src={imgSrc} alt={displayName} className="max-w-20 object-contain shrink-0" />
+        <img src={imgSrc} alt={displayName} className={`max-w-20 object-contain shrink-0 ${imgClassName ?? ""}`} />
       ) : (
-        <AnimalImage animalType={animalType} className="max-w-20 object-contain shrink-0" />
+        <AnimalImage animalType={animalType} className={`max-w-20 object-contain shrink-0 ${imgClassName ?? ""}`} />
       )}
       <p className="text-sm font-semibold leading-[1.35] text-[#46474e] whitespace-nowrap">
         {displayName}

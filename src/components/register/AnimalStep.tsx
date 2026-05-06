@@ -79,6 +79,11 @@ const AnimalStep: React.FC<AnimalStepProps> = ({
             name={animalDisplayMap[item.type]}
             selected={selectedAnimal === item.type}
             onClick={() => setSelectedAnimal(item.type)}
+            imgClassName={
+              gender === "FEMALE" && (item.type === "RABBIT" || item.type === "TURTLE")
+                ? "!max-w-24"
+                : undefined
+            }
           />
         ))}
         {commonAnimals.map((item) => (

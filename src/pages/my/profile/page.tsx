@@ -14,6 +14,7 @@ import { useUser } from "@/hooks/useUser";
 import { buttonClick } from "@/lib/analytics";
 import { ProfileUpdateRequest } from "@/types/profile";
 import { useQueryClient } from "@tanstack/react-query";
+import lockIcon from "@/assets/icons/lock.svg";
 import { useSetAtom } from "jotai";
 import { useState } from "react";
 import { Navigate } from "react-router";
@@ -96,7 +97,12 @@ const MyProfilePage: React.FC = () => {
       <TopBar onBack="/my" />
       <div className="w-full max-w-md grow p-6 flex flex-col gap-10">
         <div className="w-full max-w-md mx-auto flex flex-col gap-2 grow">
-          <h1 className="text-2xl font-semibold text-stone-700">나의 프로필</h1>
+          <div className="flex flex-col gap-1.5">
+            <h1 className="text-2xl font-semibold text-stone-700">나의 프로필</h1>
+            <p className="text-base font-medium text-label-neutral">
+              너무 매력적인 프로필이에요
+            </p>
+          </div>
           <div className="grow flex flex-col justify-center items-stretch self-stretch">
             {isEditing ? (
               <ProfileCardEditor
@@ -104,10 +110,23 @@ const MyProfilePage: React.FC = () => {
                 onChange={handleProfileUpdate}
               />
             ) : (
-              <TurnableProfileCard
-                profile={profile!}
-                contact={profile!.contact}
-              />
+              <div className="relative rounded-[36px] overflow-hidden">
+                <TurnableProfileCard
+                  profile={profile!}
+                  contact={profile!.contact}
+                />
+                {isDeleted && (
+                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-[11px] bg-black/50">
+                    <img src={lockIcon} alt="" className="size-[60px]" />
+                    <div className="flex flex-col items-center gap-1.5 text-white">
+                      <p className="text-lg font-semibold">프로필이 잠겼어요</p>
+                      <p className="text-xs font-medium">
+                        아래 버튼을 통해 [공개]할 수 있습니다
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
           </div>
           {isDeleted ? (
@@ -136,12 +155,14 @@ const MyProfilePage: React.FC = () => {
               >
                 수정하기
               </Button>
-              <button
-                className="text-primary underline text-xs cursor-pointer"
+              <Button
+                variant="secondary"
+                size="xl"
+                className="w-full"
                 onClick={() => setIsDeleteConfirmOpen(true)}
               >
                 프로필 비공개
-              </button>
+              </Button>
             </>
           )}
         </div>

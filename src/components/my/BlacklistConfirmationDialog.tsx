@@ -1,13 +1,11 @@
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
-  DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { buttonClick } from "@/lib/analytics";
 
 interface BlacklistConfirmationDialogProps {
@@ -31,30 +29,32 @@ export function BlacklistConfirmationDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-background p-6 flex flex-col items-center">
-        <DialogHeader className="w-full text-center space-y-2">
-          <DialogTitle className="text-xl font-bold text-center">
-            프로필을 비공개 하시겠어요?
+      <DialogContent className="bg-white rounded-3xl pt-5 pb-4 px-5 flex flex-col items-center gap-3">
+        <div className="flex flex-col items-center gap-2">
+          <DialogTitle className="text-xl font-semibold text-neutral-600 text-center">
+            비공개 처리
           </DialogTitle>
-          <DialogDescription className="text-black-600 text-base font-medium text-center">
-            비공개하면 더 이상 시그널을 받을 수 없어요.
+          <DialogDescription className="text-base font-medium text-neutral-400 text-center leading-snug">
+            더 이상 연락이 오지 않아요!
+            <br />
+            정말 프로필을 비공개 처리하시겠어요?
           </DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="w-full flex flex-row">
+        </div>
+        <div className="flex gap-2">
           <DialogClose asChild>
-            <Button size="xl" className="grow">
+            <Button variant="default" size="lg" className="w-[130px] rounded-xl">
               취소
             </Button>
           </DialogClose>
           <Button
-            onClick={handleConfirm}
             variant="secondary"
-            className="grow text-primary"
-            size="xl"
+            size="lg"
+            className="w-[130px] rounded-xl"
+            onClick={handleConfirm}
           >
             확인
           </Button>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );

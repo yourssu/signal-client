@@ -3,8 +3,8 @@ import { Link } from "react-router";
 import TopBar from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
-import userIcon from "@/assets/icons/user_icon.svg";
-import archiveIcon from "@/assets/icons/archive_icon.svg";
+import userIcon from "@/assets/icons/user_icon_mini.svg";
+import archiveIcon from "@/assets/icons/file.svg";
 import { ProfileAnalysisCard } from "@/components/my/ProfileAnalysisCard";
 import { useAtomValue } from "jotai";
 import { providerAtom } from "@/atoms/authTokens";
@@ -27,6 +27,14 @@ const MyPage: React.FC = () => {
         <div className="flex flex-col items-start w-full">
           <h1 className="text-2xl font-semibold text-stone-700">마이페이지</h1>
         </div>
+
+        {/* Profile Analysis Card */}
+        {(ENABLE_PROFILE_VIEW || !isLoggedIn || !profile) && (
+          <ProfileAnalysisCard
+            isLoggedIn={isLoggedIn}
+            isProfileRegistered={!!profile}
+          />
+        )}
 
         {/* Ticket Info Card */}
         <div
@@ -52,14 +60,6 @@ const MyPage: React.FC = () => {
             </Button>
           </div>
         </div>
-
-        {/* Profile Analysis Card */}
-        {(ENABLE_PROFILE_VIEW || !isLoggedIn || !profile) && (
-          <ProfileAnalysisCard
-            isLoggedIn={isLoggedIn}
-            isProfileRegistered={!!profile}
-          />
-        )}
 
         {/* Menu Options */}
         <div className="bg-white rounded-2xl px-4 py-3 w-full flex flex-col gap-2.5">

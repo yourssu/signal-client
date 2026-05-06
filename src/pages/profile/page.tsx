@@ -10,14 +10,16 @@ import GenderStep from "@/components/purchase/GenderSelect";
 import { Gender } from "@/types/profile";
 import { viewProfile } from "@/lib/analytics";
 import { useUser } from "@/hooks/useUser";
+import { TicketRequiredModal } from "@/components/TicketRequiredModal";
 
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
-  const { gender } = useUser();
+  const { gender, viewer } = useUser();
   const setGender = useSetAtom(userGenderAtom);
   const desiredGender = gender === "MALE" ? "FEMALE" : "MALE";
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [ticketModalOpen, setTicketModalOpen] = useState(false);
 
   const { data: countData } = useCountProfile();
   const { data: deck, isPending, error } = useDeckProfiles(desiredGender!, {
@@ -70,6 +72,10 @@ const ProfileListPage: React.FC = () => {
 
   const handleViewContact = () => {
     if (!profile?.profileId) return;
+    if (!viewer || viewer.ticket - viewer.usedTicket <= 0) {
+      setTicketModalOpen(true);
+      return;
+    }
     navigate(`/profile/contact?id=${profile.profileId}`, {
       state: {
         profile,
@@ -115,9 +121,13 @@ const ProfileListPage: React.FC = () => {
             className="w-full"
             disabled={!profile}
           >
-            연락처 확인하기
+            연락 보내기
           </Button>
         </div>
+        <TicketRequiredModal
+          open={ticketModalOpen}
+          onOpenChange={setTicketModalOpen}
+        />
       </div>
     </div>
   );
