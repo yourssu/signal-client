@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
+import { isValidMbti } from "@/lib/mbti";
 import { cn, whenPressEnter } from "@/lib/utils";
 import { Mbti, EgenTetoType } from "@/types/profile";
 import React, { useState, useMemo } from "react";
@@ -8,23 +9,6 @@ const egenTetoOptions: { type: EgenTetoType; label: string }[] = [
   { type: "TETO", label: "테토 st" },
   { type: "EGEN", label: "에겐 st" },
 ];
-
-const isValidMbti = (mbti: string): mbti is Mbti => {
-  if (typeof mbti !== "string" || mbti.length !== 4) return false;
-  const upperMbti = mbti.toUpperCase();
-  const validChars = [
-    ["E", "I"],
-    ["S", "N"],
-    ["T", "F"],
-    ["J", "P"],
-  ];
-  for (let i = 0; i < 4; i++) {
-    if (!validChars[i].includes(upperMbti[i])) {
-      return false;
-    }
-  }
-  return true;
-};
 
 interface EssentialInfoStepProps {
   birthYear?: number;
@@ -231,7 +215,7 @@ const EssentialInfoStep: React.FC<EssentialInfoStepProps> = ({
               )}
               {showStyle && (
                 <div className="flex flex-col gap-2 mt-4 animate-in slide-in-from-bottom-4 fade-in ease-in-out duration-300">
-                  <p className="text-xs font-medium text-[#212225] px-2">나의 스타일</p>
+                  <p className="text-xs font-medium text-label-strong px-2">나의 스타일</p>
                   <div className="flex gap-2">
                     {egenTetoOptions.map((option) => (
                       <button
@@ -240,7 +224,7 @@ const EssentialInfoStep: React.FC<EssentialInfoStepProps> = ({
                         onClick={() => setEgenTetoInput(option.type)}
                         className={cn(
                           "flex-1 h-11 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer",
-                          egenTetoInput === option.type ? "bg-neutral-100 border border-pink-600 text-pink-600" : "bg-neutral-100 text-[#212225]",
+                          egenTetoInput === option.type ? "bg-neutral-100 border border-pink-600 text-pink-600" : "bg-neutral-100 text-label-strong",
                         )}
                       >
                         {option.label}

@@ -1,7 +1,6 @@
 import * as React from "react";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -18,7 +17,6 @@ import { buttonClick } from "@/lib/analytics";
 interface LoginDrawerProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  showNextTime?: boolean;
   trigger?: React.ReactNode;
   children?: React.ReactNode;
 }
@@ -26,7 +24,6 @@ interface LoginDrawerProps {
 export function LoginDrawer({
   open,
   onOpenChange,
-  showNextTime,
   trigger,
   children,
 }: LoginDrawerProps) {
@@ -86,14 +83,6 @@ export function LoginDrawer({
               Google 계정으로 로그인
             </span>
           </Button>
-          {/* {showNextTime && (
-            <DrawerClose
-              className="text-xs underline text-primary cursor-pointer"
-              onClick={() => buttonClick("login_drawer_close", "로그인 취소")}
-            >
-              다음에 할래요
-            </DrawerClose>
-          )} */}
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

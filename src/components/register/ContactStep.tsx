@@ -11,7 +11,7 @@ interface ContactStepProps {
 }
 
 const PHONE_REGEX = /^010\d{8}$/; // Regex to validate phone numbers
-const INSTAGRAM_REGEX = /^^@[a-zA-Z0-9._]{1,30}$/; // Regex to validate Instagram IDs
+const INSTAGRAM_REGEX = /^@[a-zA-Z0-9._]{1,30}$/; // Regex to validate Instagram IDs
 
 const isValidContact = (contact: string): boolean => {
   // Check if the contact is a valid phone number or Instagram ID
@@ -46,7 +46,7 @@ const ContactStep: React.FC<ContactStepProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContact(e.target.value);
-    if (isEmpty) setIsValid(null);
+    if (e.target.value.trim() === "") setIsValid(null);
   };
 
   const handleOpenTerms = () => {
@@ -115,14 +115,6 @@ const ContactStep: React.FC<ContactStepProps> = ({
         >
           프로필 등록하기
         </Button>
-        {/* 
-        Removed: 2025-09-07
-        <RegisterConfirmationDrawer
-          disabled={!isValid || isEmpty}
-          profile={profile as ProfileResponse}
-          contact={contact}
-          onConfirm={handleSubmit}
-        /> */}
         <TermsDrawer
           open={openTerms}
           onOpenChange={() => setOpenTerms(false)}

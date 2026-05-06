@@ -61,7 +61,6 @@ const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
       <LoginDrawer
         open={loginDrawerOpen}
         onOpenChange={setLoginDrawerOpen}
-        showNextTime
       />
     </div>
   );

@@ -15,26 +15,7 @@ const GUIDE_QUESTIONS = [
   }
 ] as const;
 
-// const shuffle = <T,>(array: T[]) =>
-//   array
-//     .map((value) => ({ value, sort: Math.random() }))
-//     .sort((a, b) => a.sort - b.sort)
-//     .map(({ value }) => value);
-
 const getPersonalityExamples = (): string[] => {
-  // try {
-  //   if (PERSONALITIES.length < n) {
-  //     throw new Error("Not enough personality examples");
-  //   }
-  //   return shuffle(PERSONALITIES).slice(0, n);
-  // } catch (e) {
-  //   console.error("Error parsing personality examples:", e);
-  // }
-  // return shuffle([
-  //   "답장 빨라요",
-  //   "낯가림 심한데 친해지면 말 많음",
-  //   "힙합 좋아해요",
-  // ]).slice(0, n);
   return [
     "EX) 가장 많이 들었던 닮은 꼴을 적어보세요",
     "EX) 나의 취미를 적어보세요",

@@ -1,6 +1,7 @@
 import AnimalImage from "@/components/profile/AnimalImage";
 import ProfileTags from "@/components/profile/ProfileTags";
 import { animalDisplayMap } from "@/lib/animal";
+import { cardBgConfig } from "@/lib/card";
 import { cn } from "@/lib/utils";
 import { Gender, ProfileResponse } from "@/types/profile";
 import React from "react";
@@ -15,11 +16,6 @@ interface ProfileCardProps {
   side?: CardSide;
   size?: CardSize;
 }
-
-const cardBgConfig: Record<Gender, string> = {
-  MALE: "bg-fill-blue-light",
-  FEMALE: "bg-fill-pink-light",
-};
 
 const ProfileCardFront: React.FC<
   { profile: ProfileResponse; gender: Gender; size: CardSize }

@@ -24,20 +24,20 @@ const GenderStep: React.FC<GenderStepProps> = ({ onSelect }) => {
         <button
           type="button"
           onClick={() => onSelect("MALE")}
-          className="flex flex-1 flex-col gap-3 items-center justify-center h-[230px] py-[50px] rounded-[20px] bg-[#f0f7ff] cursor-pointer transition-colors hover:bg-[#dceeff] active:bg-[#dceeff]"
+          className="flex flex-1 flex-col gap-3 items-center justify-center h-[230px] py-[50px] rounded-[20px] bg-fill-blue-light cursor-pointer transition-colors hover:bg-[var(--blue-300)] active:bg-[var(--blue-300)]"
         >
           <img src={faceMan} alt="" className="size-20 shrink-0" />
-          <span className="text-[18px] font-semibold leading-[1.2] text-[#212225]">
+          <span className="text-[18px] font-semibold leading-[1.2] text-label-strong">
             남성
           </span>
         </button>
         <button
           type="button"
           onClick={() => onSelect("FEMALE")}
-          className="flex flex-1 flex-col gap-3 items-center justify-center h-[230px] py-[50px] rounded-[20px] bg-[#fff9fe] cursor-pointer transition-colors hover:bg-[#ffe8f8] active:bg-[#ffe8f8]"
+          className="flex flex-1 flex-col gap-3 items-center justify-center h-[230px] py-[50px] rounded-[20px] bg-fill-pink-light cursor-pointer transition-colors hover:bg-[var(--pink-300)] active:bg-[var(--pink-300)]"
         >
           <img src={faceWoman} alt="" className="size-20 shrink-0" />
-          <span className="text-[18px] font-semibold leading-[1.2] text-[#212225]">
+          <span className="text-[18px] font-semibold leading-[1.2] text-label-strong">
             여성
           </span>
         </button>

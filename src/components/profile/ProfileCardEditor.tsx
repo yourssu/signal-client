@@ -1,4 +1,5 @@
 import AnimalImage from "@/components/profile/AnimalImage";
+import { cardBgConfig } from "@/lib/card";
 import ProfileTags from "@/components/profile/ProfileTags";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +11,6 @@ import {
 import { animalDisplayMap } from "@/lib/animal";
 import { cn } from "@/lib/utils";
 import {
-  Gender,
   ProfileContactResponse,
   ProfileUpdateRequest,
 } from "@/types/profile";
@@ -24,11 +24,6 @@ interface ProfileCardEditorProps {
   onChange?: (update: ProfileUpdateRequest) => void;
   isFlipped?: boolean;
 }
-
-const cardBgConfig: Record<Gender, string> = {
-  MALE: "bg-fill-blue-light",
-  FEMALE: "bg-fill-pink-light",
-};
 
 const ProfileCardEditor: React.FC<ProfileCardEditorProps> = ({
   profile,

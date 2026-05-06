@@ -106,7 +106,6 @@ export const SwipeableProfileCard: React.FC<{
       swipeStop(xDir > 0 ? "right" : "left", profile.profileId);
     } else {
       animate(x, 0, { duration: 0.3 });
-      swipeStop(xDir > 0 ? "right" : "left", profile.profileId);
     }
   };
 

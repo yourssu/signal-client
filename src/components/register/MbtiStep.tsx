@@ -1,25 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
+import { isValidMbti } from "@/lib/mbti";
 import { cn, whenPressEnter } from "@/lib/utils";
-import { Mbti } from "@/types/profile"; // Assuming isValidMbti exists or needs creation
-import React, { useState, useMemo } from "react"; // Import useMemo
-
-const isValidMbti = (mbti: string): mbti is Mbti => {
-  if (typeof mbti !== "string" || mbti.length !== 4) return false;
-  const upperMbti = mbti.toUpperCase();
-  const validChars = [
-    ["E", "I"],
-    ["S", "N"],
-    ["T", "F"],
-    ["J", "P"],
-  ];
-  for (let i = 0; i < 4; i++) {
-    if (!validChars[i].includes(upperMbti[i])) {
-      return false;
-    }
-  }
-  return true;
-};
+import { Mbti } from "@/types/profile";
+import React, { useState, useMemo } from "react";
 
 interface MbtiStepProps {
   mbti?: Mbti;
