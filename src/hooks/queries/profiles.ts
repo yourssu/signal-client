@@ -17,11 +17,14 @@ import {
   ProfileRankingResponse,
   TicketConsumedRequest,
 } from "@/types/profile";
-import { SignalResponse } from "@/types/common";
 import { SignalError } from "@/lib/error";
 import { authedFetch } from "@/lib/fetch";
 import { API_BASE_URL } from "@/env";
 import { PurchasedProfileResponse } from "@/types/viewer";
+
+interface DeckResponse {
+  profiles: ProfileResponse[];
+}
 
 const profileBase = `${API_BASE_URL ?? ""}/api/profiles`;
 
@@ -34,15 +37,7 @@ export const useCountProfile = (
   return useQuery({
     queryKey: ["profiles", "count"],
     queryFn: async () => {
-      const response = await fetch(`${profileBase}/count`);
-
-      const res =
-        (await response.json()) as SignalResponse<ProfileCountResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
+      return authedFetch<ProfileCountResponse>(`${profileBase}/count`);
     },
     ...queryOptions,
   });
@@ -203,17 +198,9 @@ export const useProfileRanking = (
     queryFn: async () => {
       const params = new URLSearchParams();
       params.append("uuid", uuid);
-      const response = await fetch(
+      return authedFetch<ProfileRankingResponse>(
         `${profileBase}/ranking?${params.toString()}`,
       );
-
-      const res =
-        (await response.json()) as SignalResponse<ProfileRankingResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
     },
     ...queryOptions,
   });
@@ -229,15 +216,9 @@ export const useCountProfileByGender = (
   return useQuery({
     queryKey: ["profiles", "count", gender],
     queryFn: async () => {
-      const response = await fetch(`${profileBase}/genders/${gender}/count`);
-
-      const res =
-        (await response.json()) as SignalResponse<ProfileCountResponse>;
-      if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
-      } else {
-        return res.result;
-      }
+      return authedFetch<ProfileCountResponse>(
+        `${profileBase}/genders/${gender}/count`,
+      );
     },
     ...queryOptions,
   });
@@ -256,6 +237,28 @@ export const usePurchasedProfiles = (
         `${profileBase}/me/purchased`,
       );
     },
+    ...queryOptions,
+  });
+};
+
+export const useDeckProfiles = (
+  gender: Gender,
+  queryOptions?: Omit<
+    UseQueryOptions<ProfileResponse[], SignalError>,
+    "queryKey" | "queryFn"
+  >,
+) => {
+  return useQuery({
+    queryKey: ["profiles", "deck", gender],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      params.append("gender", gender);
+      const res = await authedFetch<DeckResponse>(
+        `${profileBase}/deck?${params.toString()}`,
+      );
+      return res.profiles;
+    },
+    staleTime: Infinity,
     ...queryOptions,
   });
 };

@@ -270,44 +270,45 @@ const ProfileCardEditorBack: React.FC<ProfileCardEditorBackProps> = ({
     <div
       className={cn(
         cardBg,
-        "relative rounded-[36px] overflow-hidden flex flex-col p-3 items-center w-full select-none",
+        "relative rounded-[36px] overflow-hidden flex flex-col p-3 items-stretch w-full select-none",
         className,
       )}
     >
-      <div className="flex flex-col items-center gap-3 px-3 pt-6 pb-4">
-        <div className="flex flex-col items-center gap-1 w-full px-1">
-          <p className="text-label-neutral font-medium text-xs leading-tight whitespace-nowrap">
-            {displayYear}년생 · {animalDisplayMap[profile.animal]}상
-          </p>
-          <p className="text-label-strong font-semibold text-xl leading-tight whitespace-nowrap">
-            {profile.nickname}
-          </p>
+      <div className="grow flex flex-col w-full">
+        <div className="flex flex-col items-center gap-3 px-3 pt-6 pb-4">
+          <div className="flex flex-col items-center gap-1 w-full px-1">
+            <p className="text-label-neutral font-medium text-xs leading-tight whitespace-nowrap">
+              {displayYear}년생 · {animalDisplayMap[profile.animal]}상
+            </p>
+            <p className="text-label-strong font-semibold text-xl leading-tight whitespace-nowrap">
+              {profile.nickname}
+            </p>
+          </div>
+
+          <div className="flex items-center justify-center w-full h-[126px]">
+            <AnimalImage
+              animalType={profile.animal}
+              gender={gender}
+              className="object-contain max-h-[126px]"
+            />
+          </div>
+
+          <ProfileTags profile={profile} gender={gender} />
         </div>
 
-        <div className="flex items-center justify-center w-full h-[126px]">
-          <AnimalImage
-            animalType={profile.animal}
-            gender={gender}
-            className="object-contain max-h-[126px]"
+        <div className="bg-white rounded-3xl w-full grow px-6 py-4 flex flex-col items-center justify-center gap-2">
+          <Input
+            value={profile.contact}
+            onChange={(e) => onContactChange(e.target.value)}
+            className="w-full text-lg text-center font-medium"
+            maxLength={15}
           />
+          <p className="text-label-neutral text-sm font-medium">
+            {profile.contact.startsWith("@")
+              ? "아이디를 누르면 인스타로 연결됩니다."
+              : "번호를 누르면 연락처를 추가할 수 있습니다."}
+          </p>
         </div>
-
-        <Input
-          value={profile.contact}
-          onChange={(e) => onContactChange(e.target.value)}
-          className="w-full text-base text-center"
-          maxLength={15}
-        />
-        <p
-          className={cn(
-            "text-sm font-medium",
-            gender === "MALE" ? "text-secondary-strong" : "text-primary",
-          )}
-        >
-          {profile.contact.startsWith("@")
-            ? "아이디를 누르면 인스타로 연결됩니다."
-            : "번호를 누르면 연락처를 추가할 수 있습니다."}
-        </p>
       </div>
 
       <div className="absolute left-3 h-full flex flex-col justify-center">

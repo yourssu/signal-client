@@ -20,15 +20,6 @@ const ContactedProfilesPage: React.FC = () => {
 
   const count = `${purchasedProfiles?.length ?? 0}`.padStart(2, "0");
 
-  const handleViewContact = () => {
-    if (!profile?.profileId) return;
-    navigate(`/profile/contact?id=${profile.profileId}&from=saved`, {
-      state: {
-        profile,
-      },
-    });
-  };
-
   return (
     <div className="w-full h-full flex flex-col items-center">
       <title>내가 보낸 시그널 - 시그널</title>
@@ -56,15 +47,9 @@ const ContactedProfilesPage: React.FC = () => {
               selectedId={profile?.profileId}
               onSelect={setProfile}
             />
-            {ENABLE_SAVED && (
-              <Button
-                onClick={handleViewContact}
-                size="xl"
-                className="w-full rounded-3xl"
-              >
-                연락처 확인하기
-              </Button>
-            )}
+            <p className="caption1 text-label-strong text-center">
+              카드를 클릭하면 카드를 뒤집을 수 있어요.
+            </p>
           </div>
         </>
       ) : (

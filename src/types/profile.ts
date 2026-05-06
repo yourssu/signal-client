@@ -1,5 +1,5 @@
 export type Gender = "MALE" | "FEMALE";
-export type StyleType = "TETO" | "EGEN";
+export type EgenTetoType = "TETO" | "EGEN";
 export type AnimalType =
   | "DOG"
   | "BEAR"
@@ -22,7 +22,7 @@ export interface ProfileCreatedRequest {
   nickname: string;
   introSentences: string[];
   school: string | null;
-  style: StyleType;
+  egenTeto: EgenTetoType;
 }
 
 export interface NicknameGeneratedRequest {
@@ -63,7 +63,8 @@ export interface ProfileResponse {
   nickname: string;
   introSentences: string[];
   school: string | null;
-  style: StyleType;
+  egenTeto: EgenTetoType;
+  compatibilityLabel?: string;
 }
 
 export interface MyProfileResponse {
@@ -78,7 +79,7 @@ export interface MyProfileResponse {
   nickname: string;
   introSentences: string[];
   school: string;
-  style: StyleType;
+  egenTeto: EgenTetoType;
 }
 
 export interface ProfileContactResponse extends ProfileResponse {
@@ -107,5 +108,5 @@ export interface ProfileRankingResponse {
   nickname: string;
   introSentences: string[];
   school: string;
-  style: StyleType;
+  egenTeto: EgenTetoType;
 }

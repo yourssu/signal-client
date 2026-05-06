@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { cn, whenPressEnter } from "@/lib/utils";
-import { Mbti, StyleType } from "@/types/profile";
+import { Mbti, EgenTetoType } from "@/types/profile";
 import React, { useState, useMemo } from "react";
 
-const styleOptions: { type: StyleType; label: string }[] = [
+const egenTetoOptions: { type: EgenTetoType; label: string }[] = [
   { type: "TETO", label: "테토 st" },
   { type: "EGEN", label: "에겐 st" },
 ];
@@ -31,13 +31,13 @@ interface EssentialInfoStepProps {
   mbti?: Mbti;
   department?: string;
   school?: string;
-  style?: StyleType;
+  egenTeto?: EgenTetoType;
   onSubmit: (data: {
     birthYear: number;
     mbti: Mbti;
     department: string;
     school?: string;
-    style: StyleType;
+    egenTeto: EgenTetoType;
   }) => void;
 }
 
@@ -46,7 +46,7 @@ const EssentialInfoStep: React.FC<EssentialInfoStepProps> = ({
   mbti: defaultMbti,
   department: defaultDepartment,
   school: defaultSchool,
-  style: defaultStyle,
+  egenTeto: defaultEgenTeto,
   onSubmit,
 }) => {
   const [birthYearInput, setBirthYearInput] = useState<number | null>(
@@ -60,8 +60,8 @@ const EssentialInfoStep: React.FC<EssentialInfoStepProps> = ({
   const [isAnotherSchool, setIsAnotherSchool] = useState<boolean>(
     defaultSchool ? true : false,
   );
-  const [styleInput, setStyleInput] = useState<StyleType | null>(
-    defaultStyle ?? null,
+  const [egenTetoInput, setEgenTetoInput] = useState<EgenTetoType | null>(
+    defaultEgenTeto ?? null,
   );
 
   const isBirthYearValid = useMemo(
@@ -91,7 +91,7 @@ const EssentialInfoStep: React.FC<EssentialInfoStepProps> = ({
     isBirthYearValid &&
     isMbtiValid &&
     isDepartmentValid &&
-    styleInput !== null &&
+    egenTetoInput !== null &&
     (!isAnotherSchool || schoolInput.length > 0);
 
   const isMbtiError =
@@ -120,13 +120,13 @@ const EssentialInfoStep: React.FC<EssentialInfoStepProps> = ({
   };
 
   const handleSubmit = () => {
-    if (!isAllValid || !isValidMbti(mbtiInput) || !styleInput) return;
+    if (!isAllValid || !isValidMbti(mbtiInput) || !egenTetoInput) return;
     onSubmit({
       birthYear: birthYearInput!,
       mbti: mbtiInput.toUpperCase() as Mbti,
       department: departmentInput,
       school: isAnotherSchool ? schoolInput : undefined,
-      style: styleInput,
+      egenTeto: egenTetoInput,
     });
   };
 
@@ -233,14 +233,14 @@ const EssentialInfoStep: React.FC<EssentialInfoStepProps> = ({
                 <div className="flex flex-col gap-2 mt-4 animate-in slide-in-from-bottom-4 fade-in ease-in-out duration-300">
                   <p className="text-xs font-medium text-[#212225] px-2">나의 스타일</p>
                   <div className="flex gap-2">
-                    {styleOptions.map((option) => (
+                    {egenTetoOptions.map((option) => (
                       <button
                         key={option.type}
                         type="button"
-                        onClick={() => setStyleInput(option.type)}
+                        onClick={() => setEgenTetoInput(option.type)}
                         className={cn(
                           "flex-1 h-11 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer",
-                          styleInput === option.type ? "bg-neutral-100 border border-pink-600 text-pink-600" : "bg-neutral-100 text-[#212225]",
+                          egenTetoInput === option.type ? "bg-neutral-100 border border-pink-600 text-pink-600" : "bg-neutral-100 text-[#212225]",
                         )}
                       >
                         {option.label}

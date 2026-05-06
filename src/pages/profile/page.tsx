@@ -1,68 +1,52 @@
-import React, { useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { useSetAtom } from "jotai";
-import { useCountProfile, useRandomProfile } from "@/hooks/queries/profiles";
+import { useCountProfile, useDeckProfiles } from "@/hooks/queries/profiles";
 import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
-import { addRecentlyViewedProfileAtom } from "@/atoms/profiles";
 import { SwipeableProfileCard } from "@/components/profile/SwipeableProfileCard";
-import { useViewerSelf } from "@/hooks/queries/viewers";
 import { userGenderAtom } from "@/atoms/user";
 import GenderStep from "@/components/purchase/GenderSelect";
 import { Gender } from "@/types/profile";
 import { viewProfile } from "@/lib/analytics";
-import { toast } from "sonner";
 import { useUser } from "@/hooks/useUser";
 
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
-  const { gender, recentlyViewedProfileIds } = useUser();
+  const { gender } = useUser();
   const setGender = useSetAtom(userGenderAtom);
   const desiredGender = gender === "MALE" ? "FEMALE" : "MALE";
-  const { data: viewerSelf } = useViewerSelf({
-    throwOnError: false,
-    retry: false,
-  });
-  const ticketCount = (viewerSelf?.ticket ?? 0) - (viewerSelf?.usedTicket ?? 0);
 
-  // Get recently viewed profiles to exclude them from random profile fetch
-  const addRecentlyViewedProfile = useSetAtom(addRecentlyViewedProfileAtom);
-
-  // Convert string IDs to numbers for the API
-  const excludeProfiles = recentlyViewedProfileIds.map((id) =>
-    parseInt(id, 10),
-  );
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const { data: countData } = useCountProfile();
-
-  const {
-    data: profile,
-    refetch,
-    isRefetching,
-    error,
-  } = useRandomProfile(desiredGender!, excludeProfiles, {
-    enabled: false,
-    staleTime: Infinity,
+  const { data: deck, isPending, error } = useDeckProfiles(desiredGender!, {
+    enabled: !!desiredGender,
   });
 
-  useEffect(() => {
-    if (gender && !profile) {
-      refetch();
-      if (error) {
-        toast.error(`프로필을 불러오지 못했어요.`, {
-          description: error.message,
-        });
+  const profile = useMemo(
+    () => (deck && deck.length > 0 ? deck[currentIndex] : null),
+    [deck, currentIndex],
+  );
+
+  const canSwipeLeft = !!deck && currentIndex < deck.length - 1;
+  const canSwipeRight = currentIndex > 0;
+
+  const handleSwipe = (direction: "left" | "right") => {
+    if (direction === "left" && canSwipeLeft) {
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
+      if (deck) {
+        viewProfile(deck[nextIndex].profileId);
+      }
+    } else if (direction === "right" && canSwipeRight) {
+      const prevIndex = currentIndex - 1;
+      setCurrentIndex(prevIndex);
+      if (deck) {
+        viewProfile(deck[prevIndex].profileId);
       }
     }
-  }, [error, gender, profile, refetch, ticketCount]);
-
-  // Add current profile to recently viewed profiles when it changes
-  useEffect(() => {
-    if (gender && profile && countData) {
-      addRecentlyViewedProfile(profile.profileId.toString(), countData.count);
-      viewProfile(profile.profileId);
-    }
-  }, [profile, countData, addRecentlyViewedProfile, gender]);
+  };
 
   const handleGenderSelect = (selectedGender: Gender) => {
     setGender(selectedGender);
@@ -70,13 +54,10 @@ const ProfileListPage: React.FC = () => {
 
   if (gender === null) {
     return (
-      // Main page container - Flex column, min height screen
       <div className="flex flex-col min-h-dvh">
         <title>성별 선택하기 - 시그널</title>
         <TopBar onBack="/" />
-        {/* Content area - Takes remaining height, centers content */}
         <div className="flex-grow flex flex-col items-center justify-center p-4">
-          {/* Funnel container - Max width */}
           <div className="w-full max-w-md h-full flex flex-col grow items-stretch justify-stretch">
             <GenderStep onSelect={handleGenderSelect} />
           </div>
@@ -96,10 +77,6 @@ const ProfileListPage: React.FC = () => {
     });
   };
 
-  const handleSkip = () => {
-    refetch();
-  };
-
   return (
     <div className="w-full h-full flex flex-col items-center">
       <title>시그널 보내기 - 시그널</title>
@@ -113,12 +90,22 @@ const ProfileListPage: React.FC = () => {
           </h1>
         </div>
         <div className="w-full h-full max-w-md flex items-center justify-center grow">
+          {isPending && (
+            <p className="text-label-neutral text-lg">프로필을 불러오는 중...</p>
+          )}
+          {error && (
+            <p className="text-label-neutral text-lg">프로필을 불러오지 못했어요.</p>
+          )}
           {profile && (
             <SwipeableProfileCard
               profile={profile}
-              onSwipe={handleSkip}
-              isRefetching={isRefetching}
+              canSwipeLeft={canSwipeLeft}
+              canSwipeRight={canSwipeRight}
+              onSwipe={handleSwipe}
             />
+          )}
+          {!isPending && !error && deck?.length === 0 && (
+            <p className="text-label-neutral text-lg">더 이상 프로필이 없어요.</p>
           )}
         </div>
         <div className="flex gap-4 w-full relative z-50">

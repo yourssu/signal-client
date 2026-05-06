@@ -100,7 +100,7 @@ export const handlers = [
       result: {
         id: 1,
         uuid: MOCK_UUID,
-        ticket: 3,
+        ticket: 0,
         usedTicket: 0,
         updatedTime: new Date().toISOString(),
         purchasedProfiles: [],
@@ -149,7 +149,7 @@ export const handlers = [
         nickname: "토끼같은미소",
         introSentences: ["커피 한 잔과 함께 대화 나누기 좋아해요", "봄날 산책을 좋아해요", "재미있는 이야기 잘 해요"],
         school: "숭실대학교",
-        style: "STYLE_1",
+        egenTeto: "TETO",
         contact: "https://instagram.com/example1",
       },
       {
@@ -162,7 +162,7 @@ export const handlers = [
         nickname: "고양이눈빛",
         introSentences: ["조용한 카페를 좋아해요", "독서와 영화 감상이 취미예요", "깊은 대화를 나눠요"],
         school: "숭실대학교",
-        style: "STYLE_2",
+        egenTeto: "EGEN",
         contact: "https://instagram.com/example2",
       },
     ];
@@ -207,7 +207,7 @@ export const handlers = [
         introSentences: ["항상 밝고 긍정적인 에너지!", "카페 나들이를 좋아해요", "재미있는 대화 나눠요"],
         contact: "010-1234-5678",
         school: "숭실대",
-        style: "TETO",
+        egenTeto: "TETO",
       },
     } satisfies SuccessResponse<ProfileContactResponse>);
   }),
@@ -240,7 +240,7 @@ export const handlers = [
         nickname: getRandomNickname(randomAnimal),
         introSentences: ["운동 좋아하는 프로운동러", "맛집 탐방이 취미예요", "성실하고 책임감 강함"],
         school: "숭실대",
-        style: "EGEN",
+        egenTeto: "EGEN",
       },
     } satisfies SuccessResponse<ProfileResponse>);
   }),
@@ -258,7 +258,7 @@ export const handlers = [
       contact: body.contact,
       introSentences: body.introSentences,
       school: "숭실대",
-      style: body.style,
+      egenTeto: body.egenTeto,
     };
 
     return HttpResponse.json({
@@ -322,7 +322,7 @@ export const handlers = [
         contact: "010-1234-5678",
         introSentences: ["강아지처럼 충성스러운 성격!", "산책 좋아해요", "웃음이 많은 편이에요"],
         school: "숭실대",
-        style: "TETO",
+        egenTeto: "TETO",
       },
     } satisfies SuccessResponse<ProfileContactResponse>);
   }),

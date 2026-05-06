@@ -10,7 +10,7 @@ import {
   Mbti,
   ProfileContactResponse,
   ProfileCreatedRequest,
-  StyleType,
+  EgenTetoType,
 } from "@/types/profile";
 import { useCreateProfile, useSelfProfile } from "@/hooks/queries/profiles";
 import { useNavigate, Link } from "react-router";
@@ -95,7 +95,7 @@ const ProfileRegisterPage: React.FC = () => {
     mbti: Mbti;
     department: string;
     school?: string;
-    style: StyleType;
+    egenTeto: EgenTetoType;
   }) => {
     const context = {
       ...funnel.context,
@@ -103,7 +103,7 @@ const ProfileRegisterPage: React.FC = () => {
       mbti: data.mbti,
       department: data.department,
       school: data.school ? data.school : null,
-      style: data.style,
+      egenTeto: data.egenTeto,
     };
     funnel.history.replace("essentialInfo", context);
     funnel.history.push("animal", context);
@@ -152,7 +152,7 @@ const ProfileRegisterPage: React.FC = () => {
       introSentences,
       nickname,
       school,
-      style,
+      egenTeto,
     } = funnel.context;
     if (
       gender &&
@@ -162,7 +162,7 @@ const ProfileRegisterPage: React.FC = () => {
       birthYear &&
       introSentences &&
       nickname &&
-      style
+      egenTeto
     ) {
       const finalData: ProfileCreatedRequest = {
         uuid: uuid ?? undefined,
@@ -175,7 +175,7 @@ const ProfileRegisterPage: React.FC = () => {
         nickname,
         contact,
         school: school ?? null,
-        style,
+        egenTeto,
       };
       const res = await createProfile(finalData);
       funnel.history.replace("contact", res);
@@ -240,7 +240,7 @@ const ProfileRegisterPage: React.FC = () => {
                 mbti={funnel.context.mbti}
                 department={funnel.context.department}
                 school={funnel.context.school ?? undefined}
-                style={funnel.context.style}
+                egenTeto={funnel.context.egenTeto}
                 onSubmit={handleEssentialInfoSubmit}
               />
             )}
