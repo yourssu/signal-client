@@ -8,13 +8,13 @@ import { LoginDrawer } from "@/components/LoginDrawer";
 
 interface RegisterDoneStepProps {
   profile: ProfileContactResponse;
-  profileNumber?: number;
+  profileNumber: number;
   onSubmit: () => void;
 }
 
 const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
   profile,
-  profileNumber = 183,
+  profileNumber,
   onSubmit,
 }) => {
   const provider = useAtomValue(providerAtom);

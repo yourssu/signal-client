@@ -1,12 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
-import React, { useState, useMemo } from "react"; // Import useMemo
+import React, { useState, useMemo } from "react";
 import { Sparkles } from "lucide-react";
 import { useGenerateNickname } from "@/hooks/queries/profiles";
 import { createPortal } from "react-dom";
 import generatingImg from "@/assets/register/generating.png";
 import { cn, whenPressEnter } from "@/lib/utils";
 import { buttonClick } from "@/lib/analytics";
+
+const PROFANITY_LIST = [
+  "씨발", "시발", "새끼", "병신", "지랄", "미친놈", "미친년", "개년", "창녀", "걸레",
+  "찐따", "보지", "자지", "fuck", "shit", "bitch", "asshole", "cunt", "dick", "pussy",
+  "bastard", "whore", "slut",
+];
+
+const PROFANITY_REGEX = new RegExp(PROFANITY_LIST.join("|"), "i");
+const PROFANITY_ERROR_TEXT = "사용할 수 없는 닉네임입니다.";
 
 interface NicknameStepProps {
   onSubmit: (nickname: string) => void;
@@ -22,8 +31,8 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
   const [nickname, setNickname] = useState<string>(defaultNickname ?? "");
   const { mutate: generateNickname, isPending } = useGenerateNickname();
 
-  // Validation: Check if nickname is not empty
-  const isValid = useMemo(() => nickname.trim() !== "", [nickname]);
+  const profanityError = useMemo(() => PROFANITY_REGEX.test(nickname), [nickname]);
+  const isValid = useMemo(() => nickname.trim() !== "" && !profanityError, [nickname, profanityError]);
 
   const handleSubmit = () => {
     if (!isValid) return;
@@ -75,8 +84,12 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
               required
               placeholder="닉네임을 입력하세요."
               maxLength={15}
+              state={profanityError ? "error" : undefined}
+              errorText={profanityError ? PROFANITY_ERROR_TEXT : undefined}
             />
-            <p className="text-xs text-end">{nickname.length} / 15</p>
+            {!profanityError && (
+              <p className="text-xs text-end">{nickname.length} / 15</p>
+            )}
           </div>
           <button
             type="button"

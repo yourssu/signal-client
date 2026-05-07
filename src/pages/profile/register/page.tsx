@@ -12,7 +12,11 @@ import {
   ProfileCreatedRequest,
   EgenTetoType,
 } from "@/types/profile";
-import { useCreateProfile, useSelfProfile } from "@/hooks/queries/profiles";
+import {
+  useCountProfile,
+  useCreateProfile,
+  useSelfProfile,
+} from "@/hooks/queries/profiles";
 import { useNavigate, Link } from "react-router";
 import { useSetAtom } from "jotai";
 import { userGenderAtom, userProfileAtom } from "@/atoms/user";
@@ -66,6 +70,9 @@ const ProfileRegisterPage: React.FC = () => {
         },
   });
   const { data: latestProfile } = useSelfProfile({
+    enabled: funnel.step === "done",
+  });
+  const { data: profileCountRes } = useCountProfile({
     enabled: funnel.step === "done",
   });
 
@@ -273,6 +280,7 @@ const ProfileRegisterPage: React.FC = () => {
             done={() => (
               <RegisterDoneStep
                 profile={funnel.context as ProfileContactResponse}
+                profileNumber={(profileCountRes?.count ?? 0) + 1}
                 onSubmit={handleDone}
               />
             )}
