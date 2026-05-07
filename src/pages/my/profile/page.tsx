@@ -138,12 +138,13 @@ const MyProfilePage: React.FC = () => {
               <Button size="xl" onClick={handleUpdateDone}>
                 수정 완료
               </Button>
-              <button
-                className="text-primary underline text-xs cursor-pointer"
+              <Button
+                variant="secondary"
+                size="xl"
                 onClick={handleUpdateCancelled}
               >
                 수정 취소
-              </button>
+              </Button>
             </>
           ) : (
             <>

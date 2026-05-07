@@ -11,6 +11,7 @@ import { Gender } from "@/types/profile";
 import { viewProfile } from "@/lib/analytics";
 import { useUser } from "@/hooks/useUser";
 import { TicketRequiredModal } from "@/components/TicketRequiredModal";
+import ConnectionInfo from "@/components/ConnectionInfo";
 
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const ProfileListPage: React.FC = () => {
   const setGender = useSetAtom(userGenderAtom);
   const desiredGender = gender === "MALE" ? "FEMALE" : "MALE";
 
+  const [showConnectionInfo, _setShowConnectionInfo] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [ticketModalOpen, setTicketModalOpen] = useState(false);
 
@@ -87,13 +89,16 @@ const ProfileListPage: React.FC = () => {
     <div className="w-full h-full flex flex-col items-center">
       <title>시그널 보내기 - 시그널</title>
       <TopBar onBack="/" />
-      <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6 overflow-hidden">
+      <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6 overflow-hidden relative">
         <div className="flex flex-col items-start w-full">
           <h1 className="text-2xl font-semibold text-stone-700">
             <span className="text-primary">{count}명</span>이
             <br />
             당신의 시그널을 기다리는 중
           </h1>
+        </div>
+        <div className="absolute top-20 z-50">
+          <ConnectionInfo count={0} visible={showConnectionInfo} />
         </div>
         <div className="w-full h-full max-w-md flex items-center justify-center grow">
           {isPending && (
