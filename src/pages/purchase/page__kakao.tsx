@@ -38,7 +38,7 @@ const KakaoPayPurchasePage: React.FC = () => {
     if (funnel.historySteps.length === 1) {
       chargeTicketView(source);
     }
-  }, [funnel.historySteps.length]);
+  }, [funnel.historySteps.length, source]);
 
   const handlePackageSelect = (ticketPackage: Package) => {
     funnel.history.replace("packageSelection", { package: ticketPackage });

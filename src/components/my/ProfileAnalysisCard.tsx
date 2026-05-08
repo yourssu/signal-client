@@ -30,9 +30,10 @@ export const ProfileAnalysisCard = ({
             variant="default"
             className="button-l rounded-2xl h-[50px] w-full"
             asChild
-            onClick={() => mypageRegisterClick("no_profile_card")}
           >
-            <Link to="/my/profile">프로필 등록하기</Link>
+            <Link to="/my/profile" onClick={() => mypageRegisterClick("no_profile_card")}>
+              프로필 등록하기
+            </Link>
           </Button>
           {!isLoggedIn && (
             <div className="flex gap-1 caption1 text-label-alternative">

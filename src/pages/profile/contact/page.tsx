@@ -158,7 +158,8 @@ const ContactViewPage: React.FC = () => {
                     contactAnotherSignalClick("signal_contact")
                   }
                 >
-                  다른 시그널 보내기</Link>
+                  다른 시그널 보내기
+                </Link>
               </Button>
             </div>
           </div>
