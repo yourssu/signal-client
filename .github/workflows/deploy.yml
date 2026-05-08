@@ -60,7 +60,7 @@ jobs:
           VITE_DISABLED_REGISTER_DESC: ${{ vars.DISABLED_REGISTER_DESC }}
           VITE_SHA: ${{ github.sha }}
           VITE_GA_ID: ${{ vars.GA_ID }}
-          VITE_CLARITY_ID: ${{ vars.CLARITY_ID }}
+          VITE_MIXPANEL_TOKEN: ${{ vars.MIXPANEL_TOKEN }}
           VITE_NOTICE: ${{ vars.NOTICE }}
           VITE_GOOGLE_OAUTH_CLIENT_ID: ${{ vars.GOOGLE_OAUTH_CLIENT_ID }}
           VITE_PROFILE_ANALYSIS_WRITINGS: ${{ vars.PROFILE_ANALYSIS_WRITINGS }}

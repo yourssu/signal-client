@@ -7,8 +7,9 @@ export const MODE: string = import.meta.env.MODE;
 
 // GA4 Analytics ID
 export const GA_ID: string | undefined = import.meta.env.VITE_GA_ID;
-// Clarity Analytics ID
-export const CLARITY_ID: string | undefined = import.meta.env.VITE_CLARITY_ID;
+// Mixpanel Analytics Token
+export const MIXPANEL_TOKEN: string | undefined =
+  import.meta.env.VITE_MIXPANEL_TOKEN;
 
 // Base URL for the API. This is used to make API calls.
 export const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;

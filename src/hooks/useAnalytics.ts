@@ -1,7 +1,7 @@
-import { CLARITY_ID, GA_ID } from "@/env";
+import { GA_ID, MIXPANEL_TOKEN } from "@/env";
 import { useEffect } from "react";
 import ReactGA4 from "react-ga4";
-import Clarity from "@microsoft/clarity";
+import mixpanel from "mixpanel-browser";
 import { useUser } from "@/hooks/useUser";
 import { useLocation } from "react-router";
 
@@ -17,7 +17,10 @@ export const useAnalytics = () => {
         },
       });
 
-    if (CLARITY_ID) Clarity.init(CLARITY_ID);
+    if (MIXPANEL_TOKEN) {
+      mixpanel.init(MIXPANEL_TOKEN, { track_pageview: true });
+      if (uuid) mixpanel.identify(uuid);
+    }
   }, [uuid]);
 
   useEffect(() => {
@@ -35,5 +38,19 @@ export const useAnalytics = () => {
           auth_provider: authProvider ?? undefined,
         },
       });
-  }, [authProvider, gender, profile, viewer, location]);
+
+    if (MIXPANEL_TOKEN && uuid) {
+      mixpanel.people.set({
+        profile_registered: !!profile,
+        gender: gender ?? undefined,
+        mbti: profile?.mbti ?? undefined,
+        department: profile?.department ?? undefined,
+        birth_year: profile?.birthYear?.toString() ?? undefined,
+        ticket: viewer?.ticket ?? undefined,
+        used_ticket: viewer?.usedTicket ?? undefined,
+        school: profile?.school ?? undefined,
+        auth_provider: authProvider ?? undefined,
+      });
+    }
+  }, [authProvider, gender, profile, viewer, location, uuid]);
 };
