@@ -17,9 +17,8 @@ export const useAnalytics = () => {
         },
       });
 
-    if (MIXPANEL_TOKEN) {
-      mixpanel.init(MIXPANEL_TOKEN, { track_pageview: true });
-      if (uuid) mixpanel.identify(uuid);
+    if (MIXPANEL_TOKEN && uuid) {
+      mixpanel.identify(uuid);
     }
   }, [uuid]);
 

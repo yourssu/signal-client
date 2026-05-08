@@ -2,6 +2,10 @@ import { GA_ID, MIXPANEL_TOKEN } from "@/env";
 import ReactGA4 from "react-ga4";
 import mixpanel from "mixpanel-browser";
 
+if (MIXPANEL_TOKEN) {
+  mixpanel.init(MIXPANEL_TOKEN);
+}
+
 const track = (eventName: string, params?: Record<string, unknown>) => {
   if (GA_ID) ReactGA4.event(eventName, params);
   if (MIXPANEL_TOKEN) mixpanel.track(eventName, params);
