@@ -2,6 +2,8 @@ import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import type { ProfileContactResponse, ProfileResponse } from "@/types/profile";
 
+export const profileDeckIndexAtom = atom<number>(0);
+
 // Base atom to store the array of profiles
 export const savedProfilesAtom = atomWithStorage<ProfileResponse[]>(
   "user.savedProfiles",

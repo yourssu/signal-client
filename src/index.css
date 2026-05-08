@@ -274,7 +274,7 @@ http://scripts.sil.org/OFL
 
   /* Signal colors (legacy) */
   --pink: oklch(0.66 0.1974 1.85);
-  --light-pink: oklch(0.97 0.0154 351.96);
+  --light-pink: oklch(0.9741 0.0191 333.46);
   --pale-pink: oklch(0.98 0.0076 7.28);
   --white-pink: oklch(1 0.0025 345.21);
   --blue-400: oklch(0.7 0.1583 253.63);

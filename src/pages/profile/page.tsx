@@ -1,11 +1,12 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useCountProfile, useDeckProfiles } from "@/hooks/queries/profiles";
 import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
 import { SwipeableProfileCard } from "@/components/profile/SwipeableProfileCard";
 import { userGenderAtom } from "@/atoms/user";
+import { profileDeckIndexAtom } from "@/atoms/profiles";
 import GenderStep from "@/components/purchase/GenderSelect";
 import { Gender } from "@/types/profile";
 import { viewProfile, contactClick } from "@/lib/analytics";
@@ -20,7 +21,7 @@ const ProfileListPage: React.FC = () => {
   const desiredGender = gender === "MALE" ? "FEMALE" : "MALE";
 
   const [showConnectionInfo, _setShowConnectionInfo] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useAtom(profileDeckIndexAtom);
   const [ticketModalOpen, setTicketModalOpen] = useState(false);
 
   const { data: countData } = useCountProfile();
@@ -28,23 +29,35 @@ const ProfileListPage: React.FC = () => {
     enabled: !!desiredGender,
   });
 
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [desiredGender, setCurrentIndex]);
+
+  const safeIndex = deck ? Math.min(currentIndex, Math.max(deck.length - 1, 0)) : 0;
+
+  useEffect(() => {
+    if (deck && deck.length > 0 && currentIndex >= deck.length) {
+      setCurrentIndex(deck.length - 1);
+    }
+  }, [deck, currentIndex, setCurrentIndex]);
+
   const profile = useMemo(
-    () => (deck && deck.length > 0 ? deck[currentIndex] : null),
-    [deck, currentIndex],
+    () => (deck && deck.length > 0 ? deck[safeIndex] : null),
+    [deck, safeIndex],
   );
 
-  const canSwipeLeft = !!deck && currentIndex < deck.length - 1;
-  const canSwipeRight = currentIndex > 0;
+  const canSwipeLeft = !!deck && safeIndex < deck.length - 1;
+  const canSwipeRight = safeIndex > 0;
 
   const handleSwipe = (direction: "left" | "right") => {
     if (direction === "left" && canSwipeLeft) {
-      const nextIndex = currentIndex + 1;
+      const nextIndex = safeIndex + 1;
       setCurrentIndex(nextIndex);
       if (deck) {
         viewProfile(deck[nextIndex].profileId);
       }
     } else if (direction === "right" && canSwipeRight) {
-      const prevIndex = currentIndex - 1;
+      const prevIndex = safeIndex - 1;
       setCurrentIndex(prevIndex);
       if (deck) {
         viewProfile(deck[prevIndex].profileId);
