@@ -63,7 +63,7 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
           {ENABLE_REGISTER ? (
             profileRegistered ? (
               <Link
-                to="/my"
+                to="/my/profile"
                 onClick={() => myprofileView("main")}
                 className="flex h-14 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary hover:bg-[#ffd4f3] transition-colors"
               >
