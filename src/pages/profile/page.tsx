@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { useAtom, useSetAtom } from "jotai";
 import { useCountProfile, useDeckProfiles } from "@/hooks/queries/profiles";
@@ -30,9 +30,13 @@ const ProfileListPage: React.FC = () => {
     enabled: !!desiredGender,
   });
 
+  const prevGenderRef = useRef(desiredGender);
   useEffect(() => {
-    setCurrentIndex(0);
-    setSavedProfileId(null);
+    if (prevGenderRef.current !== desiredGender) {
+      setCurrentIndex(0);
+      setSavedProfileId(null);
+      prevGenderRef.current = desiredGender;
+    }
   }, [desiredGender, setCurrentIndex, setSavedProfileId]);
 
   useEffect(() => {
