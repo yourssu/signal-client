@@ -38,10 +38,13 @@ const MyProfilePage: React.FC = () => {
   const queryClient = useQueryClient();
   const { data } = useCheckMyBlacklistStatus();
   const isDeleted = data?.isBlacklisted ?? false;
-  const { mutateAsync: updateProfile } = useUpdateProfile({
-    onError: (error) =>
-      toast.error("프로필 수정이 실패했어요.", { description: error.message }),
-  });
+  const { mutateAsync: updateProfile, isPending: isUpdating } =
+    useUpdateProfile({
+      onError: (error) =>
+        toast.error("프로필 수정이 실패했어요.", {
+          description: error.message,
+        }),
+    });
   const { mutateAsync: addToBlacklist } = useAddMyToBlacklist({
     onError: (error) =>
       toast.error("프로필 비공개에 실패했어요.", {
@@ -147,7 +150,7 @@ const MyProfilePage: React.FC = () => {
             </Button>
           ) : isEditing ? (
             <>
-              <Button size="xl" onClick={handleUpdateDone}>
+              <Button size="xl" onClick={handleUpdateDone} disabled={isUpdating}>
                 수정 완료
               </Button>
               <Button

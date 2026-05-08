@@ -3,6 +3,7 @@ import ProfileTags from "@/components/profile/ProfileTags";
 import { animalDisplayMap } from "@/lib/animal";
 import { cardBgConfig } from "@/lib/card";
 import { cn, formatPhone } from "@/lib/utils";
+import { toast } from "sonner";
 import { Gender, ProfileResponse } from "@/types/profile";
 import React from "react";
 
@@ -103,24 +104,39 @@ const ProfileCardBack: React.FC<
         </div>
 
         <div className="bg-white rounded-3xl w-full grow px-6 py-4 flex flex-col items-center justify-center gap-2">
-          <a
-            href={
-              contact.startsWith("@")
-                ? `https://instagram.com/${contact.substring(1)}`
-                : `tel:${contact}`
-            }
-            target="_blank"
-            className="w-full flex justify-center items-center px-2 py-3"
-          >
-            <span
-              className={cn(
-                "text-label-strong font-medium leading-5 text-center underline",
-                isSmall ? "text-base" : "text-lg",
-              )}
+          {contact.startsWith("@") ? (
+            <a
+              href={`https://instagram.com/${contact.substring(1)}`}
+              target="_blank"
+              className="w-full flex justify-center items-center px-2 py-3"
             >
-              {contact.startsWith("@") ? contact : formatPhone(contact)}
-            </span>
-          </a>
+              <span
+                className={cn(
+                  "text-label-strong font-medium leading-5 text-center underline",
+                  isSmall ? "text-base" : "text-lg",
+                )}
+              >
+                {contact}
+              </span>
+            </a>
+          ) : (
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(contact);
+                toast.success("전화번호가 복사되었어요");
+              }}
+              className="w-full flex justify-center items-center px-2 py-3"
+            >
+              <span
+                className={cn(
+                  "text-label-strong font-medium leading-5 text-center underline",
+                  isSmall ? "text-base" : "text-lg",
+                )}
+              >
+                {formatPhone(contact)}
+              </span>
+            </button>
+          )}
           {!isSmall && (
             <p className="text-label-neutral text-sm font-medium">
               {contact.startsWith("@")

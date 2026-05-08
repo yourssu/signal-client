@@ -66,7 +66,7 @@ export const useUser = (): UserData & {
   const refreshUser = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ["profiles", "me"] });
     queryClient.invalidateQueries({ queryKey: ["viewer", "me"] });
-    queryClient.invalidateQueries({ queryKey: ["profiles", "purchased"] });
+    queryClient.invalidateQueries({ queryKey: ["profiles", "me", "purchased"] });
     setRefreshInitiated(true);
   }, [queryClient]);
 
@@ -93,7 +93,6 @@ export const useUser = (): UserData & {
         setIsRefreshed(true);
     }
   }, [
-    profile,
     isProfilePending,
     setProfile,
     viewerRes,
@@ -101,7 +100,6 @@ export const useUser = (): UserData & {
     refreshInitiated,
     setGender,
     isViewerSelfPending,
-    purchasedProfiles,
     isPurchasedProfilesPending,
     setPurchasedProfiles,
     profileRes,
