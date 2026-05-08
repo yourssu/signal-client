@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
 import { SwipeableProfileCard } from "@/components/profile/SwipeableProfileCard";
 import { userGenderAtom } from "@/atoms/user";
-import { profileDeckIndexAtom } from "@/atoms/profiles";
+import { profileDeckIndexAtom, profileDeckProfileIdAtom } from "@/atoms/profiles";
 import GenderStep from "@/components/purchase/GenderSelect";
 import { Gender } from "@/types/profile";
 import { viewProfile, contactClick } from "@/lib/analytics";
@@ -22,6 +22,7 @@ const ProfileListPage: React.FC = () => {
 
   const [showConnectionInfo, _setShowConnectionInfo] = useState(false);
   const [currentIndex, setCurrentIndex] = useAtom(profileDeckIndexAtom);
+  const [savedProfileId, setSavedProfileId] = useAtom(profileDeckProfileIdAtom);
   const [ticketModalOpen, setTicketModalOpen] = useState(false);
 
   const { data: countData } = useCountProfile();
@@ -31,15 +32,25 @@ const ProfileListPage: React.FC = () => {
 
   useEffect(() => {
     setCurrentIndex(0);
-  }, [desiredGender, setCurrentIndex]);
-
-  const safeIndex = deck ? Math.min(currentIndex, Math.max(deck.length - 1, 0)) : 0;
+    setSavedProfileId(null);
+  }, [desiredGender, setCurrentIndex, setSavedProfileId]);
 
   useEffect(() => {
-    if (deck && deck.length > 0 && currentIndex >= deck.length) {
-      setCurrentIndex(deck.length - 1);
+    if (!deck || deck.length === 0) return;
+    if (savedProfileId !== null) {
+      const foundIndex = deck.findIndex(
+        (p) => p.profileId === savedProfileId,
+      );
+      if (foundIndex >= 0) {
+        setCurrentIndex(foundIndex);
+      }
+      setSavedProfileId(null);
     }
-  }, [deck, currentIndex, setCurrentIndex]);
+  }, [deck, savedProfileId, setCurrentIndex, setSavedProfileId]);
+
+  const safeIndex = deck
+    ? Math.min(currentIndex, Math.max(deck.length - 1, 0))
+    : 0;
 
   const profile = useMemo(
     () => (deck && deck.length > 0 ? deck[safeIndex] : null),
@@ -92,6 +103,7 @@ const ProfileListPage: React.FC = () => {
       return;
     }
     contactClick(profile.profileId);
+    setSavedProfileId(profile.profileId);
     navigate(`/profile/contact?id=${profile.profileId}`, {
       state: {
         profile,

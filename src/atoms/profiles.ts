@@ -9,6 +9,13 @@ export const profileDeckIndexAtom = atomWithStorage<number>(
   { getOnInit: true },
 );
 
+export const profileDeckProfileIdAtom = atomWithStorage<number | null>(
+  "user.profileDeckProfileId",
+  null,
+  undefined,
+  { getOnInit: true },
+);
+
 // Base atom to store the array of profiles
 export const savedProfilesAtom = atomWithStorage<ProfileResponse[]>(
   "user.savedProfiles",
