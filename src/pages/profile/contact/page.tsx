@@ -8,7 +8,11 @@ import { useSetAtom } from "jotai";
 import { purchaseProfileAtom } from "@/atoms/profiles";
 import TurnableProfileCard from "@/components/profile/TurnableProfileCard";
 import { ENABLE_SAVED, TICKET_COST } from "@/env";
-import { buttonClick, viewContact } from "@/lib/analytics";
+import {
+  contactCancelClick,
+  contactCheckClick,
+  contactAnotherSignalClick,
+} from "@/lib/analytics";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { useQueryClient } from "@tanstack/react-query";
 import listHeartOutline from "@/assets/icons/list_heart_outline.svg";
@@ -26,7 +30,7 @@ const ContactViewPage: React.FC = () => {
   const id = useMemo(() => Number(idStr), [idStr]);
   const returnLink = from === "saved" ? "/my/signals" : "/profile";
 
-  const { uuid, purchasedProfiles } = useUser();
+  const { purchasedProfiles } = useUser();
   const addContact = useSetAtom(purchaseProfileAtom);
 
   const profile = (location.state as { profile: ProfileResponse | null } | null)
@@ -46,7 +50,7 @@ const ContactViewPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const handleCancel = () => {
-    buttonClick("cancel_view_content", "이용권 열람 취소");
+    contactCancelClick();
     navigate("/profile");
   };
 
@@ -56,9 +60,12 @@ const ContactViewPage: React.FC = () => {
         profileId: id,
       });
       await queryClient.invalidateQueries({
-        queryKey: ["viewer", "uuid", uuid],
+        queryKey: ["viewer", "me"],
       });
-      if (viewerSelf) viewContact(res, viewerSelf);
+      const remainingTickets = viewerSelf
+        ? viewerSelf.ticket - viewerSelf.usedTicket - TICKET_COST
+        : 0;
+      contactCheckClick(remainingTickets > 0);
       setIsConfirmed(true);
       setError(null);
       setProfileContact(res);
@@ -103,6 +110,9 @@ const ContactViewPage: React.FC = () => {
                 확인
               </Button>
             </div>
+            <p className="mt-4 text-sm text-muted-foreground">
+              구매시 남은 이용권 수: {Math.max((viewerSelf?.ticket ?? 0) - (viewerSelf?.usedTicket ?? 0) - TICKET_COST, 0)}
+            </p>
             {error && <p className="mt-4 text-red-500 font-medium">{error}</p>}
           </div>
         </div>
@@ -142,7 +152,13 @@ const ContactViewPage: React.FC = () => {
                 </Button>
               )}
               <Button size="xl" className="rounded-2xl grow" asChild>
-                <Link to={returnLink}>다른 시그널 보내기</Link>
+                <Link
+                  to={returnLink}
+                  onClick={() =>
+                    contactAnotherSignalClick("signal_contact")
+                  }
+                >
+                  다른 시그널 보내기</Link>
               </Button>
             </div>
           </div>

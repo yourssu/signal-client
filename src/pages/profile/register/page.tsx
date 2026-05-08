@@ -1,5 +1,5 @@
 import { ChevronLeft } from "lucide-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useFunnel } from "@use-funnel/react-router";
 import GenderStep from "@/components/register/GenderStep";
 import AnimalStep from "@/components/register/AnimalStep";
@@ -27,7 +27,14 @@ import RegisterDoneStep from "@/components/register/RegisterDoneStep";
 import TopBar from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { funnelComplete, funnelStart, funnelStep } from "@/lib/analytics";
+import {
+  profileGenderSubmit,
+  profileInfoSubmit,
+  profileAnimalSubmit,
+  profileFeaturesSubmit,
+  profileNicknameSubmit,
+  profileContactDetailSubmit,
+} from "@/lib/analytics";
 import { useUser } from "@/hooks/useUser";
 
 type RegisterFunnel = {
@@ -55,6 +62,7 @@ const ProfileRegisterPage: React.FC = () => {
   const { uuid, gender, profile } = useUser();
   const setGender = useSetAtom(userGenderAtom);
   const setProfile = useSetAtom(userProfileAtom);
+  const registerStartTime = useRef(Date.now());
   const funnel = useFunnel<RegisterFunnel>({
     id: "profile.register",
     initial: profile
@@ -82,19 +90,13 @@ const ProfileRegisterPage: React.FC = () => {
     }
   }, [profile, latestProfile, setProfile]);
 
-  useEffect(() => {
-    if (funnel.historySteps.length === 1) {
-      funnelStart("profile.register", "프로필 등록");
-    }
-  }, [funnel.historySteps.length]);
-
   const { mutateAsync: createProfile } = useCreateProfile();
 
   const handleGenderSelect = (gender: Gender) => {
     setGender(gender);
     funnel.history.replace("gender", { ...funnel.context, gender });
     funnel.history.push("essentialInfo", { ...funnel.context, gender });
-    funnelStep("profile.register", "프로필 등록", "gender", funnel.context);
+    profileGenderSubmit(gender === "MALE" ? "male" : "female");
   };
 
   const handleEssentialInfoSubmit = (data: {
@@ -114,13 +116,19 @@ const ProfileRegisterPage: React.FC = () => {
     };
     funnel.history.replace("essentialInfo", context);
     funnel.history.push("animal", context);
-    funnelStep("profile.register", "프로필 등록", "essentialInfo", context);
+    profileInfoSubmit({
+      enteredMbti: data.mbti,
+      selectedType: data.egenTeto === "EGEN" ? "에겐" : "테토",
+      anotherSchool: !!data.school,
+      enteredMajor: data.department,
+      enteredAge: data.birthYear,
+    });
   };
 
   const handleAnimalSelect = (animal: AnimalType) => {
     funnel.history.replace("animal", { ...funnel.context, animal });
     funnel.history.push("personality", { ...funnel.context, animal });
-    funnelStep("profile.register", "프로필 등록", "animal", funnel.context);
+    profileAnimalSubmit(animal.toLowerCase());
   };
 
   const handlePersonalitySubmit = async (personality: string[]) => {
@@ -132,12 +140,7 @@ const ProfileRegisterPage: React.FC = () => {
       ...funnel.context,
       introSentences: personality,
     });
-    funnelStep(
-      "profile.register",
-      "프로필 등록",
-      "personality",
-      funnel.context,
-    );
+    profileFeaturesSubmit(personality.length);
   };
 
   const handleNicknameSubmit = async (nickname: string) => {
@@ -146,7 +149,7 @@ const ProfileRegisterPage: React.FC = () => {
       ...funnel.context,
       nickname,
     });
-    funnelStep("profile.register", "프로필 등록", "nickname", funnel.context);
+    profileNicknameSubmit(nickname);
   };
 
   const handleContactSubmit = async (contact: string) => {
@@ -187,14 +190,12 @@ const ProfileRegisterPage: React.FC = () => {
       const res = await createProfile(finalData);
       funnel.history.replace("contact", res);
       funnel.history.push("done", res);
-      funnelComplete("profile.register", "프로필 등록", {
-        gender,
-        animal,
-        mbti,
-        department,
-        birthYear,
-        introSentences,
-        nickname,
+      const totalTimeSpent = Math.round(
+        (Date.now() - registerStartTime.current) / 1000,
+      );
+      profileContactDetailSubmit({
+        contactInformation: contact,
+        totalTimeSpent,
       });
       setProfile(res);
     }

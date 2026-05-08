@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router";
 import TopBar from "@/components/Header";
 import { Button } from "@/components/ui/button";
@@ -11,13 +11,23 @@ import { providerAtom } from "@/atoms/authTokens";
 import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/utils";
 import { ENABLE_PROFILE_VIEW } from "@/env";
-import { buttonClick } from "@/lib/analytics";
+import { mypageView } from "@/lib/analytics";
 
 const MyPage: React.FC = () => {
   const { profile, viewer } = useUser();
   const ticketCount = (viewer?.ticket ?? 0) - (viewer?.usedTicket ?? 0);
   const provider = useAtomValue(providerAtom) ?? "local";
   const isLoggedIn = provider !== "local";
+
+  useEffect(() => {
+    if (!profile && !isLoggedIn) {
+      mypageView("unregistered");
+    } else if (profile && !isLoggedIn) {
+      mypageView("registered_nonlogin");
+    } else {
+      mypageView("registered_login");
+    }
+  }, [profile, isLoggedIn]);
 
   return (
     <div className="w-full h-full flex flex-col items-center bg-neutral-100">
@@ -52,9 +62,8 @@ const MyPage: React.FC = () => {
               asChild
             >
               <Link
-                to="/purchase"
-                onClick={() => buttonClick("purchase_ticket_mypage", "티켓 충전")}
-              >
+                to="/purchase?source=my_page"
+>
                 충전
               </Link>
             </Button>

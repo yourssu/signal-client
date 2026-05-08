@@ -7,7 +7,6 @@ import ReactGA4 from "react-ga4";
 import { GA_ID } from "@/env";
 import { toast } from "sonner";
 import { useUser } from "@/hooks/useUser";
-import { login } from "@/lib/analytics";
 
 export default function GoogleAuthPage() {
   const [searchParams] = useSearchParams();
@@ -20,7 +19,6 @@ export default function GoogleAuthPage() {
     onSuccess: (tokenResponse) => {
       if (tokenResponse.accessToken && tokenResponse.refreshToken) {
         setTokens({ tokenResponse, provider: "google" });
-        login("Google");
         refreshUser();
       } else {
         toast.error("Google 로그인 응답 오류", {

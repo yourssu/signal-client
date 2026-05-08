@@ -5,7 +5,7 @@ import TermsDrawer from "@/components/TermsDrawer";
 import { Package } from "@/types/viewer";
 import kakaoPayCI from "@/assets/icons/kakapay_ci.svg";
 import { useKakaoPaymentInitiate } from "@/hooks/queries/viewers";
-import { purchaseTickets } from "@/lib/analytics";
+
 
 interface KakaoPaymentStepProps {
   pkg: Package;
@@ -25,8 +25,6 @@ export const KakaoPaymentStep = ({
 
   const paymentInitiateMutation = useKakaoPaymentInitiate({
     onSuccess: (response) => {
-      // Redirect to KakaoPay payment page
-      purchaseTickets(pkg, response.orderId, isOnSale);
       const isMobile =
         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
           navigator.userAgent,

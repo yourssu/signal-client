@@ -224,7 +224,11 @@ const EssentialInfoStep: React.FC<EssentialInfoStepProps> = ({
                         onClick={() => setEgenTetoInput(option.type)}
                         className={cn(
                           "flex-1 h-11 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer",
-                          egenTetoInput === option.type ? "bg-neutral-100 border border-pink-600 text-pink-600" : "bg-neutral-100 text-label-strong",
+                          egenTetoInput === option.type
+                            ? option.type === "EGEN"
+                              ? "bg-neutral-100 border border-pink-600 text-pink-600"
+                              : "bg-neutral-100 border border-blue-600 text-blue-600"
+                            : "bg-neutral-100 text-label-strong",
                         )}
                       >
                         {option.label}

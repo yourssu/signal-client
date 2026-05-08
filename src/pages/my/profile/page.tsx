@@ -11,21 +11,30 @@ import {
 } from "@/hooks/queries/blacklists";
 import { useUpdateProfile } from "@/hooks/queries/profiles";
 import { useUser } from "@/hooks/useUser";
-import { buttonClick } from "@/lib/analytics";
+import {
+  myprofileView,
+  myprofileEditView,
+  myprofileEditCompleteClick,
+  myprofileLockClick,
+} from "@/lib/analytics";
 import { ProfileUpdateRequest } from "@/types/profile";
 import { useQueryClient } from "@tanstack/react-query";
 import lockIcon from "@/assets/icons/lock.svg";
 import { useSetAtom } from "jotai";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navigate } from "react-router";
 import { toast } from "sonner";
 
 const MyProfilePage: React.FC = () => {
-  const { profile } = useUser();
+  const { profile, uuid } = useUser();
   const setProfile = useSetAtom(userProfileAtom);
   const [isEditing, setIsEditing] = useState(false);
   const [profileDraft, setProfileDraft] = useState(profile);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+
+  useEffect(() => {
+    myprofileView("my_page");
+  }, []);
   const queryClient = useQueryClient();
   const { data } = useCheckMyBlacklistStatus();
   const isDeleted = data?.isBlacklisted ?? false;
@@ -52,6 +61,7 @@ const MyProfilePage: React.FC = () => {
   const handleUpdateStart = () => {
     setProfileDraft(profile);
     setIsEditing(true);
+    myprofileEditView("my_page");
   };
 
   const handleProfileUpdate = (updated: ProfileUpdateRequest) => {
@@ -67,7 +77,6 @@ const MyProfilePage: React.FC = () => {
 
   const handleRemoveProfileFromBlacklist = async () => {
     await removeFromBlacklist();
-    buttonClick("remove_from_blacklist", "프로필 공개");
     queryClient.invalidateQueries({ queryKey: ["blacklists", "me", "status"] });
     toast.success("프로필이 공개되었어요.");
   };
@@ -83,7 +92,10 @@ const MyProfilePage: React.FC = () => {
       introSentences: profileDraft!.introSentences,
       contact: profileDraft!.contact,
     });
-    buttonClick("complete_profile_edit", "프로필 수정 완료");
+    myprofileEditCompleteClick({
+      edittedNickname: profileDraft!.nickname,
+      edittedContactAdress: profileDraft!.contact ?? "",
+    });
     queryClient.setQueryData(["profiles", "me"], ret);
     setProfile(ret);
     setProfileDraft(ret);
@@ -160,7 +172,10 @@ const MyProfilePage: React.FC = () => {
                 variant="secondary"
                 size="xl"
                 className="w-full"
-                onClick={() => setIsDeleteConfirmOpen(true)}
+                onClick={() => {
+                  myprofileLockClick();
+                  setIsDeleteConfirmOpen(true);
+                }}
               >
                 프로필 비공개
               </Button>
@@ -172,6 +187,7 @@ const MyProfilePage: React.FC = () => {
         open={isDeleteConfirmOpen}
         onOpenChange={setIsDeleteConfirmOpen}
         onConfirm={handleAddProfileToBlacklist}
+        userId={uuid ?? undefined}
       />
     </div>
   );

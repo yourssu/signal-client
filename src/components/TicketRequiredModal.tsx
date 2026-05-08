@@ -52,7 +52,7 @@ export function TicketRequiredModal({
               variant="default"
               size="lg"
               className="w-[130px] rounded-xl"
-              onClick={() => navigate("/purchase")}
+              onClick={() => navigate("/purchase?source=signal_send")}
             >
               충전하러가기
             </Button>

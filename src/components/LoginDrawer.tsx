@@ -12,7 +12,7 @@ import googleLogo from "@/assets/google.png";
 import loginImage from "@/assets/login.png";
 import { Button } from "@/components/ui/button";
 import { useGoogleLogin } from "@react-oauth/google";
-import { buttonClick } from "@/lib/analytics";
+import { profileGoogleLoginClick } from "@/lib/analytics";
 
 interface LoginDrawerProps {
   open?: boolean;
@@ -36,7 +36,7 @@ export function LoginDrawer({
 
   const handleLogin = () => {
     login();
-    buttonClick("google_login", "Google 계정으로 로그인");
+    profileGoogleLoginClick();
   };
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>

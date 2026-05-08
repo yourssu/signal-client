@@ -6,22 +6,24 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { buttonClick } from "@/lib/analytics";
+import { myprofileLockCheckClick } from "@/lib/analytics";
 
 interface BlacklistConfirmationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm?: () => void;
+  userId?: string | number;
 }
 
 export function BlacklistConfirmationDialog({
   open,
   onOpenChange,
   onConfirm,
+  userId,
 }: BlacklistConfirmationDialogProps) {
   const handleConfirm = () => {
     if (onConfirm) {
-      buttonClick("confirm_add_blacklist", "프로필 비공개 확인");
+      if (userId) myprofileLockCheckClick(userId);
       onConfirm();
     }
     onOpenChange(false);

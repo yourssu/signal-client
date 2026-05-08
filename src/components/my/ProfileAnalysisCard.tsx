@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import { LoginDrawer } from "@/components/LoginDrawer";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Users } from "lucide-react";
+import { mypageRegisterClick, mypageAccountConnectClick } from "@/lib/analytics";
 
 export interface ProfileAnalysisCardProps {
   isLoggedIn?: boolean;
@@ -29,6 +30,7 @@ export const ProfileAnalysisCard = ({
             variant="default"
             className="button-l rounded-2xl h-[50px] w-full"
             asChild
+            onClick={() => mypageRegisterClick("no_profile_card")}
           >
             <Link to="/my/profile">프로필 등록하기</Link>
           </Button>
@@ -36,7 +38,10 @@ export const ProfileAnalysisCard = ({
             <div className="flex gap-1 caption1 text-label-alternative">
               <p>이미 프로필이 있다면?</p>
               <LoginDrawer>
-                <button className="text-primary underline cursor-pointer">
+                <button
+                  className="text-primary underline cursor-pointer"
+                  onClick={() => mypageAccountConnectClick()}
+                >
                   구글 계정 연동
                 </button>
               </LoginDrawer>

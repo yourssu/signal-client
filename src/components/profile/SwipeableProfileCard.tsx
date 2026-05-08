@@ -182,8 +182,10 @@ export const SwipeableProfileCard: React.FC<{
       >
         <MoveHorizontal className="text-pale-pink" />
         <p className="text-pale-pink">좌우로 움직여 프로필을 넘겨 보세요</p>
-        <p className="text-sm text-primary">
-          왼쪽: 다음 프로필 · 오른쪽: 이전 프로필
+        <p className="text-sm text-primary mt-6 font-bold">
+          왼쪽으로 스와이프: <span className="text-white font-medium">다음 프로필</span>
+          <br />
+          오른쪽으로 스와이프: <span className="text-white font-medium">이전 프로필</span>
         </p>
       </div>
     </motion.div>

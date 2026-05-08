@@ -6,7 +6,7 @@ import { useGenerateNickname } from "@/hooks/queries/profiles";
 import { createPortal } from "react-dom";
 import generatingImg from "@/assets/register/generating.png";
 import { cn, whenPressEnter } from "@/lib/utils";
-import { buttonClick } from "@/lib/analytics";
+import { profileAiNicknameClick } from "@/lib/analytics";
 
 const PROFANITY_LIST = [
   "씨발", "시발", "새끼", "병신", "지랄", "미친놈", "미친년", "개년", "창녀", "걸레",
@@ -47,7 +47,7 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
   };
 
   const handleGenerateNickname = () => {
-    buttonClick("generate_nickname", "닉네임 생성기");
+    profileAiNicknameClick();
     generateNickname(
       { introSentences },
       {

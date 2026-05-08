@@ -14,13 +14,15 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import PackageSelectionStep from "@/components/purchase/PackageSelectionStep";
 import {
-  buttonClick,
-  funnelComplete,
-  funnelStart,
-  funnelStep,
-  purchaseTickets,
-  selectPackage,
-  viewPackages,
+  chargeAccountFaultClick,
+  chargeTicketView,
+  chargeTicketClick,
+  chargeAccountClick,
+  chargeAccountConfirmClick,
+  chargeBackClick,
+  chargeTossClick,
+  chargeTossConfirmClick,
+  chargeKakaoConfirmClick,
 } from "@/lib/analytics";
 import { isAuthenticatedAtom } from "@/atoms/authTokens";
 import PaymentSelectionStep from "@/components/purchase/PaymentSelectionStep";
@@ -33,6 +35,7 @@ const BankAccountPaymentsPage: React.FC = () => {
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const [searchParams] = useSearchParams();
   const returnId = searchParams.get("return_id");
+  const source = searchParams.get("source") ?? "my_page";
   const setViewer = useSetAtom(viewerAtom);
   const { viewer, profile } = useUser();
   const funnel = useFunnel<{
@@ -66,18 +69,16 @@ const BankAccountPaymentsPage: React.FC = () => {
   });
   const onSale = !!profile && (viewer?.ticket ?? 0) === 0;
 
-  const { data: packagesRes } = useTicketPackages();
-  const packages = useMemo(() => packagesRes?.packages ?? [], [packagesRes]);
+  useTicketPackages();
 
   useEffect(() => {
     if (funnel.historySteps.length === 1) {
-      funnelStart("payment", "티켓 구매");
-      viewPackages(packages, onSale);
+      chargeTicketView(source);
     }
-  }, [funnel.historySteps.length, onSale, packages]);
+  }, [funnel.historySteps.length, source]);
 
   useEffect(() => {
-    if ((funnel.step === "bank" || funnel.step === "toss") && viewerResponse) {
+    if ((funnel.step === "bank" || funnel.step === "toss" || funnel.step === "kakao") && viewerResponse) {
       // Navigate if tickets are present (initial load or increase) or profile updated
       if (
         viewer === null ||
@@ -85,8 +86,14 @@ const BankAccountPaymentsPage: React.FC = () => {
           viewer.ticket !== viewerResponse.ticket)
       ) {
         setViewer(viewerResponse);
-        purchaseTickets(funnel.context.package!, `${verificationCode}`, onSale);
-        funnelComplete("payment", "티켓 구매", funnel.context);
+        const isValid = viewer?.ticket !== viewerResponse.ticket;
+        if (funnel.step === "bank") {
+          chargeAccountConfirmClick(isValid);
+        } else if (funnel.step === "toss") {
+          chargeTossConfirmClick();
+        } else if (funnel.step === "kakao") {
+          chargeKakaoConfirmClick();
+        }
         if (returnId) {
           navigate(`/purchase/success?return_id=${returnId}`);
         } else {
@@ -110,24 +117,21 @@ const BankAccountPaymentsPage: React.FC = () => {
   ]);
 
   const handlePackageSelect = async (ticketPackage: Package) => {
-    await fetchVerificationCode({}); // Ensure verification code is fetched
+    await fetchVerificationCode({});
     funnel.history.replace("packageSelection", { package: ticketPackage });
     funnel.history.push("paymentSelection", { package: ticketPackage });
-    funnelStep("payment", "티켓 구매", "packageSelection", funnel.context);
-    selectPackage(ticketPackage, onSale);
+    chargeTicketClick(ticketPackage.quantity[onSale ? 0 : 1]);
   };
 
   const handlePaymentSelect = (method: string) => {
-    funnelStep("payment", "티켓 구매", "paymentSelection", {
-      package: funnel.context.package!,
-      method: method,
-    });
     if (method === "toss") {
+      chargeTossClick();
       funnel.history.replace("paymentSelection", {
         package: funnel.context.package!,
       });
       funnel.history.push("toss", { package: funnel.context.package! });
     } else if (method === "bank") {
+      chargeAccountClick();
       funnel.history.replace("paymentSelection", {
         package: funnel.context.package!,
       });
@@ -141,6 +145,9 @@ const BankAccountPaymentsPage: React.FC = () => {
   };
 
   const handleBack = () => {
+    if (funnel.step === "bank" && funnel.index !== 0) {
+      chargeBackClick();
+    }
     if (funnel.index !== 0) {
       funnel.history.back();
     } else {
@@ -156,7 +163,7 @@ const BankAccountPaymentsPage: React.FC = () => {
         message: name,
         verificationCode,
       });
-      buttonClick("send_rename_request", "이름 변경 요청");
+      chargeAccountFaultClick();
     }
     setIsChecking(true);
   };

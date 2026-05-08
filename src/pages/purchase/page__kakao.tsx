@@ -2,14 +2,12 @@ import TopBar from "@/components/Header";
 import { Package } from "@/types/viewer";
 import { useFunnel } from "@use-funnel/react-router";
 import { useAtomValue } from "jotai";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 import PackageSelectionStep from "@/components/purchase/PackageSelectionStep";
 import {
-  funnelStart,
-  funnelStep,
-  selectPackage,
-  viewPackages,
+  chargeTicketView,
+  chargeTicketClick,
 } from "@/lib/analytics";
 import { KakaoPaymentStep } from "@/components/purchase/KakaoPaymentStep";
 import { isAuthenticatedAtom } from "@/atoms/authTokens";
@@ -32,22 +30,20 @@ const KakaoPayPurchasePage: React.FC = () => {
   const navigate = useNavigate();
 
   const onSale = !!profile && (viewer?.ticket ?? 0) === 0;
+  const source = "my_page";
 
-  const { data: packagesRes } = useTicketPackages();
-  const packages = useMemo(() => packagesRes?.packages ?? [], [packagesRes]);
+  useTicketPackages();
 
   useEffect(() => {
     if (funnel.historySteps.length === 1) {
-      funnelStart("payment", "티켓 구매");
-      viewPackages(packages, onSale);
+      chargeTicketView(source);
     }
-  }, [funnel.historySteps.length, packages, onSale]);
+  }, [funnel.historySteps.length]);
 
   const handlePackageSelect = (ticketPackage: Package) => {
     funnel.history.replace("packageSelection", { package: ticketPackage });
     funnel.history.push("payment", { package: ticketPackage });
-    funnelStep("payment", "티켓 구매", "packageSelection", funnel.context);
-    selectPackage(ticketPackage, onSale);
+    chargeTicketClick(ticketPackage.quantity[onSale ? 0 : 1]);
   };
 
   const handleBack = () => {

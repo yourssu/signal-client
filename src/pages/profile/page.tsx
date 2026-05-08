@@ -8,7 +8,7 @@ import { SwipeableProfileCard } from "@/components/profile/SwipeableProfileCard"
 import { userGenderAtom } from "@/atoms/user";
 import GenderStep from "@/components/purchase/GenderSelect";
 import { Gender } from "@/types/profile";
-import { viewProfile } from "@/lib/analytics";
+import { viewProfile, contactClick } from "@/lib/analytics";
 import { useUser } from "@/hooks/useUser";
 import { TicketRequiredModal } from "@/components/TicketRequiredModal";
 import ConnectionInfo from "@/components/ConnectionInfo";
@@ -78,6 +78,7 @@ const ProfileListPage: React.FC = () => {
       setTicketModalOpen(true);
       return;
     }
+    contactClick(profile.profileId);
     navigate(`/profile/contact?id=${profile.profileId}`, {
       state: {
         profile,

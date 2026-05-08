@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { shareProfileAnalysis } from "@/lib/profileAnalysis";
 import { useState } from "react";
 import { useUser } from "@/hooks/useUser";
-import { share } from "@/lib/analytics";
+import { rankingShareClick } from "@/lib/analytics";
 
 const AnalysisMyProfilePage: React.FC = () => {
   const { profile } = useUser();
@@ -41,7 +41,10 @@ const AnalysisMyProfilePage: React.FC = () => {
 
   const handleShare = async () => {
     setIsSharing(true);
-    share("native", userInfo?.uuid ?? "");
+    rankingShareClick({
+      profileViewCount: profileViewers,
+      profileViewRank: profileRank,
+    });
     await shareProfileAnalysis(
       totalProfiles,
       profileViewers,

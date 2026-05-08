@@ -12,7 +12,11 @@ import {
   ENABLE_REGISTER,
   NOTICE,
 } from "@/env";
-import { buttonClick } from "@/lib/analytics";
+import {
+  profileRegisterClick,
+  signalSendClick,
+  myprofileView,
+} from "@/lib/analytics";
 
 interface MainContentProps {
   profileRegistered: boolean;
@@ -60,7 +64,7 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
             profileRegistered ? (
               <Link
                 to="/my"
-                onClick={() => buttonClick("view_my_profile", "내 프로필 보기")}
+                onClick={() => myprofileView("main")}
                 className="flex h-14 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary hover:bg-[#ffd4f3] transition-colors"
               >
                 내 프로필 보기
@@ -68,7 +72,7 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
             ) : (
               <Link
                 to="/profile/register"
-                onClick={() => buttonClick("register_profile", "프로필 등록하기")}
+                onClick={() => profileRegisterClick()}
                 className="flex h-14 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary hover:bg-[#ffd4f3] transition-colors"
               >
                 프로필 등록하기
@@ -78,7 +82,7 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
             <Button
               className="flex h-14 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary hover:bg-[#ffd4f3]"
               onClick={() => {
-                buttonClick("register_profile_locked", "프로필 등록하기");
+                profileRegisterClick();
                 setRegisterGuardOpen(true);
               }}
             >
@@ -89,7 +93,7 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
           {ENABLE_PROFILE_VIEW ? (
             <Link
               to="/profile"
-              onClick={() => buttonClick("send_signal", "시그널 보내기")}
+              onClick={() => signalSendClick(profileRegistered)}
               className="flex h-14 items-center justify-center rounded-2xl bg-[#ff71b6] backdrop-blur-[6.5px] text-base font-semibold text-white hover:bg-[#ff5aa8] transition-colors"
             >
               시그널 보내기
@@ -98,7 +102,7 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
             <Button
               className="flex h-14 items-center justify-center rounded-2xl bg-[#ff71b6] backdrop-blur-[6.5px] text-base font-semibold text-white hover:bg-[#ff5aa8]"
               onClick={() => {
-                buttonClick("send_signal_locked", "시그널 보내기");
+                signalSendClick(profileRegistered);
                 setViewGuardOpen(true);
               }}
             >
