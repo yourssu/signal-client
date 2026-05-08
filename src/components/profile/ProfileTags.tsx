@@ -59,7 +59,8 @@ const ProfileTags: React.FC<ProfileTagsProps> = ({ profile, gender, size = "L" }
       {profile.egenTeto && (
         <span
           className={cn(
-            "bg-fill-pink text-primary",
+            config.tagBg,
+            config.tagText,
             "rounded-lg font-medium whitespace-nowrap",
             isSmall ? "px-2 py-1 text-[10px]" : "px-2.5 py-1.5 text-xs",
           )}
