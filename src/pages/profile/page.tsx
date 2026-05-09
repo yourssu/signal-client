@@ -9,7 +9,7 @@ import { userGenderAtom } from "@/atoms/user";
 import { profileDeckIndexAtom, profileDeckProfileIdAtom } from "@/atoms/profiles";
 import GenderStep from "@/components/purchase/GenderSelect";
 import { Gender } from "@/types/profile";
-import { viewProfile, contactClick } from "@/lib/analytics";
+import { contactClick } from "@/lib/analytics";
 import { useUser } from "@/hooks/useUser";
 import { TicketRequiredModal } from "@/components/TicketRequiredModal";
 import ConnectionInfo from "@/components/ConnectionInfo";
@@ -81,17 +81,9 @@ const ProfileListPage: React.FC = () => {
 
   const handleSwipe = (direction: "left" | "right") => {
     if (direction === "left" && canSwipeLeft) {
-      const nextIndex = safeIndex + 1;
-      setCurrentIndex(nextIndex);
-      if (deck) {
-        viewProfile(deck[nextIndex].profileId);
-      }
+      setCurrentIndex(safeIndex + 1);
     } else if (direction === "right" && canSwipeRight) {
-      const prevIndex = safeIndex - 1;
-      setCurrentIndex(prevIndex);
-      if (deck) {
-        viewProfile(deck[prevIndex].profileId);
-      }
+      setCurrentIndex(safeIndex - 1);
     }
   };
 

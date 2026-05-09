@@ -1,7 +1,7 @@
 import { isFirstProfileViewAtom } from "@/atoms/user";
 import ProfileCard from "@/components/profile/ProfileCard";
 import { useUser } from "@/hooks/useUser";
-import { swipeComplete, swipeStart, swipeStop } from "@/lib/analytics";
+import { swipeStart, swipeStop } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { ProfileResponse } from "@/types/profile";
 import { useSetAtom } from "jotai";
@@ -96,7 +96,6 @@ export const SwipeableProfileCard: React.FC<{
           x.set(0);
           opacity.set(0);
           const dir = direction > 0 ? "right" : "left";
-          swipeComplete(dir, profile.profileId);
           onSwipe(dir);
           setSwiped(false);
         },

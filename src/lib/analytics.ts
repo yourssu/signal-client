@@ -132,16 +132,8 @@ export const myprofileLockClick = () => track("myprofile_lock_click");
 export const myprofileLockCheckClick = (lockedUserId: string | number) =>
   track("myprofile_lock_check_click", { locked_user_id: String(lockedUserId) });
 
-export const viewProfile = (profileId: number) =>
-  track("view_profile", { profile_id: profileId });
-
 export const swipeStart = (direction: "left" | "right", profileId: number) =>
   track("swipe_start", { direction, profile_id: profileId });
-
-export const swipeComplete = (
-  direction: "left" | "right",
-  profileId: number,
-) => track("swipe_complete", { direction, profile_id: profileId });
 
 export const swipeStop = (direction: "left" | "right", profileId: number) =>
   track("swipe_stop", { direction, profile_id: profileId });
