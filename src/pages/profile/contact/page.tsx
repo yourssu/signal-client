@@ -111,7 +111,7 @@ const ContactViewPage: React.FC = () => {
               </Button>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
-              현재 이용권 수: {viewerSelf?.ticket ?? 0}
+              현재 이용권 수: {(viewerSelf?.ticket ?? 0) - (viewerSelf?.usedTicket ?? 0)}
             </p>
             {error && <p className="mt-4 text-red-500 font-medium">{error}</p>}
           </div>
