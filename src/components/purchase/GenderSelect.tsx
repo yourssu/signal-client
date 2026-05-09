@@ -1,7 +1,7 @@
 import { Gender } from "@/types/profile";
 import React from "react";
-import maleCharacter from "@/assets/images/male-character.png"; // Import downloaded image
-import femaleCharacter from "@/assets/images/female-character.png"; // Import downloaded image
+import faceMan from "@/assets/icons/face_man.svg";
+import faceWoman from "@/assets/icons/face_woman.svg";
 
 interface GenderStepProps {
   onSelect: (gender: Gender) => void;
@@ -9,44 +9,33 @@ interface GenderStepProps {
 
 const GenderStep: React.FC<GenderStepProps> = ({ onSelect }) => {
   return (
-    // Apply Figma layout: flex column, items-center, gap-40 (160px), pt adjusted
-    <div className="flex flex-col gap-8 items-center justify-center w-full grow">
-      {/* Title Section */}
-      <div className="flex flex-col items-center justify-center w-full px-4">
-        {/* Apply Figma text style: Pretendard, 600, 24px, #404040 */}
-        <h2 className="text-2xl font-semibold text-black-600">
-          <span className="text-primary">본인의 성별</span>을 선택해주세요
-        </h2>
-      </div>
-
-      <div className="flex flex-row items-center justify-center gap-6 w-full">
-        <div
-          className="flex flex-col items-center gap-6 cursor-pointer group"
+    <div className="w-full max-w-md flex flex-col gap-8 items-center mb-[15vh]">
+      <h2 className="text-2xl font-semibold text-label-neutral text-center">
+        나의 성별을
+        <br />
+        선택해주세요
+      </h2>
+      <div className="flex gap-2 items-center w-full">
+        <button
+          type="button"
           onClick={() => onSelect("MALE")}
+          className="flex flex-1 flex-col gap-3 items-center justify-center h-[230px] py-[50px] rounded-[20px] bg-fill-blue-light cursor-pointer transition-colors hover:bg-[var(--blue-300)] active:bg-[var(--blue-300)]"
         >
-          <div className="relative w-[129px] h-[129px] rounded-full border-2 border-secondary bg-white flex items-center justify-center overflow-hidden group-hover:opacity-80 transition-opacity">
-            <img
-              src={maleCharacter}
-              alt="남성 캐릭터"
-              className="object-cover w-full h-full"
-            />
-          </div>
-          <p className="text-[16px] font-medium text-black-600">남성</p>
-        </div>
-
-        <div
-          className="flex flex-col items-center gap-6 cursor-pointer group"
+          <img src={faceMan} alt="" className="size-20 shrink-0" />
+          <span className="text-lg font-semibold leading-[1.2] text-label-strong">
+            남성
+          </span>
+        </button>
+        <button
+          type="button"
           onClick={() => onSelect("FEMALE")}
+          className="flex flex-1 flex-col gap-3 items-center justify-center h-[230px] py-[50px] rounded-[20px] bg-fill-pink-light cursor-pointer transition-colors hover:bg-[var(--pink-300)] active:bg-[var(--pink-300)]"
         >
-          <div className="relative w-[129px] h-[129px] rounded-full border-2 border-primary bg-white flex items-center justify-center overflow-hidden group-hover:opacity-80 transition-opacity">
-            <img
-              src={femaleCharacter}
-              alt="여성 캐릭터"
-              className="object-cover w-full h-full" // Adjusted scale to cover
-            />
-          </div>
-          <p className="text-base font-medium text-label-neutral">여성</p>
-        </div>
+          <img src={faceWoman} alt="" className="size-20 shrink-0" />
+          <span className="text-lg font-semibold leading-[1.2] text-label-strong">
+            여성
+          </span>
+        </button>
       </div>
     </div>
   );

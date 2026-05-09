@@ -105,9 +105,7 @@ const ProfileListPage: React.FC = () => {
         <title>성별 선택하기 - 시그널</title>
         <TopBar onBack="/" />
         <div className="flex-grow flex flex-col items-center justify-center p-4">
-          <div className="w-full max-w-md h-full flex flex-col grow items-stretch justify-stretch">
-            <GenderStep onSelect={handleGenderSelect} />
-          </div>
+          <GenderStep onSelect={handleGenderSelect} />
         </div>
       </div>
     );
