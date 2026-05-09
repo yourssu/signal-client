@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import React, { useState, useMemo } from "react";
-import { Sparkles } from "lucide-react";
 import { useGenerateNickname } from "@/hooks/queries/profiles";
 import { createPortal } from "react-dom";
 import generatingImg from "@/assets/register/generating.png";
+import sparkleImg from "@/assets/register/spakcle.png";
 import { cn, whenPressEnter } from "@/lib/utils";
 import { profileAiNicknameClick } from "@/lib/analytics";
 
@@ -96,7 +96,7 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
             onClick={handleGenerateNickname}
             className="flex justify-center items-center gap-0.5 h-auto px-3 py-1.5 rounded-lg bg-[#ffe7fa] backdrop-blur-[6.5px] cursor-pointer transition-colors hover:bg-[#ffd4f3]"
           >
-            <Sparkles className="size-5 text-pink-600" />
+            <img src={sparkleImg} alt="" className="size-5" />
             <span className="text-xs font-medium text-pink-600 whitespace-nowrap">
               닉네임 AI 생성
             </span>
