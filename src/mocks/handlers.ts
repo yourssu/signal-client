@@ -180,6 +180,14 @@ export const handlers = [
       },
     } satisfies SuccessResponse<ProfileCountResponse>);
   }),
+  http.get("/api/profiles/purchased/count", () => {
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: {
+        count: 42,
+      },
+    } satisfies SuccessResponse<ProfileCountResponse>);
+  }),
   http.get("/api/profiles/uuid", ({ request }) => {
     const url = new URL(request.url);
     const uuid = url.searchParams.get("uuid");

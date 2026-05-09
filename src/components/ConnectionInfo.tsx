@@ -18,10 +18,10 @@ const ConnectionInfo: React.FC<ConnectionInfoProps> = ({
   return (
     <div
       className={cn(
-        "bg-static-white border border-[#ffa4d0] rounded-3xl flex items-center justify-center gap-1 px-4 py-3 transition-all duration-300",
+        "bg-static-white border border-[#ffa4d0] rounded-3xl flex items-center justify-center gap-1 px-4 py-3 transition-all duration-500 ease-out",
         visible
           ? "opacity-100 translate-y-0"
-          : "opacity-0 -translate-y-2 pointer-events-none",
+          : "opacity-0 -translate-y-4 pointer-events-none",
         className,
       )}
     >

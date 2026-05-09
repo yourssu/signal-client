@@ -241,6 +241,23 @@ export const usePurchasedProfiles = (
   });
 };
 
+export const usePurchasedCount = (
+  queryOptions?: Omit<
+    UseQueryOptions<ProfileCountResponse, SignalError>,
+    "queryKey" | "queryFn"
+  >,
+) => {
+  return useQuery({
+    queryKey: ["profiles", "purchased", "count"],
+    queryFn: async () => {
+      return authedFetch<ProfileCountResponse>(
+        `${profileBase}/purchased/count`,
+      );
+    },
+    ...queryOptions,
+  });
+};
+
 export const useDeckProfiles = (
   gender: Gender,
   queryOptions?: Omit<

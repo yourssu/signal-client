@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { useAtom, useSetAtom } from "jotai";
-import { useCountProfile, useDeckProfiles } from "@/hooks/queries/profiles";
+import { useCountProfile, useDeckProfiles, usePurchasedCount } from "@/hooks/queries/profiles";
 import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
 import { SwipeableProfileCard } from "@/components/profile/SwipeableProfileCard";
@@ -13,6 +13,7 @@ import { viewProfile, contactClick } from "@/lib/analytics";
 import { useUser } from "@/hooks/useUser";
 import { TicketRequiredModal } from "@/components/TicketRequiredModal";
 import ConnectionInfo from "@/components/ConnectionInfo";
+import { ENABLE_CONNECTION_INFO } from "@/env";
 
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -20,12 +21,26 @@ const ProfileListPage: React.FC = () => {
   const setGender = useSetAtom(userGenderAtom);
   const desiredGender = gender === "MALE" ? "FEMALE" : "MALE";
 
-  const [showConnectionInfo, _setShowConnectionInfo] = useState(false);
   const [currentIndex, setCurrentIndex] = useAtom(profileDeckIndexAtom);
   const [savedProfileId, setSavedProfileId] = useAtom(profileDeckProfileIdAtom);
   const [ticketModalOpen, setTicketModalOpen] = useState(false);
+  const [connectionInfoVisible, setConnectionInfoVisible] = useState(false);
 
   const { data: countData } = useCountProfile();
+  const { data: purchasedCountData } = usePurchasedCount({
+    enabled: ENABLE_CONNECTION_INFO,
+  });
+
+  const shouldShowConnectionInfo =
+    ENABLE_CONNECTION_INFO && (purchasedCountData?.count ?? 0) > 0;
+
+  useEffect(() => {
+    if (!shouldShowConnectionInfo) return;
+    setConnectionInfoVisible(true);
+    const timer = setTimeout(() => setConnectionInfoVisible(false), 5000);
+    return () => clearTimeout(timer);
+  }, [shouldShowConnectionInfo]);
+
   const { data: deck, isPending, error } = useDeckProfiles(desiredGender!, {
     enabled: !!desiredGender,
   });
@@ -127,9 +142,6 @@ const ProfileListPage: React.FC = () => {
             당신의 시그널을 기다리는 중
           </h1>
         </div>
-        <div className="absolute top-20 z-50">
-          <ConnectionInfo count={0} visible={showConnectionInfo} />
-        </div>
         <div className="w-full h-full max-w-md flex items-center justify-center grow">
           {isPending && (
             <p className="text-label-neutral text-lg">프로필을 불러오는 중...</p>
@@ -149,7 +161,12 @@ const ProfileListPage: React.FC = () => {
             <p className="text-label-neutral text-lg">더 이상 프로필이 없어요.</p>
           )}
         </div>
-        <div className="flex gap-4 w-full relative z-50">
+        <div className="flex flex-col gap-3 w-full relative z-50">
+          <ConnectionInfo
+            count={purchasedCountData?.count ?? 0}
+            visible={connectionInfoVisible}
+            className="absolute -top-14 left-1/2 -translate-x-1/2"
+          />
           <Button
             onClick={handleViewContact}
             size="xl"

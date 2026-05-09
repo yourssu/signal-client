@@ -52,6 +52,8 @@ export const ENABLE_REGISTER: boolean =
   import.meta.env.VITE_ENABLE_REGISTER === "true";
 export const ENABLE_KAKAO_PAYMENTS: boolean =
   import.meta.env.VITE_ENABLE_KAKAO_PAYMENTS === "true";
+export const ENABLE_CONNECTION_INFO: boolean =
+  import.meta.env.VITE_ENABLE_CONNECTION_INFO === "true";
 export const DISABLED_PROFILE_VIEW_DESC: string =
   import.meta.env.VITE_DISABLED_PROFILE_VIEW_DESC ??
   "5/21(수) 10:00부터 시그널을 보낼 수 있어요.";
