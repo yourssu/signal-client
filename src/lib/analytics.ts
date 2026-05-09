@@ -62,8 +62,8 @@ export const signalSendClick = (isRegistered: boolean) =>
 export const contactClick = (targetUserId: string | number) =>
   track("contact_click", { target_user_id: String(targetUserId) });
 
-export const contactCheckClick = (hasTicket: boolean) =>
-  track("contact_check_click", { has_ticket: hasTicket });
+export const contactCheckClick = (hasTicket: boolean, targetUserId: string | number) =>
+  track("contact_check_click", { has_ticket: hasTicket, target_user_id: String(targetUserId) });
 
 export const contactCancelClick = () => track("contact_cancel_click");
 

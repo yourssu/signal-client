@@ -65,7 +65,7 @@ const ContactViewPage: React.FC = () => {
       const remainingTickets = viewerSelf
         ? viewerSelf.ticket - viewerSelf.usedTicket - TICKET_COST
         : 0;
-      contactCheckClick(remainingTickets > 0);
+      contactCheckClick(remainingTickets > 0, id);
       setIsConfirmed(true);
       setError(null);
       setProfileContact(res);
