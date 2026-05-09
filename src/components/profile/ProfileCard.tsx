@@ -16,11 +16,12 @@ interface ProfileCardProps {
   className?: string;
   side?: CardSide;
   size?: CardSize;
+  compact?: boolean;
 }
 
 const ProfileCardFront: React.FC<
-  { profile: ProfileResponse; gender: Gender; size: CardSize }
-> = ({ profile, gender, size }) => {
+  { profile: ProfileResponse; gender: Gender; size: CardSize; compact?: boolean }
+> = ({ profile, gender, size, compact }) => {
   const displayYear = profile.birthYear.toString();
   const isSmall = size === "S";
 
@@ -29,6 +30,7 @@ const ProfileCardFront: React.FC<
       className={cn(
         "flex flex-col items-center gap-3 self-center",
         isSmall ? "px-2 py-3" : "px-3 pt-5 pb-4",
+        compact && "max-[400px]:px-2 max-[400px]:pt-3 max-[400px]:pb-2 max-[400px]:gap-2",
       )}
     >
       <div
@@ -56,6 +58,7 @@ const ProfileCardFront: React.FC<
         className={cn(
           "flex items-center justify-center w-full",
           isSmall ? "h-[80px]" : "h-[126px] max-[440px]:h-[100px]",
+          compact && "max-[400px]:h-[80px]",
         )}
       >
         <AnimalImage
@@ -64,6 +67,7 @@ const ProfileCardFront: React.FC<
           className={cn(
             "object-contain",
             isSmall ? "max-h-[80px]" : "max-h-[126px] max-[440px]:max-h-[100px]",
+            compact && "max-[400px]:max-h-[80px]",
           )}
         />
       </div>
@@ -174,11 +178,17 @@ const ProfileCardBack: React.FC<
   );
 };
 
-const ProfileCardBody: React.FC<{ profile: ProfileResponse }> = ({
+const ProfileCardBody: React.FC<{ profile: ProfileResponse; compact?: boolean }> = ({
   profile,
+  compact,
 }) => {
   return (
-    <div className="bg-white rounded-3xl w-full px-3 py-2 flex flex-col justify-center">
+    <div
+      className={cn(
+        "bg-white rounded-3xl w-full px-3 py-2 flex flex-col justify-center",
+        compact && "max-[400px]:py-1",
+      )}
+    >
       {profile.introSentences.map((sentence, index) => (
         <div
           key={index}
@@ -202,6 +212,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   className,
   side = "front",
   size = "L",
+  compact,
 }) => {
   const gender: Gender = profile.gender;
   const cardBg = cardBgConfig[gender];
@@ -211,6 +222,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       className={cn(
         cardBg,
         "rounded-[36px] overflow-hidden flex flex-col p-3 items-stretch w-full select-none",
+        compact && "max-[400px]:p-2",
         className,
       )}
     >
@@ -220,8 +232,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             profile={profile}
             size={size}
             gender={gender}
+            compact={compact}
           />
-          <ProfileCardBody profile={profile} />
+          <ProfileCardBody profile={profile} compact={compact} />
         </>
       ) : (
         <ProfileCardBack

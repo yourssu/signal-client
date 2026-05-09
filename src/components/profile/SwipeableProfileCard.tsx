@@ -1,4 +1,5 @@
 import { isFirstProfileViewAtom } from "@/atoms/user";
+import CompatibilityBadge from "@/components/profile/CompatibilityBadge";
 import ProfileCard from "@/components/profile/ProfileCard";
 import { useUser } from "@/hooks/useUser";
 import { swipeStart, swipeStop } from "@/lib/analytics";
@@ -172,7 +173,12 @@ export const SwipeableProfileCard: React.FC<{
       onMouseDown={handleMouseDown}
       className="w-full h-auto touch-none cursor-grab active:cursor-grabbing relative"
     >
-      <ProfileCard profile={profile} className="grow h-auto" side="front" size="L" />
+      <div className="w-full flex flex-col gap-2">
+        {profile.compatibilityLabel && (
+          <CompatibilityBadge label={profile.compatibilityLabel} />
+        )}
+        <ProfileCard profile={profile} className="grow h-auto" side="front" size="L" compact={!!profile.compatibilityLabel} />
+      </div>
       <div
         className={cn(
           "opacity-0 absolute inset-0 bg-black/75 rounded-4xl flex flex-col items-center justify-center transition-opacity",
