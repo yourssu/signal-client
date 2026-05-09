@@ -78,7 +78,12 @@ const BankAccountPaymentsPage: React.FC = () => {
   }, [funnel.historySteps.length, source]);
 
   useEffect(() => {
-    if ((funnel.step === "bank" || funnel.step === "toss" || funnel.step === "kakao") && viewerResponse) {
+    if (
+      (funnel.step === "bank" ||
+        funnel.step === "toss" ||
+        funnel.step === "kakao") &&
+      viewerResponse
+    ) {
       // Navigate if tickets are present (initial load or increase) or profile updated
       if (
         viewer === null ||

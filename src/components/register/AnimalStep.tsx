@@ -20,10 +20,7 @@ interface AnimalStepProps {
   onSelect: (animal: AnimalType) => void;
 }
 
-const genderAnimals: Record<
-  Gender,
-  { type: AnimalType; img: string }[]
-> = {
+const genderAnimals: Record<Gender, { type: AnimalType; img: string }[]> = {
   MALE: [
     { type: "BEAR", img: bearMaleImg },
     { type: "DEER", img: deerMaleImg },
@@ -80,7 +77,8 @@ const AnimalStep: React.FC<AnimalStepProps> = ({
             selected={selectedAnimal === item.type}
             onClick={() => setSelectedAnimal(item.type)}
             imgClassName={
-              gender === "FEMALE" && (item.type === "RABBIT" || item.type === "TURTLE")
+              gender === "FEMALE" &&
+              (item.type === "RABBIT" || item.type === "TURTLE")
                 ? "!max-w-24"
                 : undefined
             }

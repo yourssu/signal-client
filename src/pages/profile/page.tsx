@@ -1,12 +1,19 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { useAtom, useSetAtom } from "jotai";
-import { useCountProfile, useDeckProfiles, usePurchasedCount } from "@/hooks/queries/profiles";
+import {
+  useCountProfile,
+  useDeckProfiles,
+  usePurchasedCount,
+} from "@/hooks/queries/profiles";
 import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
 import { SwipeableProfileCard } from "@/components/profile/SwipeableProfileCard";
 import { userGenderAtom } from "@/atoms/user";
-import { profileDeckIndexAtom, profileDeckProfileIdAtom } from "@/atoms/profiles";
+import {
+  profileDeckIndexAtom,
+  profileDeckProfileIdAtom,
+} from "@/atoms/profiles";
 import GenderStep from "@/components/purchase/GenderSelect";
 import { Gender } from "@/types/profile";
 import { contactClick } from "@/lib/analytics";
@@ -41,7 +48,11 @@ const ProfileListPage: React.FC = () => {
     return () => clearTimeout(timer);
   }, [shouldShowConnectionInfo]);
 
-  const { data: deck, isPending, error } = useDeckProfiles(desiredGender!, {
+  const {
+    data: deck,
+    isPending,
+    error,
+  } = useDeckProfiles(desiredGender!, {
     enabled: !!desiredGender,
   });
 
@@ -57,9 +68,7 @@ const ProfileListPage: React.FC = () => {
   useEffect(() => {
     if (!deck || deck.length === 0) return;
     if (savedProfileId !== null) {
-      const foundIndex = deck.findIndex(
-        (p) => p.profileId === savedProfileId,
-      );
+      const foundIndex = deck.findIndex((p) => p.profileId === savedProfileId);
       if (foundIndex >= 0) {
         setCurrentIndex(foundIndex);
       }
@@ -123,7 +132,7 @@ const ProfileListPage: React.FC = () => {
   return (
     <div className="w-full h-full flex flex-col items-center">
       <title>시그널 보내기 - 시그널</title>
-      <TopBar onBack="/" />
+      <TopBar onBack="/" purchaseLink="/purchase?source=profile_top" />
       <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6 overflow-hidden relative">
         <div className="flex flex-col items-start w-full">
           <h1 className="text-2xl font-semibold text-stone-700">
@@ -134,10 +143,14 @@ const ProfileListPage: React.FC = () => {
         </div>
         <div className="w-full h-full max-w-md flex items-center justify-center grow">
           {isPending && (
-            <p className="text-label-neutral text-lg">프로필을 불러오는 중...</p>
+            <p className="text-label-neutral text-lg">
+              프로필을 불러오는 중...
+            </p>
           )}
           {error && (
-            <p className="text-label-neutral text-lg">프로필을 불러오지 못했어요.</p>
+            <p className="text-label-neutral text-lg">
+              프로필을 불러오지 못했어요.
+            </p>
           )}
           {profile && (
             <SwipeableProfileCard
@@ -148,7 +161,9 @@ const ProfileListPage: React.FC = () => {
             />
           )}
           {!isPending && !error && deck?.length === 0 && (
-            <p className="text-label-neutral text-lg">더 이상 프로필이 없어요.</p>
+            <p className="text-label-neutral text-lg">
+              더 이상 프로필이 없어요.
+            </p>
           )}
         </div>
         <div className="flex flex-col gap-3 w-full relative z-50">

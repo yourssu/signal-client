@@ -15,9 +15,7 @@ const HomePage: React.FC = () => {
     <div className="flex flex-col min-h-dvh relative">
       <title>시그널 by YOURSSU</title>
       <TopBar />
-      <MainContent
-        profileRegistered={!!profile}
-      />
+      <MainContent profileRegistered={!!profile} />
     </div>
   );
 };

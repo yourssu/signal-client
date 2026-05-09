@@ -222,7 +222,12 @@ const ProfileRegisterPage: React.FC = () => {
       <title>프로필 등록하기 - 시그널</title>
       {funnel.step === "done" ? (
         <div className="w-full h-11 shrink-0 flex items-center justify-between px-2">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/")} className="text-black-700">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate("/")}
+            className="text-black-700"
+          >
             <ChevronLeft />
           </Button>
           <Link

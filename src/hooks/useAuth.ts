@@ -16,9 +16,7 @@ import { API_BASE_URL } from "@/env";
 const MAX_REFRESH_RETRIES = 3;
 const RETRY_DELAYS = [1000, 3000, 5000];
 
-async function rawRefresh(
-  refreshToken: string,
-): Promise<TokenResponse | null> {
+async function rawRefresh(refreshToken: string): Promise<TokenResponse | null> {
   try {
     const response = await fetch(`${API_BASE_URL ?? ""}/api/auth/refresh`, {
       method: "POST",

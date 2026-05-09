@@ -18,7 +18,8 @@ const BirthYearStep: React.FC<BirthYearStepProps> = ({
 
   // Validate MBTI input
   const isValid = useMemo(
-    () => birthYearInput !== null && birthYearInput > 0 && birthYearInput < 2007,
+    () =>
+      birthYearInput !== null && birthYearInput > 0 && birthYearInput < 2007,
     [birthYearInput],
   );
 

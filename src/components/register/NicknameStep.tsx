@@ -9,9 +9,29 @@ import { cn, whenPressEnter } from "@/lib/utils";
 import { profileAiNicknameClick } from "@/lib/analytics";
 
 const PROFANITY_LIST = [
-  "씨발", "시발", "새끼", "병신", "지랄", "미친놈", "미친년", "개년", "창녀", "걸레",
-  "찐따", "보지", "자지", "fuck", "shit", "bitch", "asshole", "cunt", "dick", "pussy",
-  "bastard", "whore", "slut",
+  "씨발",
+  "시발",
+  "새끼",
+  "병신",
+  "지랄",
+  "미친놈",
+  "미친년",
+  "개년",
+  "창녀",
+  "걸레",
+  "찐따",
+  "보지",
+  "자지",
+  "fuck",
+  "shit",
+  "bitch",
+  "asshole",
+  "cunt",
+  "dick",
+  "pussy",
+  "bastard",
+  "whore",
+  "slut",
 ];
 
 const PROFANITY_REGEX = new RegExp(PROFANITY_LIST.join("|"), "i");
@@ -31,8 +51,14 @@ const NicknameStep: React.FC<NicknameStepProps> = ({
   const [nickname, setNickname] = useState<string>(defaultNickname ?? "");
   const { mutate: generateNickname, isPending } = useGenerateNickname();
 
-  const profanityError = useMemo(() => PROFANITY_REGEX.test(nickname), [nickname]);
-  const isValid = useMemo(() => nickname.trim() !== "" && !profanityError, [nickname, profanityError]);
+  const profanityError = useMemo(
+    () => PROFANITY_REGEX.test(nickname),
+    [nickname],
+  );
+  const isValid = useMemo(
+    () => nickname.trim() !== "" && !profanityError,
+    [nickname, profanityError],
+  );
 
   const handleSubmit = () => {
     if (!isValid) return;

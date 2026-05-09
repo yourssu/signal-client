@@ -36,9 +36,16 @@ const CharacterCard: React.FC<CharacterCardProps> = ({
       )}
     >
       {imgSrc ? (
-        <img src={imgSrc} alt={displayName} className={`max-w-20 object-contain shrink-0 ${imgClassName ?? ""}`} />
+        <img
+          src={imgSrc}
+          alt={displayName}
+          className={`max-w-20 object-contain shrink-0 ${imgClassName ?? ""}`}
+        />
       ) : (
-        <AnimalImage animalType={animalType} className={`max-w-20 object-contain shrink-0 ${imgClassName ?? ""}`} />
+        <AnimalImage
+          animalType={animalType}
+          className={`max-w-20 object-contain shrink-0 ${imgClassName ?? ""}`}
+        />
       )}
       <p className="text-sm font-semibold leading-[1.35] text-label-neutral whitespace-nowrap">
         {displayName}

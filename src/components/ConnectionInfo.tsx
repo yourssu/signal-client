@@ -25,11 +25,7 @@ const ConnectionInfo: React.FC<ConnectionInfoProps> = ({
         className,
       )}
     >
-      <img
-        src={heartIcon}
-        alt=""
-        className="size-3 shrink-0"
-      />
+      <img src={heartIcon} alt="" className="size-3 shrink-0" />
       <p className="caption1 text-primary text-center whitespace-nowrap">
         벌써 {displayCount}명이 시그널로 연결됐어요
       </p>

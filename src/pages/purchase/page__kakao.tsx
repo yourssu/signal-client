@@ -5,10 +5,7 @@ import { useAtomValue } from "jotai";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 import PackageSelectionStep from "@/components/purchase/PackageSelectionStep";
-import {
-  chargeTicketView,
-  chargeTicketClick,
-} from "@/lib/analytics";
+import { chargeTicketView, chargeTicketClick } from "@/lib/analytics";
 import { KakaoPaymentStep } from "@/components/purchase/KakaoPaymentStep";
 import { isAuthenticatedAtom } from "@/atoms/authTokens";
 import { useTicketPackages } from "@/hooks/queries/viewers";

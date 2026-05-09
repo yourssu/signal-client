@@ -44,7 +44,11 @@ export function BlacklistConfirmationDialog({
         </div>
         <div className="flex gap-2">
           <DialogClose asChild>
-            <Button variant="default" size="lg" className="w-[130px] rounded-xl">
+            <Button
+              variant="default"
+              size="lg"
+              className="w-[130px] rounded-xl"
+            >
               취소
             </Button>
           </DialogClose>

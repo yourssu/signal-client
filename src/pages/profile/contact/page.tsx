@@ -154,9 +154,7 @@ const ContactViewPage: React.FC = () => {
               <Button size="xl" className="rounded-2xl grow" asChild>
                 <Link
                   to={returnLink}
-                  onClick={() =>
-                    contactAnotherSignalClick("signal_contact")
-                  }
+                  onClick={() => contactAnotherSignalClick("signal_contact")}
                 >
                   다른 시그널 보내기
                 </Link>

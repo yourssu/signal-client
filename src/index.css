@@ -288,28 +288,28 @@ http://scripts.sil.org/OFL
   --toss-blue: oklch(0.5597 0.2431 261.08);
 
   /* Primitive colors */
-  --static-white: #FFFFFF;
+  --static-white: #ffffff;
   --static-black: #000000;
-  --neutral-100: #F9FAFC;
-  --neutral-200: #E3E4E6;
-  --neutral-300: #767A83;
-  --neutral-400: #5A5C64;
-  --neutral-500: #46474E;
+  --neutral-100: #f9fafc;
+  --neutral-200: #e3e4e6;
+  --neutral-300: #767a83;
+  --neutral-400: #5a5c64;
+  --neutral-500: #46474e;
   --neutral-600: #212225;
   --neutral-700: #171719;
-  --blue-100: #F0F7FF;
-  --blue-200: #E8F3FF;
-  --blue-300: #D8EAFF;
-  --blue-primitive-400: #A9D1FF;
-  --blue-600: #51A2FF;
-  --blue-700: #2189FF;
-  --pink-100: #FFF9FE;
-  --pink-200: #FFF2FC;
-  --pink-300: #FFE7FA;
-  --pink-primitive-400: #FFD3F7;
-  --pink-600: #FF71B6;
-  --pink-700: #FF449E;
-  --red-600: #FF4242;
+  --blue-100: #f0f7ff;
+  --blue-200: #e8f3ff;
+  --blue-300: #d8eaff;
+  --blue-primitive-400: #a9d1ff;
+  --blue-600: #51a2ff;
+  --blue-700: #2189ff;
+  --pink-100: #fff9fe;
+  --pink-200: #fff2fc;
+  --pink-300: #ffe7fa;
+  --pink-primitive-400: #ffd3f7;
+  --pink-600: #ff71b6;
+  --pink-700: #ff449e;
+  --red-600: #ff4242;
 }
 
 @layer base {

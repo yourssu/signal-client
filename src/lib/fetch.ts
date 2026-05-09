@@ -50,8 +50,7 @@ async function refreshAccessToken(): Promise<boolean> {
             return false;
           }
 
-          const res =
-            (await response.json()) as SignalResponse<TokenResponse>;
+          const res = (await response.json()) as SignalResponse<TokenResponse>;
           if (!("result" in res)) {
             if (attempt < 2) continue;
             return false;

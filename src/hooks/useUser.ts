@@ -66,7 +66,9 @@ export const useUser = (): UserData & {
   const refreshUser = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ["profiles", "me"] });
     queryClient.invalidateQueries({ queryKey: ["viewer", "me"] });
-    queryClient.invalidateQueries({ queryKey: ["profiles", "me", "purchased"] });
+    queryClient.invalidateQueries({
+      queryKey: ["profiles", "me", "purchased"],
+    });
     setRefreshInitiated(true);
   }, [queryClient]);
 

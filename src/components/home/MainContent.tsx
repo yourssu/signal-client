@@ -111,9 +111,13 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
           )}
 
           <p className="text-xs font-medium text-[#8c8c8c] text-center">
-            <Link to="/privacy" className="underline">개인정보처리방침</Link>
+            <Link to="/privacy" className="underline">
+              개인정보처리방침
+            </Link>
             <span> 및 </span>
-            <Link to="/terms" className="underline">이용약관</Link>
+            <Link to="/terms" className="underline">
+              이용약관
+            </Link>
           </p>
         </div>
       </div>

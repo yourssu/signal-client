@@ -10,10 +10,7 @@ import {
 } from "@/components/ui/tooltip";
 import { animalDisplayMap } from "@/lib/animal";
 import { cn } from "@/lib/utils";
-import {
-  ProfileContactResponse,
-  ProfileUpdateRequest,
-} from "@/types/profile";
+import { ProfileContactResponse, ProfileUpdateRequest } from "@/types/profile";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMotionValue, animate, motion } from "motion/react";
 import React, { useEffect, useState } from "react";
@@ -208,10 +205,7 @@ const ProfileCardEditorFront: React.FC<ProfileCardEditorFrontProps> = ({
 
       <div className="bg-white rounded-3xl w-full px-3 py-2 flex flex-col justify-center">
         {profile.introSentences.map((sentence, index) => (
-          <div
-            key={index}
-            className="flex flex-col gap-1.5 px-2 py-1.5 w-full"
-          >
+          <div key={index} className="flex flex-col gap-1.5 px-2 py-1.5 w-full">
             <p className="text-label-neutral text-[10px] font-semibold leading-[1.35]">
               특징 {index + 1}
             </p>

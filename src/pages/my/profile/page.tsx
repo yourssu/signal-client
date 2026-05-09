@@ -113,7 +113,9 @@ const MyProfilePage: React.FC = () => {
       <div className="w-full max-w-md grow p-6 flex flex-col gap-10">
         <div className="w-full max-w-md mx-auto flex flex-col gap-2 grow">
           <div className="flex flex-col gap-1.5">
-            <h1 className="text-2xl font-semibold text-stone-700">나의 프로필</h1>
+            <h1 className="text-2xl font-semibold text-stone-700">
+              나의 프로필
+            </h1>
             <p className="text-base font-medium text-label-neutral">
               너무 매력적인 프로필이에요
             </p>
@@ -150,7 +152,11 @@ const MyProfilePage: React.FC = () => {
             </Button>
           ) : isEditing ? (
             <>
-              <Button size="xl" onClick={handleUpdateDone} disabled={isUpdating}>
+              <Button
+                size="xl"
+                onClick={handleUpdateDone}
+                disabled={isUpdating}
+              >
                 수정 완료
               </Button>
               <Button

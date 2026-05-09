@@ -49,7 +49,9 @@ const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
     );
 
     return (
-      <div className={cn("flex flex-col gap-1.5 items-start w-full", className)}>
+      <div
+        className={cn("flex flex-col gap-1.5 items-start w-full", className)}
+      >
         <div className={textFieldClasses}>
           <div className="flex flex-col gap-1 items-start flex-1 min-w-0">
             {label && (
@@ -77,14 +79,21 @@ const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
                 )?.set;
                 if (nativeInputValueSetter && ref) {
                   if (typeof ref === "function") {
-                    const inputEl = (document.getElementById(props.id ?? "") as HTMLInputElement | null) ?? ref;
+                    const inputEl =
+                      (document.getElementById(
+                        props.id ?? "",
+                      ) as HTMLInputElement | null) ?? ref;
                     if (inputEl instanceof HTMLInputElement) {
                       nativeInputValueSetter.call(inputEl, "");
-                      inputEl.dispatchEvent(new Event("input", { bubbles: true }));
+                      inputEl.dispatchEvent(
+                        new Event("input", { bubbles: true }),
+                      );
                     }
                   } else if ("current" in ref && ref.current) {
                     nativeInputValueSetter.call(ref.current, "");
-                    ref.current.dispatchEvent(new Event("input", { bubbles: true }));
+                    ref.current.dispatchEvent(
+                      new Event("input", { bubbles: true }),
+                    );
                   }
                 }
                 onChange?.({

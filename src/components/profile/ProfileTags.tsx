@@ -1,7 +1,10 @@
 import { cn } from "@/lib/utils";
 import { EgenTetoType, Gender, ProfileResponse } from "@/types/profile";
 
-type ProfileWithTags = Pick<ProfileResponse, "mbti" | "department" | "egenTeto">;
+type ProfileWithTags = Pick<
+  ProfileResponse,
+  "mbti" | "department" | "egenTeto"
+>;
 
 interface ProfileTagsProps {
   profile: ProfileWithTags;
@@ -9,10 +12,7 @@ interface ProfileTagsProps {
   size?: "L" | "S";
 }
 
-const genderTagConfig: Record<
-  Gender,
-  { tagBg: string; tagText: string }
-> = {
+const genderTagConfig: Record<Gender, { tagBg: string; tagText: string }> = {
   MALE: {
     tagBg: "bg-fill-blue",
     tagText: "text-secondary-strong",
@@ -28,7 +28,11 @@ const egenTetoLabelMap: Record<EgenTetoType, string> = {
   EGEN: "에겐",
 };
 
-const ProfileTags: React.FC<ProfileTagsProps> = ({ profile, gender, size = "L" }) => {
+const ProfileTags: React.FC<ProfileTagsProps> = ({
+  profile,
+  gender,
+  size = "L",
+}) => {
   const isSmall = size === "S";
   const config = genderTagConfig[gender];
 

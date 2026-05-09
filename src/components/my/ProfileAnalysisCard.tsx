@@ -4,7 +4,10 @@ import { Link } from "react-router";
 import { LoginDrawer } from "@/components/LoginDrawer";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Users } from "lucide-react";
-import { mypageRegisterClick, mypageAccountConnectClick } from "@/lib/analytics";
+import {
+  mypageRegisterClick,
+  mypageAccountConnectClick,
+} from "@/lib/analytics";
 
 export interface ProfileAnalysisCardProps {
   isLoggedIn?: boolean;
@@ -24,14 +27,21 @@ export const ProfileAnalysisCard = ({
             새학기 첫 축제, 운명의 상대를 만날 기회
           </p>
         </div>
-        <img src={registerCharacter} alt="" className="size-40 object-contain my-6" />
+        <img
+          src={registerCharacter}
+          alt=""
+          className="size-40 object-contain my-6"
+        />
         <div className="flex flex-col gap-3 items-center w-full">
           <Button
             variant="default"
             className="button-l rounded-2xl h-[50px] w-full"
             asChild
           >
-            <Link to="/my/profile" onClick={() => mypageRegisterClick("no_profile_card")}>
+            <Link
+              to="/my/profile"
+              onClick={() => mypageRegisterClick("no_profile_card")}
+            >
               프로필 등록하기
             </Link>
           </Button>

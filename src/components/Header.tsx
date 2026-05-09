@@ -9,9 +9,10 @@ import userIcon from "@/assets/icons/user_icon.svg";
 interface TopBarProps {
   onBack?: To | (() => void);
   hideInfo?: boolean;
+  purchaseLink?: string;
 }
 
-const TopBar: React.FC<TopBarProps> = ({ onBack, hideInfo }) => {
+const TopBar: React.FC<TopBarProps> = ({ onBack, hideInfo, purchaseLink }) => {
   useViewerSelf();
   const handleBack = () => {
     if (typeof onBack === "function") {
@@ -46,7 +47,15 @@ const TopBar: React.FC<TopBarProps> = ({ onBack, hideInfo }) => {
         </div>
       )}
       {!hideInfo && (
-        <div className="flex items-center pt-2 gap-2">
+        <div className="flex items-center pt-2 gap-3">
+          {purchaseLink && (
+            <Link
+              to={purchaseLink}
+              className="bg-white border border-gray-200 rounded-full px-2.5 py-1 text-[10px] font-semibold text-[#767a83]"
+            >
+              이용권 구매
+            </Link>
+          )}
           <Link to="/my">
             <img src={userIcon} alt="User" className="size-9" />
           </Link>
