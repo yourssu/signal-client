@@ -1,4 +1,4 @@
-import connectionSignalIcon from "@/assets/icons/connection-signal.svg";
+import heartIcon from "@/assets/icons/heart_icon.svg";
 import { cn } from "@/lib/utils";
 import React from "react";
 
@@ -26,9 +26,9 @@ const ConnectionInfo: React.FC<ConnectionInfoProps> = ({
       )}
     >
       <img
-        src={connectionSignalIcon}
+        src={heartIcon}
         alt=""
-        className="size-4 shrink-0"
+        className="size-3 shrink-0"
       />
       <p className="caption1 text-primary text-center whitespace-nowrap">
         벌써 {displayCount}명이 시그널로 연결됐어요
