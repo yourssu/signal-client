@@ -85,12 +85,17 @@ const ProfileRegisterPage: React.FC = () => {
     enabled: funnel.step === "done",
   });
   const { data: ticketPackagesRes } = useTicketPackages({
-    enabled: funnel.step === "done",
-  });
+      enabled: funnel.step === "done",
+    });
   const discountRate = (() => {
-    const firstPkg = ticketPackagesRes?.packages[0];
-    if (!firstPkg || firstPkg.price[1] === 0) return 0;
-    return Math.ceil(100 - (firstPkg.price[0] / firstPkg.price[1]) * 100);
+    const packages = ticketPackagesRes?.packages;
+    if (!packages || packages.length === 0) return 0;
+    return Math.max(
+      ...packages.map((pkg) => {
+        if (pkg.price[1] === 0) return 0;
+        return Math.ceil(100 - (pkg.price[0] / pkg.price[1]) * 100);
+      }),
+    );
   })();
 
   useEffect(() => {
