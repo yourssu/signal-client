@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { chargeAccountFaultClick } from "@/lib/analytics";
 
 interface RenameRequestDrawerProps {
   open: boolean;
@@ -26,6 +27,7 @@ export function RenameRequestDrawer({
 
   const handleConfirm = () => {
     if (newName.trim()) {
+      chargeAccountFaultClick();
       onConfirm(newName);
       onOpenChange(false);
     }
@@ -52,7 +54,7 @@ export function RenameRequestDrawer({
           <p className="text-xs text-center text-muted-foreground">
             아직도 해결이 안 되시나요?
             <br />
-            문의 - 백마상 앞 13번 부스 / yourssu.noreply@gmail.com
+            문의 - 신형관 맞은편, 31번 부스 / yourssu.noreply@gmail.com
             <br />
             부스 운영으로 인해 답변에 시간이 다소 소요될 수 있습니다.
           </p>

@@ -61,9 +61,7 @@ const MyPage: React.FC = () => {
               className="button-s rounded-lg px-3 py-1.5 h-auto"
               asChild
             >
-              <Link to="/purchase?source=my_page">
-                충전
-              </Link>
+              <Link to="/purchase?source=my_page">충전</Link>
             </Button>
           </div>
         </div>

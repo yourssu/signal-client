@@ -141,8 +141,9 @@ const router = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 const App: React.FC = () => {
-  const queryClient = new QueryClient();
   return (
     <GoogleOAuthProvider clientId={GOOGLE_OAUTH_CLIENT_ID}>
       <QueryClientProvider client={queryClient}>

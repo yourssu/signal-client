@@ -8,8 +8,8 @@ export const MODE: string = import.meta.env.MODE;
 // GA4 Analytics ID
 export const GA_ID: string | undefined = import.meta.env.VITE_GA_ID;
 // Mixpanel Analytics Token
-export const MIXPANEL_TOKEN: string | undefined =
-  import.meta.env.VITE_MIXPANEL_TOKEN;
+export const MIXPANEL_TOKEN: string | undefined = import.meta.env
+  .VITE_MIXPANEL_TOKEN;
 
 // Base URL for the API. This is used to make API calls.
 export const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
@@ -52,6 +52,8 @@ export const ENABLE_REGISTER: boolean =
   import.meta.env.VITE_ENABLE_REGISTER === "true";
 export const ENABLE_KAKAO_PAYMENTS: boolean =
   import.meta.env.VITE_ENABLE_KAKAO_PAYMENTS === "true";
+export const ENABLE_CONNECTION_INFO: boolean =
+  import.meta.env.VITE_ENABLE_CONNECTION_INFO === "true";
 export const DISABLED_PROFILE_VIEW_DESC: string =
   import.meta.env.VITE_DISABLED_PROFILE_VIEW_DESC ??
   "5/21(수) 10:00부터 시그널을 보낼 수 있어요.";

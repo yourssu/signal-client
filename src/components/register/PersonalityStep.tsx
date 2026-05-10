@@ -12,7 +12,7 @@ const GUIDE_QUESTIONS = [
   {
     question: "Q2. 내 닮은 꼴 뭐야?",
     example: "Ex) 억울한 최우식?",
-  }
+  },
 ] as const;
 
 const getPersonalityExamples = (): string[] => {
@@ -23,11 +23,7 @@ const getPersonalityExamples = (): string[] => {
   ];
 };
 
-const LABEL_LIST: string[] = [
-  "첫번째",
-  "두번째",
-  "세번째",
-];
+const LABEL_LIST: string[] = ["첫번째", "두번째", "세번째"];
 
 interface PersonalityStepProps {
   traits?: string[];
@@ -43,7 +39,10 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
 
   // Validation: Check if at least 2 traits are entered
   const isValid = useMemo(() => {
-    return traits.every((trait) => trait.trim() !== "") && traits.every((trait) => trait.trim().length <= 20);
+    return (
+      traits.every((trait) => trait.trim() !== "") &&
+      traits.every((trait) => trait.trim().length <= 20)
+    );
   }, [traits]);
 
   const handleSubmit = () => {
@@ -115,7 +114,9 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
                 }
                 placeholder={personalityExamples[index]}
                 errorText={
-                  trait.trim().length > 20 ? "글자수는 최대 20자입니다." : undefined
+                  trait.trim().length > 20
+                    ? "글자수는 최대 20자입니다."
+                    : undefined
                 }
               />
             </div>
@@ -135,26 +136,25 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
             />
           </button>
           {isGuideOpen && (
-            <div className="flex flex-col gap-3 pt-[14px] mb-2 pb-3 px-3 bg-fill-pink-light rounded-2xl animate-in slide-in-from-top-2 fade-in ease-in-out duration-200"
-            >
+            <div className="flex flex-col gap-3 pt-[14px] mb-2 pb-3 px-3 bg-fill-pink-light rounded-2xl animate-in slide-in-from-top-2 fade-in ease-in-out duration-200">
               <p className="px-2 text-sm font-semibold leading-[1.35] text-primary whitespace-pre-line">
                 나의 매력.. 고민 된다면?{"\n"}친구한테 물어보세요
               </p>
               <div className="flex flex-col gap-3 w-full">
-              {GUIDE_QUESTIONS.map((g, i) => (
-                <div
-                  key={i}
-                  className="flex flex-col gap-1 justify-center h-16 px-4 bg-static-white rounded-xl"
-                >
-                  <p className="text-sm font-semibold leading-[1.35] text-label-strong">
-                    {g.question}
-                  </p>
-                  <p className="text-xs font-medium leading-[1.2] text-label-neutral">
-                    {g.example}
-                  </p>
-                </div>
-              ))}
-            </div>
+                {GUIDE_QUESTIONS.map((g, i) => (
+                  <div
+                    key={i}
+                    className="flex flex-col gap-1 justify-center h-16 px-4 bg-static-white rounded-xl"
+                  >
+                    <p className="text-sm font-semibold leading-[1.35] text-label-strong">
+                      {g.question}
+                    </p>
+                    <p className="text-xs font-medium leading-[1.2] text-label-neutral">
+                      {g.example}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

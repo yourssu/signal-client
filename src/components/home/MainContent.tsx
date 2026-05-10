@@ -63,7 +63,7 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
           {ENABLE_REGISTER ? (
             profileRegistered ? (
               <Link
-                to="/my"
+                to="/my/profile"
                 onClick={() => myprofileView("main")}
                 className="flex h-14 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary hover:bg-[#ffd4f3] transition-colors"
               >
@@ -111,9 +111,13 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
           )}
 
           <p className="text-xs font-medium text-[#8c8c8c] text-center">
-            <Link to="/privacy" className="underline">개인정보처리방침</Link>
+            <Link to="/privacy" className="underline">
+              개인정보처리방침
+            </Link>
             <span> 및 </span>
-            <Link to="/terms" className="underline">이용약관</Link>
+            <Link to="/terms" className="underline">
+              이용약관
+            </Link>
           </p>
         </div>
       </div>

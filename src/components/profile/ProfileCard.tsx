@@ -3,6 +3,7 @@ import ProfileTags from "@/components/profile/ProfileTags";
 import { animalDisplayMap } from "@/lib/animal";
 import { cardBgConfig } from "@/lib/card";
 import { cn, formatPhone } from "@/lib/utils";
+import { toast } from "sonner";
 import { Gender, ProfileResponse } from "@/types/profile";
 import React from "react";
 
@@ -15,11 +16,15 @@ interface ProfileCardProps {
   className?: string;
   side?: CardSide;
   size?: CardSize;
+  compact?: boolean;
 }
 
-const ProfileCardFront: React.FC<
-  { profile: ProfileResponse; gender: Gender; size: CardSize }
-> = ({ profile, gender, size }) => {
+const ProfileCardFront: React.FC<{
+  profile: ProfileResponse;
+  gender: Gender;
+  size: CardSize;
+  compact?: boolean;
+}> = ({ profile, gender, size, compact }) => {
   const displayYear = profile.birthYear.toString();
   const isSmall = size === "S";
 
@@ -28,11 +33,11 @@ const ProfileCardFront: React.FC<
       className={cn(
         "flex flex-col items-center gap-3 self-center",
         isSmall ? "px-2 py-3" : "px-3 pt-5 pb-4",
+        compact &&
+          "max-[400px]:px-2 max-[400px]:pt-3 max-[400px]:pb-2 max-[400px]:gap-2",
       )}
     >
-      <div
-        className="flex flex-col items-center gap-1 w-full px-1"
-      >
+      <div className="flex flex-col items-center gap-1 w-full px-1">
         <p
           className={cn(
             "text-label-neutral font-medium leading-tight whitespace-nowrap",
@@ -55,6 +60,7 @@ const ProfileCardFront: React.FC<
         className={cn(
           "flex items-center justify-center w-full",
           isSmall ? "h-[80px]" : "h-[126px] max-[440px]:h-[100px]",
+          compact && "max-[400px]:h-[80px]",
         )}
       >
         <AnimalImage
@@ -62,7 +68,10 @@ const ProfileCardFront: React.FC<
           gender={gender}
           className={cn(
             "object-contain",
-            isSmall ? "max-h-[80px]" : "max-h-[126px] max-[440px]:max-h-[100px]",
+            isSmall
+              ? "max-h-[80px]"
+              : "max-h-[126px] max-[440px]:max-h-[100px]",
+            compact && "max-[400px]:max-h-[80px]",
           )}
         />
       </div>
@@ -72,30 +81,47 @@ const ProfileCardFront: React.FC<
   );
 };
 
-const ProfileCardBack: React.FC<
-  { profile: ProfileResponse; contact?: string; size: CardSize; gender: Gender }
-> = ({ profile, contact, size, gender }) => {
+const ProfileCardBack: React.FC<{
+  profile: ProfileResponse;
+  contact?: string;
+  size: CardSize;
+  gender: Gender;
+}> = ({ profile, contact, size, gender }) => {
   const isSmall = size === "S";
 
   if (contact) {
     return (
       <div className="grow flex flex-col w-full">
-        <div className={cn("flex flex-col items-center gap-3 px-3", isSmall ? "pt-4 pb-3" : "pt-6 pb-4")}>
+        <div
+          className={cn(
+            "flex flex-col items-center gap-3 px-3",
+            isSmall ? "pt-4 pb-3" : "pt-6 pb-4",
+          )}
+        >
           <div className="flex flex-col items-center gap-1 w-full px-1">
             <p className="text-label-neutral font-medium text-xs leading-tight whitespace-nowrap">
-              {profile.birthYear}년생 ·{" "}
-              {animalDisplayMap[profile.animal]}상
+              {profile.birthYear}년생 · {animalDisplayMap[profile.animal]}상
             </p>
             <p className="text-label-strong font-semibold text-xl leading-tight whitespace-nowrap">
               {profile.nickname}
             </p>
           </div>
 
-          <div className={cn("flex items-center justify-center w-full", isSmall ? "h-[80px]" : "h-[126px] max-[440px]:h-[100px]")}>
+          <div
+            className={cn(
+              "flex items-center justify-center w-full",
+              isSmall ? "h-[80px]" : "h-[126px] max-[440px]:h-[100px]",
+            )}
+          >
             <AnimalImage
               animalType={profile.animal}
               gender={gender}
-              className={cn("object-contain", isSmall ? "max-h-[80px]" : "max-h-[126px] max-[440px]:max-h-[100px]")}
+              className={cn(
+                "object-contain",
+                isSmall
+                  ? "max-h-[80px]"
+                  : "max-h-[126px] max-[440px]:max-h-[100px]",
+              )}
             />
           </div>
 
@@ -103,24 +129,39 @@ const ProfileCardBack: React.FC<
         </div>
 
         <div className="bg-white rounded-3xl w-full grow px-6 py-4 flex flex-col items-center justify-center gap-2">
-          <a
-            href={
-              contact.startsWith("@")
-                ? `https://instagram.com/${contact.substring(1)}`
-                : `tel:${contact}`
-            }
-            target="_blank"
-            className="w-full flex justify-center items-center px-2 py-3"
-          >
-            <span
-              className={cn(
-                "text-label-strong font-medium leading-5 text-center underline",
-                isSmall ? "text-base" : "text-lg",
-              )}
+          {contact.startsWith("@") ? (
+            <a
+              href={`https://instagram.com/${contact.substring(1)}`}
+              target="_blank"
+              className="w-full flex justify-center items-center px-2 py-3"
             >
-              {contact.startsWith("@") ? contact : formatPhone(contact)}
-            </span>
-          </a>
+              <span
+                className={cn(
+                  "text-label-strong font-medium leading-5 text-center underline",
+                  isSmall ? "text-base" : "text-lg",
+                )}
+              >
+                {contact}
+              </span>
+            </a>
+          ) : (
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(contact);
+                toast.success("전화번호가 복사되었어요");
+              }}
+              className="w-full flex justify-center items-center px-2 py-3"
+            >
+              <span
+                className={cn(
+                  "text-label-strong font-medium leading-5 text-center underline",
+                  isSmall ? "text-base" : "text-lg",
+                )}
+              >
+                {formatPhone(contact)}
+              </span>
+            </button>
+          )}
           {!isSmall && (
             <p className="text-label-neutral text-sm font-medium">
               {contact.startsWith("@")
@@ -134,22 +175,36 @@ const ProfileCardBack: React.FC<
   }
 
   return (
-    <div className={cn("flex flex-col items-center gap-3 px-3", isSmall ? "pt-4 pb-3" : "pt-6 pb-4")}>
+    <div
+      className={cn(
+        "flex flex-col items-center gap-3 px-3",
+        isSmall ? "pt-4 pb-3" : "pt-6 pb-4",
+      )}
+    >
       <div className="flex flex-col items-center gap-1 w-full px-1">
         <p className="text-label-neutral font-medium text-xs leading-tight whitespace-nowrap">
-          {profile.birthYear}년생 ·{" "}
-          {animalDisplayMap[profile.animal]}상
+          {profile.birthYear}년생 · {animalDisplayMap[profile.animal]}상
         </p>
         <p className="text-label-strong font-semibold text-xl leading-tight whitespace-nowrap">
           {profile.nickname}
         </p>
       </div>
 
-      <div className={cn("flex items-center justify-center w-full", isSmall ? "h-[80px]" : "h-[126px] max-[440px]:h-[100px]")}>
+      <div
+        className={cn(
+          "flex items-center justify-center w-full",
+          isSmall ? "h-[80px]" : "h-[126px] max-[440px]:h-[100px]",
+        )}
+      >
         <AnimalImage
           animalType={profile.animal}
           gender={gender}
-          className={cn("object-contain", isSmall ? "max-h-[80px]" : "max-h-[126px] max-[440px]:max-h-[100px]")}
+          className={cn(
+            "object-contain",
+            isSmall
+              ? "max-h-[80px]"
+              : "max-h-[126px] max-[440px]:max-h-[100px]",
+          )}
         />
       </div>
 
@@ -158,16 +213,19 @@ const ProfileCardBack: React.FC<
   );
 };
 
-const ProfileCardBody: React.FC<{ profile: ProfileResponse }> = ({
-  profile,
-}) => {
+const ProfileCardBody: React.FC<{
+  profile: ProfileResponse;
+  compact?: boolean;
+}> = ({ profile, compact }) => {
   return (
-    <div className="bg-white rounded-3xl w-full px-3 py-2 flex flex-col justify-center">
+    <div
+      className={cn(
+        "bg-white rounded-3xl w-full px-3 py-2 flex flex-col justify-center",
+        compact && "max-[400px]:py-1",
+      )}
+    >
       {profile.introSentences.map((sentence, index) => (
-        <div
-          key={index}
-          className="flex flex-col gap-1.5 px-2 py-1.5 w-full"
-        >
+        <div key={index} className="flex flex-col gap-1.5 px-2 py-1.5 w-full">
           <p className="text-label-neutral text-[10px] font-semibold leading-[1.35]">
             특징 {index + 1}
           </p>
@@ -186,6 +244,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   className,
   side = "front",
   size = "L",
+  compact,
 }) => {
   const gender: Gender = profile.gender;
   const cardBg = cardBgConfig[gender];
@@ -195,6 +254,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       className={cn(
         cardBg,
         "rounded-[36px] overflow-hidden flex flex-col p-3 items-stretch w-full select-none",
+        compact && "max-[400px]:p-2",
         className,
       )}
     >
@@ -204,8 +264,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             profile={profile}
             size={size}
             gender={gender}
+            compact={compact}
           />
-          <ProfileCardBody profile={profile} />
+          <ProfileCardBody profile={profile} compact={compact} />
         </>
       ) : (
         <ProfileCardBack

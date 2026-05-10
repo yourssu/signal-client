@@ -69,7 +69,12 @@ const TurnableProfileCard: React.FC<TurnableProfileCardProps> = ({
             WebkitBackfaceVisibility: "hidden",
           }}
         >
-          <ProfileCard profile={profile} className={className} side="front" size={size} />
+          <ProfileCard
+            profile={profile}
+            className={className}
+            side="front"
+            size={size}
+          />
         </motion.div>
 
         <motion.div
@@ -94,7 +99,12 @@ const TurnableProfileCard: React.FC<TurnableProfileCardProps> = ({
 
         {/* Invisible element to maintain container size */}
         <div className="invisible">
-          <ProfileCard profile={profile} className={className} side="front" size={size} />
+          <ProfileCard
+            profile={profile}
+            className={className}
+            side="front"
+            size={size}
+          />
         </div>
       </motion.div>
     </div>

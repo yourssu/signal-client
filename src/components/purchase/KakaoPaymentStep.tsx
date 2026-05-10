@@ -6,7 +6,6 @@ import { Package } from "@/types/viewer";
 import kakaoPayCI from "@/assets/icons/kakapay_ci.svg";
 import { useKakaoPaymentInitiate } from "@/hooks/queries/viewers";
 
-
 interface KakaoPaymentStepProps {
   pkg: Package;
   isAuthenticated: boolean;

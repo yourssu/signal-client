@@ -1,17 +1,26 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import { useSetAtom } from "jotai";
-import { useCountProfile, useDeckProfiles } from "@/hooks/queries/profiles";
+import { useAtom, useSetAtom } from "jotai";
+import {
+  useCountProfile,
+  useDeckProfiles,
+  usePurchasedCount,
+} from "@/hooks/queries/profiles";
 import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
 import { SwipeableProfileCard } from "@/components/profile/SwipeableProfileCard";
 import { userGenderAtom } from "@/atoms/user";
+import {
+  profileDeckIndexAtom,
+  profileDeckProfileIdAtom,
+} from "@/atoms/profiles";
 import GenderStep from "@/components/purchase/GenderSelect";
 import { Gender } from "@/types/profile";
-import { viewProfile, contactClick } from "@/lib/analytics";
+import { contactClick } from "@/lib/analytics";
 import { useUser } from "@/hooks/useUser";
 import { TicketRequiredModal } from "@/components/TicketRequiredModal";
 import ConnectionInfo from "@/components/ConnectionInfo";
+import { ENABLE_CONNECTION_INFO } from "@/env";
 
 const ProfileListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -19,36 +28,71 @@ const ProfileListPage: React.FC = () => {
   const setGender = useSetAtom(userGenderAtom);
   const desiredGender = gender === "MALE" ? "FEMALE" : "MALE";
 
-  const [showConnectionInfo, _setShowConnectionInfo] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useAtom(profileDeckIndexAtom);
+  const [savedProfileId, setSavedProfileId] = useAtom(profileDeckProfileIdAtom);
   const [ticketModalOpen, setTicketModalOpen] = useState(false);
+  const [connectionInfoVisible, setConnectionInfoVisible] = useState(false);
 
   const { data: countData } = useCountProfile();
-  const { data: deck, isPending, error } = useDeckProfiles(desiredGender!, {
+  const { data: purchasedCountData } = usePurchasedCount({
+    enabled: ENABLE_CONNECTION_INFO,
+  });
+
+  const shouldShowConnectionInfo =
+    ENABLE_CONNECTION_INFO && (purchasedCountData?.count ?? 0) > 0;
+
+  useEffect(() => {
+    if (!shouldShowConnectionInfo) return;
+    setConnectionInfoVisible(true);
+    const timer = setTimeout(() => setConnectionInfoVisible(false), 5000);
+    return () => clearTimeout(timer);
+  }, [shouldShowConnectionInfo]);
+
+  const {
+    data: deck,
+    isPending,
+    error,
+  } = useDeckProfiles(desiredGender!, {
     enabled: !!desiredGender,
   });
 
+  const prevGenderRef = useRef(desiredGender);
+  useEffect(() => {
+    if (prevGenderRef.current !== desiredGender) {
+      setCurrentIndex(0);
+      setSavedProfileId(null);
+      prevGenderRef.current = desiredGender;
+    }
+  }, [desiredGender, setCurrentIndex, setSavedProfileId]);
+
+  useEffect(() => {
+    if (!deck || deck.length === 0) return;
+    if (savedProfileId !== null) {
+      const foundIndex = deck.findIndex((p) => p.profileId === savedProfileId);
+      if (foundIndex >= 0) {
+        setCurrentIndex(foundIndex);
+      }
+      setSavedProfileId(null);
+    }
+  }, [deck, savedProfileId, setCurrentIndex, setSavedProfileId]);
+
+  const safeIndex = deck
+    ? Math.min(currentIndex, Math.max(deck.length - 1, 0))
+    : 0;
+
   const profile = useMemo(
-    () => (deck && deck.length > 0 ? deck[currentIndex] : null),
-    [deck, currentIndex],
+    () => (deck && deck.length > 0 ? deck[safeIndex] : null),
+    [deck, safeIndex],
   );
 
-  const canSwipeLeft = !!deck && currentIndex < deck.length - 1;
-  const canSwipeRight = currentIndex > 0;
+  const canSwipeLeft = !!deck && safeIndex < deck.length - 1;
+  const canSwipeRight = safeIndex > 0;
 
   const handleSwipe = (direction: "left" | "right") => {
     if (direction === "left" && canSwipeLeft) {
-      const nextIndex = currentIndex + 1;
-      setCurrentIndex(nextIndex);
-      if (deck) {
-        viewProfile(deck[nextIndex].profileId);
-      }
+      setCurrentIndex(safeIndex + 1);
     } else if (direction === "right" && canSwipeRight) {
-      const prevIndex = currentIndex - 1;
-      setCurrentIndex(prevIndex);
-      if (deck) {
-        viewProfile(deck[prevIndex].profileId);
-      }
+      setCurrentIndex(safeIndex - 1);
     }
   };
 
@@ -62,9 +106,7 @@ const ProfileListPage: React.FC = () => {
         <title>성별 선택하기 - 시그널</title>
         <TopBar onBack="/" />
         <div className="flex-grow flex flex-col items-center justify-center p-4">
-          <div className="w-full max-w-md h-full flex flex-col grow items-stretch justify-stretch">
-            <GenderStep onSelect={handleGenderSelect} />
-          </div>
+          <GenderStep onSelect={handleGenderSelect} />
         </div>
       </div>
     );
@@ -79,6 +121,7 @@ const ProfileListPage: React.FC = () => {
       return;
     }
     contactClick(profile.profileId);
+    setSavedProfileId(profile.profileId);
     navigate(`/profile/contact?id=${profile.profileId}`, {
       state: {
         profile,
@@ -89,7 +132,7 @@ const ProfileListPage: React.FC = () => {
   return (
     <div className="w-full h-full flex flex-col items-center">
       <title>시그널 보내기 - 시그널</title>
-      <TopBar onBack="/" />
+      <TopBar onBack="/" purchaseLink="/purchase?source=profile_top" />
       <div className="flex flex-col gap-4 items-center w-full max-w-md grow p-6 overflow-hidden relative">
         <div className="flex flex-col items-start w-full">
           <h1 className="text-2xl font-semibold text-stone-700">
@@ -98,15 +141,16 @@ const ProfileListPage: React.FC = () => {
             당신의 시그널을 기다리는 중
           </h1>
         </div>
-        <div className="absolute top-20 z-50">
-          <ConnectionInfo count={0} visible={showConnectionInfo} />
-        </div>
         <div className="w-full h-full max-w-md flex items-center justify-center grow">
           {isPending && (
-            <p className="text-label-neutral text-lg">프로필을 불러오는 중...</p>
+            <p className="text-label-neutral text-lg">
+              프로필을 불러오는 중...
+            </p>
           )}
           {error && (
-            <p className="text-label-neutral text-lg">프로필을 불러오지 못했어요.</p>
+            <p className="text-label-neutral text-lg">
+              프로필을 불러오지 못했어요.
+            </p>
           )}
           {profile && (
             <SwipeableProfileCard
@@ -117,10 +161,17 @@ const ProfileListPage: React.FC = () => {
             />
           )}
           {!isPending && !error && deck?.length === 0 && (
-            <p className="text-label-neutral text-lg">더 이상 프로필이 없어요.</p>
+            <p className="text-label-neutral text-lg">
+              더 이상 프로필이 없어요.
+            </p>
           )}
         </div>
-        <div className="flex gap-4 w-full relative z-50">
+        <div className="flex flex-col gap-3 w-full relative z-50">
+          <ConnectionInfo
+            count={purchasedCountData?.count ?? 0}
+            visible={connectionInfoVisible}
+            className="absolute -top-14 left-1/2 -translate-x-1/2"
+          />
           <Button
             onClick={handleViewContact}
             size="xl"

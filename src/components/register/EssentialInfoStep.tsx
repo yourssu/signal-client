@@ -78,12 +78,9 @@ const EssentialInfoStep: React.FC<EssentialInfoStepProps> = ({
     egenTetoInput !== null &&
     (!isAnotherSchool || schoolInput.length > 0);
 
-  const isMbtiError =
-    mbtiInput.length === 4 && !isValidMbti(mbtiInput);
+  const isMbtiError = mbtiInput.length === 4 && !isValidMbti(mbtiInput);
 
-  const handleBirthYearChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleBirthYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const digitsOnly = e.target.value.replace(/\D/g, "");
     if (digitsOnly.length > 4) return;
     const value = digitsOnly === "" ? null : parseInt(digitsOnly);
@@ -97,9 +94,7 @@ const EssentialInfoStep: React.FC<EssentialInfoStepProps> = ({
     }
   };
 
-  const handleDepartmentChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleDepartmentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDepartmentInput(e.target.value);
   };
 
@@ -215,7 +210,9 @@ const EssentialInfoStep: React.FC<EssentialInfoStepProps> = ({
               )}
               {showStyle && (
                 <div className="flex flex-col gap-2 mt-4 animate-in slide-in-from-bottom-4 fade-in ease-in-out duration-300">
-                  <p className="text-xs font-medium text-label-strong px-2">나의 스타일</p>
+                  <p className="text-xs font-medium text-label-strong px-2">
+                    나의 스타일
+                  </p>
                   <div className="flex gap-2">
                     {egenTetoOptions.map((option) => (
                       <button
@@ -224,7 +221,9 @@ const EssentialInfoStep: React.FC<EssentialInfoStepProps> = ({
                         onClick={() => setEgenTetoInput(option.type)}
                         className={cn(
                           "flex-1 h-11 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer",
-                          egenTetoInput === option.type ? "bg-neutral-100 border border-pink-600 text-pink-600" : "bg-neutral-100 text-label-strong",
+                          egenTetoInput === option.type
+                            ? "bg-neutral-100 border border-pink-600 text-pink-600"
+                            : "bg-neutral-100 text-label-strong",
                         )}
                       >
                         {option.label}

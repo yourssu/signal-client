@@ -62,8 +62,14 @@ export const signalSendClick = (isRegistered: boolean) =>
 export const contactClick = (targetUserId: string | number) =>
   track("contact_click", { target_user_id: String(targetUserId) });
 
-export const contactCheckClick = (hasTicket: boolean) =>
-  track("contact_check_click", { has_ticket: hasTicket });
+export const contactCheckClick = (
+  hasTicket: boolean,
+  targetUserId: string | number,
+) =>
+  track("contact_check_click", {
+    has_ticket: hasTicket,
+    target_user_id: String(targetUserId),
+  });
 
 export const contactCancelClick = () => track("contact_cancel_click");
 
@@ -92,7 +98,8 @@ export const chargeTossClick = () => track("charge_toss_click");
 
 export const chargeTossConfirmClick = () => track("charge_toss_confirm_click");
 
-export const chargeKakaoConfirmClick = () => track("charge_kakao_confirm_click");
+export const chargeKakaoConfirmClick = () =>
+  track("charge_kakao_confirm_click");
 
 export const mypageView = (userStatus: string) =>
   track("mypage_view", { user_status: userStatus });
@@ -132,16 +139,8 @@ export const myprofileLockClick = () => track("myprofile_lock_click");
 export const myprofileLockCheckClick = (lockedUserId: string | number) =>
   track("myprofile_lock_check_click", { locked_user_id: String(lockedUserId) });
 
-export const viewProfile = (profileId: number) =>
-  track("view_profile", { profile_id: profileId });
-
 export const swipeStart = (direction: "left" | "right", profileId: number) =>
   track("swipe_start", { direction, profile_id: profileId });
-
-export const swipeComplete = (
-  direction: "left" | "right",
-  profileId: number,
-) => track("swipe_complete", { direction, profile_id: profileId });
 
 export const swipeStop = (direction: "left" | "right", profileId: number) =>
   track("swipe_stop", { direction, profile_id: profileId });

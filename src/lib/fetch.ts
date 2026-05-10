@@ -31,23 +31,47 @@ async function refreshAccessToken(): Promise<boolean> {
         return false;
       }
 
-      const response = await fetch(`${API_BASE_URL ?? ""}/api/auth/refresh`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refreshToken }),
-      });
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          const response = await fetch(
+            `${API_BASE_URL ?? ""}/api/auth/refresh`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ refreshToken }),
+            },
+          );
 
-      if (!response.ok) return false;
+          if (!response.ok) {
+            if (attempt < 2) {
+              await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
+              continue;
+            }
+            return false;
+          }
 
-      const res = (await response.json()) as SignalResponse<TokenResponse>;
-      if (!("result" in res)) return false;
+          const res = (await response.json()) as SignalResponse<TokenResponse>;
+          if (!("result" in res)) {
+            if (attempt < 2) continue;
+            return false;
+          }
 
-      const { accessToken, refreshToken: newRefresh } = res.result;
-      if (!accessToken || !newRefresh) return false;
+          const { accessToken, refreshToken: newRefresh } = res.result;
+          if (!accessToken || !newRefresh) {
+            if (attempt < 2) continue;
+            return false;
+          }
 
-      store.set(setTokensAtom, { tokenResponse: res.result });
-      return true;
-    } catch {
+          store.set(setTokensAtom, { tokenResponse: res.result });
+          return true;
+        } catch {
+          if (attempt < 2) {
+            await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
+            continue;
+          }
+          return false;
+        }
+      }
       return false;
     } finally {
       refreshPromise = null;

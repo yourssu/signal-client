@@ -1,15 +1,38 @@
 import { useAtomValue, useSetAtom } from "jotai";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { toast } from "sonner";
 import { useRegister, useRefreshToken } from "@/hooks/queries/auth";
 import {
   accessTokenAtom,
+  clearTokensAtom,
   refreshTokenAtom,
   isAuthenticatedAtom,
   setTokensAtom,
   tokenExpiryAtom,
 } from "@/atoms/authTokens";
 import { TokenResponse } from "@/types/auth";
+import { API_BASE_URL } from "@/env";
+
+const MAX_REFRESH_RETRIES = 3;
+const RETRY_DELAYS = [1000, 3000, 5000];
+
+async function rawRefresh(refreshToken: string): Promise<TokenResponse | null> {
+  try {
+    const response = await fetch(`${API_BASE_URL ?? ""}/api/auth/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    if (!response.ok) return null;
+
+    const res = await response.json();
+    if (!res.result?.accessToken || !res.result?.refreshToken) return null;
+    return res.result as TokenResponse;
+  } catch {
+    return null;
+  }
+}
 
 export const useAuth = () => {
   const accessToken = useAtomValue(accessTokenAtom);
@@ -17,6 +40,8 @@ export const useAuth = () => {
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const setTokens = useSetAtom(setTokensAtom);
   const tokenExpiry = useAtomValue(tokenExpiryAtom);
+  const clearTokens = useSetAtom(clearTokensAtom);
+  const hasInitialized = useRef(false);
 
   const registerMutation = useRegister({
     onSuccess: (data: TokenResponse) => {
@@ -38,47 +63,44 @@ export const useAuth = () => {
         });
       }
     },
-    onError: (error) => {
-      toast.error("토큰 갱신 실패", { description: error.message });
-      // If refresh fails, try to register
-      registerMutation.mutate();
-    },
+    onError: () => {},
   });
 
-  const tryRefreshToken = useCallback(async () => {
-    if (!refreshToken) {
-      return false;
-    }
+  const tryRefreshWithRetry = useCallback(
+    async (token: string): Promise<TokenResponse | null> => {
+      const tokenExpiryData = tokenExpiry;
+      if (
+        tokenExpiryData.refreshTokenExpiresAt &&
+        tokenExpiryData.refreshTokenExpiresAt <= Date.now()
+      ) {
+        return null;
+      }
 
-    // Check if refresh token is expired
-    const now = Date.now();
-    if (
-      tokenExpiry.refreshTokenExpiresAt &&
-      tokenExpiry.refreshTokenExpiresAt <= now
-    ) {
-      return false;
-    }
-
-    try {
-      await refreshMutation.mutateAsync({ refreshToken });
-      return true;
-    } catch {
-      return false;
-    }
-  }, [refreshToken, refreshMutation, tokenExpiry.refreshTokenExpiresAt]);
+      for (let i = 0; i < MAX_REFRESH_RETRIES; i++) {
+        const result = await rawRefresh(token);
+        if (result) {
+          setTokens({ tokenResponse: result, provider: "local" });
+          return result;
+        }
+        if (i < MAX_REFRESH_RETRIES - 1) {
+          await new Promise((r) => setTimeout(r, RETRY_DELAYS[i]));
+        }
+      }
+      return null;
+    },
+    [tokenExpiry, setTokens],
+  );
 
   const initializeAuth = useCallback(async () => {
-    // If no tokens exist, register automatically
     if (!accessToken && !refreshToken) {
       registerMutation.mutate();
       return;
     }
 
-    // If tokens exist but not authenticated (expired access token), try refresh
     if (!isAuthenticated && refreshToken) {
-      const refreshSuccess = await tryRefreshToken();
-      if (!refreshSuccess) {
-        // If refresh failed, register new account
+      const result = await tryRefreshWithRetry(refreshToken);
+      if (!result) {
+        clearTokens();
         registerMutation.mutate();
       }
     }
@@ -87,26 +109,26 @@ export const useAuth = () => {
     refreshToken,
     isAuthenticated,
     registerMutation,
-    tryRefreshToken,
+    tryRefreshWithRetry,
+    clearTokens,
   ]);
 
-  // Auto-register or auto-refresh on mount
   useEffect(() => {
+    if (hasInitialized.current) return;
+    hasInitialized.current = true;
     initializeAuth();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only run once on mount
+  }, [initializeAuth]);
 
   return {
-    // State
     accessToken,
     refreshToken,
     isAuthenticated,
     tokenExpiry,
 
-    // Mutation states
     isRegistering: registerMutation.isPending,
     isRefreshing: refreshMutation.isPending,
     registerError: registerMutation.error,
     refreshError: refreshMutation.error,
+    clearTokens,
   };
 };

@@ -127,7 +127,9 @@ export const BankAccountPaymentStep = ({
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <div className="bg-primary flex items-center justify-center size-[18px] rounded-[20px] shrink-0">
-              <span className="text-white text-xs font-medium leading-[1.3]">1</span>
+              <span className="text-white text-xs font-medium leading-[1.3]">
+                1
+              </span>
             </div>
             <h2 className="text-sm font-semibold text-label-strong leading-[1.35]">
               계좌 복사하기
@@ -168,7 +170,9 @@ export const BankAccountPaymentStep = ({
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <div className="bg-primary flex items-center justify-center size-[18px] rounded-[20px] shrink-0">
-              <span className="text-white text-xs font-medium leading-[1.3]">2</span>
+              <span className="text-white text-xs font-medium leading-[1.3]">
+                2
+              </span>
             </div>
             <h2 className="text-sm font-semibold text-label-strong leading-[1.35]">
               인증번호 확인
@@ -200,7 +204,9 @@ export const BankAccountPaymentStep = ({
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <div className="bg-primary flex items-center justify-center size-[18px] rounded-[20px] shrink-0">
-              <span className="text-white text-xs font-medium leading-[1.3]">3</span>
+              <span className="text-white text-xs font-medium leading-[1.3]">
+                3
+              </span>
             </div>
             <h2 className="text-sm font-semibold text-label-strong leading-[1.35]">
               아래 금액을 입금해주세요

@@ -58,10 +58,7 @@ const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
         </Button>
       </div>
 
-      <LoginDrawer
-        open={loginDrawerOpen}
-        onOpenChange={setLoginDrawerOpen}
-      />
+      <LoginDrawer open={loginDrawerOpen} onOpenChange={setLoginDrawerOpen} />
     </div>
   );
 };

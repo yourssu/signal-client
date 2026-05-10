@@ -35,12 +35,28 @@ const MOCK_TOKEN: TokenResponse = {
   refreshTokenExpiresIn: 1000 * 60 * 60 * 24 * 7,
 };
 
-const maleAnimals: AnimalType[] = ["BEAR", "DEER", "DINOSAUR", "DOG", "CAT", "HAMSTER"];
-const femaleAnimals: AnimalType[] = ["FOX", "RABBIT", "TURTLE", "DOG", "CAT", "HAMSTER"];
+const maleAnimals: AnimalType[] = [
+  "BEAR",
+  "DEER",
+  "DINOSAUR",
+  "DOG",
+  "CAT",
+  "HAMSTER",
+];
+const femaleAnimals: AnimalType[] = [
+  "FOX",
+  "RABBIT",
+  "TURTLE",
+  "DOG",
+  "CAT",
+  "HAMSTER",
+];
 
 const getRandomAnimal = (gender?: Gender): AnimalType => {
   const animals = gender
-    ? gender === "MALE" ? maleAnimals : femaleAnimals
+    ? gender === "MALE"
+      ? maleAnimals
+      : femaleAnimals
     : [...maleAnimals, ...femaleAnimals];
   return animals[Math.floor(Math.random() * animals.length)];
 };
@@ -112,9 +128,24 @@ export const handlers = [
       timestamp: new Date().toISOString(),
       result: {
         packages: [
-          { id: "pkg-1", name: "시작 패키지", quantity: [3, 3], price: [3000, 3000] },
-          { id: "pkg-2", name: "인기 패키지", quantity: [5, 5], price: [4500, 5000] },
-          { id: "pkg-3", name: "프리미엄 패키지", quantity: [10, 10], price: [8000, 10000] },
+          {
+            id: "pkg-1",
+            name: "시작 패키지",
+            quantity: [3, 3],
+            price: [3000, 3000],
+          },
+          {
+            id: "pkg-2",
+            name: "인기 패키지",
+            quantity: [5, 5],
+            price: [4500, 5000],
+          },
+          {
+            id: "pkg-3",
+            name: "프리미엄 패키지",
+            quantity: [10, 10],
+            price: [8000, 10000],
+          },
         ],
       },
     } satisfies SuccessResponse<TicketPackagesResponse>);
@@ -147,7 +178,11 @@ export const handlers = [
         animal: "RABBIT",
         mbti: "ENFP",
         nickname: "토끼같은미소",
-        introSentences: ["커피 한 잔과 함께 대화 나누기 좋아해요", "봄날 산책을 좋아해요", "재미있는 이야기 잘 해요"],
+        introSentences: [
+          "커피 한 잔과 함께 대화 나누기 좋아해요",
+          "봄날 산책을 좋아해요",
+          "재미있는 이야기 잘 해요",
+        ],
         school: "숭실대학교",
         egenTeto: "TETO",
         contact: "https://instagram.com/example1",
@@ -160,7 +195,11 @@ export const handlers = [
         animal: "CAT",
         mbti: "INFJ",
         nickname: "고양이눈빛",
-        introSentences: ["조용한 카페를 좋아해요", "독서와 영화 감상이 취미예요", "깊은 대화를 나눠요"],
+        introSentences: [
+          "조용한 카페를 좋아해요",
+          "독서와 영화 감상이 취미예요",
+          "깊은 대화를 나눠요",
+        ],
         school: "숭실대학교",
         egenTeto: "EGEN",
         contact: "https://instagram.com/example2",
@@ -177,6 +216,14 @@ export const handlers = [
       timestamp: new Date().toISOString(),
       result: {
         count: 1234,
+      },
+    } satisfies SuccessResponse<ProfileCountResponse>);
+  }),
+  http.get("/api/profiles/purchased/count", () => {
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: {
+        count: 42,
       },
     } satisfies SuccessResponse<ProfileCountResponse>);
   }),
@@ -204,7 +251,11 @@ export const handlers = [
         animal: randomAnimal,
         mbti: getRandomMBTI(),
         nickname: getRandomNickname(randomAnimal),
-        introSentences: ["항상 밝고 긍정적인 에너지!", "카페 나들이를 좋아해요", "재미있는 대화 나눠요"],
+        introSentences: [
+          "항상 밝고 긍정적인 에너지!",
+          "카페 나들이를 좋아해요",
+          "재미있는 대화 나눠요",
+        ],
         contact: "010-1234-5678",
         school: "숭실대",
         egenTeto: "TETO",
@@ -238,7 +289,11 @@ export const handlers = [
         animal: randomAnimal,
         mbti: getRandomMBTI(),
         nickname: getRandomNickname(randomAnimal),
-        introSentences: ["운동 좋아하는 프로운동러", "맛집 탐방이 취미예요", "성실하고 책임감 강함"],
+        introSentences: [
+          "운동 좋아하는 프로운동러",
+          "맛집 탐방이 취미예요",
+          "성실하고 책임감 강함",
+        ],
         school: "숭실대",
         egenTeto: "EGEN",
       },
@@ -320,7 +375,11 @@ export const handlers = [
         mbti: "ENTP",
         nickname: "총명한 강아지",
         contact: "010-1234-5678",
-        introSentences: ["강아지처럼 충성스러운 성격!", "산책 좋아해요", "웃음이 많은 편이에요"],
+        introSentences: [
+          "강아지처럼 충성스러운 성격!",
+          "산책 좋아해요",
+          "웃음이 많은 편이에요",
+        ],
         school: "숭실대",
         egenTeto: "TETO",
       },

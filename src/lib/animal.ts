@@ -8,6 +8,6 @@ export const animalDisplayMap: Record<AnimalType, string> = {
   DEER: "사슴",
   CAT: "고양이",
   FOX: "여우",
-  TURTLE: "거북이",
+  TURTLE: "꼬북이",
   RABBIT: "토끼",
 };

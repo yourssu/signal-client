@@ -51,11 +51,7 @@ const RegisterConfirmationDrawer: React.FC<RegisterConfirmationDrawerProps> = ({
         </DrawerHeader>
         <div className="flex flex-col items-center gap-4 px-4 -mt-2">
           <div className="w-full max-w-sm">
-            <TurnableProfileCard
-              profile={profile}
-              contact={contact}
-              size="S"
-            />
+            <TurnableProfileCard profile={profile} contact={contact} size="S" />
           </div>
 
           <p className="text-center text-xs font-medium text-primary">

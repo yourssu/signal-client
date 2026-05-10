@@ -18,7 +18,9 @@ const Layout: React.FC = () => {
   return (
     <div className="h-dvh min-h-dvh overflow-hidden tracking-tight">
       {isHome && <Background />}
-      <main className={`max-w-md mx-auto w-full h-full shadow-sm overflow-auto ${!isHome ? "bg-(--background)" : ""}`}>
+      <main
+        className={`max-w-md mx-auto w-full h-full shadow-sm overflow-auto ${!isHome ? "bg-(--background)" : ""}`}
+      >
         <Outlet />
         <Toaster theme="light" richColors position="top-center" />
         {MODE !== "production" && <DevTools />}
