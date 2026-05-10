@@ -52,6 +52,7 @@ const ProfileListPage: React.FC = () => {
     data: deck,
     isPending,
     error,
+    refetch: refetchDeck,
   } = useDeckProfiles(desiredGender!, {
     enabled: !!desiredGender,
   });
@@ -71,10 +72,14 @@ const ProfileListPage: React.FC = () => {
       const foundIndex = deck.findIndex((p) => p.profileId === savedProfileId);
       if (foundIndex >= 0) {
         setCurrentIndex(foundIndex);
+      } else {
+        setCurrentIndex(0);
       }
       setSavedProfileId(null);
     }
   }, [deck, savedProfileId, setCurrentIndex, setSavedProfileId]);
+
+  const [isRefetching, setIsRefetching] = useState(false);
 
   const safeIndex = deck
     ? Math.min(currentIndex, Math.max(deck.length - 1, 0))
@@ -85,11 +90,22 @@ const ProfileListPage: React.FC = () => {
     [deck, safeIndex],
   );
 
-  const canSwipeLeft = !!deck && safeIndex < deck.length - 1;
+  const canSwipeLeft = !!deck && deck.length > 0;
   const canSwipeRight = safeIndex > 0;
 
-  const handleSwipe = (direction: "left" | "right") => {
-    if (direction === "left" && canSwipeLeft) {
+  const handleSwipe = async (direction: "left" | "right") => {
+    if (direction === "left") {
+      const isLastProfile = safeIndex >= (deck?.length ?? 0) - 1;
+      if (isLastProfile) {
+        setIsRefetching(true);
+        const result = await refetchDeck();
+        setIsRefetching(false);
+        if (result.data && result.data.length > 0) {
+          setCurrentIndex(0);
+          setSavedProfileId(null);
+        }
+        return;
+      }
       setCurrentIndex(safeIndex + 1);
     } else if (direction === "right" && canSwipeRight) {
       setCurrentIndex(safeIndex - 1);
@@ -142,17 +158,17 @@ const ProfileListPage: React.FC = () => {
           </h1>
         </div>
         <div className="w-full h-full max-w-md flex items-center justify-center grow">
-          {isPending && (
+          {(isPending || isRefetching) && (
             <p className="text-label-neutral text-lg">
               프로필을 불러오는 중...
             </p>
           )}
-          {error && (
+          {error && !isRefetching && (
             <p className="text-label-neutral text-lg">
               프로필을 불러오지 못했어요.
             </p>
           )}
-          {profile && (
+          {profile && !isRefetching && (
             <SwipeableProfileCard
               profile={profile}
               canSwipeLeft={canSwipeLeft}
@@ -160,7 +176,7 @@ const ProfileListPage: React.FC = () => {
               onSwipe={handleSwipe}
             />
           )}
-          {!isPending && !error && deck?.length === 0 && (
+          {!isPending && !isRefetching && !error && deck?.length === 0 && (
             <p className="text-label-neutral text-lg">
               더 이상 프로필이 없어요.
             </p>
