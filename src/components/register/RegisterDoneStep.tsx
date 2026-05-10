@@ -31,7 +31,7 @@ const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
       return () => clearTimeout(timer);
     }
   }, [provider]);
-
+ 
   return (
     <div className="w-full max-w-md mx-auto flex flex-col items-center grow">
       <div className="flex flex-col gap-2 items-center text-center">
@@ -40,9 +40,11 @@ const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
           <br />
           프로필 등록 완료!
         </h2>
-        <p className="text-base font-medium text-[#5a5c64]">
-          이용권 {discountRate}% 할인 혜택을 받을 수 있어요
-        </p>
+        {discountRate > 0 && (
+          <p className="text-base font-medium text-[#5a5c64]">
+            이용권 {discountRate}% 할인 혜택을 받을 수 있어요
+          </p>
+        )}
       </div>
 
       <div className="grow flex flex-col justify-center items-stretch self-stretch py-6">
