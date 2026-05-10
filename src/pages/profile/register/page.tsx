@@ -286,7 +286,7 @@ const ProfileRegisterPage: React.FC = () => {
             done={() => (
               <RegisterDoneStep
                 profile={funnel.context as ProfileContactResponse}
-                profileNumber={(profileCountRes?.count ?? 0) + 1}
+                profileNumber={profileCountRes?.count ?? 1}
                 onSubmit={handleDone}
               />
             )}
