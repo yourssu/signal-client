@@ -2,7 +2,7 @@ import { isFirstProfileViewAtom } from "@/atoms/user";
 import CompatibilityBadge from "@/components/profile/CompatibilityBadge";
 import ProfileCard from "@/components/profile/ProfileCard";
 import { useUser } from "@/hooks/useUser";
-import { swipeStart, swipeStop } from "@/lib/analytics";
+import { swipeStart } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { ProfileResponse } from "@/types/profile";
 import { useSetAtom } from "jotai";
@@ -103,7 +103,6 @@ export const SwipeableProfileCard: React.FC<{
       });
     } else if (isSwipedLeft || isSwipedRight) {
       animate(x, 0, { duration: 0.3 });
-      swipeStop(xDir > 0 ? "right" : "left", profile.profileId);
     } else {
       animate(x, 0, { duration: 0.3 });
     }
