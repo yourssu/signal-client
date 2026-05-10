@@ -9,12 +9,14 @@ import { LoginDrawer } from "@/components/LoginDrawer";
 interface RegisterDoneStepProps {
   profile: ProfileContactResponse;
   profileNumber: number;
+  discountRate: number;
   onSubmit: () => void;
 }
 
 const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
   profile,
   profileNumber,
+  discountRate,
   onSubmit,
 }) => {
   const provider = useAtomValue(providerAtom);
@@ -39,7 +41,7 @@ const RegisterDoneStep: React.FC<RegisterDoneStepProps> = ({
           프로필 등록 완료!
         </h2>
         <p className="text-base font-medium text-[#5a5c64]">
-          이용권 30% 할인 혜택을 받을 수 있어요
+          이용권 {discountRate}% 할인 혜택을 받을 수 있어요
         </p>
       </div>
 

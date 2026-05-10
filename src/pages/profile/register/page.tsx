@@ -17,6 +17,7 @@ import {
   useCreateProfile,
   useSelfProfile,
 } from "@/hooks/queries/profiles";
+import { useTicketPackages } from "@/hooks/queries/viewers";
 import { useNavigate, Link } from "react-router";
 import { useSetAtom } from "jotai";
 import { userGenderAtom, userProfileAtom } from "@/atoms/user";
@@ -83,6 +84,14 @@ const ProfileRegisterPage: React.FC = () => {
   const { data: profileCountRes } = useCountProfile({
     enabled: funnel.step === "done",
   });
+  const { data: ticketPackagesRes } = useTicketPackages({
+    enabled: funnel.step === "done",
+  });
+  const discountRate = (() => {
+    const firstPkg = ticketPackagesRes?.packages[0];
+    if (!firstPkg || firstPkg.price[1] === 0) return 0;
+    return Math.ceil(100 - (firstPkg.price[0] / firstPkg.price[1]) * 100);
+  })();
 
   useEffect(() => {
     if (latestProfile && profile != latestProfile) {
@@ -287,6 +296,7 @@ const ProfileRegisterPage: React.FC = () => {
               <RegisterDoneStep
                 profile={funnel.context as ProfileContactResponse}
                 profileNumber={profileCountRes?.count ?? 1}
+                discountRate={discountRate}
                 onSubmit={handleDone}
               />
             )}
