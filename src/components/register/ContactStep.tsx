@@ -84,7 +84,7 @@ const ContactStep: React.FC<ContactStepProps> = ({
             onKeyDown={submitOnEnter}
             onBlur={(e) => handleValidation(e.target.value)}
             required
-            placeholder="연락처를 입력해주세요"
+            placeholder="운명의 상대가 이쪽으로 연락할거에요"
             state={isValid === false && !isEmpty ? "error" : undefined}
             helperText="입력 형식 예시: @yourssu_offical 또는 01011119999"
             errorText="입력 형식 예시: @yourssu_offical 또는 01011119999"
