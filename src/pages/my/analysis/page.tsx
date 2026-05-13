@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useAtomValue } from "jotai";
 import { Navigate } from "react-router";
 import ProfileAnalysisResult from "@/components/my/ProfileAnalysisResult";
-import { useProfileRanking } from "@/hooks/queries/profiles";
+import { useCountProfileByGender, useProfileRanking } from "@/hooks/queries/profiles";
 import { useUserInfo } from "@/hooks/queries/users";
 import { providerAtom } from "@/atoms/authTokens";
 import { IS_LOCAL } from "@/env";
@@ -13,6 +13,7 @@ import { shareProfileAnalysis } from "@/lib/profileAnalysis";
 import { useState } from "react";
 import { useUser } from "@/hooks/useUser";
 import { rankingShareClick } from "@/lib/analytics";
+import { SignalError } from "@/lib/error";
 
 const AnalysisMyProfilePage: React.FC = () => {
   const { profile } = useUser();
@@ -23,15 +24,24 @@ const AnalysisMyProfilePage: React.FC = () => {
   const { data: userInfo } = useUserInfo();
 
   // 프로필 랭킹 정보 가져오기 (UUID가 있을 때만)
-  const { data: profileRankingData } = useProfileRanking(userInfo?.uuid || "", {
+  const { data: profileRankingData, error: profileRankingError } = useProfileRanking(userInfo?.uuid || "", {
     enabled: !!userInfo?.uuid,
   });
 
-  const totalProfiles = profileRankingData?.totalProfiles ?? 1;
+  const isRankingNotFound = profileRankingError instanceof SignalError && profileRankingError.status === 404;
+
+  const { data: genderCountData } = useCountProfileByGender(profile?.gender ?? "MALE", {
+    enabled: isRankingNotFound,
+  });
+
+  const totalProfiles = isRankingNotFound
+    ? (genderCountData?.count ?? 1)
+    : (profileRankingData?.totalProfiles ?? 1);
   const profileViewers = profileRankingData?.purchaseCount ?? 0;
   const profileRank = profileRankingData?.rank ?? totalProfiles;
-  const profilePercentage =
-    Math.floor((profileRank / totalProfiles) * 1000) / 10;
+  const profilePercentage = isRankingNotFound
+    ? 100
+    : Math.floor((profileRank / totalProfiles) * 1000) / 10;
 
   if (!profile || profile === null)
     return <Navigate to="/profile/register" replace />;

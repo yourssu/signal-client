@@ -3,6 +3,8 @@ import { DATA_EXPIRY } from "@/env";
 import { useAtom, useSetAtom } from "jotai";
 import { useEffect, useRef } from "react";
 
+const SIX_MONTHS_MS = 6 * 30 * 24 * 60 * 60 * 1000;
+
 export const useExpiredDataCheck = (): void => {
   const [lastEntranceTime, setLastEntranceTime] = useAtom(lastEntranceAtom);
   const clearDataAtom = useSetAtom(cleanDataAtom);
@@ -11,7 +13,9 @@ export const useExpiredDataCheck = (): void => {
     if (
       !checked.current &&
       (lastEntranceTime === null ||
-        lastEntranceTime < new Date(DATA_EXPIRY).getTime())
+        lastEntranceTime < new Date(DATA_EXPIRY).getTime() ||
+        (lastEntranceTime !== null &&
+          Date.now() - lastEntranceTime >= SIX_MONTHS_MS))
     ) {
       clearDataAtom();
       checked.current = true;
