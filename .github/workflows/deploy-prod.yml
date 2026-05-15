@@ -7,8 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  id-token: write # Needed for AWS OIDC
-  contents: read # Needed to check out the repository
+  contents: read
 
 jobs:
   deploy:
@@ -17,4 +16,5 @@ jobs:
     with:
       environment: production
       deployment_url: https://signal.yourssu.com
-      aws_role_arn: arn:aws:iam::590662143928:role/signal-client-deploy-prod
+      cf_project_name: signal-client-prod
+    secrets: inherit

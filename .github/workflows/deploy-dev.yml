@@ -10,8 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  id-token: write # Needed for AWS OIDC
-  contents: read # Needed to check out the repository
+  contents: read
 
 jobs:
   deploy:
@@ -19,5 +18,6 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     with:
       environment: develop
-      deployment_url: https://signal.dev.yourssu.com
-      aws_role_arn: arn:aws:iam::590662143928:role/signal-client-deploy-dev
+      deployment_url: https://signal-dev.yourssu.com
+      cf_project_name: signal-dev
+    secrets: inherit
