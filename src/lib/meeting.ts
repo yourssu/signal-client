@@ -57,7 +57,7 @@ export const formatRemainingTime = (expiresAt: string): string => {
   return `${Math.ceil(remainingMs / 60_000)}분 남음`;
 };
 
-const MEETING_AVATARS: Record<AnimalType, string> = {
+export const MEETING_AVATARS: Record<AnimalType, string> = {
   HAMSTER: avatarHamster,
   CAT: avatarCat,
   DOG: avatarDog,
