@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 import TopBar from "@/components/Header";
 import SlotMarker from "@/components/lobby/SlotMarker";
 import PartySizeFilterCard, {
@@ -8,14 +10,19 @@ import LatestMatchBanner from "@/components/lobby/LatestMatchBanner";
 import MatchChanceChip from "@/components/lobby/MatchChanceChip";
 import ProfileRequiredDialog from "@/components/lobby/ProfileRequiredDialog";
 import { useMeetingBoard } from "@/hooks/queries/meetings";
-import { SLOT_POSITIONS } from "@/lib/meeting";
+import {
+  MEETING_CREATION_BLOCK_MESSAGES,
+  MEETING_SLOTS,
+  SLOT_POSITIONS,
+} from "@/lib/meeting";
 import { lobbyViewed } from "@/lib/analytics";
 import mapBackground from "@/assets/lobby/map_background.png";
 import btnManual from "@/assets/lobby/btn_manual.svg";
 import btnInvite from "@/assets/lobby/btn_invite.svg";
-import type { MeetingSlotResponse } from "@/types/meeting";
+import type { MeetingRoomSummaryResponse, MeetingSlot } from "@/types/meeting";
 
 const LobbyPage: React.FC = () => {
+  const navigate = useNavigate();
   const { data: board } = useMeetingBoard();
   const [partySize, setPartySize] = useState<PartySize>(null);
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
@@ -24,13 +31,39 @@ const LobbyPage: React.FC = () => {
     lobbyViewed();
   }, []);
 
-  const handleSlotClick = (slotItem: MeetingSlotResponse) => {
-    if (
-      !slotItem.room &&
-      board?.creationEligibility.reason === "PROFILE_REQUIRED"
-    ) {
-      setProfileDialogOpen(true);
+  const roomBySlot = useMemo(
+    () =>
+      new Map(board?.slots.map((slotItem) => [slotItem.slot, slotItem.room])),
+    [board],
+  );
+
+  const handleSlotClick = (
+    slot: MeetingSlot,
+    room?: MeetingRoomSummaryResponse | null,
+  ) => {
+    if (room) {
+      navigate(`/lobby/join/${room.id}?partySize=${room.partySize}`);
+      return;
     }
+
+    const eligibility = board?.creationEligibility;
+    if (!eligibility) return;
+
+    if (eligibility.canCreate) {
+      navigate(`/lobby/create?slot=${slot}`);
+      return;
+    }
+
+    if (eligibility.reason === "PROFILE_REQUIRED") {
+      setProfileDialogOpen(true);
+      return;
+    }
+
+    toast.error(
+      eligibility.reason
+        ? MEETING_CREATION_BLOCK_MESSAGES[eligibility.reason]
+        : "지금은 방을 만들 수 없어요",
+    );
   };
 
   return (
@@ -53,14 +86,18 @@ const LobbyPage: React.FC = () => {
             alt=""
             className="absolute inset-0 size-full object-cover"
           />
-          {board?.slots.slice(0, SLOT_POSITIONS.length).map((slotItem, i) => (
-            <SlotMarker
-              key={slotItem.slot}
-              room={slotItem.room}
-              position={SLOT_POSITIONS[i]}
-              onClick={() => handleSlotClick(slotItem)}
-            />
-          ))}
+          {board &&
+            MEETING_SLOTS.map((slot) => {
+              const room = roomBySlot.get(slot);
+              return (
+                <SlotMarker
+                  key={slot}
+                  room={room}
+                  position={SLOT_POSITIONS[slot]}
+                  onClick={() => handleSlotClick(slot, room)}
+                />
+              );
+            })}
         </div>
 
         {/* TODO: 매칭 기회 횟수 API 필드가 없어 1로 고정 */}
