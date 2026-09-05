@@ -144,3 +144,5 @@ export const swipeStart = (direction: "left" | "right", profileId: number) =>
 
 export const swipeStop = (direction: "left" | "right", profileId: number) =>
   track("swipe_stop", { direction, profile_id: profileId });
+
+export const lobbyViewed = () => track("lobby_viewed");
