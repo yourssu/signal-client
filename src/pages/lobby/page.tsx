@@ -102,6 +102,11 @@ const LobbyPage: React.FC = () => {
                   key={slot}
                   room={room}
                   position={SLOT_POSITIONS[slot]}
+                  matchesFilter={
+                    partySize === null || !room
+                      ? null
+                      : room.partySize === partySize
+                  }
                   onClick={() => handleSlotClick(slot, room)}
                 />
               );
