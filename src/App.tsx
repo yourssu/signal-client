@@ -27,6 +27,8 @@ import TermPrivacyPage from "@/pages/[privacy,terms]/page";
 import AnalysisMyProfilePage from "@/pages/my/analysis/page";
 import GoogleAuthPage from "@/pages/auth/google/page";
 import LobbyPage from "@/pages/lobby/page";
+import MeetingCreatePage from "@/pages/lobby/create/page";
+import LobbyJoinPage from "@/pages/lobby/join/page";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const router = createBrowserRouter([
@@ -142,6 +144,14 @@ const router = createBrowserRouter([
       {
         path: "lobby",
         element: ENABLE_LOBBY ? <LobbyPage /> : <Navigate to="/" />,
+      },
+      {
+        path: "lobby/create",
+        element: ENABLE_LOBBY ? <MeetingCreatePage /> : <Navigate to="/" />,
+      },
+      {
+        path: "lobby/join/:roomId",
+        element: ENABLE_LOBBY ? <LobbyJoinPage /> : <Navigate to="/" />,
       },
     ],
   },
