@@ -10,6 +10,8 @@ import catImg from "@/assets/animals/cat.png";
 import foxImg from "@/assets/animals/fox.png";
 import rabbitImg from "@/assets/animals/rabbit.png";
 import turtleImg from "@/assets/animals/turtle.png";
+// TODO: 시그널 v6./Component/charater 의 "wolf, large" 3D 아이콘으로 교체한다.
+import wolfImg from "@/assets/animals/wolf.svg";
 
 import bearMaleImg from "@/assets/animals/male/bear.png";
 import deerMaleImg from "@/assets/animals/male/Deer.png";
@@ -31,6 +33,7 @@ const animalImageMap: Record<AnimalType, string> = {
   FOX: foxImg,
   TURTLE: turtleImg,
   RABBIT: rabbitImg,
+  WOLF: wolfImg,
 };
 
 const genderedAnimalImageMap: Record<Gender, Record<AnimalType, string>> = {
@@ -44,6 +47,7 @@ const genderedAnimalImageMap: Record<Gender, Record<AnimalType, string>> = {
     FOX: foxImg,
     TURTLE: turtleImg,
     RABBIT: rabbitImg,
+    WOLF: wolfImg,
   },
   FEMALE: {
     DOG: dogCommonImg,
@@ -55,6 +59,7 @@ const genderedAnimalImageMap: Record<Gender, Record<AnimalType, string>> = {
     BEAR: bearImg,
     DEER: deerImg,
     DINOSAUR: dinosaurImg,
+    WOLF: wolfImg,
   },
 };
 
