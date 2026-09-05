@@ -3,6 +3,11 @@ import { TicketIssuedRequest } from "@/types/admin";
 import { TokenResponse } from "@/types/auth";
 import { ErrorResponse, SuccessResponse } from "@/types/common";
 import {
+  MeetingBoardResponse,
+  MeetingSlot,
+  MeetingSlotResponse,
+} from "@/types/meeting";
+import {
   AnimalType,
   Gender,
   Mbti,
@@ -84,6 +89,72 @@ const getRandomNickname = (animal: AnimalType): string => {
   ];
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
   return `${adjective} ${animalDisplayMap[animal]}`;
+};
+
+const ALL_MEETING_SLOTS: MeetingSlot[] = [
+  "SLOT_1",
+  "SLOT_2",
+  "SLOT_3",
+  "SLOT_4",
+  "SLOT_5",
+  "SLOT_6",
+  "SLOT_7",
+];
+
+const FILLED_MEETING_SLOTS: MeetingSlot[] = [
+  "SLOT_1",
+  "SLOT_2",
+  "SLOT_3",
+  "SLOT_5",
+  "SLOT_7",
+];
+
+const MEETING_ROOM_MOCKS: {
+  partySize: number;
+  remainingMinutes: number;
+  creatorAnimal: AnimalType;
+}[] = [
+  { partySize: 3, remainingMinutes: 10, creatorAnimal: "WOLF" },
+  { partySize: 2, remainingMinutes: 25, creatorAnimal: "HAMSTER" },
+  { partySize: 4, remainingMinutes: 45, creatorAnimal: "DEER" },
+  { partySize: 2, remainingMinutes: 5, creatorAnimal: "FOX" },
+  { partySize: 4, remainingMinutes: 60, creatorAnimal: "TURTLE" },
+];
+
+const createMeetingBoardResponse = (): MeetingBoardResponse => {
+  const now = Date.now();
+  let filledIndex = 0;
+
+  const slots: MeetingSlotResponse[] = ALL_MEETING_SLOTS.map((slot) => {
+    if (!FILLED_MEETING_SLOTS.includes(slot)) {
+      return { slot };
+    }
+
+    const { partySize, remainingMinutes, creatorAnimal } =
+      MEETING_ROOM_MOCKS[filledIndex++];
+    return {
+      slot,
+      room: {
+        id: filledIndex,
+        partySize,
+        invitation: `숭실대 테스트학과 ${partySize}명이 모임을 기다리고 있어요!`,
+        expiresAt: new Date(now + remainingMinutes * 60 * 1000).toISOString(),
+        creatorAnimal,
+      },
+    };
+  });
+
+  return {
+    creationEligibility: { canCreate: true },
+    slots,
+    latestMatch: {
+      roomId: 1,
+      creatorNickname: "숭실대 방장",
+      creatorAnimal: "DOG",
+      matchedAt: new Date(now).toISOString(),
+      visibleUntil: new Date(now + 30 * 1000).toISOString(),
+    },
+  };
 };
 
 export const handlers = [
@@ -470,5 +541,13 @@ export const handlers = [
         purchasedProfiles: [],
       },
     } satisfies SuccessResponse<ViewerDetailResponse>);
+  }),
+
+  /** Meetings */
+  http.get("/api/meetings/board", () => {
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: createMeetingBoardResponse(),
+    } satisfies SuccessResponse<MeetingBoardResponse>);
   }),
 ];

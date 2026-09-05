@@ -9,7 +9,8 @@ export type AnimalType =
   | "CAT"
   | "FOX"
   | "TURTLE"
-  | "RABBIT";
+  | "RABBIT"
+  | "WOLF";
 export type Mbti = `${"E" | "I"}${"N" | "S"}${"F" | "T"}${"J" | "P"}`;
 export interface ProfileCreatedRequest {
   uuid?: string;
