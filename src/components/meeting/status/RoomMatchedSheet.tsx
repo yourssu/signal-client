@@ -1,11 +1,13 @@
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import RoomStepper from "@/components/meeting/status/RoomStepper";
 import { cn, formatPhone, getDeviceType } from "@/lib/utils";
-import type { MeetingMemberResponse } from "@/types/meeting";
+import type { MeetingMemberResponse, MeetingTeamSide } from "@/types/meeting";
 import contactPhoneIcon from "@/assets/lobby/contact_phone.svg";
 
 interface RoomMatchedSheetProps {
   open: boolean;
+  teamSide: MeetingTeamSide;
   counterpartContact: string;
   members: MeetingMemberResponse[];
   invitation: string;
@@ -21,10 +23,12 @@ const buildSmsHref = (contact: string, message: string) => {
 
 export default function RoomMatchedSheet({
   open,
+  teamSide,
   counterpartContact,
   members,
   invitation,
 }: RoomMatchedSheetProps) {
+  const isCreator = teamSide === "CREATOR";
   const isInstagram = counterpartContact.startsWith("@");
   const displayContact = isInstagram
     ? counterpartContact
@@ -46,11 +50,19 @@ export default function RoomMatchedSheet({
   if (!open) return null;
 
   return (
-    <div className="flex w-full flex-col gap-3 rounded-[20px] bg-white p-5 drop-shadow-[1px_1px_4px_rgba(0,0,0,0.25)]">
-      <p className="h3 text-label-strong">신청한 미팅</p>
+    <div className="flex w-full flex-col gap-3 rounded-[20px] bg-white p-5 pt-2.5 drop-shadow-[1px_1px_4px_rgba(0,0,0,0.25)]">
+      <div className="bg-line-normal mx-auto h-1 w-[60px] rounded-full" />
+
+      <p className="h3 text-label-strong">
+        {isCreator ? "매칭 완료!" : "신청한 미팅"}
+      </p>
+
+      <RoomStepper state="matched" />
 
       <div className="bg-fill-normal flex items-center justify-between rounded-lg p-3">
-        <span className="body2 text-label-alternative">방장 연락처</span>
+        <span className="body2 text-label-alternative">
+          {isCreator ? "상대 팀 연락처" : "방장 연락처"}
+        </span>
         <div className="flex items-center gap-1.5">
           {!isInstagram && (
             <img src={contactPhoneIcon} alt="" className="size-5" />
@@ -98,7 +110,7 @@ export default function RoomMatchedSheet({
               연락 보내기
             </a>
           ) : (
-            <a href={contactHref}>연락 보내기</a>
+            <a href={contactHref}>문자 보내기</a>
           )}
         </Button>
       </div>

@@ -48,13 +48,16 @@ export const MEETING_CREATION_BLOCK_MESSAGES: Record<
     "오늘은 더 참여할 수 없어요. 내일 다시 시도해주세요",
 };
 
+/** 잔여 시간이 이 값 이하로 떨어지면 방 종료 임박 안내를 띄운다. */
+export const MEETING_ROOM_EXPIRY_WARNING_MS = 60_000;
+
 export const formatRemainingTime = (expiresAt: string): string => {
   const remainingMs = new Date(expiresAt).getTime() - Date.now();
   if (remainingMs <= 0) return "마감";
   return `${Math.ceil(remainingMs / 60_000)}분 남음`;
 };
 
-const MEETING_AVATARS: Record<AnimalType, string> = {
+export const MEETING_AVATARS: Record<AnimalType, string> = {
   HAMSTER: avatarHamster,
   CAT: avatarCat,
   DOG: avatarDog,

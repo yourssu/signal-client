@@ -23,13 +23,21 @@ import type { MeetingRoomSummaryResponse, MeetingSlot } from "@/types/meeting";
 
 const LobbyPage: React.FC = () => {
   const navigate = useNavigate();
-  const { data: board } = useMeetingBoard();
+  const { data: board, isError } = useMeetingBoard();
   const [partySize, setPartySize] = useState<PartySize>(null);
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
 
   useEffect(() => {
     lobbyViewed();
   }, []);
+
+  // 폴링이라 실패가 반복된다. id를 고정해 토스트가 쌓이지 않게 한다.
+  useEffect(() => {
+    if (!isError) return;
+    toast.error("방 목록을 불러오지 못했어요. 잠시 후 다시 시도할게요", {
+      id: "meeting-board-error",
+    });
+  }, [isError]);
 
   const roomBySlot = useMemo(
     () =>
@@ -94,6 +102,11 @@ const LobbyPage: React.FC = () => {
                   key={slot}
                   room={room}
                   position={SLOT_POSITIONS[slot]}
+                  matchesFilter={
+                    partySize === null || !room
+                      ? null
+                      : room.partySize === partySize
+                  }
                   onClick={() => handleSlotClick(slot, room)}
                 />
               );
