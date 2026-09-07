@@ -1,13 +1,17 @@
 import React from "react";
-import { useNavigate } from "react-router";
+import { Navigate, useNavigate, useSearchParams } from "react-router";
 import { useFunnel } from "@use-funnel/react-router";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import TopBar from "@/components/Header";
 import MemberForm from "@/components/meeting/MemberForm";
 import MemberList from "@/components/meeting/MemberList";
 import InvitationStep from "@/components/meeting/InvitationStep";
 import { useUser } from "@/hooks/useUser";
+import { useCreateMeetingRoom } from "@/hooks/queries/meetings";
+import { getMeetingErrorMessage, MEETING_SLOTS } from "@/lib/meeting";
 import { cn } from "@/lib/utils";
-import type { MeetingMemberRequest } from "@/types/meeting";
+import type { MeetingMemberRequest, MeetingSlot } from "@/types/meeting";
 
 type CreateMeetingContext = {
   members: MeetingMemberRequest[];
@@ -23,7 +27,12 @@ const MAX_FRIEND_COUNT = 3;
 
 const MeetingCreatePage: React.FC = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { profile } = useUser();
+  const [searchParams] = useSearchParams();
+  const slotParam = searchParams.get("slot");
+  const slot = MEETING_SLOTS.find((s) => s === slotParam) ?? null;
+  const { mutate: createRoom, isPending: isCreating } = useCreateMeetingRoom();
   const funnel = useFunnel<CreateMeetingFunnel>({
     id: "meeting.create",
     initial: {
@@ -54,9 +63,25 @@ const MeetingCreatePage: React.FC = () => {
     funnel.history.replace("invitation", { ...funnel.context, invitation });
   };
 
-  const handleCreate = () => {
-    // TODO: 방 생성 API 연결
-    navigate("/lobby");
+  const handleCreate = (targetSlot: MeetingSlot) => {
+    createRoom(
+      {
+        slot: targetSlot,
+        invitation: funnel.context.invitation.trim(),
+        companions: funnel.context.members,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["meetings", "board"] });
+          navigate("/lobby");
+        },
+        onError: (error) => {
+          toast.error(
+            getMeetingErrorMessage(error.code, "방을 만들지 못했어요"),
+          );
+        },
+      },
+    );
   };
 
   const handleBack = () => {
@@ -66,6 +91,9 @@ const MeetingCreatePage: React.FC = () => {
     }
     funnel.history.back();
   };
+
+  // 어느 자리에 만들지는 로비에서 핀을 눌러야 정해진다.
+  if (!slot) return <Navigate to="/lobby" replace />;
 
   return (
     <div className="flex h-full flex-col bg-white">
@@ -138,11 +166,13 @@ const MeetingCreatePage: React.FC = () => {
               <div className="shrink-0 px-[18px] pt-3 pb-8">
                 <button
                   type="button"
-                  disabled={!isInvitationValid}
-                  onClick={handleCreate}
+                  disabled={!isInvitationValid || isCreating}
+                  onClick={() => handleCreate(slot)}
                   className={cn(
                     "button-l h-14 w-full rounded-2xl text-static-white",
-                    isInvitationValid ? "bg-primary" : "bg-line-normal",
+                    isInvitationValid && !isCreating
+                      ? "bg-primary"
+                      : "bg-line-normal",
                   )}
                 >
                   생성하기

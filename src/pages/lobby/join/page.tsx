@@ -1,31 +1,34 @@
-import React, { useState } from "react";
-import {
-  Navigate,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router";
+import React, { useEffect, useState } from "react";
+import { Navigate, useNavigate, useParams } from "react-router";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import TopBar from "@/components/Header";
 import MemberForm from "@/components/meeting/MemberForm";
 import MemberList from "@/components/meeting/MemberList";
 import { useUser } from "@/hooks/useUser";
+import { useMatchMeetingRoom, useMeetingRoom } from "@/hooks/queries/meetings";
+import { getMeetingErrorMessage } from "@/lib/meeting";
 import { cn } from "@/lib/utils";
 import type { MeetingMemberRequest } from "@/types/meeting";
 
-const DEFAULT_PARTY_SIZE = 4;
-
 const LobbyJoinPage: React.FC = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { profile } = useUser();
   const { roomId } = useParams<{ roomId: string }>();
-  const [searchParams] = useSearchParams();
-  // TODO: 방 정보 API 연동 시 partySize를 응답값으로 교체
-  const partySize = Number(searchParams.get("partySize") ?? DEFAULT_PARTY_SIZE);
+  const numericRoomId = Number(roomId);
+
+  const { data: roomDetail, error: roomError } = useMeetingRoom(numericRoomId, {
+    staleTime: Infinity,
+  });
+  const { mutate: matchRoom, isPending: isMatching } =
+    useMatchMeetingRoom(numericRoomId);
 
   const [members, setMembers] = useState<MeetingMemberRequest[]>([]);
   const [contact, setContact] = useState<string>();
 
-  const isFull = members.length >= partySize;
+  const partySize = roomDetail?.room.partySize ?? 0;
+  const isFull = partySize > 0 && members.length >= partySize;
   const canSubmit = isFull && !!contact;
 
   const handleAdd = (member: MeetingMemberRequest, memberContact?: string) => {
@@ -44,12 +47,50 @@ const LobbyJoinPage: React.FC = () => {
   };
 
   const handleNext = () => {
-    if (!canSubmit) return;
-    // TODO: roomId로 참여 매칭 API 연동 (members, contact 전송) 후 결과 화면으로 이동
-    navigate("/lobby");
+    if (!canSubmit || !contact) return;
+    const [representative, ...companions] = members;
+    matchRoom(
+      { representative, contact, companions },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["meetings", "board"] });
+          navigate("/lobby");
+        },
+        onError: (error) => {
+          toast.error(
+            getMeetingErrorMessage(error.code, "미팅에 참여하지 못했어요"),
+          );
+        },
+      },
+    );
   };
 
-  if (!roomId) return <Navigate to="/lobby" replace />;
+  // 방이 없거나 이미 끝났으면 참여할 수 없다.
+  useEffect(() => {
+    if (!roomError) return;
+    toast.error(
+      getMeetingErrorMessage(roomError.code, "방 정보를 불러오지 못했어요"),
+      { id: "meeting-join-room-error" },
+    );
+    navigate("/lobby", { replace: true });
+  }, [roomError, navigate]);
+
+  if (!roomId || Number.isNaN(numericRoomId)) {
+    return <Navigate to="/lobby" replace />;
+  }
+
+  // 정원을 알아야 폼을 그릴 수 있다. 조회 실패는 위 effect가 로비로 되돌린다.
+  if (!roomDetail) {
+    return (
+      <div className="flex h-full flex-col bg-white">
+        <title>미팅 참여하기 - 시그널</title>
+        <TopBar onBack="/lobby" />
+        <div className="flex flex-1 items-center justify-center">
+          <p className="text-label-neutral text-lg">방 정보를 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full flex-col bg-white">
@@ -88,10 +129,10 @@ const LobbyJoinPage: React.FC = () => {
         <button
           type="button"
           onClick={handleNext}
-          disabled={!canSubmit}
+          disabled={!canSubmit || isMatching}
           className={cn(
             "button-l h-14 w-full rounded-2xl text-static-white",
-            canSubmit ? "bg-primary" : "bg-line-normal",
+            canSubmit && !isMatching ? "bg-primary" : "bg-line-normal",
           )}
         >
           다음
