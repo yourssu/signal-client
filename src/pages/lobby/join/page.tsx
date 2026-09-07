@@ -18,8 +18,9 @@ const LobbyJoinPage: React.FC = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const numericRoomId = Number(roomId);
 
+  // 시트가 채워둔 캐시를 그대로 믿으면 끝난 방에도 폼이 열린다. 진입할 때마다 다시 확인한다.
   const { data: roomDetail, error: roomError } = useMeetingRoom(numericRoomId, {
-    staleTime: Infinity,
+    refetchOnMount: "always",
   });
   const { mutate: matchRoom, isPending: isMatching } =
     useMatchMeetingRoom(numericRoomId);

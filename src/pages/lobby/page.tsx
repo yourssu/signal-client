@@ -193,6 +193,12 @@ const LobbyPage: React.FC = () => {
     );
   };
 
+  useEffect(() => {
+    if (previewRoomId === null || !board) return;
+    const stillOpen = board.slots.some((s) => s.room?.id === previewRoomId);
+    if (!stillOpen) setPreviewRoomId(null);
+  }, [board, previewRoomId]);
+
   const partySizeFilter = (
     <PartySizeFilterCard value={partySize} onChange={setPartySize} />
   );
