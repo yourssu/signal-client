@@ -8,6 +8,7 @@ import PartySizeFilterCard, {
 } from "@/components/lobby/PartySizeFilterCard";
 import LatestMatchBanner from "@/components/lobby/LatestMatchBanner";
 import MatchChanceChip from "@/components/lobby/MatchChanceChip";
+import ManualDialog from "@/components/lobby/ManualDialog";
 import ProfileRequiredDialog from "@/components/lobby/ProfileRequiredDialog";
 import RoomDeleteDialog from "@/components/lobby/RoomDeleteDialog";
 import RoomPreviewSheet from "@/components/lobby/RoomPreviewSheet";
@@ -44,6 +45,7 @@ const LobbyPage: React.FC = () => {
   const { data: board, isError } = useMeetingBoard();
   const [partySize, setPartySize] = useState<PartySize>(null);
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
+  const [manualOpen, setManualOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [previewRoomId, setPreviewRoomId] = useState<number | null>(null);
   const [roomDismissal, setRoomDismissal] = useState<RoomDismissal | null>(
@@ -306,12 +308,16 @@ const LobbyPage: React.FC = () => {
         </div>
 
         <div className="absolute top-3 right-4 flex flex-col items-center gap-2">
-          <div className="flex w-[53px] flex-col items-center">
+          <button
+            type="button"
+            onClick={() => setManualOpen(true)}
+            className="flex w-[53px] flex-col items-center"
+          >
             <img src={btnManual} alt="" className="mb-[-4px] size-[40px]" />
             <span className="caption2 text-static-white w-[44px] rounded-[31px] bg-blue-600 py-[2px] text-center">
               설명서
             </span>
-          </div>
+          </button>
           <div className="flex w-[53px] flex-col items-center">
             <img src={btnInvite} alt="" className="mb-[-4px] size-[40px]" />
             <span className="caption2 bg-primary text-static-white w-[44px] rounded-[31px] py-[2px] text-center">
@@ -325,6 +331,8 @@ const LobbyPage: React.FC = () => {
         {board?.latestMatch && <LatestMatchBanner match={board.latestMatch} />}
         {bottomCard}
       </div>
+
+      <ManualDialog open={manualOpen} onOpenChange={setManualOpen} />
 
       <ProfileRequiredDialog
         open={profileDialogOpen}
