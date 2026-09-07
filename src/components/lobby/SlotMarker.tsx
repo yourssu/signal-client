@@ -28,6 +28,7 @@ export default function SlotMarker({
     <button
       type="button"
       onClick={onClick}
+      disabled={isDimmed}
       className={cn(
         "absolute flex w-[60px] -translate-x-1/2 flex-col items-center gap-[7px] transition-opacity",
         isDimmed && "opacity-40",
