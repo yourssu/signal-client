@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import RoomStepper from "@/components/meeting/status/RoomStepper";
-import { MEETING_ROOM_EXPIRY_WARNING_MS } from "@/lib/meeting";
+import { formatCountdown, MEETING_ROOM_EXPIRY_WARNING_MS } from "@/lib/meeting";
 
 interface RoomWaitingSheetProps {
   open: boolean;
@@ -8,15 +8,6 @@ interface RoomWaitingSheetProps {
   onCancel: () => void;
   onExpire?: () => void;
 }
-
-const formatCountdown = (remainingMs: number) => {
-  const totalSeconds = Number.isFinite(remainingMs)
-    ? Math.max(0, Math.round(remainingMs / 1000))
-    : 0;
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-};
 
 export default function RoomWaitingSheet({
   open,

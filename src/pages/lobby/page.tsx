@@ -10,6 +10,7 @@ import LatestMatchBanner from "@/components/lobby/LatestMatchBanner";
 import MatchChanceChip from "@/components/lobby/MatchChanceChip";
 import ProfileRequiredDialog from "@/components/lobby/ProfileRequiredDialog";
 import RoomDeleteDialog from "@/components/lobby/RoomDeleteDialog";
+import RoomPreviewSheet from "@/components/lobby/RoomPreviewSheet";
 import RoomWaitingSheet from "@/components/meeting/status/RoomWaitingSheet";
 import RoomMatchedSheet from "@/components/meeting/status/RoomMatchedSheet";
 import RoomExpiredSheet from "@/components/meeting/status/RoomExpiredSheet";
@@ -44,6 +45,7 @@ const LobbyPage: React.FC = () => {
   const [partySize, setPartySize] = useState<PartySize>(null);
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [previewRoomId, setPreviewRoomId] = useState<number | null>(null);
   const [roomDismissal, setRoomDismissal] = useState<RoomDismissal | null>(
     null,
   );
@@ -166,7 +168,7 @@ const LobbyPage: React.FC = () => {
   ) => {
     if (room) {
       if (myRoom && room.id === myRoom.roomId) return;
-      navigate(`/lobby/join/${room.id}?partySize=${room.partySize}`);
+      setPreviewRoomId(room.id);
       return;
     }
 
@@ -190,6 +192,12 @@ const LobbyPage: React.FC = () => {
         : undefined) ?? "지금은 방을 만들 수 없어요",
     );
   };
+
+  useEffect(() => {
+    if (previewRoomId === null || !board) return;
+    const stillOpen = board.slots.some((s) => s.room?.id === previewRoomId);
+    if (!stillOpen) setPreviewRoomId(null);
+  }, [board, previewRoomId]);
 
   const partySizeFilter = (
     <PartySizeFilterCard value={partySize} onChange={setPartySize} />
@@ -321,6 +329,14 @@ const LobbyPage: React.FC = () => {
       <ProfileRequiredDialog
         open={profileDialogOpen}
         onOpenChange={setProfileDialogOpen}
+      />
+
+      <RoomPreviewSheet
+        roomId={previewRoomId}
+        onOpenChange={(open) => {
+          if (!open) setPreviewRoomId(null);
+        }}
+        onJoin={(id) => navigate(`/lobby/join/${id}`)}
       />
 
       <RoomDeleteDialog

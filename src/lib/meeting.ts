@@ -83,6 +83,16 @@ export const getMeetingErrorMessage = (
 /** 잔여 시간이 이 값 이하로 떨어지면 방 종료 임박 안내를 띄운다. */
 export const MEETING_ROOM_EXPIRY_WARNING_MS = 60_000;
 
+/** 남은 시간을 mm:ss로. 파싱 실패는 00:00으로 떨어뜨린다. */
+export const formatCountdown = (remainingMs: number): string => {
+  const totalSeconds = Number.isFinite(remainingMs)
+    ? Math.max(0, Math.round(remainingMs / 1000))
+    : 0;
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+};
+
 export const formatRemainingTime = (expiresAt: string): string => {
   const remainingMs = new Date(expiresAt).getTime() - Date.now();
   if (remainingMs <= 0) return "마감";
