@@ -53,6 +53,26 @@ export type MeetingCreationBlockReason =
   | "DAILY_MEETING_LIMIT_EXCEEDED"
   | "ACTIVE_ROOM_EXISTS";
 
+/** 서버가 ErrorResponse.code로 내려주는 미팅 실패 사유. */
+export type MeetingErrorCode =
+  | "PROFILE_REQUIRED"
+  | "MEETING_BLOCKED"
+  | "DAILY_CREATION_LIMIT_EXCEEDED"
+  | "DAILY_MEETING_LIMIT_EXCEEDED"
+  | "ACTIVE_ROOM_EXISTS"
+  | "SLOT_ALREADY_OCCUPIED"
+  | "SELF_MATCH_NOT_ALLOWED"
+  | "ROOM_ALREADY_MATCHED"
+  | "ROOM_CANCELLED"
+  | "ROOM_EXPIRED"
+  | "MEETING_ROOM_NOT_FOUND"
+  | "MEETING_ROOM_CANCEL_FORBIDDEN"
+  | "MEETING_RESULT_FORBIDDEN"
+  | "INVALID_MEETING_SLOT"
+  | "INVALID_MEETING_INVITATION"
+  | "INVALID_MEETING_MEMBER"
+  | "INVALID_COMPANION_COUNT";
+
 export interface MeetingCreationEligibilityResponse {
   canCreate: boolean;
   reason?: MeetingCreationBlockReason | null;

@@ -10,6 +10,7 @@ import avatarTurtle from "@/assets/lobby/avatar_turtle.svg";
 import avatarWolf from "@/assets/lobby/avatar_wolf.svg";
 import type {
   MeetingCreationBlockReason,
+  MeetingErrorCode,
   MeetingRoomSummaryResponse,
   MeetingSlot,
 } from "@/types/meeting";
@@ -49,6 +50,35 @@ export const MEETING_CREATION_BLOCK_MESSAGES: Record<
     "오늘은 더 참여할 수 없어요. 내일 다시 시도해주세요",
   ACTIVE_ROOM_EXISTS: "이미 참여 중인 방이 있어요",
 };
+
+const MEETING_ERROR_MESSAGES: Record<MeetingErrorCode, string> = {
+  PROFILE_REQUIRED: "프로필을 먼저 등록해주세요",
+  MEETING_BLOCKED: "지금은 미팅을 이용할 수 없어요",
+  DAILY_CREATION_LIMIT_EXCEEDED: "오늘 만들 수 있는 방을 모두 사용했어요",
+  DAILY_MEETING_LIMIT_EXCEEDED:
+    "오늘은 더 참여할 수 없어요. 내일 다시 시도해주세요",
+  ACTIVE_ROOM_EXISTS: "이미 참여 중인 방이 있어요",
+  SLOT_ALREADY_OCCUPIED: "잠깐 사이 방이 찼어요. 다른 위치를 선택해주세요",
+  SELF_MATCH_NOT_ALLOWED: "내가 만든 방에는 참여할 수 없어요",
+  ROOM_ALREADY_MATCHED: "이미 매칭이 끝난 방이에요",
+  ROOM_CANCELLED: "삭제된 방이에요",
+  ROOM_EXPIRED: "종료된 방이에요",
+  MEETING_ROOM_NOT_FOUND: "방을 찾을 수 없어요",
+  MEETING_ROOM_CANCEL_FORBIDDEN: "방장만 방을 삭제할 수 있어요",
+  MEETING_RESULT_FORBIDDEN: "매칭 당사자만 볼 수 있어요",
+  INVALID_MEETING_SLOT: "다른 위치를 선택해주세요",
+  INVALID_MEETING_INVITATION: "만나서 할 일을 다시 입력해주세요",
+  INVALID_MEETING_MEMBER: "인원 정보를 다시 확인해주세요",
+  INVALID_COMPANION_COUNT: "인원 수가 방과 맞지 않아요",
+};
+
+/** 서버가 코드를 주지 않거나 모르는 코드를 줄 수 있으므로 문구를 보장한다. */
+export const getMeetingErrorMessage = (
+  code: string | undefined,
+  fallback: string,
+): string =>
+  (code ? MEETING_ERROR_MESSAGES[code as MeetingErrorCode] : undefined) ??
+  fallback;
 
 /** 잔여 시간이 이 값 이하로 떨어지면 방 종료 임박 안내를 띄운다. */
 export const MEETING_ROOM_EXPIRY_WARNING_MS = 60_000;
