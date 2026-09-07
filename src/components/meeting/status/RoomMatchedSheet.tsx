@@ -34,22 +34,32 @@ export default function RoomMatchedSheet({
 }: RoomMatchedSheetProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const dragStartY = useRef<number | null>(null);
+  const draggedRef = useRef(false);
 
-  const handleHandleDown = (event: React.PointerEvent) => {
+  const handleHandleDown = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (!event.isPrimary) return;
     dragStartY.current = event.clientY;
+    draggedRef.current = false;
+    event.currentTarget.setPointerCapture(event.pointerId);
   };
 
-  const handleHandleUp = (event: React.PointerEvent) => {
+  const handleHandleUp = (event: React.PointerEvent<HTMLButtonElement>) => {
     const startY = dragStartY.current;
     dragStartY.current = null;
     if (startY === null) return;
 
-    const delta = event.clientY - startY;
-    if (Math.abs(delta) < DRAG_THRESHOLD_PX) {
-      setIsCollapsed((prev) => !prev);
+    // 짧게 움직였으면 누른 것으로 보고 click에 맡긴다. 키보드도 그 경로로 온다.
+    if (Math.abs(event.clientY - startY) < DRAG_THRESHOLD_PX) return;
+    draggedRef.current = true;
+    setIsCollapsed(event.clientY > startY);
+  };
+
+  const handleHandleClick = () => {
+    if (draggedRef.current) {
+      draggedRef.current = false;
       return;
     }
-    setIsCollapsed(delta > 0);
+    setIsCollapsed((prev) => !prev);
   };
 
   const isCreator = teamSide === "CREATOR";
@@ -86,6 +96,7 @@ export default function RoomMatchedSheet({
         aria-label={isCollapsed ? "미팅 정보 펼치기" : "미팅 정보 접기"}
         onPointerDown={handleHandleDown}
         onPointerUp={handleHandleUp}
+        onClick={handleHandleClick}
         className="mx-auto touch-none py-1"
       >
         <span className="bg-line-normal block h-1 w-[60px] rounded-full" />

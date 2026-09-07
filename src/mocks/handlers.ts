@@ -778,10 +778,9 @@ export const handlers = [
 
   http.post("/api/meetings/rooms", async ({ request }) => {
     const body = (await request.json()) as MeetingRoomCreateRequest;
-    const occupied = MEETING_SLOTS.some(
-      (slot) =>
-        slot === body.slot &&
-        (FILLED_MEETING_SLOTS.includes(slot) || createdRoom?.slot === slot),
+    // 보드가 비운 슬롯(만료·취소)에는 다시 만들 수 있어야 한다. 같은 판정을 쓴다.
+    const occupied = createMeetingBoardResponse().slots.some(
+      (slotItem) => slotItem.slot === body.slot && slotItem.room,
     );
     if (occupied) {
       return HttpResponse.json(
