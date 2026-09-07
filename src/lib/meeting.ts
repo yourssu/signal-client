@@ -43,9 +43,11 @@ export const MEETING_CREATION_BLOCK_MESSAGES: Record<
   string
 > = {
   PROFILE_REQUIRED: "프로필을 먼저 등록해주세요",
+  MEETING_BLOCKED: "지금은 미팅을 이용할 수 없어요",
   DAILY_CREATION_LIMIT_EXCEEDED: "오늘 만들 수 있는 방을 모두 사용했어요",
   DAILY_MEETING_LIMIT_EXCEEDED:
     "오늘은 더 참여할 수 없어요. 내일 다시 시도해주세요",
+  ACTIVE_ROOM_EXISTS: "이미 참여 중인 방이 있어요",
 };
 
 /** 잔여 시간이 이 값 이하로 떨어지면 방 종료 임박 안내를 띄운다. */

@@ -67,10 +67,11 @@ const LobbyPage: React.FC = () => {
       return;
     }
 
+    // 서버가 아직 모르는 사유를 주면 빈 토스트가 뜨므로 문구를 보장한다.
     toast.error(
-      eligibility.reason
+      (eligibility.reason
         ? MEETING_CREATION_BLOCK_MESSAGES[eligibility.reason]
-        : "지금은 방을 만들 수 없어요",
+        : undefined) ?? "지금은 방을 만들 수 없어요",
     );
   };
 

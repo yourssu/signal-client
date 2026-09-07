@@ -28,7 +28,7 @@ export const useRegister = (
 
       const res = (await response.json()) as SignalResponse<TokenResponse>;
       if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
+        throw new SignalError(res.message, res.status, res.timestamp, res.code);
       } else {
         return res.result;
       }
