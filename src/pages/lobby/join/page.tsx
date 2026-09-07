@@ -8,6 +8,7 @@ import {
 import TopBar from "@/components/Header";
 import MemberForm from "@/components/meeting/MemberForm";
 import MemberList from "@/components/meeting/MemberList";
+import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/utils";
 import type { MeetingMemberRequest } from "@/types/meeting";
 
@@ -15,6 +16,7 @@ const DEFAULT_PARTY_SIZE = 4;
 
 const LobbyJoinPage: React.FC = () => {
   const navigate = useNavigate();
+  const { profile } = useUser();
   const { roomId } = useParams<{ roomId: string }>();
   const [searchParams] = useSearchParams();
   // TODO: 방 정보 API 연동 시 partySize를 응답값으로 교체
@@ -58,7 +60,11 @@ const LobbyJoinPage: React.FC = () => {
         <h1 className="h1 text-label-normal">
           {`${partySize}명이 기다리고 있어요`}
         </h1>
-        <p className="body1 text-label-alternative">참여자 정보를 적어주세요</p>
+        <p className="body1 text-label-alternative">
+          {members.length === 0
+            ? "나의 정보를 적어주세요"
+            : "참여자 정보를 적어주세요"}
+        </p>
       </div>
 
       <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-[18px]">
@@ -70,8 +76,10 @@ const LobbyJoinPage: React.FC = () => {
           onAdd={handleAdd}
         />
         <MemberList
+          self={{ animal: profile?.animal }}
           members={members}
-          emptySlotCount={partySize - members.length}
+          // 본인 행이 입력 전에도 한 칸을 차지하므로 정원에서 함께 뺀다.
+          emptySlotCount={partySize - Math.max(members.length, 1)}
           onRemove={handleRemove}
         />
       </div>

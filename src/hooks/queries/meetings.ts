@@ -13,8 +13,10 @@ import {
   MeetingRoomDetailResponse,
   MeetingRoomResponse,
 } from "@/types/meeting";
+import { useAtomValue } from "jotai";
 import { SignalError } from "@/lib/error";
 import { authedFetch } from "@/lib/fetch";
+import { accessTokenAtom } from "@/atoms/authTokens";
 import { API_BASE_URL } from "@/env";
 
 const meetingBase = `${API_BASE_URL ?? ""}/api/meetings`;
@@ -26,9 +28,11 @@ export const MEETING_BOARD_POLL_INTERVAL = 5000;
 export const useMeetingBoard = (
   queryOptions?: Omit<
     UseQueryOptions<MeetingBoardResponse, SignalError>,
-    "queryKey" | "queryFn"
+    "queryKey" | "queryFn" | "enabled"
   >,
 ) => {
+  const accessToken = useAtomValue(accessTokenAtom);
+
   return useQuery({
     queryKey: ["meetings", "board"],
     queryFn: async () => {
@@ -36,7 +40,13 @@ export const useMeetingBoard = (
     },
     // 방 만료(1시간)와 latestMatch 노출 구간(30초)을 반영하기 위해 짧은 주기로 갱신한다.
     refetchInterval: MEETING_BOARD_POLL_INTERVAL,
+    // 한 번 실패한 요청을 즉시 3회까지 재시도하면 authedFetch의 refresh 경로를
+    // 폴링 주기마다 세 배로 두드린다. 다음 주기에 다시 시도하는 것으로 충분하다.
+    retry: false,
     ...queryOptions,
+    // 토큰이 지워진 뒤(refresh 실패로 clearTokensAtom이 돌았을 때)에도 폴링이
+    // 이어지면 만료된 세션으로 refresh를 계속 재시도하게 된다. 여기서 끊는다.
+    enabled: !!accessToken,
   });
 };
 
