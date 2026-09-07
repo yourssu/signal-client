@@ -9,7 +9,17 @@ import PartySizeFilterCard, {
 import LatestMatchBanner from "@/components/lobby/LatestMatchBanner";
 import MatchChanceChip from "@/components/lobby/MatchChanceChip";
 import ProfileRequiredDialog from "@/components/lobby/ProfileRequiredDialog";
-import { useMeetingBoard } from "@/hooks/queries/meetings";
+import RoomDeleteDialog from "@/components/lobby/RoomDeleteDialog";
+import RoomWaitingSheet from "@/components/meeting/status/RoomWaitingSheet";
+import RoomMatchedSheet from "@/components/meeting/status/RoomMatchedSheet";
+import RoomExpiredSheet from "@/components/meeting/status/RoomExpiredSheet";
+import {
+  useCancelMeetingRoom,
+  useMeetingBoard,
+  useMeetingResult,
+  useMeetingRoom,
+} from "@/hooks/queries/meetings";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   MEETING_CREATION_BLOCK_MESSAGES,
   MEETING_SLOTS,
@@ -21,11 +31,92 @@ import btnManual from "@/assets/lobby/btn_manual.svg";
 import btnInvite from "@/assets/lobby/btn_invite.svg";
 import type { MeetingRoomSummaryResponse, MeetingSlot } from "@/types/meeting";
 
+/** 만료 안내를 본(로컬 타이머 만료) 방과, 안내를 닫아 더는 보지 않기로 한 방을 하나로 묶은 상태. */
+interface RoomDismissal {
+  roomId: number;
+  phase: "expired" | "dismissed";
+}
+
 const LobbyPage: React.FC = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { data: board, isError } = useMeetingBoard();
   const [partySize, setPartySize] = useState<PartySize>(null);
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [roomDismissal, setRoomDismissal] = useState<RoomDismissal | null>(
+    null,
+  );
+
+  const myRoom = board?.myRoom ?? null;
+
+  // dismissal이 지금 서버가 내려주는 방과 다른 방을 가리키면(예: 그 사이 새 방이 생겼다면)
+  // 낡은 기록이므로 무시한다.
+  const isDismissed =
+    roomDismissal?.phase === "dismissed" &&
+    (!myRoom || roomDismissal.roomId === myRoom.roomId);
+  const activeRoom = myRoom && !isDismissed ? myRoom : null;
+  const isMatched = activeRoom?.status === "MATCHED";
+
+  const myRoomSlot = useMemo(
+    () =>
+      myRoom
+        ? (board?.slots.find((s) => s.room?.id === myRoom.roomId) ?? null)
+        : null,
+    [board, myRoom],
+  );
+  const openRoomExpiresAt =
+    myRoom?.status === "OPEN" ? myRoomSlot?.room?.expiresAt : undefined;
+
+  // 로컬 타이머 만료(phase: "expired")가 최신 서버 상태와 어긋나면 해제한다.
+  // - 만료 직전 매칭되면(타이머가 0에 닿은 뒤 폴링이 MATCHED를 주는 경우) 매칭 시트를 보여줘야 한다.
+  // - 기기 시계가 서버보다 빨라 방이 여전히 OPEN이고 만료 시각이 미래이면 오탐이다.
+  const isLocalExpiryOverridden =
+    !!roomDismissal &&
+    roomDismissal.phase === "expired" &&
+    !!myRoom &&
+    roomDismissal.roomId === myRoom.roomId &&
+    (myRoom.status === "MATCHED" ||
+      (myRoom.status === "OPEN" &&
+        !!openRoomExpiresAt &&
+        new Date(openRoomExpiresAt).getTime() > Date.now()));
+
+  const isLocalExpiryActive =
+    roomDismissal?.phase === "expired" &&
+    (!myRoom || roomDismissal.roomId === myRoom.roomId) &&
+    !isLocalExpiryOverridden;
+
+  // OPEN인데 보드 슬롯에서 방을 찾을 수 없으면 대기 시트를 그릴 근거(만료 시각)가 없다.
+  // useMeetingRoom은 staleTime: Infinity라 갱신되지 않고 목 데이터와도 어긋나므로 쓰지 않는다.
+  // 이 경우 RoomWaitingSheet가 마운트되지 않아 onExpire가 불리지 않으므로 여기서 바로 만료로 본다.
+  const isMissingFromBoard =
+    activeRoom?.status === "OPEN" && !openRoomExpiresAt;
+
+  // 만료 시트에 표시할 방 id. activeRoom과 무관하게 로컬 상태만으로 떠야 하므로
+  // myRoom이 null이 되어도(서버가 방을 완전히 지워도) 계속 유지된다.
+  let expiredRoomId: number | null = null;
+  if (isLocalExpiryActive && roomDismissal) {
+    expiredRoomId = roomDismissal.roomId;
+  } else if (isMissingFromBoard && activeRoom) {
+    expiredRoomId = activeRoom.roomId;
+  }
+
+  const { data: roomDetail, isError: isRoomDetailError } = useMeetingRoom(
+    activeRoom?.roomId ?? 0,
+    {
+      enabled: isMatched,
+      staleTime: Infinity,
+    },
+  );
+  const { data: matchResult, isError: isMatchResultError } = useMeetingResult(
+    activeRoom?.roomId ?? 0,
+    {
+      enabled: isMatched,
+      staleTime: Infinity,
+    },
+  );
+  const { mutate: cancelRoom, isPending: isCancellingRoom } =
+    useCancelMeetingRoom();
 
   useEffect(() => {
     lobbyViewed();
@@ -39,17 +130,42 @@ const LobbyPage: React.FC = () => {
     });
   }, [isError]);
 
+  useEffect(() => {
+    if (!isRoomDetailError && !isMatchResultError) return;
+    toast.error("매칭 정보를 불러오지 못했어요. 잠시 후 다시 시도해주세요", {
+      id: "meeting-room-detail-error",
+    });
+  }, [isRoomDetailError, isMatchResultError]);
+
   const roomBySlot = useMemo(
     () =>
       new Map(board?.slots.map((slotItem) => [slotItem.slot, slotItem.room])),
     [board],
   );
 
+  const handleDeleteRoom = () => {
+    if (!activeRoom) return;
+    const roomId = activeRoom.roomId;
+    cancelRoom(roomId, {
+      onSuccess: () => {
+        setDeleteDialogOpen(false);
+        // 폴링이 다음 응답을 줄 때까지 대기 시트가 잠깐 남지 않도록 로컬로도 지운다.
+        setRoomDismissal({ roomId, phase: "dismissed" });
+        queryClient.invalidateQueries({ queryKey: ["meetings", "board"] });
+      },
+      onError: () => {
+        setDeleteDialogOpen(false);
+        toast.error("방을 삭제하지 못했어요. 잠시 후 다시 시도해주세요");
+      },
+    });
+  };
+
   const handleSlotClick = (
     slot: MeetingSlot,
     room?: MeetingRoomSummaryResponse | null,
   ) => {
     if (room) {
+      if (myRoom && room.id === myRoom.roomId) return;
       navigate(`/lobby/join/${room.id}?partySize=${room.partySize}`);
       return;
     }
@@ -74,6 +190,68 @@ const LobbyPage: React.FC = () => {
         : undefined) ?? "지금은 방을 만들 수 없어요",
     );
   };
+
+  const partySizeFilter = (
+    <PartySizeFilterCard value={partySize} onChange={setPartySize} />
+  );
+
+  const renderBottomCard = () => {
+    if (expiredRoomId !== null) {
+      return (
+        <RoomExpiredSheet
+          open
+          onConfirm={() =>
+            setRoomDismissal({ roomId: expiredRoomId, phase: "dismissed" })
+          }
+        />
+      );
+    }
+
+    if (!activeRoom) return partySizeFilter;
+
+    if (activeRoom.status === "MATCHED") {
+      const contact = matchResult?.counterpartContact;
+      if (!roomDetail || !contact) return partySizeFilter;
+      if (new Date(roomDetail.room.expiresAt).getTime() <= Date.now()) {
+        return partySizeFilter;
+      }
+
+      return (
+        <RoomMatchedSheet
+          open
+          teamSide={activeRoom.teamSide}
+          counterpartContact={contact}
+          members={roomDetail.members.filter(
+            (member) => member.teamSide !== activeRoom.teamSide,
+          )}
+          invitation={roomDetail.room.invitation}
+        />
+      );
+    }
+
+    if (activeRoom.status === "OPEN") {
+      if (!openRoomExpiresAt) return partySizeFilter;
+      return (
+        <RoomWaitingSheet
+          open
+          expiresAt={openRoomExpiresAt}
+          onCancel={() => setDeleteDialogOpen(true)}
+          onExpire={() =>
+            setRoomDismissal({ roomId: activeRoom.roomId, phase: "expired" })
+          }
+        />
+      );
+    }
+
+    return partySizeFilter;
+  };
+
+  const bottomCard = renderBottomCard();
+  // 시트가 하단을 차지하는 동안 인원 필터가 남아 있으면 마커가 흐린 채 되돌릴 수 없으므로 초기화한다.
+  const isShowingFilterCard = bottomCard === partySizeFilter;
+  useEffect(() => {
+    if (!isShowingFilterCard) setPartySize(null);
+  }, [isShowingFilterCard]);
 
   return (
     <div className="relative flex h-full w-full flex-col overflow-hidden">
@@ -137,12 +315,19 @@ const LobbyPage: React.FC = () => {
 
       <div className="flex shrink-0 flex-col gap-3 px-[4.27%] pb-[43.65px]">
         {board?.latestMatch && <LatestMatchBanner match={board.latestMatch} />}
-        <PartySizeFilterCard value={partySize} onChange={setPartySize} />
+        {bottomCard}
       </div>
 
       <ProfileRequiredDialog
         open={profileDialogOpen}
         onOpenChange={setProfileDialogOpen}
+      />
+
+      <RoomDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleDeleteRoom}
+        confirmDisabled={isCancellingRoom}
       />
     </div>
   );

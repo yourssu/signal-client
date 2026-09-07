@@ -5,6 +5,10 @@ import { TokenResponse } from "@/types/auth";
 import { ErrorResponse, SuccessResponse } from "@/types/common";
 import {
   MeetingBoardResponse,
+  MeetingMemberResponse,
+  MeetingMyRoomResponse,
+  MeetingResultResponse,
+  MeetingRoomDetailResponse,
   MeetingSlot,
   MeetingSlotResponse,
 } from "@/types/meeting";
@@ -92,7 +96,6 @@ const getRandomNickname = (animal: AnimalType): string => {
   return `${adjective} ${animalDisplayMap[animal]}`;
 };
 
-
 const FILLED_MEETING_SLOTS: MeetingSlot[] = [
   "SLOT_1",
   "SLOT_2",
@@ -113,8 +116,108 @@ const MEETING_ROOM_MOCKS: {
   { partySize: 4, remainingMinutes: 60, creatorAnimal: "TURTLE" },
 ];
 
+/**
+ * 개발용 시나리오 전환. `/lobby?mock=waiting` 처럼 주소창에 붙여 쓴다.
+ * board 요청 URL에는 쿼리가 실리지 않으므로 location에서 직접 읽는다.
+ */
+type MeetingMockScenario = "waiting" | "expiring" | "matched" | "applicant";
+
+const MEETING_MOCK_SCENARIOS: MeetingMockScenario[] = [
+  "waiting",
+  "expiring",
+  "matched",
+  "applicant",
+];
+
+const getMeetingMockScenario = (): MeetingMockScenario | null => {
+  const value = new URLSearchParams(window.location.search).get("mock");
+  return MEETING_MOCK_SCENARIOS.find((s) => s === value) ?? null;
+};
+
+/** 시나리오가 켜졌을 때 내 방으로 쓰는 슬롯과 방 id. */
+const MY_ROOM_SLOT: MeetingSlot = "SLOT_1";
+const MY_ROOM_ID = 1;
+
+/** cancel 핸들러가 취소한 방 id. buildMyRoom과 슬롯 생성이 함께 참조해 삭제한 방을 되살리지 않는다. */
+const cancelledRoomIds = new Set<number>();
+
+/**
+ * 목 기준 시각. 모듈 평가 시점에 잡으면 SPA 내비게이션으로 한참 뒤에 시나리오에
+ * 들어올 때 이미 만료된 상태로 시작한다. 첫 요청 시점에 한 번만 잡고,
+ * 폴링마다 다시 잡지 않는다(그러면 만료 시각이 계속 밀려 방이 끝나지 않는다).
+ */
+let mockBaseTime: number | null = null;
+const getMockBaseTime = (): number => {
+  if (mockBaseTime === null) {
+    mockBaseTime = Date.now();
+  }
+  return mockBaseTime;
+};
+
+const buildMyRoom = (
+  scenario: MeetingMockScenario | null,
+): MeetingMyRoomResponse | null => {
+  if (!scenario) return null;
+  if (cancelledRoomIds.has(MY_ROOM_ID)) return null;
+  const isMatched = scenario === "matched" || scenario === "applicant";
+  return {
+    roomId: MY_ROOM_ID,
+    status: isMatched ? "MATCHED" : "OPEN",
+    teamSide: scenario === "applicant" ? "APPLICANT" : "CREATOR",
+  };
+};
+
+const MEETING_MEMBER_MOCKS: Omit<
+  MeetingMemberResponse,
+  "teamSide" | "memberOrder"
+>[] = [
+  { department: "컴퓨터학부", birthYear: 2002, gender: "MALE" },
+  { department: "산업정보시스템공학과", birthYear: 2001, gender: "MALE" },
+  { department: "글로벌미디어학부", birthYear: 2003, gender: "MALE" },
+];
+
+const buildMeetingMembers = (partySize: number): MeetingMemberResponse[] => {
+  const build = (
+    teamSide: MeetingMemberResponse["teamSide"],
+    gender: MeetingMemberResponse["gender"],
+  ) =>
+    Array.from({ length: partySize }, (_, index) => {
+      const base = MEETING_MEMBER_MOCKS[index % MEETING_MEMBER_MOCKS.length];
+      return { ...base, gender, teamSide, memberOrder: index + 1 };
+    });
+
+  return [...build("CREATOR", "MALE"), ...build("APPLICANT", "FEMALE")];
+};
+
+const createMeetingRoomDetail = (
+  roomId: number,
+): MeetingRoomDetailResponse | null => {
+  if (roomId !== MY_ROOM_ID) return null;
+
+  const scenario = getMeetingMockScenario();
+  const { partySize, remainingMinutes, creatorAnimal } = MEETING_ROOM_MOCKS[0];
+  const isMatched = scenario === "matched" || scenario === "applicant";
+
+  return {
+    room: {
+      id: roomId,
+      slot: MY_ROOM_SLOT,
+      creatorAnimal,
+      creatorNickname: "숭실대 방장",
+      partySize,
+      invitation: `숭실대 테스트학과 ${partySize}명이 모임을 기다리고 있어요!`,
+      status: isMatched ? "MATCHED" : "OPEN",
+      expiresAt: new Date(
+        getMockBaseTime() + remainingMinutes * 60 * 1000,
+      ).toISOString(),
+    },
+    members: buildMeetingMembers(partySize),
+  };
+};
+
 const createMeetingBoardResponse = (): MeetingBoardResponse => {
-  const now = Date.now();
+  const now = getMockBaseTime();
+  const scenario = getMeetingMockScenario();
   let filledIndex = 0;
 
   const slots: MeetingSlotResponse[] = MEETING_SLOTS.map((slot) => {
@@ -122,15 +225,26 @@ const createMeetingBoardResponse = (): MeetingBoardResponse => {
       return { slot };
     }
 
+    const roomIndex = filledIndex++;
+    const roomId = roomIndex + 1;
+    if (cancelledRoomIds.has(roomId)) {
+      return { slot };
+    }
+
     const { partySize, remainingMinutes, creatorAnimal } =
-      MEETING_ROOM_MOCKS[filledIndex++];
+      MEETING_ROOM_MOCKS[roomIndex];
+    // 임박 시나리오는 내 방만 40초 뒤에 끝나게 둔다.
+    const remainingMs =
+      scenario === "expiring" && slot === MY_ROOM_SLOT
+        ? 40 * 1000
+        : remainingMinutes * 60 * 1000;
     return {
       slot,
       room: {
-        id: filledIndex,
+        id: roomId,
         partySize,
         invitation: `숭실대 테스트학과 ${partySize}명이 모임을 기다리고 있어요!`,
-        expiresAt: new Date(now + remainingMinutes * 60 * 1000).toISOString(),
+        expiresAt: new Date(now + remainingMs).toISOString(),
         creatorAnimal,
       },
     };
@@ -139,7 +253,7 @@ const createMeetingBoardResponse = (): MeetingBoardResponse => {
   return {
     creationEligibility: { canCreate: true },
     slots,
-    myRoom: null,
+    myRoom: buildMyRoom(scenario),
     latestMatch: {
       roomId: 1,
       creatorNickname: "숭실대 방장",
@@ -542,5 +656,53 @@ export const handlers = [
       timestamp: new Date().toISOString(),
       result: createMeetingBoardResponse(),
     } satisfies SuccessResponse<MeetingBoardResponse>);
+  }),
+
+  http.get("/api/meetings/rooms/:roomId", ({ params }) => {
+    const roomId = Number(params.roomId);
+    const detail = createMeetingRoomDetail(roomId);
+    if (!detail) {
+      return HttpResponse.json(
+        {
+          timestamp: new Date().toISOString(),
+          status: 404,
+          message: "방을 찾을 수 없습니다.",
+          code: "MEETING_ROOM_NOT_FOUND",
+        } satisfies ErrorResponse,
+        { status: 404 },
+      );
+    }
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: detail,
+    } satisfies SuccessResponse<MeetingRoomDetailResponse>);
+  }),
+
+  http.get("/api/meetings/rooms/:roomId/result", ({ params }) => {
+    const roomId = Number(params.roomId);
+    if (roomId !== MY_ROOM_ID) {
+      return HttpResponse.json(
+        {
+          timestamp: new Date().toISOString(),
+          status: 403,
+          message: "매칭 당사자가 아닙니다.",
+          code: "MEETING_RESULT_FORBIDDEN",
+        } satisfies ErrorResponse,
+        { status: 403 },
+      );
+    }
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: {
+        roomId,
+        counterpartContact: "@signal_official",
+      },
+    } satisfies SuccessResponse<MeetingResultResponse>);
+  }),
+
+  http.post("/api/meetings/rooms/:roomId/cancel", ({ params }) => {
+    const roomId = Number(params.roomId);
+    cancelledRoomIds.add(roomId);
+    return new HttpResponse(null, { status: 204 });
   }),
 ];

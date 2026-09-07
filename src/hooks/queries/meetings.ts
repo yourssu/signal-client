@@ -58,6 +58,9 @@ export const useMeetingRoom = (
     "queryKey" | "queryFn"
   >,
 ) => {
+  const accessToken = useAtomValue(accessTokenAtom);
+  const { enabled = true, ...restOptions } = queryOptions ?? {};
+
   return useQuery({
     queryKey: ["meetings", "rooms", roomId],
     queryFn: async () => {
@@ -65,7 +68,9 @@ export const useMeetingRoom = (
         `${meetingBase}/rooms/${roomId}`,
       );
     },
-    ...queryOptions,
+    ...restOptions,
+    // 토큰이 없는데도 호출부의 enabled만으로 켜지면 refresh가 무의미하게 돈다.
+    enabled: !!accessToken && enabled,
   });
 };
 
@@ -77,6 +82,9 @@ export const useMeetingResult = (
     "queryKey" | "queryFn"
   >,
 ) => {
+  const accessToken = useAtomValue(accessTokenAtom);
+  const { enabled = true, ...restOptions } = queryOptions ?? {};
+
   return useQuery({
     queryKey: ["meetings", "rooms", roomId, "result"],
     queryFn: async () => {
@@ -84,7 +92,8 @@ export const useMeetingResult = (
         `${meetingBase}/rooms/${roomId}/result`,
       );
     },
-    ...queryOptions,
+    ...restOptions,
+    enabled: !!accessToken && enabled,
   });
 };
 
