@@ -84,7 +84,7 @@ const LobbyJoinPage: React.FC = () => {
     return (
       <div className="flex h-full flex-col bg-white">
         <title>미팅 참여하기 - 시그널</title>
-        <TopBar onBack="/lobby" />
+        <TopBar onBack="/lobby" hideInfo />
         <div className="flex flex-1 items-center justify-center">
           <p className="text-label-neutral text-lg">방 정보를 불러오는 중...</p>
         </div>
@@ -95,7 +95,7 @@ const LobbyJoinPage: React.FC = () => {
   return (
     <div className="flex h-full flex-col bg-white">
       <title>미팅 참여하기 - 시그널</title>
-      <TopBar onBack="/lobby" />
+      <TopBar onBack="/lobby" hideInfo />
 
       <div className="flex flex-col gap-1.5 px-[18px] py-3">
         <h1 className="h1 text-label-normal">

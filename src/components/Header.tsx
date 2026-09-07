@@ -46,7 +46,7 @@ const TopBar: React.FC<TopBarProps> = ({ onBack, hideInfo, purchaseLink }) => {
               onClick={handleBack}
               className="text-black-700"
             >
-              <ChevronLeft />
+              <ChevronLeft className="size-6" />
             </Button>
           ) : (
             <Link
@@ -57,7 +57,7 @@ const TopBar: React.FC<TopBarProps> = ({ onBack, hideInfo, purchaseLink }) => {
               to={onBack}
               replace
             >
-              <ChevronLeft />
+              <ChevronLeft className="size-6" />
             </Link>
           )}
         </div>
