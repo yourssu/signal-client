@@ -301,6 +301,11 @@ const createMeetingBoardResponse = (): MeetingBoardResponse => {
       scenario === "expiring" && slot === MY_ROOM_SLOT
         ? 40 * 1000
         : remainingMinutes * 60 * 1000;
+    // 끝난 방은 열린 방이 아니다. 슬롯을 비워 다시 만들 수 있게 한다.
+    if (now + remainingMs <= Date.now()) {
+      return { slot };
+    }
+
     return {
       slot,
       room: {

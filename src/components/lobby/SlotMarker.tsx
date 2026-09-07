@@ -23,12 +23,16 @@ export default function SlotMarker({
   onClick,
 }: SlotMarkerProps) {
   const isDimmed = matchesFilter === false;
+  // 서버가 끝난 방을 걷어가기 전까지 최대 한 폴링 주기 동안 남는다.
+  const isExpired = room
+    ? new Date(room.expiresAt).getTime() <= Date.now()
+    : false;
 
   return (
     <button
       type="button"
       onClick={onClick}
-      disabled={isDimmed}
+      disabled={isDimmed || isExpired}
       className={cn(
         "absolute flex w-[60px] -translate-x-1/2 flex-col items-center gap-[7px] transition-opacity",
         isDimmed && "opacity-40",
