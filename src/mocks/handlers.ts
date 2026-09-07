@@ -1,4 +1,5 @@
 import { animalDisplayMap } from "@/lib/animal";
+import { MEETING_SLOTS } from "@/lib/meeting";
 import { TicketIssuedRequest } from "@/types/admin";
 import { TokenResponse } from "@/types/auth";
 import { ErrorResponse, SuccessResponse } from "@/types/common";
@@ -91,15 +92,6 @@ const getRandomNickname = (animal: AnimalType): string => {
   return `${adjective} ${animalDisplayMap[animal]}`;
 };
 
-const ALL_MEETING_SLOTS: MeetingSlot[] = [
-  "SLOT_1",
-  "SLOT_2",
-  "SLOT_3",
-  "SLOT_4",
-  "SLOT_5",
-  "SLOT_6",
-  "SLOT_7",
-];
 
 const FILLED_MEETING_SLOTS: MeetingSlot[] = [
   "SLOT_1",
@@ -125,7 +117,7 @@ const createMeetingBoardResponse = (): MeetingBoardResponse => {
   const now = Date.now();
   let filledIndex = 0;
 
-  const slots: MeetingSlotResponse[] = ALL_MEETING_SLOTS.map((slot) => {
+  const slots: MeetingSlotResponse[] = MEETING_SLOTS.map((slot) => {
     if (!FILLED_MEETING_SLOTS.includes(slot)) {
       return { slot };
     }
@@ -147,6 +139,7 @@ const createMeetingBoardResponse = (): MeetingBoardResponse => {
   return {
     creationEligibility: { canCreate: true },
     slots,
+    myRoom: null,
     latestMatch: {
       roomId: 1,
       creatorNickname: "숭실대 방장",

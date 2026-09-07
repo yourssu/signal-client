@@ -114,6 +114,15 @@ async function fetchWithAuth<T>(
           .get("Content-Type")
           ?.includes("application/json") !== true
       ) {
+        // 204처럼 본문이 없는 성공만 통과시킨다. 에러 페이지(HTML)나 빈 5xx가
+        // 여기로 새면 호출부가 undefined를 정상 응답으로 받는다.
+        if (!retryResponse.ok) {
+          throw new SignalError(
+            "알 수 없는 오류",
+            retryResponse.status,
+            new Date().toISOString(),
+          );
+        }
         return undefined as T;
       }
 
@@ -125,6 +134,7 @@ async function fetchWithAuth<T>(
           errorRes.message ?? "알 수 없는 오류",
           errorRes.status ?? retryResponse.status,
           errorRes.timestamp ?? new Date().toISOString(),
+          errorRes.code,
         );
       }
 
@@ -142,6 +152,13 @@ async function fetchWithAuth<T>(
   if (
     response.headers.get("Content-Type")?.includes("application/json") !== true
   ) {
+    if (!response.ok) {
+      throw new SignalError(
+        "알 수 없는 오류",
+        response.status,
+        new Date().toISOString(),
+      );
+    }
     return undefined as T;
   }
 
@@ -153,6 +170,7 @@ async function fetchWithAuth<T>(
       errorRes.message ?? "알 수 없는 오류",
       errorRes.status ?? response.status,
       errorRes.timestamp ?? new Date().toISOString(),
+      errorRes.code,
     );
   }
 

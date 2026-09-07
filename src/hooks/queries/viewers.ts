@@ -62,7 +62,7 @@ export const useIssueTicket = (
       });
       const res = (await response.json()) as SignalResponse<ViewerResponse>;
       if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
+        throw new SignalError(res.message, res.status, res.timestamp, res.code);
       } else {
         return res.result;
       }
@@ -165,7 +165,7 @@ export const useTicketPackages = (
       const res =
         (await response.json()) as SignalResponse<TicketPackagesResponse>;
       if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
+        throw new SignalError(res.message, res.status, res.timestamp, res.code);
       } else {
         return res.result;
       }

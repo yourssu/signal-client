@@ -38,6 +38,7 @@ export interface MeetingRoomSummaryResponse {
 export interface MeetingRoomResponse extends MeetingRoomSummaryResponse {
   slot: MeetingSlot;
   status: MeetingRoomStatus;
+  creatorNickname: string;
 }
 
 export interface MeetingRoomDetailResponse {
@@ -47,8 +48,10 @@ export interface MeetingRoomDetailResponse {
 
 export type MeetingCreationBlockReason =
   | "PROFILE_REQUIRED"
+  | "MEETING_BLOCKED"
   | "DAILY_CREATION_LIMIT_EXCEEDED"
-  | "DAILY_MEETING_LIMIT_EXCEEDED";
+  | "DAILY_MEETING_LIMIT_EXCEEDED"
+  | "ACTIVE_ROOM_EXISTS";
 
 export interface MeetingCreationEligibilityResponse {
   canCreate: boolean;
@@ -68,10 +71,17 @@ export interface MeetingLatestMatchResponse {
   visibleUntil: string;
 }
 
+export interface MeetingMyRoomResponse {
+  roomId: number;
+  status: "OPEN" | "MATCHED";
+  teamSide: MeetingTeamSide;
+}
+
 export interface MeetingBoardResponse {
   creationEligibility: MeetingCreationEligibilityResponse;
   slots: MeetingSlotResponse[];
   latestMatch?: MeetingLatestMatchResponse | null;
+  myRoom?: MeetingMyRoomResponse | null;
 }
 
 export interface MeetingRoomCreateRequest {
