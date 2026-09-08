@@ -1,17 +1,19 @@
 import { cn } from "@/lib/utils";
 
-export type PartySize = 2 | 3 | 4 | null;
+export type PartySize = 2 | 3 | 4;
+/** 필터 상태. null은 아직 고르지 않은 것, "ANY"는 "미정"을 고른 것이다. */
+export type PartySizeFilter = PartySize | "ANY" | null;
 
 interface PartySizeFilterCardProps {
-  value: PartySize;
-  onChange: (v: PartySize) => void;
+  value: PartySizeFilter;
+  onChange: (v: PartySizeFilter) => void;
 }
 
-const OPTIONS: { value: PartySize; label: string }[] = [
+const OPTIONS: { value: PartySizeFilter; label: string }[] = [
   { value: 2, label: "2명" },
   { value: 3, label: "3명" },
   { value: 4, label: "4명" },
-  { value: null, label: "미정" },
+  { value: "ANY", label: "미정" },
 ];
 
 export default function PartySizeFilterCard({

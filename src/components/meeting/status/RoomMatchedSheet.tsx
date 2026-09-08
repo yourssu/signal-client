@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import RoomStepper from "@/components/meeting/status/RoomStepper";
+import { getMemberSummaryParts, MEMBER_PART_SEPARATOR } from "@/lib/meeting";
 import { cn, formatPhone, getDeviceType } from "@/lib/utils";
 import type { MeetingMemberResponse, MeetingTeamSide } from "@/types/meeting";
 import contactPhoneIcon from "@/assets/lobby/contact_phone.svg";
@@ -144,13 +145,12 @@ export default function RoomMatchedSheet({
                       "border-line-normal border-b",
                   )}
                 >
-                  <span>{member.department}</span>
-                  <span>·</span>
-                  <span>
-                    {String(member.birthYear % 100).padStart(2, "0")}년생
-                  </span>
-                  <span>·</span>
-                  <span>{member.gender === "MALE" ? "남" : "여"}</span>
+                  {getMemberSummaryParts(member).map((part, partIndex) => (
+                    <Fragment key={partIndex}>
+                      {partIndex > 0 && <span>{MEMBER_PART_SEPARATOR}</span>}
+                      <span>{part}</span>
+                    </Fragment>
+                  ))}
                 </div>
               ))}
             </div>

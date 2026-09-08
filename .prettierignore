@@ -1,0 +1,3 @@
+# msw가 생성하는 파일이라 우리 포맷 규칙을 적용하지 않는다.
+# 그러지 않으면 pnpm format 과 msw init 이 서로 덮어써 194줄이 왔다 갔다 한다.
+public/mockServiceWorker.js

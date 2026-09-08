@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import TopBar from "@/components/Header";
 import SlotMarker from "@/components/lobby/SlotMarker";
 import PartySizeFilterCard, {
-  PartySize,
+  PartySizeFilter,
 } from "@/components/lobby/PartySizeFilterCard";
 import LatestMatchBanner from "@/components/lobby/LatestMatchBanner";
 import MatchChanceChip from "@/components/lobby/MatchChanceChip";
@@ -28,6 +28,7 @@ import {
   SLOT_POSITIONS,
 } from "@/lib/meeting";
 import { lobbyViewed } from "@/lib/analytics";
+import { ENABLE_REGISTER } from "@/env";
 import mapBackground from "@/assets/lobby/map_background.png";
 import btnManual from "@/assets/lobby/btn_manual.svg";
 import btnInvite from "@/assets/lobby/btn_invite.svg";
@@ -43,7 +44,7 @@ const LobbyPage: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: board, isError } = useMeetingBoard();
-  const [partySize, setPartySize] = useState<PartySize>(null);
+  const [partySize, setPartySize] = useState<PartySizeFilter>(null);
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   const [manualOpen, setManualOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -183,6 +184,11 @@ const LobbyPage: React.FC = () => {
     }
 
     if (eligibility.reason === "PROFILE_REQUIRED") {
+      // 등록 라우트가 닫혀 있으면 안내 모달의 버튼이 홈으로 튕긴다. 사유만 알린다.
+      if (!ENABLE_REGISTER) {
+        toast.error("지금은 프로필을 등록할 수 없어요");
+        return;
+      }
       setProfileDialogOpen(true);
       return;
     }
@@ -292,7 +298,7 @@ const LobbyPage: React.FC = () => {
                   room={room}
                   position={SLOT_POSITIONS[slot]}
                   matchesFilter={
-                    partySize === null || !room
+                    partySize === null || partySize === "ANY" || !room
                       ? null
                       : room.partySize === partySize
                   }
