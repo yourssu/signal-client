@@ -109,8 +109,9 @@ export const formatCountdown = (remainingMs: number): string => {
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 };
 
-export const formatRemainingTime = (expiresAt: string): string => {
-  const remainingMs = new Date(expiresAt).getTime() - Date.now();
+/** 기준 시각을 받는다. 내부에서 시계를 읽으면 리렌더 없이는 값이 갱신되지 않는다. */
+export const formatRemainingTime = (expiresAt: string, now: number): string => {
+  const remainingMs = new Date(expiresAt).getTime() - now;
   if (remainingMs <= 0) return "마감";
   return `${Math.ceil(remainingMs / 60_000)}분 남음`;
 };
