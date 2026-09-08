@@ -11,6 +11,7 @@ import avatarWolf from "@/assets/lobby/avatar_wolf.svg";
 import type {
   MeetingCreationBlockReason,
   MeetingErrorCode,
+  MeetingMemberResponse,
   MeetingRoomSummaryResponse,
   MeetingSlot,
 } from "@/types/meeting";
@@ -82,6 +83,21 @@ export const getMeetingErrorMessage = (
 
 /** 잔여 시간이 이 값 이하로 떨어지면 방 종료 임박 안내를 띄운다. */
 export const MEETING_ROOM_EXPIRY_WARNING_MS = 60_000;
+
+/** 가운뎃점 U+00B7. 생김새가 거의 같은 U+2219로 흘러간 적이 있어 한곳에 묶어 둔다. */
+export const MEMBER_PART_SEPARATOR = "·";
+
+/**
+ * 멤버를 화면에 쓸 조각으로 나눈다. 행·칩으로 마크업이 갈려
+ * 문자열 하나로 합치면 조각 사이 간격을 줄 수 없다.
+ */
+export const getMemberSummaryParts = (
+  member: Pick<MeetingMemberResponse, "gender" | "birthYear" | "department">,
+): string[] => [
+  member.department,
+  `${String(member.birthYear % 100).padStart(2, "0")}년생`,
+  member.gender === "MALE" ? "남" : "여",
+];
 
 /** 남은 시간을 mm:ss로. 파싱 실패는 00:00으로 떨어뜨린다. */
 export const formatCountdown = (remainingMs: number): string => {

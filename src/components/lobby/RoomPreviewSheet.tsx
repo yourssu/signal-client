@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import {
   Drawer,
@@ -7,7 +7,12 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { useMeetingRoom } from "@/hooks/queries/meetings";
-import { formatCountdown, getMeetingErrorMessage } from "@/lib/meeting";
+import {
+  formatCountdown,
+  getMeetingErrorMessage,
+  getMemberSummaryParts,
+  MEMBER_PART_SEPARATOR,
+} from "@/lib/meeting";
 import invitationIcon from "@/assets/lobby/invitation.svg";
 import type { MeetingMemberResponse } from "@/types/meeting";
 
@@ -20,11 +25,12 @@ interface RoomPreviewSheetProps {
 
 const MemberChip = ({ member }: { member: MeetingMemberResponse }) => (
   <div className="bg-fill-normal caption1 text-label-alternative flex items-center gap-0.5 rounded-full px-2 py-1.5">
-    <span>{member.department}</span>
-    <span>∙</span>
-    <span>{String(member.birthYear % 100).padStart(2, "0")}년생</span>
-    <span>∙</span>
-    <span>{member.gender === "MALE" ? "남" : "여"}</span>
+    {getMemberSummaryParts(member).map((part, index) => (
+      <Fragment key={index}>
+        {index > 0 && <span>{MEMBER_PART_SEPARATOR}</span>}
+        <span>{part}</span>
+      </Fragment>
+    ))}
   </div>
 );
 
