@@ -434,7 +434,7 @@ export const handlers = [
         ],
         school: "숭실대학교",
         egenTeto: "TETO",
-        contact: "https://instagram.com/example1",
+        contact: "@example1",
       },
       {
         profileId: 102,
@@ -451,7 +451,7 @@ export const handlers = [
         ],
         school: "숭실대학교",
         egenTeto: "EGEN",
-        contact: "https://instagram.com/example2",
+        contact: "@example2",
       },
     ];
     return HttpResponse.json({
