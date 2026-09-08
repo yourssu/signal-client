@@ -13,6 +13,8 @@ interface SlotMarkerProps {
    * true면 인원 배지 대신 "가능"을 달고, false면 마커 전체를 흐린다.
    */
   matchesFilter?: boolean | null;
+  /** 남은 시간과 마감 판정의 기준 시각. 로비의 틱 하나를 마커 전체가 나눠 쓴다. */
+  now: number;
   onClick: () => void;
 }
 
@@ -20,13 +22,12 @@ export default function SlotMarker({
   room,
   position,
   matchesFilter = null,
+  now,
   onClick,
 }: SlotMarkerProps) {
   const isDimmed = matchesFilter === false;
   // 서버가 끝난 방을 걷어가기 전까지 최대 한 폴링 주기 동안 남는다.
-  const isExpired = room
-    ? new Date(room.expiresAt).getTime() <= Date.now()
-    : false;
+  const isExpired = room ? new Date(room.expiresAt).getTime() <= now : false;
 
   return (
     <button
@@ -68,7 +69,7 @@ export default function SlotMarker({
         )}
       </div>
       <span className="caption1 text-label-normal">
-        {room ? formatRemainingTime(room.expiresAt) : "방 생성"}
+        {room ? formatRemainingTime(room.expiresAt, now) : "방 생성"}
       </span>
     </button>
   );

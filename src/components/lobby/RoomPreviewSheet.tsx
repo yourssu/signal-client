@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/drawer";
 import { useMeetingRoom } from "@/hooks/queries/meetings";
 import {
-  formatCountdown,
+  formatRemainingDetail,
   getMeetingErrorMessage,
   getMemberSummaryParts,
   MEMBER_PART_SEPARATOR,
@@ -140,7 +140,7 @@ export default function RoomPreviewSheet({
 
               <div className="flex w-full flex-col items-center gap-2">
                 <span className="caption1 text-primary">
-                  방 폭파까지 {formatCountdown(remainingMs)}초 남았어요
+                  방 폭파까지 {formatRemainingDetail(remainingMs)} 남았어요
                 </span>
                 <button
                   type="button"

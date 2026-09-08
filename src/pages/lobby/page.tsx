@@ -22,6 +22,7 @@ import {
   useMeetingRoom,
 } from "@/hooks/queries/meetings";
 import { useQueryClient } from "@tanstack/react-query";
+import { useNow } from "@/hooks/useNow";
 import {
   MEETING_CREATION_BLOCK_MESSAGES,
   MEETING_SLOTS,
@@ -34,6 +35,12 @@ import btnManual from "@/assets/lobby/btn_manual.svg";
 import btnInvite from "@/assets/lobby/btn_invite.svg";
 import type { MeetingRoomSummaryResponse, MeetingSlot } from "@/types/meeting";
 
+/**
+ * 마커의 남은 시간을 다시 그리는 주기(ms).
+ * "N분 남음" 표시라 초 단위까지 맞출 필요는 없고, 마감된 핀이 눌리지 않을 만큼만 촘촘하면 된다.
+ */
+const MARKER_TICK_INTERVAL = 10_000;
+
 /** 만료 안내를 본(로컬 타이머 만료) 방과, 안내를 닫아 더는 보지 않기로 한 방을 하나로 묶은 상태. */
 interface RoomDismissal {
   roomId: number;
@@ -44,6 +51,7 @@ const LobbyPage: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data: board, isError } = useMeetingBoard();
+  const now = useNow(MARKER_TICK_INTERVAL);
   const [partySize, setPartySize] = useState<PartySizeFilter>(null);
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   const [manualOpen, setManualOpen] = useState(false);
@@ -302,6 +310,7 @@ const LobbyPage: React.FC = () => {
                       ? null
                       : room.partySize === partySize
                   }
+                  now={now}
                   onClick={() => handleSlotClick(slot, room)}
                 />
               );

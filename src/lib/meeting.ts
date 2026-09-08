@@ -99,20 +99,38 @@ export const getMemberSummaryParts = (
   member.gender === "MALE" ? "남" : "여",
 ];
 
-/** 남은 시간을 mm:ss로. 파싱 실패는 00:00으로 떨어뜨린다. */
-export const formatCountdown = (remainingMs: number): string => {
-  const totalSeconds = Number.isFinite(remainingMs)
-    ? Math.max(0, Math.round(remainingMs / 1000))
+/**
+ * 남은 밀리초를 초로 내린다. 파싱 실패는 0으로 떨어뜨린다.
+ *
+ * 세 화면이 같은 방의 남은 시간을 동시에 보여주므로 버림 하나로 통일한다.
+ * 올리거나 반올림하면 상세 시트가 "43분 52초"일 때 로비 마커가 "44분"이 된다.
+ */
+const toRemainingSeconds = (remainingMs: number): number =>
+  Number.isFinite(remainingMs)
+    ? Math.max(0, Math.floor(remainingMs / 1000))
     : 0;
+
+/** 남은 시간을 mm:ss로. */
+export const formatCountdown = (remainingMs: number): string => {
+  const totalSeconds = toRemainingSeconds(remainingMs);
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 };
 
-export const formatRemainingTime = (expiresAt: string): string => {
-  const remainingMs = new Date(expiresAt).getTime() - Date.now();
+/** 상세 시트용 "43분 52초". */
+export const formatRemainingDetail = (remainingMs: number): string => {
+  const totalSeconds = toRemainingSeconds(remainingMs);
+  return `${Math.floor(totalSeconds / 60)}분 ${totalSeconds % 60}초`;
+};
+
+/** 기준 시각을 받는다. 내부에서 시계를 읽으면 리렌더 없이는 값이 갱신되지 않는다. */
+export const formatRemainingTime = (expiresAt: string, now: number): string => {
+  const remainingMs = new Date(expiresAt).getTime() - now;
   if (remainingMs <= 0) return "마감";
-  return `${Math.ceil(remainingMs / 60_000)}분 남음`;
+  // 버림이라 마지막 1분은 "0분 남음"이 된다. 만료 임박 안내 구간과 같은 경계다.
+  if (remainingMs < MEETING_ROOM_EXPIRY_WARNING_MS) return "1분 미만";
+  return `${Math.floor(remainingMs / 60_000)}분 남음`;
 };
 
 export const MEETING_AVATARS: Record<AnimalType, string> = {
