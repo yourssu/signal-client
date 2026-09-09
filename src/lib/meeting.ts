@@ -101,6 +101,12 @@ export const getRoomEndedReason = (
   return null;
 };
 
+/** 미팅에 쓸 수 있는 연락처. 전화번호이거나 인스타 핸들이다. */
+const MEETING_CONTACT_REGEX = /^(?:010[2-9]\d{7}|@[a-zA-Z0-9._]{1,30})$/;
+
+export const isMeetingContact = (contact: string): boolean =>
+  MEETING_CONTACT_REGEX.test(contact);
+
 /** 잔여 시간이 이 값 이하로 떨어지면 방 종료 임박 안내를 띄운다. */
 export const MEETING_ROOM_EXPIRY_WARNING_MS = 60_000;
 
