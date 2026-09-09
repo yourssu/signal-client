@@ -4,23 +4,19 @@ import { toast } from "sonner";
 import { useRegister } from "@/hooks/queries/auth";
 import {
   accessTokenAtom,
-  clearTokensAtom,
   refreshTokenAtom,
   isAuthenticatedAtom,
-  providerAtom,
   setTokensAtom,
-  tokenExpiryAtom,
 } from "@/atoms/authTokens";
 import { TokenResponse } from "@/types/auth";
-import { refreshAccessToken } from "@/lib/fetch";
+import { endSession, refreshAccessToken } from "@/lib/fetch";
 
+/** 앱에 하나만 있어야 한다. Layout에서만 부른다. */
 export const useAuth = () => {
   const accessToken = useAtomValue(accessTokenAtom);
   const refreshToken = useAtomValue(refreshTokenAtom);
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const setTokens = useSetAtom(setTokensAtom);
-  const tokenExpiry = useAtomValue(tokenExpiryAtom);
-  const clearTokens = useSetAtom(clearTokensAtom);
   const hasInitialized = useRef(false);
 
   const registerMutation = useRegister({
@@ -45,40 +41,13 @@ export const useAuth = () => {
 
     if (isAuthenticated || !refreshToken) return;
 
-    const outcome = await refreshAccessToken();
-    if (outcome !== "rejected") return;
-
-    // 서버가 토큰을 거절한 것이라 세션은 끝났다. 다음 로드에서 처음부터 시작한다.
-    const provider = getDefaultStore().get(providerAtom);
-    clearTokens();
-    toast.error("세션이 만료됐어요", {
-      description:
-        provider === "google"
-          ? "다시 로그인해주세요."
-          : "새로고침하면 다시 시작할 수 있어요.",
-    });
-  }, [
-    accessToken,
-    refreshToken,
-    isAuthenticated,
-    registerMutation,
-    clearTokens,
-  ]);
+    // 거절이면 세션은 끝났다. 다음 로드에서 처음부터 시작한다.
+    if ((await refreshAccessToken()) === "rejected") endSession();
+  }, [accessToken, refreshToken, isAuthenticated, registerMutation]);
 
   useEffect(() => {
     if (hasInitialized.current) return;
     hasInitialized.current = true;
     initializeAuth();
   }, [initializeAuth]);
-
-  return {
-    accessToken,
-    refreshToken,
-    isAuthenticated,
-    tokenExpiry,
-
-    isRegistering: registerMutation.isPending,
-    registerError: registerMutation.error,
-    clearTokens,
-  };
 };

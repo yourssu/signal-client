@@ -105,7 +105,6 @@ export const useViewerSelf = (
       return authedFetch<ViewerDetailResponse>(`${viewersBase}/me`);
     },
     ...restOptions,
-    // 토큰이 생기기 전에 나가면 401을 받고 갱신 경로로 들어간다. 있을 때만 보낸다.
     enabled: !!accessToken && enabled,
   });
 };

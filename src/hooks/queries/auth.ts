@@ -3,6 +3,8 @@ import { TokenResponse, GoogleOAuthRequest } from "@/types/auth";
 import { SignalResponse } from "@/types/common";
 import { SignalError } from "@/lib/error";
 import { API_BASE_URL } from "@/env";
+import { getDefaultStore } from "jotai";
+import { accessTokenAtom } from "@/atoms/authTokens";
 
 const authBase = `${API_BASE_URL ?? ""}/api/auth`;
 
@@ -39,12 +41,17 @@ export const useGoogleLogin = (
   >,
 ) => {
   return useMutation({
-    // 토큰을 받으러 가는 요청이라 인증이 필요 없다. authedFetch를 타면 익명 Bearer를
-    // 달고 나가고, 401이면 갱신→삭제 경로로 들어가 로그인 중에 토큰이 지워진다.
+    // 요청 본문은 code뿐이라, 지금 익명 계정에 구글을 묶으려면 서버가 Bearer로 누군지
+    // 알아야 한다(464848c). 다만 authedFetch를 타면 401에 갱신→삭제 경로로 들어가
+    // 로그인 중에 토큰이 지워지므로, Bearer만 직접 달아 보낸다.
     mutationFn: async (data: GoogleOAuthRequest) => {
+      const accessToken = getDefaultStore().get(accessTokenAtom);
       const response = await fetch(`${authBase}/google`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+        },
         body: JSON.stringify(data),
       });
       const res = (await response.json()) as SignalResponse<TokenResponse>;

@@ -2,10 +2,11 @@ import { getDefaultStore } from "jotai";
 import {
   accessTokenAtom,
   clearTokensAtom,
+  providerAtom,
   refreshTokenAtom,
   setTokensAtom,
-  tokenExpiryAtom,
 } from "@/atoms/authTokens";
+import { toast } from "sonner";
 import { API_BASE_URL } from "@/env";
 import { SignalError } from "@/lib/error";
 import { ErrorResponse, SignalResponse } from "@/types/common";
@@ -16,8 +17,26 @@ const store = getDefaultStore();
 /**
  * 갱신 결과. "rejected"만 세션이 끝난 것이고, "unavailable"은 서버에 못 닿았을 뿐이라
  * 토큰을 지우면 안 된다. 둘을 같이 취급하면 서버가 잠깐 흔들릴 때 계정을 잃는다(#9).
+ * "none"은 갱신할 토큰 자체가 없는 경우다.
  */
 export type RefreshOutcome = "ok" | "rejected" | "unavailable" | "none";
+
+/**
+ * 세션을 끝낸다. 지우기 전에 provider를 읽어야 누구에게 무슨 말을 할지 안다.
+ * 401을 받은 요청마다 불리므로, 이미 끝난 세션이면 다시 지우거나 알리지 않는다.
+ */
+export function endSession() {
+  if (!store.get(accessTokenAtom) && !store.get(refreshTokenAtom)) return;
+  const provider = store.get(providerAtom);
+  store.set(clearTokensAtom);
+  toast.error("세션이 만료됐어요", {
+    id: "auth-session-ended",
+    description:
+      provider === "google"
+        ? "다시 로그인해주세요."
+        : "새로고침하면 다시 시작할 수 있어요.",
+  });
+}
 
 let refreshPromise: Promise<RefreshOutcome> | null = null;
 
@@ -32,13 +51,9 @@ export async function refreshAccessToken(): Promise<RefreshOutcome> {
       const refreshToken = store.get(refreshTokenAtom);
       if (!refreshToken) return "none";
 
-      const tokenExpiry = store.get(tokenExpiryAtom);
-      if (
-        tokenExpiry.refreshTokenExpiresAt &&
-        tokenExpiry.refreshTokenExpiresAt <= Date.now()
-      ) {
-        return "rejected";
-      }
+      // 갱신하는 사이 구글 로그인이 세션을 바꿨을 수 있다. 그 결과로 새 세션을 덮거나
+      // 지우면 안 되므로, 답을 내기 전에 아직 같은 세션인지 본다.
+      const isSameSession = () => store.get(refreshTokenAtom) === refreshToken;
 
       for (let attempt = 0; attempt < 3; attempt++) {
         try {
@@ -51,9 +66,10 @@ export async function refreshAccessToken(): Promise<RefreshOutcome> {
             },
           );
 
-          // 서버가 토큰을 보고 거절한 것은 다시 물어도 같은 답이다.
-          if (response.status === 401 || response.status === 403) {
-            return "rejected";
+          // 서버가 토큰을 보고 거절한 것은 다시 물어도 같은 답이다. 403은 WAF나 CDN도
+          // 주므로 토큰 거절로 보지 않는다. 확인된 건 401뿐이다.
+          if (response.status === 401) {
+            return isSameSession() ? "rejected" : "ok";
           }
           if (!response.ok) {
             if (attempt < 2) {
@@ -73,7 +89,9 @@ export async function refreshAccessToken(): Promise<RefreshOutcome> {
             return "unavailable";
           }
 
-          store.set(setTokensAtom, { tokenResponse: res.result });
+          if (isSameSession()) {
+            store.set(setTokensAtom, { tokenResponse: res.result });
+          }
           return "ok";
         } catch {
           if (attempt < 2) {
@@ -161,7 +179,7 @@ async function fetchWithAuth<T>(
       );
     }
 
-    store.set(clearTokensAtom);
+    endSession();
     throw new SignalError(
       "인증이 만료되었습니다. 다시 로그인해주세요.",
       401,

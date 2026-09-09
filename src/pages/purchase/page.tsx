@@ -95,7 +95,7 @@ const BankAccountPaymentsPage: React.FC = () => {
         viewer.ticket !== viewerResponse.ticket
       ) {
         setViewer(viewerResponse);
-        const isValid = viewer?.ticket !== viewerResponse.ticket;
+        const isValid = viewer.ticket !== viewerResponse.ticket;
         if (funnel.step === "bank") {
           chargeAccountConfirmClick(isValid);
         } else if (funnel.step === "toss") {
