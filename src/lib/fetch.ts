@@ -13,22 +13,31 @@ import { TokenResponse } from "@/types/auth";
 
 const store = getDefaultStore();
 
-let refreshPromise: Promise<boolean> | null = null;
+/**
+ * 갱신 결과. "rejected"만 세션이 끝난 것이고, "unavailable"은 서버에 못 닿았을 뿐이라
+ * 토큰을 지우면 안 된다. 둘을 같이 취급하면 서버가 잠깐 흔들릴 때 계정을 잃는다(#9).
+ */
+export type RefreshOutcome = "ok" | "rejected" | "unavailable" | "none";
 
-async function refreshAccessToken(): Promise<boolean> {
+let refreshPromise: Promise<RefreshOutcome> | null = null;
+
+const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** 동시에 여러 요청이 401을 받아도 갱신은 한 번만 나간다. */
+export async function refreshAccessToken(): Promise<RefreshOutcome> {
   if (refreshPromise) return refreshPromise;
 
   refreshPromise = (async () => {
     try {
       const refreshToken = store.get(refreshTokenAtom);
-      if (!refreshToken) return false;
+      if (!refreshToken) return "none";
 
       const tokenExpiry = store.get(tokenExpiryAtom);
       if (
         tokenExpiry.refreshTokenExpiresAt &&
         tokenExpiry.refreshTokenExpiresAt <= Date.now()
       ) {
-        return false;
+        return "rejected";
       }
 
       for (let attempt = 0; attempt < 3; attempt++) {
@@ -42,37 +51,39 @@ async function refreshAccessToken(): Promise<boolean> {
             },
           );
 
+          // 서버가 토큰을 보고 거절한 것은 다시 물어도 같은 답이다.
+          if (response.status === 401 || response.status === 403) {
+            return "rejected";
+          }
           if (!response.ok) {
             if (attempt < 2) {
-              await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
+              await wait(1000 * (attempt + 1));
               continue;
             }
-            return false;
+            return "unavailable";
           }
 
           const res = (await response.json()) as SignalResponse<TokenResponse>;
-          if (!("result" in res)) {
+          if (
+            !("result" in res) ||
+            !res.result.accessToken ||
+            !res.result.refreshToken
+          ) {
             if (attempt < 2) continue;
-            return false;
-          }
-
-          const { accessToken, refreshToken: newRefresh } = res.result;
-          if (!accessToken || !newRefresh) {
-            if (attempt < 2) continue;
-            return false;
+            return "unavailable";
           }
 
           store.set(setTokensAtom, { tokenResponse: res.result });
-          return true;
+          return "ok";
         } catch {
           if (attempt < 2) {
-            await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
+            await wait(1000 * (attempt + 1));
             continue;
           }
-          return false;
+          return "unavailable";
         }
       }
-      return false;
+      return "unavailable";
     } finally {
       refreshPromise = null;
     }
@@ -97,8 +108,8 @@ async function fetchWithAuth<T>(
   });
 
   if (response.status === 401) {
-    const refreshed = await refreshAccessToken();
-    if (refreshed) {
+    const outcome = await refreshAccessToken();
+    if (outcome === "ok") {
       const newToken = store.get(accessTokenAtom);
       const retryResponse = await fetch(url, {
         ...options,
@@ -139,6 +150,15 @@ async function fetchWithAuth<T>(
       }
 
       return retryRes.result;
+    }
+
+    // 못 닿은 것뿐이면 토큰을 남겨 다음 요청이 다시 시도하게 한다.
+    if (outcome === "unavailable") {
+      throw new SignalError(
+        "서버에 연결할 수 없어요. 잠시 후 다시 시도해주세요.",
+        503,
+        new Date().toISOString(),
+      );
     }
 
     store.set(clearTokensAtom);

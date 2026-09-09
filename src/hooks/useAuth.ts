@@ -7,32 +7,12 @@ import {
   clearTokensAtom,
   refreshTokenAtom,
   isAuthenticatedAtom,
+  providerAtom,
   setTokensAtom,
   tokenExpiryAtom,
 } from "@/atoms/authTokens";
 import { TokenResponse } from "@/types/auth";
-import { API_BASE_URL } from "@/env";
-
-const MAX_REFRESH_RETRIES = 3;
-const RETRY_DELAYS = [1000, 3000, 5000];
-
-async function rawRefresh(refreshToken: string): Promise<TokenResponse | null> {
-  try {
-    const response = await fetch(`${API_BASE_URL ?? ""}/api/auth/refresh`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken }),
-    });
-
-    if (!response.ok) return null;
-
-    const res = await response.json();
-    if (!res.result?.accessToken || !res.result?.refreshToken) return null;
-    return res.result as TokenResponse;
-  } catch {
-    return null;
-  }
-}
+import { refreshAccessToken } from "@/lib/fetch";
 
 export const useAuth = () => {
   const accessToken = useAtomValue(accessTokenAtom);
@@ -55,50 +35,33 @@ export const useAuth = () => {
     },
   });
 
-  const tryRefreshWithRetry = useCallback(
-    async (token: string): Promise<TokenResponse | null> => {
-      const tokenExpiryData = tokenExpiry;
-      if (
-        tokenExpiryData.refreshTokenExpiresAt &&
-        tokenExpiryData.refreshTokenExpiresAt <= Date.now()
-      ) {
-        return null;
-      }
-
-      for (let i = 0; i < MAX_REFRESH_RETRIES; i++) {
-        const result = await rawRefresh(token);
-        if (result) {
-          setTokens({ tokenResponse: result, provider: "local" });
-          return result;
-        }
-        if (i < MAX_REFRESH_RETRIES - 1) {
-          await new Promise((r) => setTimeout(r, RETRY_DELAYS[i]));
-        }
-      }
-      return null;
-    },
-    [tokenExpiry, setTokens],
-  );
-
   const initializeAuth = useCallback(async () => {
+    // 토큰이 아예 없을 때만 새 계정이다. 있던 계정이 갱신에 실패했다고 새로 만들면
+    // 그 계정에 묶인 티켓과 내역을 잃는다(#9).
     if (!accessToken && !refreshToken) {
       registerMutation.mutate();
       return;
     }
 
-    if (!isAuthenticated && refreshToken) {
-      const result = await tryRefreshWithRetry(refreshToken);
-      if (!result) {
-        clearTokens();
-        registerMutation.mutate();
-      }
-    }
+    if (isAuthenticated || !refreshToken) return;
+
+    const outcome = await refreshAccessToken();
+    if (outcome !== "rejected") return;
+
+    // 서버가 토큰을 거절한 것이라 세션은 끝났다. 다음 로드에서 처음부터 시작한다.
+    const provider = getDefaultStore().get(providerAtom);
+    clearTokens();
+    toast.error("세션이 만료됐어요", {
+      description:
+        provider === "google"
+          ? "다시 로그인해주세요."
+          : "새로고침하면 다시 시작할 수 있어요.",
+    });
   }, [
     accessToken,
     refreshToken,
     isAuthenticated,
     registerMutation,
-    tryRefreshWithRetry,
     clearTokens,
   ]);
 
