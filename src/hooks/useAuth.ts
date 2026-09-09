@@ -1,7 +1,7 @@
-import { useAtomValue, useSetAtom } from "jotai";
+import { getDefaultStore, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useCallback, useRef } from "react";
 import { toast } from "sonner";
-import { useRegister, useRefreshToken } from "@/hooks/queries/auth";
+import { useRegister } from "@/hooks/queries/auth";
 import {
   accessTokenAtom,
   clearTokensAtom,
@@ -45,25 +45,14 @@ export const useAuth = () => {
 
   const registerMutation = useRegister({
     onSuccess: (data: TokenResponse) => {
+      // 등록을 기다리는 사이 구글 로그인이 먼저 토큰을 넣었을 수 있다.
+      // 늦게 온 익명 토큰이 그걸 덮으면 로그인한 계정을 잃는다.
+      if (getDefaultStore().get(accessTokenAtom)) return;
       setTokens({ tokenResponse: data, provider: "local" });
     },
     onError: (error) => {
       toast.error("회원가입 실패", { description: error.message });
     },
-  });
-
-  const refreshMutation = useRefreshToken({
-    onSuccess: (data: TokenResponse) => {
-      if (data.accessToken && data.refreshToken) {
-        setTokens({ tokenResponse: data, provider: "local" });
-      } else {
-        toast.error("토큰 갱신 실패", {
-          description:
-            "토큰 정보를 받아오는 데 실패했습니다. 새로고침 해주세요.",
-        });
-      }
-    },
-    onError: () => {},
   });
 
   const tryRefreshWithRetry = useCallback(
@@ -126,9 +115,7 @@ export const useAuth = () => {
     tokenExpiry,
 
     isRegistering: registerMutation.isPending,
-    isRefreshing: refreshMutation.isPending,
     registerError: registerMutation.error,
-    refreshError: refreshMutation.error,
     clearTokens,
   };
 };
