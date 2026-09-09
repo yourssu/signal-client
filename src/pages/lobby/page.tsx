@@ -35,6 +35,9 @@ import btnManual from "@/assets/lobby/btn_manual.svg";
 import btnInvite from "@/assets/lobby/btn_invite.svg";
 import type { MeetingRoomSummaryResponse, MeetingSlot } from "@/types/meeting";
 
+/** 베타 정책상 하루 한 번이다. 서버에 남은 횟수 필드가 생기면 그 값으로 바꾼다. */
+const MATCH_CHANCE_PER_DAY = 1;
+
 /**
  * 마커의 남은 시간을 다시 그리는 주기(ms).
  * "N분 남음" 표시라 초 단위까지 맞출 필요는 없고, 마감된 핀이 눌리지 않을 만큼만 촘촘하면 된다.
@@ -149,6 +152,12 @@ const LobbyPage: React.FC = () => {
       id: "meeting-room-detail-error",
     });
   }, [isRoomDetailError, isMatchResultError]);
+
+  // 남은 횟수를 주는 필드가 없다. 하루치를 다 쓰면 생성 자격 사유로만 드러난다.
+  const matchChance =
+    board?.creationEligibility.reason === "DAILY_MEETING_LIMIT_EXCEEDED"
+      ? 0
+      : MATCH_CHANCE_PER_DAY;
 
   const roomBySlot = useMemo(
     () =>
@@ -317,9 +326,8 @@ const LobbyPage: React.FC = () => {
             })}
         </div>
 
-        {/* TODO: 매칭 기회 횟수 API 필드가 없어 1로 고정 */}
         <div className="absolute top-3 left-1/2 -translate-x-1/2">
-          <MatchChanceChip count={1} />
+          <MatchChanceChip count={matchChance} />
         </div>
 
         <div className="absolute top-3 right-4 flex flex-col items-center gap-2">
