@@ -10,6 +10,7 @@ import { useMeetingRoom } from "@/hooks/queries/meetings";
 import {
   formatRemainingDetail,
   getMeetingErrorMessage,
+  MEETING_ERROR_MESSAGES,
   getRoomEndedReason,
   getMemberSummaryParts,
   MEMBER_PART_SEPARATOR,
@@ -22,7 +23,7 @@ interface RoomPreviewSheetProps {
   /** 미리 볼 방. null이면 닫힌다. */
   roomId: number | null;
   onOpenChange: (open: boolean) => void;
-  /** 참여할 수 없는 사유. 넘기면 버튼 대신 이유를 알린다. */
+  /** 참여할 수 없는 사유. 넘기면 참여 버튼을 잠그고 남은 시간 자리에 이유를 쓴다. */
   joinBlockedReason?: MeetingErrorCode | null;
   onJoin: (roomId: number) => void;
 }
@@ -149,7 +150,7 @@ export default function RoomPreviewSheet({
               </div>
 
               <div className="flex w-full flex-col items-center gap-2">
-                {/* 참여할 수 없으면 남은 시간보다 그 이유를 먼저 알려야 한다. */}
+                {/* 참여할 수 없는 동안에는 남은 시간보다 이유가 알아야 할 것이다. */}
                 <span
                   className={cn(
                     "caption1",
@@ -159,10 +160,7 @@ export default function RoomPreviewSheet({
                   )}
                 >
                   {joinBlockedReason
-                    ? getMeetingErrorMessage(
-                        joinBlockedReason,
-                        "지금은 참여할 수 없어요",
-                      )
+                    ? MEETING_ERROR_MESSAGES[joinBlockedReason]
                     : `방 폭파까지 ${formatRemainingDetail(remainingMs)} 남았어요`}
                 </span>
                 <button

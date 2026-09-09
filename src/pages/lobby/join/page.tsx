@@ -6,8 +6,13 @@ import TopBar from "@/components/Header";
 import MemberForm from "@/components/meeting/MemberForm";
 import MemberList from "@/components/meeting/MemberList";
 import { useUser } from "@/hooks/useUser";
-import { useMatchMeetingRoom, useMeetingRoom } from "@/hooks/queries/meetings";
 import {
+  useMatchMeetingRoom,
+  useMeetingBoard,
+  useMeetingRoom,
+} from "@/hooks/queries/meetings";
+import {
+  getJoinBlockedReason,
   getMeetingErrorMessage,
   getRoomEndedReason,
   isMeetingContact,
@@ -29,6 +34,9 @@ const LobbyJoinPage: React.FC = () => {
   });
   const { mutate: matchRoom, isPending: isMatching } =
     useMatchMeetingRoom(numericRoomId);
+  // 로비를 거치지 않고 주소로 바로 들어와도 막아야 한다. 시트에서만 잠그면 새어 나간다.
+  const { data: board } = useMeetingBoard();
+  const joinBlockedReason = getJoinBlockedReason(board?.myRoom);
 
   // 폼을 채우는 사이에 방이 끝날 수 있어 초 단위로 다시 판단한다.
   const now = useNow(1000);
@@ -121,6 +129,14 @@ const LobbyJoinPage: React.FC = () => {
     navigate("/lobby", { replace: true });
   }, [endedReason, navigate]);
 
+  useEffect(() => {
+    if (!joinBlockedReason) return;
+    toast.error(getMeetingErrorMessage(joinBlockedReason, "참여할 수 없어요"), {
+      id: "meeting-join-blocked",
+    });
+    navigate("/lobby", { replace: true });
+  }, [joinBlockedReason, navigate]);
+
   if (!roomId || Number.isNaN(numericRoomId)) {
     return <Navigate to="/lobby" replace />;
   }
@@ -130,7 +146,7 @@ const LobbyJoinPage: React.FC = () => {
   const isProfileSettled = !!profile || isRefreshed;
 
   // 정원을 알아야 폼을 그릴 수 있다. 조회 실패와 끝난 방은 위 effect가 로비로 되돌린다.
-  if (!roomDetail || endedReason || !isProfileSettled) {
+  if (!roomDetail || endedReason || joinBlockedReason || !isProfileSettled) {
     return (
       <div className="flex h-full flex-col bg-white">
         <title>미팅 참여하기 - 시그널</title>
