@@ -50,6 +50,13 @@ export const useMeetingBoard = (
   });
 };
 
+/**
+ * 서버가 사유를 붙여 거절한 것(4xx)은 다시 물어도 같은 답이다.
+ * 끝난 방을 눌렀을 때 기본 재시도가 다 돌 때까지 스피너만 8초쯤 남는다.
+ */
+const retryOnlyServerFailure = (failureCount: number, error: SignalError) =>
+  error.status >= 500 && failureCount < 2;
+
 /** 미팅 방의 상태와 양쪽 팀 구성원을 조회합니다. */
 export const useMeetingRoom = (
   roomId: number,
@@ -68,6 +75,7 @@ export const useMeetingRoom = (
         `${meetingBase}/rooms/${roomId}`,
       );
     },
+    retry: retryOnlyServerFailure,
     ...restOptions,
     // 토큰이 없는데도 호출부의 enabled만으로 켜지면 refresh가 무의미하게 돈다.
     enabled: !!accessToken && enabled,
@@ -92,6 +100,7 @@ export const useMeetingResult = (
         `${meetingBase}/rooms/${roomId}/result`,
       );
     },
+    retry: retryOnlyServerFailure,
     ...restOptions,
     enabled: !!accessToken && enabled,
   });
