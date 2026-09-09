@@ -13,6 +13,8 @@ import turtleFemaleImg from "@/assets/animals/female/turtle.png";
 import dogCommonImg from "@/assets/animals/common/dog.png";
 import catCommonImg from "@/assets/animals/common/cat.png";
 import hamsterCommonImg from "@/assets/animals/common/hamster.png";
+// TODO: 남자 늑대 3D 에셋으로 교체한다. 지금은 로비용 2D SVG를 임시로 쓴다.
+import wolfImg from "@/assets/animals/wolf.svg";
 
 interface AnimalStepProps {
   gender: Gender;
@@ -20,24 +22,28 @@ interface AnimalStepProps {
   onSelect: (animal: AnimalType) => void;
 }
 
+/**
+ * 성별에 따라 고르는 동물이 다르다. 앞 셋은 성별 전용이고 강아지·고양이는 공용이며,
+ * 마지막 자리만 남자는 늑대, 여자는 햄스터로 갈린다.
+ */
 const genderAnimals: Record<Gender, { type: AnimalType; img: string }[]> = {
   MALE: [
     { type: "BEAR", img: bearMaleImg },
     { type: "DEER", img: deerMaleImg },
     { type: "DINOSAUR", img: dinosaurMaleImg },
+    { type: "DOG", img: dogCommonImg },
+    { type: "CAT", img: catCommonImg },
+    { type: "WOLF", img: wolfImg },
   ],
   FEMALE: [
     { type: "FOX", img: foxFemaleImg },
     { type: "RABBIT", img: rabbitFemaleImg },
     { type: "TURTLE", img: turtleFemaleImg },
+    { type: "DOG", img: dogCommonImg },
+    { type: "CAT", img: catCommonImg },
+    { type: "HAMSTER", img: hamsterCommonImg },
   ],
 };
-
-const commonAnimals: { type: AnimalType; img: string }[] = [
-  { type: "DOG", img: dogCommonImg },
-  { type: "CAT", img: catCommonImg },
-  { type: "HAMSTER", img: hamsterCommonImg },
-];
 
 const AnimalStep: React.FC<AnimalStepProps> = ({
   gender,
@@ -82,16 +88,6 @@ const AnimalStep: React.FC<AnimalStepProps> = ({
                 ? "!max-w-24"
                 : undefined
             }
-          />
-        ))}
-        {commonAnimals.map((item) => (
-          <CharacterCard
-            key={item.type}
-            animalType={item.type}
-            imgSrc={item.img}
-            name={animalDisplayMap[item.type]}
-            selected={selectedAnimal === item.type}
-            onClick={() => setSelectedAnimal(item.type)}
           />
         ))}
       </div>

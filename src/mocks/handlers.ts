@@ -55,7 +55,7 @@ const maleAnimals: AnimalType[] = [
   "DINOSAUR",
   "DOG",
   "CAT",
-  "HAMSTER",
+  "WOLF",
 ];
 const femaleAnimals: AnimalType[] = [
   "FOX",
