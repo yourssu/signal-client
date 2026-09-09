@@ -10,11 +10,11 @@ import catImg from "@/assets/animals/cat.png";
 import foxImg from "@/assets/animals/fox.png";
 import rabbitImg from "@/assets/animals/rabbit.png";
 import turtleImg from "@/assets/animals/turtle.png";
-import wolfMaleImg from "@/assets/animals/male/wolf.png";
 
 import bearMaleImg from "@/assets/animals/male/bear.png";
 import deerMaleImg from "@/assets/animals/male/Deer.png";
 import dinosaurMaleImg from "@/assets/animals/male/Dinosaur.png";
+import wolfMaleImg from "@/assets/animals/male/wolf.png";
 import foxFemaleImg from "@/assets/animals/female/fox.png";
 import rabbitFemaleImg from "@/assets/animals/female/rabbit.png";
 import turtleFemaleImg from "@/assets/animals/female/turtle.png";

@@ -21,10 +21,6 @@ interface AnimalStepProps {
   onSelect: (animal: AnimalType) => void;
 }
 
-/**
- * 성별에 따라 고르는 동물이 다르다. 앞 셋은 성별 전용이고 강아지·고양이는 공용이며,
- * 마지막 자리만 남자는 늑대, 여자는 햄스터로 갈린다.
- */
 const genderAnimals: Record<Gender, { type: AnimalType; img: string }[]> = {
   MALE: [
     { type: "BEAR", img: bearMaleImg },
