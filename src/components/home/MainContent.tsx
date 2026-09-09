@@ -20,13 +20,17 @@ import {
   myprofileView,
 } from "@/lib/analytics";
 
-/** 보조 버튼(연분홍) 공통 모양. 한 줄에 하나면 꽉 차고, 둘이면 반씩 나눠 갖는다. */
+/** flex-1을 품고 있어 한 줄에 하나면 꽉 차고, 둘이면 반씩 나눠 갖는다. */
 const SUB_BUTTON_CLASS =
   "flex h-14 flex-1 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary transition-colors hover:bg-[#ffd4f3]";
 
 interface MainContentProps {
   profileRegistered: boolean;
 }
+
+/** 미팅 버튼과 한 줄을 나눠 쓸 때만 좁아지므로, 그때만 짧은 라벨을 쓴다. */
+const registerLabel = (isRowShared: boolean) =>
+  isRowShared ? "프로필 등록" : "프로필 등록하기";
 
 const MainContent = ({ profileRegistered }: MainContentProps) => {
   const { data } = useCountProfile();
@@ -67,7 +71,10 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
 
         <div className="flex flex-col gap-2 w-full">
           <div className="flex gap-2">
-            {/* 등록을 마치면 프로필은 GNB 아이콘으로 들어가고 이 자리는 미팅이 차지한다. */}
+            {/*
+              등록을 마치면 이 자리를 미팅에 내준다. 프로필은 GNB 아이콘(/my)으로 갈 수 있다.
+              다만 미팅 버튼이 없는 상태에서까지 비우면 갈 곳이 사라지므로 플래그가 꺼져 있으면 남긴다.
+            */}
             {(!profileRegistered || !ENABLE_LOBBY) &&
               (ENABLE_REGISTER ? (
                 profileRegistered ? (
@@ -84,18 +91,19 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
                     onClick={() => profileRegisterClick()}
                     className={SUB_BUTTON_CLASS}
                   >
-                    프로필 등록
+                    {registerLabel(!profileRegistered && ENABLE_LOBBY)}
                   </Link>
                 )
               ) : (
                 <Button
-                  className={cn(SUB_BUTTON_CLASS, "hover:bg-[#ffd4f3]")}
+                  // buttonVariants의 hover/active 스케일이 transition-colors에 걸려 뚝 끊긴다.
+                  className={cn(SUB_BUTTON_CLASS, "transition-all")}
                   onClick={() => {
                     profileRegisterClick();
                     setRegisterGuardOpen(true);
                   }}
                 >
-                  프로필 등록
+                  {registerLabel(!profileRegistered && ENABLE_LOBBY)}
                 </Button>
               ))}
 
