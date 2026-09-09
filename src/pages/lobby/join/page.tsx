@@ -32,31 +32,46 @@ const LobbyJoinPage: React.FC = () => {
     ? getRoomEndedReason(roomDetail.room, now)
     : null;
 
+  // 프로필이 있으면 대표는 내 정보로 채운다. 같은 걸 또 적게 할 이유가 없다.
+  const selfMember: MeetingMemberRequest | null = profile
+    ? {
+        gender: profile.gender,
+        birthYear: profile.birthYear,
+        department: profile.department,
+      }
+    : null;
+
+  // 프로필이 없을 때만 첫 입력자가 대표가 되고, 연락처도 그때 받는다.
   const [members, setMembers] = useState<MeetingMemberRequest[]>([]);
-  const [contact, setContact] = useState<string>();
+  const [typedContact, setTypedContact] = useState<string>();
+  const contact = profile?.contact ?? typedContact;
 
   const partySize = roomDetail?.room.partySize ?? 0;
-  const isFull = partySize > 0 && members.length >= partySize;
+  // 내 자리가 이미 찼으면 친구만 채우면 된다.
+  const neededCount = selfMember ? partySize - 1 : partySize;
+  const isFull = partySize > 0 && members.length >= neededCount;
   const canSubmit = isFull && !!contact;
 
   const handleAdd = (member: MeetingMemberRequest, memberContact?: string) => {
     if (isFull) return;
-    if (members.length === 0 && memberContact) {
-      setContact(memberContact);
+    if (!selfMember && members.length === 0 && memberContact) {
+      setTypedContact(memberContact);
     }
     setMembers((prev) => [...prev, member]);
   };
 
   const handleRemove = (index: number) => {
-    if (members.length === 1) {
-      setContact(undefined);
+    if (!selfMember && members.length === 1) {
+      setTypedContact(undefined);
     }
     setMembers((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleNext = () => {
     if (!canSubmit || !contact) return;
-    const [representative, ...companions] = members;
+    const [representative, ...companions] = selfMember
+      ? [selfMember, ...members]
+      : members;
     matchRoom(
       { representative, contact, companions },
       {
@@ -122,25 +137,34 @@ const LobbyJoinPage: React.FC = () => {
           {`${partySize}명이 기다리고 있어요`}
         </h1>
         <p className="body1 text-label-alternative">
-          {members.length === 0
-            ? "나의 정보를 적어주세요"
-            : "참여자 정보를 적어주세요"}
+          {selfMember
+            ? "함께할 친구를 알려주세요"
+            : members.length === 0
+              ? "나의 정보를 적어주세요"
+              : "참여자 정보를 적어주세요"}
         </p>
       </div>
 
       <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-[18px]">
         <MemberForm
           ageLabel="나이"
-          showContact={members.length === 0}
+          showContact={!selfMember && members.length === 0}
           disabled={isFull}
           addLabel="추가하기"
           onAdd={handleAdd}
         />
         <MemberList
-          self={{ animal: profile?.animal }}
+          host={
+            profile ? { nickname: "나", animal: profile.animal } : undefined
+          }
+          self={profile ? undefined : { animal: undefined }}
           members={members}
           // 본인 행이 입력 전에도 한 칸을 차지하므로 정원에서 함께 뺀다.
-          emptySlotCount={partySize - Math.max(members.length, 1)}
+          emptySlotCount={
+            selfMember
+              ? neededCount - members.length
+              : partySize - Math.max(members.length, 1)
+          }
           onRemove={handleRemove}
         />
       </div>

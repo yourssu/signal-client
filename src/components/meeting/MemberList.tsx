@@ -7,7 +7,8 @@ import type { AnimalType } from "@/types/profile";
 import { X } from "lucide-react";
 
 interface MemberListProps {
-  host?: { nickname: string; animal: AnimalType };
+  /** members와 별개로 맨 위에 고정으로 그리는, 이미 채워진 행. */
+  host?: { nickname: string; animal: AnimalType; badge?: string };
   /** 넘기면 첫 번째 멤버를 본인 행으로 그린다. 프로필이 없으면 기본 유저 아이콘을 쓴다. */
   self?: { animal?: AnimalType };
   members: MeetingMemberRequest[];
@@ -60,7 +61,7 @@ const MemberList = ({
           <NamedRow
             avatar={MEETING_AVATARS[host.animal]}
             name={host.nickname}
-            badge="방장"
+            badge={host.badge}
           />
         )}
         {self && members.length === 0 && (

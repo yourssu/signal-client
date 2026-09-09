@@ -117,7 +117,11 @@ const MeetingCreatePage: React.FC = () => {
               <MemberList
                 host={
                   profile
-                    ? { nickname: profile.nickname, animal: profile.animal }
+                    ? {
+                        nickname: profile.nickname,
+                        animal: profile.animal,
+                        badge: "방장",
+                      }
                     : undefined
                 }
                 members={funnel.context.members}
