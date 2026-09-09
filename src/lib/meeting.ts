@@ -12,6 +12,7 @@ import type {
   MeetingCreationBlockReason,
   MeetingErrorCode,
   MeetingMemberResponse,
+  MeetingMyRoomResponse,
   MeetingRoomResponse,
   MeetingRoomSummaryResponse,
   MeetingSlot,
@@ -53,7 +54,7 @@ export const MEETING_CREATION_BLOCK_MESSAGES: Record<
   ACTIVE_ROOM_EXISTS: "이미 참여 중인 방이 있어요",
 };
 
-const MEETING_ERROR_MESSAGES: Record<MeetingErrorCode, string> = {
+export const MEETING_ERROR_MESSAGES: Record<MeetingErrorCode, string> = {
   PROFILE_REQUIRED: "프로필을 먼저 등록해주세요",
   MEETING_BLOCKED: "지금은 미팅을 이용할 수 없어요",
   DAILY_CREATION_LIMIT_EXCEEDED: "오늘 만들 수 있는 방을 모두 사용했어요",
@@ -81,6 +82,19 @@ export const getMeetingErrorMessage = (
 ): string =>
   (code ? MEETING_ERROR_MESSAGES[code as MeetingErrorCode] : undefined) ??
   fallback;
+
+/**
+ * 내가 만든 방이 아직 모집 중이면 서버가 다른 방 참여를 막는다.
+ *
+ * 스펙의 409 설명이 "생성한 방 진행 중"이라 매칭까지 끝난 방도 막히는지는 확인되지 않았다.
+ * 잘못 막으면 참여할 수 있는 사람을 막게 되므로 확실한 경우만 미리 알린다.
+ */
+export const getJoinBlockedReason = (
+  myRoom: MeetingMyRoomResponse | null | undefined,
+): MeetingErrorCode | null =>
+  myRoom?.teamSide === "CREATOR" && myRoom.status === "OPEN"
+    ? "ACTIVE_ROOM_EXISTS"
+    : null;
 
 /**
  * 참여할 수 없게 된 사유를 서버가 409로 줄 코드와 같은 값으로 돌려준다.

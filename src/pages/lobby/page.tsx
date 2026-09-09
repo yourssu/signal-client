@@ -24,6 +24,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useNow } from "@/hooks/useNow";
 import {
+  getJoinBlockedReason,
   MEETING_CREATION_BLOCK_MESSAGES,
   MEETING_SLOTS,
   SLOT_POSITIONS,
@@ -158,7 +159,9 @@ const LobbyPage: React.FC = () => {
   // 그 구간은 myRoom이 MATCHED인지로 메운다.
   const isMatchChanceUsedUp =
     board?.creationEligibility?.reason === "DAILY_MEETING_LIMIT_EXCEEDED" ||
-    board?.myRoom?.status === "MATCHED";
+    myRoom?.status === "MATCHED";
+
+  const joinBlockedReason = getJoinBlockedReason(myRoom);
 
   const roomBySlot = useMemo(
     () =>
@@ -387,6 +390,7 @@ const LobbyPage: React.FC = () => {
         onOpenChange={(open) => {
           if (!open) setPreviewRoomId(null);
         }}
+        joinBlockedReason={joinBlockedReason}
         onJoin={(id) => navigate(`/lobby/join/${id}`)}
       />
 
