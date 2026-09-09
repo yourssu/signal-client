@@ -140,7 +140,9 @@ export default function RoomPreviewSheet({
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <span className="caption2 text-label-assistive">참여자</span>
+                  <span className="caption2 text-label-assistive">
+                    참여자 (방장 포함)
+                  </span>
                   <div className="flex w-full flex-wrap gap-1.5">
                     {members.map((member) => (
                       <MemberChip key={member.memberOrder} member={member} />
