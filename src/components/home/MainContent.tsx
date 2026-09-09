@@ -8,15 +8,21 @@ import { ServiceDisabledDialog } from "@/components/home/ServiceDisabledDialog";
 import {
   DISABLED_PROFILE_VIEW_DESC,
   DISABLED_REGISTER_DESC,
+  ENABLE_LOBBY,
   ENABLE_PROFILE_VIEW,
   ENABLE_REGISTER,
   NOTICE,
 } from "@/env";
+import { cn } from "@/lib/utils";
 import {
   profileRegisterClick,
   signalSendClick,
   myprofileView,
 } from "@/lib/analytics";
+
+/** 보조 버튼(연분홍) 공통 모양. 한 줄에 하나면 꽉 차고, 둘이면 반씩 나눠 갖는다. */
+const SUB_BUTTON_CLASS =
+  "flex h-14 flex-1 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary transition-colors hover:bg-[#ffd4f3]";
 
 interface MainContentProps {
   profileRegistered: boolean;
@@ -60,35 +66,45 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
         {NOTICE && <p className="text-xs font-medium">{NOTICE}</p>}
 
         <div className="flex flex-col gap-2 w-full">
-          {ENABLE_REGISTER ? (
-            profileRegistered ? (
-              <Link
-                to="/my/profile"
-                onClick={() => myprofileView("main")}
-                className="flex h-14 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary hover:bg-[#ffd4f3] transition-colors"
-              >
-                내 프로필 보기
+          <div className="flex gap-2">
+            {/* 등록을 마치면 프로필은 GNB 아이콘으로 들어가고 이 자리는 미팅이 차지한다. */}
+            {(!profileRegistered || !ENABLE_LOBBY) &&
+              (ENABLE_REGISTER ? (
+                profileRegistered ? (
+                  <Link
+                    to="/my/profile"
+                    onClick={() => myprofileView("main")}
+                    className={SUB_BUTTON_CLASS}
+                  >
+                    내 프로필 보기
+                  </Link>
+                ) : (
+                  <Link
+                    to="/profile/register"
+                    onClick={() => profileRegisterClick()}
+                    className={SUB_BUTTON_CLASS}
+                  >
+                    프로필 등록
+                  </Link>
+                )
+              ) : (
+                <Button
+                  className={cn(SUB_BUTTON_CLASS, "hover:bg-[#ffd4f3]")}
+                  onClick={() => {
+                    profileRegisterClick();
+                    setRegisterGuardOpen(true);
+                  }}
+                >
+                  프로필 등록
+                </Button>
+              ))}
+
+            {ENABLE_LOBBY && (
+              <Link to="/lobby" className={SUB_BUTTON_CLASS}>
+                {profileRegistered ? "축제 미팅하기(Beta)" : "축제 미팅하기"}
               </Link>
-            ) : (
-              <Link
-                to="/profile/register"
-                onClick={() => profileRegisterClick()}
-                className="flex h-14 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary hover:bg-[#ffd4f3] transition-colors"
-              >
-                프로필 등록하기
-              </Link>
-            )
-          ) : (
-            <Button
-              className="flex h-14 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary hover:bg-[#ffd4f3]"
-              onClick={() => {
-                profileRegisterClick();
-                setRegisterGuardOpen(true);
-              }}
-            >
-              프로필 등록하기
-            </Button>
-          )}
+            )}
+          </div>
 
           {ENABLE_PROFILE_VIEW ? (
             <Link
