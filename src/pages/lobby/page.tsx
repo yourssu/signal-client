@@ -342,9 +342,23 @@ const LobbyPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex shrink-0 flex-col gap-3 px-[4.27%] pb-[43.65px]">
-        {board?.latestMatch && <LatestMatchBanner match={board.latestMatch} />}
-        {bottomCard}
+      <div className="relative shrink-0 px-[4.27%] pb-[43.65px]">
+        {/*
+          자리만 잡는 사본이다. 시트 높이가 그대로 흐름에 들어가면 지도 영역(flex-1)이
+          줄었다 늘었다 하며 지도가 딸려 움직인다. 인원 필터만큼만 자리를 잡아 두고
+          그보다 큰 시트는 위로 넘쳐 지도를 덮게 한다. 필터를 고쳐도 높이가 따라오도록
+          숫자를 적지 않고 같은 카드를 그린다.
+        */}
+        <div aria-hidden className="invisible">
+          {partySizeFilter}
+        </div>
+        {/* 배너는 카드에 붙어 함께 올라가야 시트에 가려지지 않는다. */}
+        <div className="absolute inset-x-[4.27%] bottom-[43.65px] flex flex-col gap-3">
+          {board?.latestMatch && (
+            <LatestMatchBanner match={board.latestMatch} />
+          )}
+          {bottomCard}
+        </div>
       </div>
 
       <ManualDialog open={manualOpen} onOpenChange={setManualOpen} />
