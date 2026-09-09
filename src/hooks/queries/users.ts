@@ -1,4 +1,6 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { useAtomValue } from "jotai";
+import { accessTokenAtom } from "@/atoms/authTokens";
 import { UserInfoResponse } from "@/types/user";
 import { SignalError } from "@/lib/error";
 import { authedFetch } from "@/lib/fetch";
@@ -12,11 +14,15 @@ export const useUserInfo = (
     "queryKey" | "queryFn"
   >,
 ) => {
+  const accessToken = useAtomValue(accessTokenAtom);
+  const { enabled = true, ...restOptions } = queryOptions ?? {};
+
   return useQuery({
     queryKey: ["users", "me"],
     queryFn: async () => {
       return authedFetch<UserInfoResponse>(`${usersBase}/me`);
     },
-    ...queryOptions,
+    ...restOptions,
+    enabled: !!accessToken && enabled,
   });
 };

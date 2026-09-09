@@ -1,13 +1,8 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import {
-  TokenResponse,
-  RefreshTokenRequest,
-  GoogleOAuthRequest,
-} from "@/types/auth";
+import { TokenResponse, GoogleOAuthRequest } from "@/types/auth";
 import { SignalResponse } from "@/types/common";
 import { SignalError } from "@/lib/error";
 import { API_BASE_URL } from "@/env";
-import { authedFetch } from "@/lib/fetch";
 
 const authBase = `${API_BASE_URL ?? ""}/api/auth`;
 
@@ -37,26 +32,6 @@ export const useRegister = (
   });
 };
 
-export const useRefreshToken = (
-  mutationOptions?: Omit<
-    UseMutationOptions<TokenResponse, SignalError, RefreshTokenRequest>,
-    "mutationFn"
-  >,
-) => {
-  return useMutation({
-    mutationFn: async (data: RefreshTokenRequest) => {
-      return await authedFetch<TokenResponse>(`${authBase}/refresh`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-    },
-    ...mutationOptions,
-  });
-};
-
 export const useGoogleLogin = (
   mutationOptions?: Omit<
     UseMutationOptions<TokenResponse, SignalError, GoogleOAuthRequest>,
@@ -64,14 +39,19 @@ export const useGoogleLogin = (
   >,
 ) => {
   return useMutation({
+    // 토큰을 받으러 가는 요청이라 인증이 필요 없다. authedFetch를 타면 익명 Bearer를
+    // 달고 나가고, 401이면 갱신→삭제 경로로 들어가 로그인 중에 토큰이 지워진다.
     mutationFn: async (data: GoogleOAuthRequest) => {
-      return await authedFetch<TokenResponse>(`${authBase}/google`, {
+      const response = await fetch(`${authBase}/google`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+      const res = (await response.json()) as SignalResponse<TokenResponse>;
+      if (!("result" in res)) {
+        throw new SignalError(res.message, res.status, res.timestamp, res.code);
+      }
+      return res.result;
     },
     ...mutationOptions,
   });
