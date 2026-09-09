@@ -73,6 +73,7 @@ pnpm format  # Prettier with double quotes preference
 7. **DON'T** add Claude attribution anywhere - no `Co-Authored-By: Claude` or `Claude-Session` commit trailers, no `🤖 Generated with Claude Code` badge or session link in PR bodies (applies from 2026-09-05)
 8. **DON'T** write comments that restate the code - only what the code cannot say (why a workaround exists, what a magic number came from)
 9. **DON'T** use `download_assets`' `export` output for Figma assets - it bakes in the canvas background (`#4B4B4B`). Use `svgAssets`, or the container URL from `get_design_context` when you need the full component including its background circle. `download_assets` only returns short-lived URLs, so `curl` them into `src/assets/<domain>/`
+10. **DON'T** write PR titles as sentences or pad PR bodies - match the repo's own PRs (#2-#12): the title is `type: 노운 프레이즈` ending in a noun (`fix: 할인률을 전체 패키지 최댓값으로 계산 및 0%일 때 문구 숨김`), and the body is empty or one to two bullets. No `## 개요` / `## 범위` / `## 검증` sections, no tables, no bold emphasis. Investigation notes and measurements belong in the commit message, not the PR body
 
 ## 🎯 Quick Start for New Features
 
