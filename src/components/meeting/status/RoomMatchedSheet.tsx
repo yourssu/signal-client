@@ -10,8 +10,8 @@ import contactPhoneIcon from "@/assets/lobby/contact_phone.svg";
 /**
  * 접히고 펴지는 구간. grid-rows 0fr↔1fr로 높이를 애니메이션한다.
  *
- * 카드가 줄면 그만큼 지도 영역(flex-1)이 커지므로, 한 번에 바꾸면 지도가 통째로
- * 튀어 오른다. 접힐 때는 부모 gap 하나가 남아 뜨는 여백을 -mt-3으로 걷는다.
+ * 접힐 때는 부모 gap 하나가 남아 뜨는 여백을 -mt-3으로 걷는다. 닫힌 동안에는
+ * 화면에서만 사라질 뿐 DOM에 남으므로, 읽어주기와 페이지 내 검색에서도 빼 준다.
  */
 const CollapsibleArea = ({
   isOpen,
@@ -26,7 +26,10 @@ const CollapsibleArea = ({
       isOpen ? "grid-rows-[1fr]" : "-mt-3 grid-rows-[0fr] opacity-0",
     )}
   >
-    <div className="flex min-h-0 flex-col gap-3 overflow-hidden">
+    <div
+      inert={!isOpen}
+      className="flex min-h-0 flex-col gap-3 overflow-hidden"
+    >
       {children}
     </div>
   </div>
@@ -62,6 +65,12 @@ export default function RoomMatchedSheet({
   const dragStartY = useRef<number | null>(null);
   const draggedRef = useRef(false);
 
+  // 끌기가 click 없이 끝나면 draggedRef가 남아 다음 누름을 한 번 먹는다.
+  const endDrag = () => {
+    dragStartY.current = null;
+    draggedRef.current = false;
+  };
+
   const handleHandleDown = (event: React.PointerEvent<HTMLButtonElement>) => {
     if (!event.isPrimary) return;
     dragStartY.current = event.clientY;
@@ -73,16 +82,17 @@ export default function RoomMatchedSheet({
   const handleHandleMove = (event: React.PointerEvent<HTMLButtonElement>) => {
     const startY = dragStartY.current;
     if (startY === null || !event.isPrimary) return;
+    // 버튼을 뗀 뒤에도 마우스는 계속 pointermove를 던진다. 눌린 동안만 끌기로 본다.
+    if (event.buttons === 0) {
+      endDrag();
+      return;
+    }
 
     const movedY = event.clientY - startY;
     // 짧게 움직였으면 누른 것으로 보고 click에 맡긴다. 키보드도 그 경로로 온다.
     if (Math.abs(movedY) < DRAG_THRESHOLD_PX) return;
     draggedRef.current = true;
     setIsCollapsed(movedY > 0);
-  };
-
-  const handleHandleUp = () => {
-    dragStartY.current = null;
   };
 
   const handleHandleClick = () => {
@@ -122,7 +132,11 @@ export default function RoomMatchedSheet({
         aria-label={isCollapsed ? "미팅 정보 펼치기" : "미팅 정보 접기"}
         onPointerDown={handleHandleDown}
         onPointerMove={handleHandleMove}
-        onPointerUp={handleHandleUp}
+        onPointerUp={() => {
+          dragStartY.current = null;
+        }}
+        onPointerCancel={endDrag}
+        onLostPointerCapture={endDrag}
         onClick={handleHandleClick}
         // 음수 마진으로 차지하는 높이는 그대로 두고 잡을 수 있는 영역만 넓힌다.
         className="mx-auto -my-2 touch-none py-3"
