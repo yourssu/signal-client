@@ -5,6 +5,7 @@ import { TokenResponse } from "@/types/auth";
 import { ErrorResponse, SuccessResponse } from "@/types/common";
 import {
   MeetingBoardResponse,
+  MeetingCreationEligibilityResponse,
   MeetingMatchResponse,
   MeetingMemberResponse,
   MeetingMyRoomResponse,
@@ -128,7 +129,8 @@ type MeetingMockScenario =
   | "expiring"
   | "matched"
   | "applicant"
-  | "no-profile";
+  | "no-profile"
+  | "chance-used-up";
 
 const MEETING_MOCK_SCENARIOS: MeetingMockScenario[] = [
   "waiting",
@@ -136,6 +138,7 @@ const MEETING_MOCK_SCENARIOS: MeetingMockScenario[] = [
   "matched",
   "applicant",
   "no-profile",
+  "chance-used-up",
 ];
 
 const getMeetingMockScenario = (): MeetingMockScenario | null => {
@@ -266,6 +269,16 @@ const createMeetingRoomDetail = (
   };
 };
 
+const buildCreationEligibility = (
+  scenario: MeetingMockScenario | null,
+): MeetingCreationEligibilityResponse => {
+  if (scenario === "no-profile")
+    return { canCreate: false, reason: "PROFILE_REQUIRED" };
+  if (scenario === "chance-used-up")
+    return { canCreate: false, reason: "DAILY_MEETING_LIMIT_EXCEEDED" };
+  return { canCreate: true };
+};
+
 const createMeetingBoardResponse = (): MeetingBoardResponse => {
   const now = getMockBaseTime();
   const scenario = getMeetingMockScenario();
@@ -319,10 +332,7 @@ const createMeetingBoardResponse = (): MeetingBoardResponse => {
   });
 
   return {
-    creationEligibility:
-      scenario === "no-profile"
-        ? { canCreate: false, reason: "PROFILE_REQUIRED" }
-        : { canCreate: true },
+    creationEligibility: buildCreationEligibility(scenario),
     slots,
     myRoom: buildMyRoom(scenario),
     latestMatch: {

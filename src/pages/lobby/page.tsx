@@ -35,6 +35,9 @@ import btnManual from "@/assets/lobby/btn_manual.svg";
 import btnInvite from "@/assets/lobby/btn_invite.svg";
 import type { MeetingRoomSummaryResponse, MeetingSlot } from "@/types/meeting";
 
+/** 베타 정책상 하루 한 번이다. 서버에 남은 횟수 필드가 생기면 그 값으로 바꾼다. */
+const MATCH_CHANCE_PER_DAY = 1;
+
 /**
  * 마커의 남은 시간을 다시 그리는 주기(ms).
  * "N분 남음" 표시라 초 단위까지 맞출 필요는 없고, 마감된 핀이 눌리지 않을 만큼만 촘촘하면 된다.
@@ -149,6 +152,13 @@ const LobbyPage: React.FC = () => {
       id: "meeting-room-detail-error",
     });
   }, [isRoomDetailError, isMatchResultError]);
+
+  // 남은 횟수를 주는 필드가 없어 두 갈래로 판단한다. 서버는 사유를 하나만 주므로
+  // 매칭된 방을 들고 있는 동안에는 ACTIVE_ROOM_EXISTS에 가려 한도 사유가 오지 않는다.
+  // 그 구간은 myRoom이 MATCHED인지로 메운다.
+  const isMatchChanceUsedUp =
+    board?.creationEligibility?.reason === "DAILY_MEETING_LIMIT_EXCEEDED" ||
+    board?.myRoom?.status === "MATCHED";
 
   const roomBySlot = useMemo(
     () =>
@@ -317,10 +327,14 @@ const LobbyPage: React.FC = () => {
             })}
         </div>
 
-        {/* TODO: 매칭 기회 횟수 API 필드가 없어 1로 고정 */}
-        <div className="absolute top-3 left-1/2 -translate-x-1/2">
-          <MatchChanceChip count={1} />
-        </div>
+        {/* 보드를 받기 전에 그리면 남은 횟수를 아는 척하게 된다. */}
+        {board && (
+          <div className="absolute top-3 left-1/2 -translate-x-1/2">
+            <MatchChanceChip
+              count={isMatchChanceUsedUp ? 0 : MATCH_CHANCE_PER_DAY}
+            />
+          </div>
+        )}
 
         <div className="absolute top-3 right-4 flex flex-col items-center gap-2">
           <button
