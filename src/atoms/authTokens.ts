@@ -56,7 +56,7 @@ export const isAuthenticatedAtom = atom((get) => {
 export const setTokensAtom = atom(
   null,
   (
-    _get,
+    get,
     set,
     params: { tokenResponse: TokenResponse; provider?: "google" | "local" },
   ) => {
@@ -68,7 +68,8 @@ export const setTokensAtom = atom(
       accessTokenExpiresAt: now + params.tokenResponse.accessTokenExpiresIn,
       refreshTokenExpiresAt: now + params.tokenResponse.refreshTokenExpiresIn,
     });
-    set(providerAtom, params.provider || "local");
+    // 갱신은 provider를 모른 채 부른다. 그때마다 local로 되돌리면 구글 로그인이 지워진다.
+    set(providerAtom, params.provider ?? get(providerAtom) ?? "local");
   },
 );
 

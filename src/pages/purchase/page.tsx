@@ -84,14 +84,18 @@ const BankAccountPaymentsPage: React.FC = () => {
         funnel.step === "kakao") &&
       viewerResponse
     ) {
-      // Navigate if tickets are present (initial load or increase) or profile updated
+      // 비교할 기준이 없으면(첫 방문·캐시 삭제) 이 응답을 기준으로 삼기만 한다.
+      // 여기서 바로 이동하면 결제 전에 성공 화면이 뜬다(#9).
+      if (viewer === null) {
+        setViewer(viewerResponse);
+        return;
+      }
       if (
-        viewer === null ||
-        (viewer.updatedTime !== viewerResponse.updatedTime &&
-          viewer.ticket !== viewerResponse.ticket)
+        viewer.updatedTime !== viewerResponse.updatedTime &&
+        viewer.ticket !== viewerResponse.ticket
       ) {
         setViewer(viewerResponse);
-        const isValid = viewer?.ticket !== viewerResponse.ticket;
+        const isValid = viewer.ticket !== viewerResponse.ticket;
         if (funnel.step === "bank") {
           chargeAccountConfirmClick(isValid);
         } else if (funnel.step === "toss") {

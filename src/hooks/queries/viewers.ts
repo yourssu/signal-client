@@ -4,6 +4,8 @@ import {
   useQuery,
   UseQueryOptions,
 } from "@tanstack/react-query";
+import { useAtomValue } from "jotai";
+import { accessTokenAtom } from "@/atoms/authTokens";
 import {
   IssuedVerificationRequest,
   NotificationDepositRequest,
@@ -94,12 +96,16 @@ export const useViewerSelf = (
     "queryKey" | "queryFn"
   >,
 ) => {
+  const accessToken = useAtomValue(accessTokenAtom);
+  const { enabled = true, ...restOptions } = queryOptions ?? {};
+
   return useQuery({
     queryKey: ["viewer", "me"],
     queryFn: async () => {
       return authedFetch<ViewerDetailResponse>(`${viewersBase}/me`);
     },
-    ...queryOptions,
+    ...restOptions,
+    enabled: !!accessToken && enabled,
   });
 };
 

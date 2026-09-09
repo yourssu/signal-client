@@ -5,6 +5,8 @@ import {
   useQuery,
   UseQueryOptions,
 } from "@tanstack/react-query";
+import { useAtomValue } from "jotai";
+import { accessTokenAtom } from "@/atoms/authTokens";
 import {
   Gender,
   NicknameCreatedResponse,
@@ -49,12 +51,16 @@ export const useSelfProfile = (
     "queryKey" | "queryFn"
   >,
 ) => {
+  const accessToken = useAtomValue(accessTokenAtom);
+  const { enabled = true, ...restOptions } = queryOptions ?? {};
+
   return useQuery({
     queryKey: ["profiles", "me"],
     queryFn: async () => {
       return authedFetch<ProfileContactResponse>(`${profileBase}/me`);
     },
-    ...queryOptions,
+    ...restOptions,
+    enabled: !!accessToken && enabled,
   });
 };
 
@@ -230,6 +236,9 @@ export const usePurchasedProfiles = (
     "queryKey" | "queryFn"
   >,
 ) => {
+  const accessToken = useAtomValue(accessTokenAtom);
+  const { enabled = true, ...restOptions } = queryOptions ?? {};
+
   return useQuery({
     queryKey: ["profiles", "me", "purchased"],
     queryFn: async () => {
@@ -237,7 +246,8 @@ export const usePurchasedProfiles = (
         `${profileBase}/me/purchased`,
       );
     },
-    ...queryOptions,
+    ...restOptions,
+    enabled: !!accessToken && enabled,
   });
 };
 
