@@ -344,7 +344,14 @@ const LobbyPage: React.FC = () => {
 
       <div className="flex shrink-0 flex-col gap-3 px-[4.27%] pb-[43.65px]">
         {board?.latestMatch && <LatestMatchBanner match={board.latestMatch} />}
-        {bottomCard}
+        {/*
+          카드가 차지하는 자리를 인원 필터 높이로 고정한다. 시트는 필터보다 커서
+          위로 넘치는데, 그 높이를 그대로 두면 지도 영역(flex-1)이 줄었다 늘었다 하며
+          지도가 딸려 움직인다. 지도는 그대로 두고 시트가 덮게 한다.
+        */}
+        <div className="relative h-[144px]">
+          <div className="absolute inset-x-0 bottom-0">{bottomCard}</div>
+        </div>
       </div>
 
       <ManualDialog open={manualOpen} onOpenChange={setManualOpen} />
