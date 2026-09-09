@@ -12,7 +12,7 @@ interface RoomStepperProps {
 
 interface StepperStyle {
   recruitIcon: string;
-  /** 모집이 실제로 진행 중일 때만 물결을 준다. 끝났거나 실패한 흐름에는 없다. */
+  /** failed도 모집 아이콘은 stepActive를 그대로 쓰지만, 멈춘 흐름이라 물결은 주지 않는다. */
   recruitRipple: boolean;
   lastLine: string;
   lastIcon: string;
@@ -67,7 +67,15 @@ function StepDot({
             className="bg-primary animate-ripple absolute inset-0 rounded-full motion-reduce:hidden"
           />
         )}
-        <img src={icon} alt="" className="relative size-[18px]" />
+        {/* step_active는 반투명이라 받침이 없으면 물결이 비쳐 아이콘 색까지 맥동한다. */}
+        <img
+          src={icon}
+          alt=""
+          className={cn(
+            "relative size-[18px]",
+            ripple && "rounded-full bg-white",
+          )}
+        />
       </span>
       <span className={cn("caption2 whitespace-nowrap", labelClassName)}>
         {label}
@@ -78,7 +86,7 @@ function StepDot({
 
 function StepLine({ className }: { className?: string }) {
   // 상자 높이를 점 아이콘(size-[18px])과 맞춰야 선이 점의 중심에 걸린다.
-  // 라벨까지 포함한 열 전체를 기준으로 잡으면 라벨 높이의 절반만큼 내려간다.
+  // 라벨까지 포함한 열 전체를 기준으로 잡으면 간격과 라벨 높이의 절반만큼 내려간다.
   return (
     <div className="flex h-[18px] flex-1 items-center">
       <div className={cn("h-[1.5px] w-full rounded-full", className)} />
