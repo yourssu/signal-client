@@ -33,7 +33,11 @@ import { DISABLED_REGISTER_DESC, ENABLE_REGISTER } from "@/env";
 import mapBackground from "@/assets/lobby/map_background.png";
 import btnManual from "@/assets/lobby/btn_manual.svg";
 import btnInvite from "@/assets/lobby/btn_invite.svg";
-import type { MeetingRoomSummaryResponse, MeetingSlot } from "@/types/meeting";
+import type {
+  MeetingErrorCode,
+  MeetingRoomSummaryResponse,
+  MeetingSlot,
+} from "@/types/meeting";
 
 /** 베타 정책상 하루 한 번이다. 서버에 남은 횟수 필드가 생기면 그 값으로 바꾼다. */
 const MATCH_CHANCE_PER_DAY = 1;
@@ -159,6 +163,14 @@ const LobbyPage: React.FC = () => {
   const isMatchChanceUsedUp =
     board?.creationEligibility?.reason === "DAILY_MEETING_LIMIT_EXCEEDED" ||
     board?.myRoom?.status === "MATCHED";
+
+  // 내가 만든 방이 아직 모집 중이면 서버가 다른 방 참여를 ACTIVE_ROOM_EXISTS로 막는다.
+  // 스펙의 409 설명이 "생성한 방 진행 중"이라, 매칭까지 끝난 방도 막히는지는 확인되지 않았다.
+  // 확실한 경우만 미리 알리고 나머지는 서버 응답에 맡긴다.
+  const joinBlockedReason: MeetingErrorCode | null =
+    myRoom?.teamSide === "CREATOR" && myRoom.status === "OPEN"
+      ? "ACTIVE_ROOM_EXISTS"
+      : null;
 
   const roomBySlot = useMemo(
     () =>
@@ -387,6 +399,7 @@ const LobbyPage: React.FC = () => {
         onOpenChange={(open) => {
           if (!open) setPreviewRoomId(null);
         }}
+        joinBlockedReason={joinBlockedReason}
         onJoin={(id) => navigate(`/lobby/join/${id}`)}
       />
 

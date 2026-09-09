@@ -14,13 +14,16 @@ import {
   getMemberSummaryParts,
   MEMBER_PART_SEPARATOR,
 } from "@/lib/meeting";
+import { cn } from "@/lib/utils";
 import invitationIcon from "@/assets/lobby/invitation.svg";
-import type { MeetingMemberResponse } from "@/types/meeting";
+import type { MeetingErrorCode, MeetingMemberResponse } from "@/types/meeting";
 
 interface RoomPreviewSheetProps {
   /** 미리 볼 방. null이면 닫힌다. */
   roomId: number | null;
   onOpenChange: (open: boolean) => void;
+  /** 참여할 수 없는 사유. 넘기면 버튼 대신 이유를 알린다. */
+  joinBlockedReason?: MeetingErrorCode | null;
   onJoin: (roomId: number) => void;
 }
 
@@ -38,6 +41,7 @@ const MemberChip = ({ member }: { member: MeetingMemberResponse }) => (
 export default function RoomPreviewSheet({
   roomId,
   onOpenChange,
+  joinBlockedReason,
   onJoin,
 }: RoomPreviewSheetProps) {
   // roomId가 null이 되어도 마지막 방을 들고 있어야 닫히는 0.5초 동안 내용이 남는다.
@@ -145,13 +149,30 @@ export default function RoomPreviewSheet({
               </div>
 
               <div className="flex w-full flex-col items-center gap-2">
-                <span className="caption1 text-primary">
-                  방 폭파까지 {formatRemainingDetail(remainingMs)} 남았어요
+                {/* 참여할 수 없으면 남은 시간보다 그 이유를 먼저 알려야 한다. */}
+                <span
+                  className={cn(
+                    "caption1",
+                    joinBlockedReason
+                      ? "text-label-alternative"
+                      : "text-primary",
+                  )}
+                >
+                  {joinBlockedReason
+                    ? getMeetingErrorMessage(
+                        joinBlockedReason,
+                        "지금은 참여할 수 없어요",
+                      )
+                    : `방 폭파까지 ${formatRemainingDetail(remainingMs)} 남았어요`}
                 </span>
                 <button
                   type="button"
+                  disabled={!!joinBlockedReason}
                   onClick={() => onJoin(room.id)}
-                  className="button-l bg-primary text-static-white h-14 w-full rounded-2xl"
+                  className={cn(
+                    "button-l text-static-white h-14 w-full rounded-2xl",
+                    joinBlockedReason ? "bg-line-normal" : "bg-primary",
+                  )}
                 >
                   참여하기
                 </button>
