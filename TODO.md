@@ -63,4 +63,4 @@
 
 ### 기타
 
-- [ ] Wolf 3D 아이콘 교체 — 로비용 2D SVG를 임시로 쓰고 있다 (`src/components/profile/AnimalImage.tsx`)
+- [x] Wolf 3D 아이콘 교체 — Figma `2425:11313`을 다른 동물과 같은 540x378로 잘라 `animals/male/wolf.png`에 넣었다
