@@ -8,19 +8,29 @@ import { ServiceDisabledDialog } from "@/components/home/ServiceDisabledDialog";
 import {
   DISABLED_PROFILE_VIEW_DESC,
   DISABLED_REGISTER_DESC,
+  ENABLE_LOBBY,
   ENABLE_PROFILE_VIEW,
   ENABLE_REGISTER,
   NOTICE,
 } from "@/env";
+import { cn } from "@/lib/utils";
 import {
   profileRegisterClick,
   signalSendClick,
   myprofileView,
 } from "@/lib/analytics";
 
+/** flex-1을 품고 있어 한 줄에 하나면 꽉 차고, 둘이면 반씩 나눠 갖는다. */
+const SUB_BUTTON_CLASS =
+  "flex h-14 flex-1 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary transition-colors hover:bg-[#ffd4f3]";
+
 interface MainContentProps {
   profileRegistered: boolean;
 }
+
+/** 미팅 버튼과 한 줄을 나눠 쓸 때만 좁아지므로, 그때만 짧은 라벨을 쓴다. */
+const registerLabel = (isRowShared: boolean) =>
+  isRowShared ? "프로필 등록" : "프로필 등록하기";
 
 const MainContent = ({ profileRegistered }: MainContentProps) => {
   const { data } = useCountProfile();
@@ -60,35 +70,49 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
         {NOTICE && <p className="text-xs font-medium">{NOTICE}</p>}
 
         <div className="flex flex-col gap-2 w-full">
-          {ENABLE_REGISTER ? (
-            profileRegistered ? (
-              <Link
-                to="/my/profile"
-                onClick={() => myprofileView("main")}
-                className="flex h-14 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary hover:bg-[#ffd4f3] transition-colors"
-              >
-                내 프로필 보기
+          <div className="flex gap-2">
+            {/*
+              등록을 마치면 이 자리를 미팅에 내준다. 프로필은 GNB 아이콘(/my)으로 갈 수 있다.
+              다만 미팅 버튼이 없는 상태에서까지 비우면 갈 곳이 사라지므로 플래그가 꺼져 있으면 남긴다.
+            */}
+            {(!profileRegistered || !ENABLE_LOBBY) &&
+              (ENABLE_REGISTER ? (
+                profileRegistered ? (
+                  <Link
+                    to="/my/profile"
+                    onClick={() => myprofileView("main")}
+                    className={SUB_BUTTON_CLASS}
+                  >
+                    내 프로필 보기
+                  </Link>
+                ) : (
+                  <Link
+                    to="/profile/register"
+                    onClick={() => profileRegisterClick()}
+                    className={SUB_BUTTON_CLASS}
+                  >
+                    {registerLabel(!profileRegistered && ENABLE_LOBBY)}
+                  </Link>
+                )
+              ) : (
+                <Button
+                  // buttonVariants의 hover/active 스케일이 transition-colors에 걸려 뚝 끊긴다.
+                  className={cn(SUB_BUTTON_CLASS, "transition-all")}
+                  onClick={() => {
+                    profileRegisterClick();
+                    setRegisterGuardOpen(true);
+                  }}
+                >
+                  {registerLabel(!profileRegistered && ENABLE_LOBBY)}
+                </Button>
+              ))}
+
+            {ENABLE_LOBBY && (
+              <Link to="/lobby" className={SUB_BUTTON_CLASS}>
+                {profileRegistered ? "축제 미팅하기(Beta)" : "축제 미팅하기"}
               </Link>
-            ) : (
-              <Link
-                to="/profile/register"
-                onClick={() => profileRegisterClick()}
-                className="flex h-14 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary hover:bg-[#ffd4f3] transition-colors"
-              >
-                프로필 등록하기
-              </Link>
-            )
-          ) : (
-            <Button
-              className="flex h-14 items-center justify-center rounded-2xl bg-[#ffe7fa] backdrop-blur-[6.5px] text-base font-semibold text-primary hover:bg-[#ffd4f3]"
-              onClick={() => {
-                profileRegisterClick();
-                setRegisterGuardOpen(true);
-              }}
-            >
-              프로필 등록하기
-            </Button>
-          )}
+            )}
+          </div>
 
           {ENABLE_PROFILE_VIEW ? (
             <Link
