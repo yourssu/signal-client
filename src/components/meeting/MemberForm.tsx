@@ -1,5 +1,6 @@
 import GenderChips from "@/components/meeting/GenderChips";
 import { FormField } from "@/components/ui/form-field";
+import { isMeetingContact } from "@/lib/meeting";
 import { cn } from "@/lib/utils";
 import type { MeetingMemberRequest } from "@/types/meeting";
 import type { Gender } from "@/types/profile";
@@ -12,8 +13,6 @@ interface MemberFormProps {
   addLabel?: string;
   onAdd: (member: MeetingMemberRequest, contact?: string) => void;
 }
-
-const CONTACT_REGEX = /^(?:010[2-9]\d{7}|@[a-zA-Z0-9._]{1,30})$/;
 
 const MemberForm = ({
   ageLabel,
@@ -29,11 +28,11 @@ const MemberForm = ({
 
   const isBirthYearValid = /^\d{4}$/.test(birthYear);
   const isDepartmentValid = department.trim().length > 0;
-  const isContactValid = !showContact || CONTACT_REGEX.test(contact);
+  const isContactValid = !showContact || isMeetingContact(contact);
   const isFormValid =
     isBirthYearValid && isDepartmentValid && !!gender && isContactValid;
   const showContactError =
-    showContact && contact.length > 0 && !CONTACT_REGEX.test(contact);
+    showContact && contact.length > 0 && !isMeetingContact(contact);
 
   const handleAdd = () => {
     if (disabled || !isFormValid || !gender) return;

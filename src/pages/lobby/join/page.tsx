@@ -7,7 +7,11 @@ import MemberForm from "@/components/meeting/MemberForm";
 import MemberList from "@/components/meeting/MemberList";
 import { useUser } from "@/hooks/useUser";
 import { useMatchMeetingRoom, useMeetingRoom } from "@/hooks/queries/meetings";
-import { getMeetingErrorMessage, getRoomEndedReason } from "@/lib/meeting";
+import {
+  getMeetingErrorMessage,
+  getRoomEndedReason,
+  isMeetingContact,
+} from "@/lib/meeting";
 import { useNow } from "@/hooks/useNow";
 import { cn } from "@/lib/utils";
 import type { MeetingMemberRequest } from "@/types/meeting";
@@ -15,7 +19,7 @@ import type { MeetingMemberRequest } from "@/types/meeting";
 const LobbyJoinPage: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { profile } = useUser();
+  const { profile, isRefreshed } = useUser();
   const { roomId } = useParams<{ roomId: string }>();
   const numericRoomId = Number(roomId);
 
@@ -32,31 +36,53 @@ const LobbyJoinPage: React.FC = () => {
     ? getRoomEndedReason(roomDetail.room, now)
     : null;
 
+  // 프로필이 있어도 연락처가 미팅에서 쓸 수 있는 형태여야 건너뛸 수 있다.
+  // 등록 화면의 검사가 더 느슨해 여기서 거르지 않으면 서버가 마지막에 거절한다.
+  const profileContact =
+    profile && isMeetingContact(profile.contact) ? profile.contact : null;
+
+  // 대표를 내 정보로 채운다. 같은 걸 또 적게 할 이유가 없다.
+  const selfMember: MeetingMemberRequest | null =
+    profile && profileContact
+      ? {
+          gender: profile.gender,
+          birthYear: profile.birthYear,
+          department: profile.department,
+        }
+      : null;
+
+  // 대표를 채우지 못하면 첫 입력자가 대표가 되고, 연락처도 그때 받는다.
   const [members, setMembers] = useState<MeetingMemberRequest[]>([]);
-  const [contact, setContact] = useState<string>();
+  const [typedContact, setTypedContact] = useState<string>();
+  const contact = profileContact ?? typedContact;
 
   const partySize = roomDetail?.room.partySize ?? 0;
-  const isFull = partySize > 0 && members.length >= partySize;
+  // 내 자리가 이미 찼으면 친구만 채우면 된다.
+  const neededCount = selfMember ? partySize - 1 : partySize;
+  const isFull = partySize > 0 && members.length >= neededCount;
   const canSubmit = isFull && !!contact;
 
   const handleAdd = (member: MeetingMemberRequest, memberContact?: string) => {
     if (isFull) return;
-    if (members.length === 0 && memberContact) {
-      setContact(memberContact);
+    if (!selfMember && members.length === 0 && memberContact) {
+      setTypedContact(memberContact);
     }
     setMembers((prev) => [...prev, member]);
   };
 
   const handleRemove = (index: number) => {
-    if (members.length === 1) {
-      setContact(undefined);
+    // 연락처는 대표 것이다. 대표가 빠지면 남은 사람 것이 아니므로 함께 지운다.
+    if (!selfMember && index === 0) {
+      setTypedContact(undefined);
     }
     setMembers((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleNext = () => {
     if (!canSubmit || !contact) return;
-    const [representative, ...companions] = members;
+    const [representative, ...companions] = selfMember
+      ? [selfMember, ...members]
+      : members;
     matchRoom(
       { representative, contact, companions },
       {
@@ -99,8 +125,12 @@ const LobbyJoinPage: React.FC = () => {
     return <Navigate to="/lobby" replace />;
   }
 
+  // 프로필이 늦게 도착하면 이미 나를 입력한 뒤에 대표가 또 채워져 두 번 들어간다.
+  // 있는지 없는지 확정되기 전에는 폼을 열지 않는다.
+  const isProfileSettled = !!profile || isRefreshed;
+
   // 정원을 알아야 폼을 그릴 수 있다. 조회 실패와 끝난 방은 위 effect가 로비로 되돌린다.
-  if (!roomDetail || endedReason) {
+  if (!roomDetail || endedReason || !isProfileSettled) {
     return (
       <div className="flex h-full flex-col bg-white">
         <title>미팅 참여하기 - 시그널</title>
@@ -122,25 +152,30 @@ const LobbyJoinPage: React.FC = () => {
           {`${partySize}명이 기다리고 있어요`}
         </h1>
         <p className="body1 text-label-alternative">
-          {members.length === 0
-            ? "나의 정보를 적어주세요"
-            : "참여자 정보를 적어주세요"}
+          {selfMember
+            ? "함께할 친구를 알려주세요"
+            : members.length === 0
+              ? "나의 정보를 적어주세요"
+              : "참여자 정보를 적어주세요"}
         </p>
       </div>
 
       <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-[18px]">
         <MemberForm
           ageLabel="나이"
-          showContact={members.length === 0}
+          // 팀 연락처는 하나다. 아직 없으면 계속 받아야 다시 넣을 길이 생긴다.
+          showContact={!selfMember && !contact}
           disabled={isFull}
           addLabel="추가하기"
           onAdd={handleAdd}
         />
         <MemberList
-          self={{ animal: profile?.animal }}
+          self={{ animal: profile?.animal, filled: !!selfMember }}
           members={members}
           // 본인 행이 입력 전에도 한 칸을 차지하므로 정원에서 함께 뺀다.
-          emptySlotCount={partySize - Math.max(members.length, 1)}
+          emptySlotCount={
+            neededCount - Math.max(members.length, selfMember ? 0 : 1)
+          }
           onRemove={handleRemove}
         />
       </div>

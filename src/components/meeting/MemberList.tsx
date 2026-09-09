@@ -8,8 +8,11 @@ import { X } from "lucide-react";
 
 interface MemberListProps {
   host?: { nickname: string; animal: AnimalType };
-  /** 넘기면 첫 번째 멤버를 본인 행으로 그린다. 프로필이 없으면 기본 유저 아이콘을 쓴다. */
-  self?: { animal?: AnimalType };
+  /**
+   * 본인 행을 그린다. 프로필이 없으면 기본 유저 아이콘을 쓴다.
+   * filled면 members와 별개로 맨 위에 그리고, 아니면 members[0]이 본인이다.
+   */
+  self?: { animal?: AnimalType; filled?: boolean };
   members: MeetingMemberRequest[];
   emptySlotCount: number;
   onRemove?: (index: number) => void;
@@ -63,11 +66,12 @@ const MemberList = ({
             badge="방장"
           />
         )}
-        {self && members.length === 0 && (
+        {self?.filled && <NamedRow avatar={selfAvatar} name="나" />}
+        {self && !self.filled && members.length === 0 && (
           <NamedRow avatar={selfAvatar} name="나" note="지금 정보 입력 중" />
         )}
         {members.map((member, index) =>
-          self && index === 0 ? (
+          self && !self.filled && index === 0 ? (
             <NamedRow
               key={index}
               avatar={selfAvatar}
