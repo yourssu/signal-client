@@ -153,11 +153,12 @@ const LobbyPage: React.FC = () => {
     });
   }, [isRoomDetailError, isMatchResultError]);
 
-  // 남은 횟수를 주는 필드가 없다. 하루치를 다 쓰면 생성 자격 사유로만 드러난다.
-  const matchChance =
-    board?.creationEligibility.reason === "DAILY_MEETING_LIMIT_EXCEEDED"
-      ? 0
-      : MATCH_CHANCE_PER_DAY;
+  // 남은 횟수를 주는 필드가 없어 두 갈래로 판단한다. 서버는 사유를 하나만 주므로
+  // 매칭된 방을 들고 있는 동안에는 ACTIVE_ROOM_EXISTS에 가려 한도 사유가 오지 않는다.
+  // 그 구간은 myRoom이 MATCHED인지로 메운다.
+  const isMatchChanceUsedUp =
+    board?.creationEligibility?.reason === "DAILY_MEETING_LIMIT_EXCEEDED" ||
+    board?.myRoom?.status === "MATCHED";
 
   const roomBySlot = useMemo(
     () =>
@@ -326,9 +327,14 @@ const LobbyPage: React.FC = () => {
             })}
         </div>
 
-        <div className="absolute top-3 left-1/2 -translate-x-1/2">
-          <MatchChanceChip count={matchChance} />
-        </div>
+        {/* 보드를 받기 전에 그리면 남은 횟수를 아는 척하게 된다. */}
+        {board && (
+          <div className="absolute top-3 left-1/2 -translate-x-1/2">
+            <MatchChanceChip
+              count={isMatchChanceUsedUp ? 0 : MATCH_CHANCE_PER_DAY}
+            />
+          </div>
+        )}
 
         <div className="absolute top-3 right-4 flex flex-col items-center gap-2">
           <button
