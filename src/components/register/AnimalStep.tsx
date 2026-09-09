@@ -13,8 +13,7 @@ import turtleFemaleImg from "@/assets/animals/female/turtle.png";
 import dogCommonImg from "@/assets/animals/common/dog.png";
 import catCommonImg from "@/assets/animals/common/cat.png";
 import hamsterCommonImg from "@/assets/animals/common/hamster.png";
-// TODO: 남자 늑대 3D 에셋으로 교체한다. 지금은 로비용 2D SVG를 임시로 쓴다.
-import wolfImg from "@/assets/animals/wolf.svg";
+import wolfMaleImg from "@/assets/animals/male/wolf.png";
 
 interface AnimalStepProps {
   gender: Gender;
@@ -33,7 +32,7 @@ const genderAnimals: Record<Gender, { type: AnimalType; img: string }[]> = {
     { type: "DINOSAUR", img: dinosaurMaleImg },
     { type: "DOG", img: dogCommonImg },
     { type: "CAT", img: catCommonImg },
-    { type: "WOLF", img: wolfImg },
+    { type: "WOLF", img: wolfMaleImg },
   ],
   FEMALE: [
     { type: "FOX", img: foxFemaleImg },
