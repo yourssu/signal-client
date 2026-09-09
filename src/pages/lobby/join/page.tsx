@@ -7,7 +7,8 @@ import MemberForm from "@/components/meeting/MemberForm";
 import MemberList from "@/components/meeting/MemberList";
 import { useUser } from "@/hooks/useUser";
 import { useMatchMeetingRoom, useMeetingRoom } from "@/hooks/queries/meetings";
-import { getMeetingErrorMessage } from "@/lib/meeting";
+import { getMeetingErrorMessage, getRoomEndedReason } from "@/lib/meeting";
+import { useNow } from "@/hooks/useNow";
 import { cn } from "@/lib/utils";
 import type { MeetingMemberRequest } from "@/types/meeting";
 
@@ -24,6 +25,12 @@ const LobbyJoinPage: React.FC = () => {
   });
   const { mutate: matchRoom, isPending: isMatching } =
     useMatchMeetingRoom(numericRoomId);
+
+  // 폼을 채우는 사이에 방이 끝날 수 있어 초 단위로 다시 판단한다.
+  const now = useNow(1000);
+  const endedReason = roomDetail
+    ? getRoomEndedReason(roomDetail.room, now)
+    : null;
 
   const [members, setMembers] = useState<MeetingMemberRequest[]>([]);
   const [contact, setContact] = useState<string>();
@@ -66,7 +73,7 @@ const LobbyJoinPage: React.FC = () => {
     );
   };
 
-  // 방이 없거나 이미 끝났으면 참여할 수 없다.
+  // 방을 못 불러왔으면 참여할 수 없다.
   useEffect(() => {
     if (!roomError) return;
     toast.error(
@@ -76,12 +83,24 @@ const LobbyJoinPage: React.FC = () => {
     navigate("/lobby", { replace: true });
   }, [roomError, navigate]);
 
+  // 조회는 성공해도 끝난 방일 수 있다. 폼을 열어두면 다 채운 뒤에야 거절당한다.
+  useEffect(() => {
+    if (!endedReason) return;
+    toast.error(
+      getMeetingErrorMessage(endedReason, "참여할 수 없는 방이에요"),
+      {
+        id: "meeting-join-room-ended",
+      },
+    );
+    navigate("/lobby", { replace: true });
+  }, [endedReason, navigate]);
+
   if (!roomId || Number.isNaN(numericRoomId)) {
     return <Navigate to="/lobby" replace />;
   }
 
-  // 정원을 알아야 폼을 그릴 수 있다. 조회 실패는 위 effect가 로비로 되돌린다.
-  if (!roomDetail) {
+  // 정원을 알아야 폼을 그릴 수 있다. 조회 실패와 끝난 방은 위 effect가 로비로 되돌린다.
+  if (!roomDetail || endedReason) {
     return (
       <div className="flex h-full flex-col bg-white">
         <title>미팅 참여하기 - 시그널</title>

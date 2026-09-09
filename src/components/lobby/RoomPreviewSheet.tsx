@@ -10,6 +10,7 @@ import { useMeetingRoom } from "@/hooks/queries/meetings";
 import {
   formatRemainingDetail,
   getMeetingErrorMessage,
+  getRoomEndedReason,
   getMemberSummaryParts,
   MEMBER_PART_SEPARATOR,
 } from "@/lib/meeting";
@@ -68,27 +69,32 @@ export default function RoomPreviewSheet({
   }, [roomId, error, close]);
 
   const expiresAt = detail?.room.expiresAt;
+  const status = detail?.room.status;
   const [remainingMs, setRemainingMs] = useState(0);
-  const expiredRef = useRef(false);
+  const endedRef = useRef(false);
 
   useEffect(() => {
-    if (roomId === null || !expiresAt) return;
-    expiredRef.current = false;
+    if (roomId === null || !expiresAt || !status) return;
+    endedRef.current = false;
 
     const tick = () => {
-      const next = new Date(expiresAt).getTime() - Date.now();
-      setRemainingMs(next);
-      if (!Number.isFinite(next) || next > 0 || expiredRef.current) return;
+      const at = Date.now();
+      setRemainingMs(new Date(expiresAt).getTime() - at);
+      // 시간이 남았어도 이미 매칭되거나 삭제된 방일 수 있다.
+      const reason = getRoomEndedReason({ status, expiresAt }, at);
+      if (!reason || endedRef.current) return;
       // 끝난 방으로 참여 폼에 들어가면 인원을 다 넣은 뒤에야 거절당한다.
-      expiredRef.current = true;
-      toast.error("방이 종료됐어요", { id: "meeting-preview-expired" });
+      endedRef.current = true;
+      toast.error(getMeetingErrorMessage(reason, "방이 종료됐어요"), {
+        id: "meeting-preview-ended",
+      });
       close();
     };
 
     const timer = window.setInterval(tick, 1000);
     tick();
     return () => clearInterval(timer);
-  }, [roomId, expiresAt, close]);
+  }, [roomId, expiresAt, status, close]);
 
   const room = detail?.room;
   // 목·서버 모두 양 팀을 함께 내려주므로 방장 팀만 골라낸다.

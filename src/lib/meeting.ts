@@ -12,6 +12,7 @@ import type {
   MeetingCreationBlockReason,
   MeetingErrorCode,
   MeetingMemberResponse,
+  MeetingRoomResponse,
   MeetingRoomSummaryResponse,
   MeetingSlot,
 } from "@/types/meeting";
@@ -80,6 +81,25 @@ export const getMeetingErrorMessage = (
 ): string =>
   (code ? MEETING_ERROR_MESSAGES[code as MeetingErrorCode] : undefined) ??
   fallback;
+
+/**
+ * 참여할 수 없게 된 사유를 서버가 409로 줄 코드와 같은 값으로 돌려준다.
+ * 아직 열려 있으면 null이다.
+ *
+ * 서버는 끝난 방도 200으로 내려주므로 조회가 성공했다는 것만으로는 참여할 수 있다는 뜻이
+ * 아니다. 이걸 보지 않으면 인원을 다 채운 뒤에야 거절당한다.
+ */
+export const getRoomEndedReason = (
+  room: Pick<MeetingRoomResponse, "status" | "expiresAt">,
+  now: number,
+): MeetingErrorCode | null => {
+  if (room.status === "MATCHED") return "ROOM_ALREADY_MATCHED";
+  if (room.status === "CANCELLED") return "ROOM_CANCELLED";
+  if (room.status === "EXPIRED") return "ROOM_EXPIRED";
+  // 서버가 걷어가기 전이라 status는 아직 OPEN이어도 시간이 지났으면 끝난 방이다.
+  if (new Date(room.expiresAt).getTime() <= now) return "ROOM_EXPIRED";
+  return null;
+};
 
 /** 잔여 시간이 이 값 이하로 떨어지면 방 종료 임박 안내를 띄운다. */
 export const MEETING_ROOM_EXPIRY_WARNING_MS = 60_000;
