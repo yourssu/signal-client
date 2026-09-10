@@ -4,9 +4,9 @@ import {
   clearTokensAtom,
   providerAtom,
   refreshTokenAtom,
+  sessionEndedAtom,
   setTokensAtom,
 } from "@/atoms/authTokens";
-import { toast } from "sonner";
 import { API_BASE_URL } from "@/env";
 import { SignalError } from "@/lib/error";
 import { ErrorResponse, SignalResponse } from "@/types/common";
@@ -23,19 +23,14 @@ export type RefreshOutcome = "ok" | "rejected" | "unavailable" | "none";
 
 /**
  * 세션을 끝낸다. 지우기 전에 provider를 읽어야 누구에게 무슨 말을 할지 안다.
- * 401을 받은 요청마다 불리므로, 이미 끝난 세션이면 다시 지우거나 알리지 않는다.
+ * 401을 받은 요청마다 불리므로, 이미 끝난 세션이면 다시 지우지 않는다.
+ * 알림은 Layout의 다이얼로그가 맡는다.
  */
 export function endSession() {
   if (!store.get(accessTokenAtom) && !store.get(refreshTokenAtom)) return;
-  const provider = store.get(providerAtom);
+  const provider = store.get(providerAtom) ?? "local";
   store.set(clearTokensAtom);
-  toast.error("세션이 만료됐어요", {
-    id: "auth-session-ended",
-    description:
-      provider === "google"
-        ? "다시 로그인해주세요."
-        : "새로고침하면 다시 시작할 수 있어요.",
-  });
+  store.set(sessionEndedAtom, provider);
 }
 
 let refreshPromise: Promise<RefreshOutcome> | null = null;

@@ -13,6 +13,10 @@ interface ServiceDisabledDialogProps {
   onOpenChange: (open: boolean) => void;
   title: string;
   content: string;
+  confirmLabel?: string;
+  confirmDisabled?: boolean;
+  /** 바깥을 눌러도 닫히지 않는다. 눌러야만 벗어날 수 있는 상태에 쓴다. */
+  blocking?: boolean;
   onConfirm?: () => void;
 }
 
@@ -21,6 +25,9 @@ export function ServiceDisabledDialog({
   onOpenChange,
   title,
   content,
+  confirmLabel = "확인",
+  confirmDisabled = false,
+  blocking = false,
   onConfirm,
 }: ServiceDisabledDialogProps) {
   const handleConfirm = () => {
@@ -31,8 +38,17 @@ export function ServiceDisabledDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-background p-6 flex flex-col items-center">
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        if (blocking && !next) return;
+        onOpenChange(next);
+      }}
+    >
+      <DialogContent
+        hideClose={blocking}
+        className="bg-background p-6 flex flex-col items-center"
+      >
         <DialogHeader className="w-full text-center space-y-2">
           <DialogTitle className="text-primary text-xl font-bold text-center">
             {title}
@@ -42,8 +58,13 @@ export function ServiceDisabledDialog({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="w-full">
-          <Button onClick={handleConfirm} className="w-full" size="xl">
-            확인
+          <Button
+            onClick={handleConfirm}
+            disabled={confirmDisabled}
+            className="w-full"
+            size="xl"
+          >
+            {confirmLabel}
           </Button>
         </DialogFooter>
       </DialogContent>
