@@ -14,6 +14,7 @@ interface ServiceDisabledDialogProps {
   title: string;
   content: string;
   confirmLabel?: string;
+  confirmDisabled?: boolean;
   /** 바깥을 눌러도 닫히지 않는다. 눌러야만 벗어날 수 있는 상태에 쓴다. */
   blocking?: boolean;
   onConfirm?: () => void;
@@ -25,6 +26,7 @@ export function ServiceDisabledDialog({
   title,
   content,
   confirmLabel = "확인",
+  confirmDisabled = false,
   blocking = false,
   onConfirm,
 }: ServiceDisabledDialogProps) {
@@ -56,7 +58,12 @@ export function ServiceDisabledDialog({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="w-full">
-          <Button onClick={handleConfirm} className="w-full" size="xl">
+          <Button
+            onClick={handleConfirm}
+            disabled={confirmDisabled}
+            className="w-full"
+            size="xl"
+          >
             {confirmLabel}
           </Button>
         </DialogFooter>

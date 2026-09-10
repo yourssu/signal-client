@@ -1,12 +1,12 @@
 import { getDefaultStore, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useCallback, useRef } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { useRegister } from "@/hooks/queries/auth";
 import {
   accessTokenAtom,
   refreshTokenAtom,
   isAuthenticatedAtom,
-  sessionEndedAtom,
   setTokensAtom,
 } from "@/atoms/authTokens";
 import { TokenResponse } from "@/types/auth";
@@ -18,7 +18,7 @@ export const useAuth = () => {
   const refreshToken = useAtomValue(refreshTokenAtom);
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const setTokens = useSetAtom(setTokensAtom);
-  const setSessionEnded = useSetAtom(sessionEndedAtom);
+  const navigate = useNavigate();
   const hasInitialized = useRef(false);
 
   const registerMutation = useRegister({
@@ -54,10 +54,11 @@ export const useAuth = () => {
   }, [initializeAuth]);
 
   // 세션이 끝난 뒤 사용자가 눌러서 새 익명 계정으로 시작한다. 자동으로 만들지 않는다(#9).
+  // 새 계정으로 바뀐 채 결제 퍼널 같은 화면에 남아 있으면 이전 계정 기준으로 판정이 나므로 홈으로 보낸다.
+  const { mutate: register, isPending: isRestarting } = registerMutation;
   const restartSession = useCallback(() => {
-    setSessionEnded(null);
-    registerMutation.mutate();
-  }, [setSessionEnded, registerMutation]);
+    register(undefined, { onSuccess: () => navigate("/", { replace: true }) });
+  }, [register, navigate]);
 
-  return { restartSession };
+  return { restartSession, isRestarting };
 };

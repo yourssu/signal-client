@@ -76,6 +76,9 @@ export const setTokensAtom = atom(
     });
     // 갱신은 provider를 모른 채 부른다. 그때마다 local로 되돌리면 구글 로그인이 지워진다.
     set(providerAtom, params.provider ?? get(providerAtom) ?? "local");
+    // 토큰이 다시 생겼다는 것이 곧 세션이 회복됐다는 뜻이다. 버튼을 눌렀다고 풀면
+    // 등록이 실패하거나 로그인 드로어를 닫았을 때 막다른 화면이 다시 남는다.
+    set(sessionEndedAtom, null);
   },
 );
 
