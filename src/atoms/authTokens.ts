@@ -38,6 +38,12 @@ export const tokenExpiryAtom = atomWithStorage<{
   { getOnInit: true },
 );
 
+/**
+ * 세션이 끝났음을 화면에 알리기 위한 상태. 값은 끝나기 직전의 provider다 —
+ * clearTokens가 provider를 지우므로 그 뒤에는 누구였는지 알 수 없다. null이면 정상.
+ */
+export const sessionEndedAtom = atom<"google" | "local" | null>(null);
+
 // Computed atom to check if tokens are valid
 export const isAuthenticatedAtom = atom((get) => {
   const accessToken = get(accessTokenAtom);

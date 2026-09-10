@@ -6,6 +6,7 @@ import {
   accessTokenAtom,
   refreshTokenAtom,
   isAuthenticatedAtom,
+  sessionEndedAtom,
   setTokensAtom,
 } from "@/atoms/authTokens";
 import { TokenResponse } from "@/types/auth";
@@ -17,6 +18,7 @@ export const useAuth = () => {
   const refreshToken = useAtomValue(refreshTokenAtom);
   const isAuthenticated = useAtomValue(isAuthenticatedAtom);
   const setTokens = useSetAtom(setTokensAtom);
+  const setSessionEnded = useSetAtom(sessionEndedAtom);
   const hasInitialized = useRef(false);
 
   const registerMutation = useRegister({
@@ -50,4 +52,12 @@ export const useAuth = () => {
     hasInitialized.current = true;
     initializeAuth();
   }, [initializeAuth]);
+
+  // 세션이 끝난 뒤 사용자가 눌러서 새 익명 계정으로 시작한다. 자동으로 만들지 않는다(#9).
+  const restartSession = useCallback(() => {
+    setSessionEnded(null);
+    registerMutation.mutate();
+  }, [setSessionEnded, registerMutation]);
+
+  return { restartSession };
 };
