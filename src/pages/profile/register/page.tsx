@@ -85,8 +85,8 @@ const ProfileRegisterPage: React.FC = () => {
     enabled: funnel.step === "done",
   });
   const { data: ticketPackagesRes } = useTicketPackages({
-      enabled: funnel.step === "done",
-    });
+    enabled: funnel.step === "done",
+  });
   const discountRate = (() => {
     const packages = ticketPackagesRes?.packages;
     if (!packages || packages.length === 0) return 0;
@@ -281,6 +281,8 @@ const ProfileRegisterPage: React.FC = () => {
             personality={() => (
               <PersonalityStep
                 traits={funnel.context.introSentences}
+                gender={funnel.context.gender}
+                animal={funnel.context.animal}
                 onSubmit={handlePersonalitySubmit}
               />
             )}
