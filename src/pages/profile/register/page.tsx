@@ -154,7 +154,7 @@ const ProfileRegisterPage: React.FC = () => {
       ...funnel.context,
       introSentences: personality,
     });
-    profileFeaturesSubmit(personality.length);
+    profileFeaturesSubmit(personality);
   };
 
   const handleNicknameSubmit = async (nickname: string) => {

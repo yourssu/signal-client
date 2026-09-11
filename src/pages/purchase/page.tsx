@@ -96,10 +96,11 @@ const BankAccountPaymentsPage: React.FC = () => {
       ) {
         setViewer(viewerResponse);
         const isValid = viewer.ticket !== viewerResponse.ticket;
+        const purchasedTicket = viewerResponse.ticket - viewer.ticket;
         if (funnel.step === "bank") {
-          chargeAccountConfirmClick(isValid);
+          chargeAccountConfirmClick(isValid, purchasedTicket);
         } else if (funnel.step === "toss") {
-          chargeTossConfirmClick();
+          chargeTossConfirmClick(purchasedTicket);
         } else if (funnel.step === "kakao") {
           chargeKakaoConfirmClick();
         }

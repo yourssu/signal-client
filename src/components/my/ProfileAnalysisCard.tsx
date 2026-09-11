@@ -7,6 +7,8 @@ import { ChevronRight, Users } from "lucide-react";
 import {
   mypageRegisterClick,
   mypageAccountConnectClick,
+  mypageLoginClick,
+  mypageRankingClick,
 } from "@/lib/analytics";
 
 export interface ProfileAnalysisCardProps {
@@ -66,7 +68,11 @@ export const ProfileAnalysisCard = ({
   if (!isLoggedIn) {
     return (
       <LoginDrawer>
-        <div className="bg-white rounded-[20px] px-4 py-5 w-full flex items-center gap-2.5 cursor-pointer">
+        {/* 이 카드는 프로필이 있을 때만 그려진다. 프로필 없는 카드의 로그인은 mypage_account_connect_click이 맡는다. */}
+        <div
+          onClick={() => mypageLoginClick("google_login_induction")}
+          className="bg-white rounded-[20px] px-4 py-5 w-full flex items-center gap-2.5 cursor-pointer"
+        >
           <div className="bg-fill-pink rounded-[10px] size-9 flex items-center justify-center shrink-0">
             <img src={archiveIcon} alt="" className="size-[23px]" />
           </div>
@@ -89,6 +95,7 @@ export const ProfileAnalysisCard = ({
   return (
     <Link
       to="/my/analysis"
+      onClick={() => mypageRankingClick()}
       className="bg-white rounded-[20px] px-4 py-5 w-full flex items-center gap-2.5 cursor-pointer"
     >
       <div className="bg-fill-pink rounded-[10px] size-9 flex items-center justify-center shrink-0">

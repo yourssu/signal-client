@@ -11,7 +11,7 @@ import { providerAtom } from "@/atoms/authTokens";
 import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/utils";
 import { ENABLE_PROFILE_VIEW } from "@/env";
-import { mypageView } from "@/lib/analytics";
+import { contactListClick, mypageView } from "@/lib/analytics";
 
 const MyPage: React.FC = () => {
   const { profile, viewer } = useUser();
@@ -86,6 +86,7 @@ const MyPage: React.FC = () => {
           {ENABLE_PROFILE_VIEW && (
             <Link
               to="/my/signals"
+              onClick={() => contactListClick("my_page")}
               className="flex items-center justify-between w-full py-1 cursor-pointer"
             >
               <div className="flex items-center gap-2">

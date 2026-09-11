@@ -38,8 +38,16 @@ export const profileInfoSubmit = (data: {
 export const profileAnimalSubmit = (selectedAnimal: string) =>
   track("profile_animal_submit", { selected_animal: selectedAnimal });
 
-export const profileFeaturesSubmit = (featureCount: number) =>
-  track("profile_features_submit", { feature_count: featureCount });
+export const profileFeaturesSubmit = (features: string[]) =>
+  track("profile_features_submit", {
+    feature_count: features.length,
+    // 시트가 정한 키는 feature1~3_content 셋뿐이다.
+    ...Object.fromEntries(
+      features
+        .slice(0, 3)
+        .map((content, index) => [`feature${index + 1}_content`, content]),
+    ),
+  });
 
 export const profileAiNicknameClick = () => track("profile_ai_nickname_click");
 
@@ -61,8 +69,29 @@ export const profileGoogleLoginClick = () =>
 export const signalSendClick = (isRegistered: boolean) =>
   track("signal_send_click", { is_registered: isRegistered });
 
-export const contactClick = (targetUserId: string | number) =>
-  track("contact_click", { target_user_id: String(targetUserId) });
+/**
+ * 궁합 라벨 문구. 서버가 boolean을 주지 않아 compatibilityLabel 문자열로 역산한다.
+ * dev deck 남녀 139건에서 값은 이 셋(또는 없음)뿐이었다.
+ * 서버가 문구를 바꾸면 에러 없이 셋 다 false로 떨어지므로 여기를 같이 고쳐야 한다.
+ */
+const COMPATIBILITY_LABELS = {
+  appearance: "얼굴합 레전드 조합!",
+  inner: "내면의 소울메이트예요",
+  best: "시그널이 고른 운명의 상대",
+} as const;
+
+export const contactClick = (
+  targetUserId: string | number,
+  compatibilityLabel?: string,
+) =>
+  track("contact_click", {
+    target_user_id: String(targetUserId),
+    // apperance는 시트 원문의 오타지만 대시보드가 이 이름으로 잡혀 있다.
+    is_good_apperance_couple:
+      compatibilityLabel === COMPATIBILITY_LABELS.appearance,
+    is_good_inner_couple: compatibilityLabel === COMPATIBILITY_LABELS.inner,
+    is_best_couple: compatibilityLabel === COMPATIBILITY_LABELS.best,
+  });
 
 export const contactCheckClick = (
   hasTicket: boolean,
@@ -78,6 +107,11 @@ export const contactCancelClick = () => track("contact_cancel_click");
 export const contactAnotherSignalClick = (sourcePage: string) =>
   track("contact_another_signal_click", { source_page: sourcePage });
 
+export const contactDetailClick = () => track("contact_detail_click");
+
+export const contactListClick = (sourcePage: string) =>
+  track("contact_list_click", { source_page: sourcePage });
+
 export const chargeTicketView = (sourceCard: string) =>
   track("charge_ticket_view", { source_card: sourceCard });
 
@@ -90,15 +124,22 @@ export const chargeAccountClick = () => track("charge_account_click");
 
 export const chargeBackClick = () => track("charge_back_click");
 
-export const chargeAccountConfirmClick = (isValid: boolean) =>
-  track("charge_account_confirm_click", { is_valid: isValid });
+export const chargeAccountConfirmClick = (
+  isValid: boolean,
+  purchasedTicket: number,
+) =>
+  track("charge_account_confirm_click", {
+    is_valid: isValid,
+    purchased_ticket: purchasedTicket,
+  });
 
 export const chargeAccountFaultClick = () =>
   track("charge_account_fault_click");
 
 export const chargeTossClick = () => track("charge_toss_click");
 
-export const chargeTossConfirmClick = () => track("charge_toss_confirm_click");
+export const chargeTossConfirmClick = (purchasedTicket: number) =>
+  track("charge_toss_confirm_click", { purchased_ticket: purchasedTicket });
 
 export const chargeKakaoConfirmClick = () =>
   track("charge_kakao_confirm_click");
@@ -120,6 +161,11 @@ export const mypageRegisterClick = (sourceCard: string) =>
 
 export const mypageAccountConnectClick = () =>
   track("mypage_account_connect_click");
+
+export const mypageLoginClick = (sourceCard: string) =>
+  track("mypage_login_click", { source_card: sourceCard });
+
+export const mypageRankingClick = () => track("mypage_ranking_click");
 
 export const myprofileView = (sourcePage: string) =>
   track("myprofile_view", { source_page: sourcePage });
