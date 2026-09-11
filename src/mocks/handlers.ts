@@ -1,4 +1,5 @@
 import { animalDisplayMap } from "@/lib/animal";
+import { CELEBRITY_LIST } from "@/lib/celebrity";
 import { MEETING_SLOTS } from "@/lib/meeting";
 import { TicketIssuedRequest } from "@/types/admin";
 import { TokenResponse } from "@/types/auth";
@@ -558,6 +559,30 @@ export const handlers = [
       },
     } satisfies SuccessResponse<ProfileResponse>);
   }),
+  http.get("/api/profiles/celebrities", ({ request }) => {
+    const url = new URL(request.url);
+    const gender = url.searchParams.get("gender") as Gender | null;
+    const animal = url.searchParams.get("animal") as AnimalType | null;
+    const names =
+      gender && animal ? CELEBRITY_LIST[gender]?.[animal] : undefined;
+
+    if (!names) {
+      return HttpResponse.json(
+        {
+          timestamp: new Date().toISOString(),
+          status: 400,
+          message: "gender에 해당하지 않는 동물상입니다.",
+        } satisfies ErrorResponse,
+        { status: 400 },
+      );
+    }
+
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: names,
+    } satisfies SuccessResponse<string[]>);
+  }),
+
   http.post("/api/profiles", async ({ request }) => {
     const body = (await request.json()) as ProfileCreatedRequest;
 

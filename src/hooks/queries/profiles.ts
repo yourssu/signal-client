@@ -8,6 +8,7 @@ import {
 import { useAtomValue } from "jotai";
 import { accessTokenAtom } from "@/atoms/authTokens";
 import {
+  AnimalType,
   Gender,
   NicknameCreatedResponse,
   NicknameGeneratedRequest,
@@ -226,6 +227,30 @@ export const useCountProfileByGender = (
         `${profileBase}/genders/${gender}/count`,
       );
     },
+    ...queryOptions,
+  });
+};
+
+/** 동물상별 닮은꼴 연예인. 인증이 필요 없고 목록이 고정이라 한 번만 받는다. */
+export const useCelebrities = (
+  gender: Gender,
+  animal: AnimalType,
+  queryOptions?: Omit<
+    UseQueryOptions<string[], SignalError>,
+    "queryKey" | "queryFn"
+  >,
+) => {
+  return useQuery({
+    queryKey: ["profiles", "celebrities", gender, animal],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      params.append("gender", gender);
+      params.append("animal", animal);
+      return authedFetch<string[]>(
+        `${profileBase}/celebrities?${params.toString()}`,
+      );
+    },
+    staleTime: Infinity,
     ...queryOptions,
   });
 };
