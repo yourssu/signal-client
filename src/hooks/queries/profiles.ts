@@ -209,6 +209,9 @@ export const useProfileRanking = (
         `${profileBase}/ranking?${params.toString()}`,
       );
     },
+    // 마이페이지 카드와 분석 페이지가 같은 키를 쓴다. 0이면 카드가 받아둔 걸
+    // 분석 페이지가 곧바로 다시 받는다. 열람 횟수라 몇 분 묵어도 된다.
+    staleTime: 5 * 60_000,
     ...queryOptions,
   });
 };
