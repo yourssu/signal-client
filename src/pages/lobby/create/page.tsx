@@ -10,6 +10,10 @@ import InvitationStep from "@/components/meeting/InvitationStep";
 import { useUser } from "@/hooks/useUser";
 import { useCreateMeetingRoom } from "@/hooks/queries/meetings";
 import { getMeetingErrorMessage, MEETING_SLOTS } from "@/lib/meeting";
+import {
+  roomCreateCompleteClick,
+  roomOnboardingNextClick,
+} from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import type { MeetingMemberRequest, MeetingSlot } from "@/types/meeting";
 
@@ -56,6 +60,10 @@ const MeetingCreatePage: React.FC = () => {
   };
 
   const handleMembersNext = () => {
+    roomOnboardingNextClick({
+      members: funnel.context.members,
+      leader: profile,
+    });
     funnel.history.push("invitation", funnel.context);
   };
 
@@ -64,6 +72,7 @@ const MeetingCreatePage: React.FC = () => {
   };
 
   const handleCreate = (targetSlot: MeetingSlot) => {
+    roomCreateCompleteClick(funnel.context.invitation.trim());
     createRoom(
       {
         slot: targetSlot,

@@ -1,4 +1,5 @@
 import { useCelebrities } from "@/hooks/queries/profiles";
+import { profileSimilarCelebClick } from "@/lib/analytics";
 import { CELEBRITY_LIST, toLookalikeTrait } from "@/lib/celebrity";
 import { cn } from "@/lib/utils";
 import { AnimalType, Gender } from "@/types/profile";
@@ -40,7 +41,10 @@ const CelebrityTags = ({
               type="button"
               // 입력창이 포커스를 잃으면 키보드가 닫히며 화면이 밀려 탭이 빗나간다.
               onMouseDown={(event) => event.preventDefault()}
-              onClick={() => onSelect(isSelected ? "" : trait)}
+              onClick={() => {
+                if (!isSelected) profileSimilarCelebClick(name);
+                onSelect(isSelected ? "" : trait);
+              }}
               className={cn(
                 "button-s text-label-alternative border-line-normal flex h-8 items-center rounded-full border px-[11px] whitespace-nowrap transition-colors duration-200",
                 isSelected && "border-primary text-primary",

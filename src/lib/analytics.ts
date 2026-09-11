@@ -1,6 +1,8 @@
 import { GA_ID, MIXPANEL_TOKEN } from "@/env";
 import ReactGA4 from "react-ga4";
 import mixpanel from "mixpanel-browser";
+import type { MeetingMemberRequest } from "@/types/meeting";
+import type { Gender } from "@/types/profile";
 
 if (MIXPANEL_TOKEN) {
   mixpanel.init(MIXPANEL_TOKEN);
@@ -146,3 +148,83 @@ export const swipeStop = (direction: "left" | "right", profileId: number) =>
   track("swipe_stop", { direction, profile_id: profileId });
 
 export const lobbyViewed = () => track("lobby_viewed");
+
+export const profileSimilarCelebClick = (celebrityName: string) =>
+  track("profile_similar_celeb_click", { celebrity_name: celebrityName });
+
+export const meetingSignalClick = (isRegistered: boolean) =>
+  track("meeting_signal_click", { is_registered: isRegistered });
+
+export const roomCreateClick = (isRegistered: boolean) =>
+  track("room_create_click", { is_registered: isRegistered });
+
+// profile_gender_submit이 소문자로 보내고 있어 같은 값으로 맞춘다.
+const toGenderParam = (gender: Gender) =>
+  gender === "MALE" ? "male" : "female";
+
+const memberParams = (prefix: string, member: MeetingMemberRequest) => ({
+  [`${prefix}_birth`]: member.birthYear,
+  [`${prefix}_major`]: member.department,
+  [`${prefix}_gender`]: toGenderParam(member.gender),
+});
+
+/**
+ * 인원이 가변이라 person_1_birth처럼 순번을 키에 박아 펼친다.
+ * 빈 순번을 null로 채우면 집계에 빈 값이 섞이므로 있는 사람 것만 넣는다.
+ */
+const membersParams = (members: MeetingMemberRequest[]) =>
+  members.reduce<Record<string, unknown>>(
+    (params, member, index) => ({
+      ...params,
+      ...memberParams(`person_${index + 1}`, member),
+    }),
+    {},
+  );
+
+export const roomOnboardingNextClick = (data: {
+  members: MeetingMemberRequest[];
+  leader: MeetingMemberRequest | null;
+}) =>
+  track("room_onboarding_next_click", {
+    // 정원은 방장을 포함해 센다. 화면의 "N인 방 만들기"와 같은 수다.
+    people_count: data.members.length + 1,
+    ...membersParams(data.members),
+    ...(data.leader ? memberParams("leader", data.leader) : {}),
+  });
+
+export const roomCreateCompleteClick = (roomIntro: string) =>
+  track("room_create_complete_click", { room_intro: roomIntro });
+
+export const roomDeleteClick = () => track("room_delete_click");
+
+export const roomDeleteCompleteClick = (roomRunTime: number) =>
+  track("room_delete_complete_click", { room_run_time: roomRunTime });
+
+export const roomDetailClick = (data: {
+  targetRoomIntro: string;
+  targetRoomPeopleCount: number;
+}) =>
+  track("room_detail_click", {
+    target_room_intro: data.targetRoomIntro,
+    target_room_people_count: data.targetRoomPeopleCount,
+  });
+
+export const roomParticipateClick = (isRegistered: boolean) =>
+  track("room_participate_click", { is_registered: isRegistered });
+
+// onboardig는 택소노미 시트의 오타지만 대시보드가 이 이름으로 잡혀 있어 그대로 둔다.
+export const roomParticipateOnboardingCompleteClick = (
+  members: MeetingMemberRequest[],
+) =>
+  track("room_participate_onboardig_complete_click", {
+    people_count: members.length,
+    ...membersParams(members),
+  });
+
+export const roomContactClick = () => track("room_contact_click");
+
+export const textContentsCopyClick = () => track("text_contents_copy_click");
+
+export const meetingManualClick = () => track("meeting_manual_click");
+
+export const meetingReferralClick = () => track("meeting_referral_click");

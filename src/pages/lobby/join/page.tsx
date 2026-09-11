@@ -18,6 +18,7 @@ import {
   isMeetingContact,
 } from "@/lib/meeting";
 import { useNow } from "@/hooks/useNow";
+import { roomParticipateOnboardingCompleteClick } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import type { MeetingMemberRequest } from "@/types/meeting";
 
@@ -91,6 +92,7 @@ const LobbyJoinPage: React.FC = () => {
     const [representative, ...companions] = selfMember
       ? [selfMember, ...members]
       : members;
+    roomParticipateOnboardingCompleteClick([representative, ...companions]);
     matchRoom(
       { representative, contact, companions },
       {

@@ -124,6 +124,23 @@ export const isMeetingContact = (contact: string): boolean =>
 /** 잔여 시간이 이 값 이하로 떨어지면 방 종료 임박 안내를 띄운다. */
 export const MEETING_ROOM_EXPIRY_WARNING_MS = 60_000;
 
+/** 방은 생성 후 이 시간이 지나면 닫힌다. 설명서의 "1시간 동안만 유지" 문구와 같은 정책이다. */
+export const MEETING_ROOM_TTL_MS = 60 * 60_000;
+
+/**
+ * 생성 후 흐른 분. 서버가 생성 시각을 주지 않아 만료 시각에서 TTL을 되짚는다.
+ * 남은 분을 내림하므로 화면의 "N분 남음"과 더하면 60이 된다.
+ * 기기 시계가 서버와 어긋나 범위를 벗어나면 0~60으로 자른다.
+ */
+export const getRoomRunMinutes = (expiresAt: string, now: number): number => {
+  const ttlMinutes = MEETING_ROOM_TTL_MS / 60_000;
+  const remainingMs = new Date(expiresAt).getTime() - now;
+  const remainingMinutes = Number.isFinite(remainingMs)
+    ? Math.floor(remainingMs / 60_000)
+    : 0;
+  return Math.min(ttlMinutes, Math.max(0, ttlMinutes - remainingMinutes));
+};
+
 /** 가운뎃점 U+00B7. 생김새가 거의 같은 U+2219로 흘러간 적이 있어 한곳에 묶어 둔다. */
 export const MEMBER_PART_SEPARATOR = "·";
 

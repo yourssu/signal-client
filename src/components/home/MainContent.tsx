@@ -15,6 +15,7 @@ import {
 } from "@/env";
 import { cn } from "@/lib/utils";
 import {
+  meetingSignalClick,
   profileRegisterClick,
   signalSendClick,
   myprofileView,
@@ -108,7 +109,11 @@ const MainContent = ({ profileRegistered }: MainContentProps) => {
               ))}
 
             {ENABLE_LOBBY && (
-              <Link to="/lobby" className={SUB_BUTTON_CLASS}>
+              <Link
+                to="/lobby"
+                onClick={() => meetingSignalClick(profileRegistered)}
+                className={SUB_BUTTON_CLASS}
+              >
                 {profileRegistered ? "축제 미팅하기(Beta)" : "축제 미팅하기"}
               </Link>
             )}
