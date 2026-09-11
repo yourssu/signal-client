@@ -12,6 +12,7 @@ import {
   contactCancelClick,
   contactCheckClick,
   contactAnotherSignalClick,
+  contactListClick,
 } from "@/lib/analytics";
 import { useViewerSelf } from "@/hooks/queries/viewers";
 import { useQueryClient } from "@tanstack/react-query";
@@ -111,7 +112,8 @@ const ContactViewPage: React.FC = () => {
               </Button>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
-              현재 이용권 수: {(viewerSelf?.ticket ?? 0) - (viewerSelf?.usedTicket ?? 0)}
+              현재 이용권 수:{" "}
+              {(viewerSelf?.ticket ?? 0) - (viewerSelf?.usedTicket ?? 0)}
             </p>
             {error && <p className="mt-4 text-red-500 font-medium">{error}</p>}
           </div>
@@ -146,7 +148,10 @@ const ContactViewPage: React.FC = () => {
                   className="rounded-2xl text-primary px-3.5"
                   asChild
                 >
-                  <Link to="/my/signals">
+                  <Link
+                    to="/my/signals"
+                    onClick={() => contactListClick("signal_contact")}
+                  >
                     <img src={listHeartOutline} className="inline size-8" />
                   </Link>
                 </Button>

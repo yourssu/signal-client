@@ -2,6 +2,7 @@ import { Fragment, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import RoomStepper from "@/components/meeting/status/RoomStepper";
+import { roomContactClick, textContentsCopyClick } from "@/lib/analytics";
 import { getMemberSummaryParts, MEMBER_PART_SEPARATOR } from "@/lib/meeting";
 import { cn, formatPhone, getDeviceType } from "@/lib/utils";
 import type { MeetingMemberResponse, MeetingTeamSide } from "@/types/meeting";
@@ -116,6 +117,7 @@ export default function RoomMatchedSheet({
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(invitationMessage);
+      textContentsCopyClick();
       toast.success("문자 내용이 복사됐어요! 바로 연락해보세요");
     } catch {
       toast.error("복사에 실패했어요. 연락처를 직접 눌러 확인해주세요");
@@ -210,11 +212,18 @@ export default function RoomMatchedSheet({
         </Button>
         <Button asChild size="xl" className="flex-1">
           {isInstagram ? (
-            <a href={contactHref} target="_blank" rel="noreferrer">
+            <a
+              href={contactHref}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => roomContactClick()}
+            >
               연락 보내기
             </a>
           ) : (
-            <a href={contactHref}>문자 보내기</a>
+            <a href={contactHref} onClick={() => roomContactClick()}>
+              문자 보내기
+            </a>
           )}
         </Button>
       </div>

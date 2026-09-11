@@ -23,13 +23,25 @@ import {
 } from "@/hooks/queries/meetings";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNow } from "@/hooks/useNow";
+import { useUser } from "@/hooks/useUser";
 import {
   getJoinBlockedReason,
+  getRoomRunMinutes,
   MEETING_CREATION_BLOCK_MESSAGES,
   MEETING_SLOTS,
   SLOT_POSITIONS,
 } from "@/lib/meeting";
-import { lobbyViewed } from "@/lib/analytics";
+import {
+  lobbyViewed,
+  meetingManualClick,
+  meetingReferralClick,
+  roomCreateClick,
+  roomDeleteClick,
+  roomDeleteCompleteClick,
+  roomDetailClick,
+  roomParticipateClick,
+} from "@/lib/analytics";
+import { shareReferralLink } from "@/lib/referral";
 import { DISABLED_REGISTER_DESC, ENABLE_REGISTER } from "@/env";
 import mapBackground from "@/assets/lobby/map_background.png";
 import btnManual from "@/assets/lobby/btn_manual.svg";
@@ -54,6 +66,7 @@ interface RoomDismissal {
 const LobbyPage: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { profile } = useUser();
   const { data: board, isError } = useMeetingBoard();
   const now = useNow(MARKER_TICK_INTERVAL);
   const [partySize, setPartySize] = useState<PartySizeFilter>(null);
@@ -171,6 +184,9 @@ const LobbyPage: React.FC = () => {
 
   const handleDeleteRoom = () => {
     if (!activeRoom) return;
+    if (openRoomExpiresAt) {
+      roomDeleteCompleteClick(getRoomRunMinutes(openRoomExpiresAt, Date.now()));
+    }
     const roomId = activeRoom.roomId;
     cancelRoom(roomId, {
       onSuccess: () => {
@@ -186,16 +202,32 @@ const LobbyPage: React.FC = () => {
     });
   };
 
+  const handleReferralClick = async () => {
+    // 시트가 뜨기 전에 보낸다. 공유했는지가 아니라 눌렀는지를 재는 이벤트다.
+    meetingReferralClick();
+    try {
+      const result = await shareReferralLink();
+      if (result === "copied") toast.success("초대 링크를 복사했어요");
+    } catch {
+      toast.error("초대 링크를 공유하지 못했어요. 잠시 후 다시 시도해주세요");
+    }
+  };
+
   const handleSlotClick = (
     slot: MeetingSlot,
     room?: MeetingRoomSummaryResponse | null,
   ) => {
     if (room) {
       if (myRoom && room.id === myRoom.roomId) return;
+      roomDetailClick({
+        targetRoomIntro: room.invitation,
+        targetRoomPeopleCount: room.partySize,
+      });
       setPreviewRoomId(room.id);
       return;
     }
 
+    roomCreateClick(!!profile);
     const eligibility = board?.creationEligibility;
     if (!eligibility) return;
 
@@ -272,7 +304,10 @@ const LobbyPage: React.FC = () => {
         <RoomWaitingSheet
           open
           expiresAt={openRoomExpiresAt}
-          onCancel={() => setDeleteDialogOpen(true)}
+          onCancel={() => {
+            roomDeleteClick();
+            setDeleteDialogOpen(true);
+          }}
           onExpire={() =>
             setRoomDismissal({ roomId: activeRoom.roomId, phase: "expired" })
           }
@@ -342,7 +377,10 @@ const LobbyPage: React.FC = () => {
         <div className="absolute top-3 right-4 flex flex-col items-center gap-2">
           <button
             type="button"
-            onClick={() => setManualOpen(true)}
+            onClick={() => {
+              meetingManualClick();
+              setManualOpen(true);
+            }}
             className="flex w-[53px] flex-col items-center"
           >
             <img src={btnManual} alt="" className="mb-[-4px] size-[40px]" />
@@ -350,12 +388,16 @@ const LobbyPage: React.FC = () => {
               설명서
             </span>
           </button>
-          <div className="flex w-[53px] flex-col items-center">
+          <button
+            type="button"
+            onClick={handleReferralClick}
+            className="flex w-[53px] flex-col items-center"
+          >
             <img src={btnInvite} alt="" className="mb-[-4px] size-[40px]" />
             <span className="caption2 bg-primary text-static-white w-[44px] rounded-[31px] py-[2px] text-center">
               친구초대
             </span>
-          </div>
+          </button>
         </div>
       </div>
 
@@ -391,7 +433,10 @@ const LobbyPage: React.FC = () => {
           if (!open) setPreviewRoomId(null);
         }}
         joinBlockedReason={joinBlockedReason}
-        onJoin={(id) => navigate(`/lobby/join/${id}`)}
+        onJoin={(id) => {
+          roomParticipateClick(!!profile);
+          navigate(`/lobby/join/${id}`);
+        }}
       />
 
       <RoomDeleteDialog
