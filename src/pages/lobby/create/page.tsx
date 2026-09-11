@@ -99,51 +99,53 @@ const MeetingCreatePage: React.FC = () => {
     <div className="flex h-full flex-col bg-white">
       <TopBar onBack={handleBack} hideInfo />
       <funnel.Render
-        members={() => (
-          <>
-            <title>함께할 친구를 알려주세요 - 시그널</title>
-            <div className="flex flex-col gap-1.5 px-[18px] py-3">
-              <h1 className="h1 text-label-normal">함께할 친구를 알려주세요</h1>
-              <p className="body1 text-label-alternative">
-                미팅에 보여질 기본 정보만 입력하면 돼요
-              </p>
-            </div>
-            <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-[18px]">
-              <MemberForm
-                ageLabel="출생연도"
-                disabled={funnel.context.members.length >= MAX_FRIEND_COUNT}
-                onAdd={handleAddMember}
-              />
-              <MemberList
-                host={
-                  profile
-                    ? { nickname: profile.nickname, animal: profile.animal }
-                    : undefined
-                }
-                members={funnel.context.members}
-                emptySlotCount={
-                  MAX_FRIEND_COUNT - funnel.context.members.length
-                }
-                onRemove={handleRemoveMember}
-              />
-            </div>
-            <div className="shrink-0 px-[18px] pt-3 pb-8">
-              <button
-                type="button"
-                disabled={funnel.context.members.length === 0}
-                onClick={handleMembersNext}
-                className={cn(
-                  "button-l h-14 w-full rounded-2xl text-static-white",
-                  funnel.context.members.length > 0
-                    ? "bg-primary"
-                    : "bg-line-normal",
-                )}
-              >
-                다음
-              </button>
-            </div>
-          </>
-        )}
+        members={() => {
+          // 정원은 방장을 포함한다. 친구를 한 명도 안 넣었으면 1인 방이 되므로 숫자를 쓰지 않는다.
+          const friendCount = funnel.context.members.length;
+          return (
+            <>
+              <title>함께할 친구를 알려주세요 - 시그널</title>
+              <div className="flex flex-col gap-1.5 px-[18px] py-3">
+                <h1 className="h1 text-label-normal">
+                  함께할 친구를 알려주세요
+                </h1>
+                <p className="body1 text-label-alternative">
+                  최대 4명까지 추가할 수 있어요
+                </p>
+              </div>
+              <div className="flex flex-1 flex-col gap-6 overflow-y-auto px-[18px]">
+                <MemberForm
+                  ageLabel="출생연도"
+                  disabled={friendCount >= MAX_FRIEND_COUNT}
+                  onAdd={handleAddMember}
+                />
+                <MemberList
+                  host={
+                    profile
+                      ? { nickname: profile.nickname, animal: profile.animal }
+                      : undefined
+                  }
+                  members={funnel.context.members}
+                  emptySlotCount={MAX_FRIEND_COUNT - friendCount}
+                  onRemove={handleRemoveMember}
+                />
+              </div>
+              <div className="shrink-0 px-[18px] pt-3 pb-8">
+                <button
+                  type="button"
+                  disabled={friendCount === 0}
+                  onClick={handleMembersNext}
+                  className={cn(
+                    "button-l h-14 w-full rounded-2xl text-static-white",
+                    friendCount > 0 ? "bg-primary" : "bg-line-normal",
+                  )}
+                >
+                  {friendCount > 0 ? `${friendCount + 1}인 방 만들기` : "다음"}
+                </button>
+              </div>
+            </>
+          );
+        }}
         invitation={() => {
           const isInvitationValid = funnel.context.invitation.trim().length > 0;
           return (
