@@ -165,7 +165,17 @@ export const mypageAccountConnectClick = () =>
 export const mypageLoginClick = (sourceCard: string) =>
   track("mypage_login_click", { source_card: sourceCard });
 
-export const mypageRankingClick = () => track("mypage_ranking_click");
+export const mypageRankingClick = (data?: {
+  profileViewCount: number;
+  profileViewRank: number;
+}) =>
+  track(
+    "mypage_ranking_click",
+    data && {
+      profile_view_count: data.profileViewCount,
+      profile_view_rank: data.profileViewRank,
+    },
+  );
 
 export const myprofileView = (sourcePage: string) =>
   track("myprofile_view", { source_page: sourcePage });

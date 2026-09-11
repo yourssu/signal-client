@@ -4,6 +4,8 @@ import { Link } from "react-router";
 import { LoginDrawer } from "@/components/LoginDrawer";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Users } from "lucide-react";
+import { useProfileRanking } from "@/hooks/queries/profiles";
+import { useUserInfo } from "@/hooks/queries/users";
 import {
   mypageRegisterClick,
   mypageAccountConnectClick,
@@ -20,6 +22,14 @@ export const ProfileAnalysisCard = ({
   isLoggedIn,
   isProfileRegistered,
 }: ProfileAnalysisCardProps) => {
+  // 랭킹은 프로필이 있고 로그인된 카드에서만 쓴다. 다른 카드에서는 요청이 나가지 않게 막는다.
+  // 분석 페이지와 같은 키로 캐시되므로 여기서 받아두면 그쪽이 재사용한다.
+  const isRankingCard = !!isLoggedIn && !!isProfileRegistered;
+  const { data: userInfo } = useUserInfo({ enabled: isRankingCard });
+  const { data: ranking } = useProfileRanking(userInfo?.uuid ?? "", {
+    enabled: isRankingCard && !!userInfo?.uuid,
+  });
+
   if (!isProfileRegistered) {
     return (
       <div className="bg-white rounded-[20px] px-4 pt-8 pb-5 w-full flex flex-col items-center justify-between gap-0">
@@ -53,7 +63,10 @@ export const ProfileAnalysisCard = ({
               <LoginDrawer>
                 <button
                   className="text-primary underline cursor-pointer"
-                  onClick={() => mypageAccountConnectClick()}
+                  onClick={() => {
+                    mypageAccountConnectClick();
+                    mypageLoginClick("no_profile_card");
+                  }}
                 >
                   구글 계정 연동
                 </button>
@@ -68,7 +81,6 @@ export const ProfileAnalysisCard = ({
   if (!isLoggedIn) {
     return (
       <LoginDrawer>
-        {/* 이 카드는 프로필이 있을 때만 그려진다. 프로필 없는 카드의 로그인은 mypage_account_connect_click이 맡는다. */}
         <div
           onClick={() => mypageLoginClick("google_login_induction")}
           className="bg-white rounded-[20px] px-4 py-5 w-full flex items-center gap-2.5 cursor-pointer"
@@ -95,7 +107,15 @@ export const ProfileAnalysisCard = ({
   return (
     <Link
       to="/my/analysis"
-      onClick={() => mypageRankingClick()}
+      // 아직 못 받았거나 랭킹이 없으면(404) 프로퍼티 없이 보낸다.
+      onClick={() =>
+        mypageRankingClick(
+          ranking && {
+            profileViewCount: ranking.purchaseCount,
+            profileViewRank: ranking.rank,
+          },
+        )
+      }
       className="bg-white rounded-[20px] px-4 py-5 w-full flex items-center gap-2.5 cursor-pointer"
     >
       <div className="bg-fill-pink rounded-[10px] size-9 flex items-center justify-center shrink-0">

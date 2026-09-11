@@ -41,6 +41,7 @@ import {
   roomDetailClick,
   roomParticipateClick,
 } from "@/lib/analytics";
+import { shareReferralLink } from "@/lib/referral";
 import { DISABLED_REGISTER_DESC, ENABLE_REGISTER } from "@/env";
 import mapBackground from "@/assets/lobby/map_background.png";
 import btnManual from "@/assets/lobby/btn_manual.svg";
@@ -199,6 +200,17 @@ const LobbyPage: React.FC = () => {
         toast.error("방을 삭제하지 못했어요. 잠시 후 다시 시도해주세요");
       },
     });
+  };
+
+  const handleReferralClick = async () => {
+    // 시트가 뜨기 전에 보낸다. 공유했는지가 아니라 눌렀는지를 재는 이벤트다.
+    meetingReferralClick();
+    try {
+      const result = await shareReferralLink();
+      if (result === "copied") toast.success("초대 링크를 복사했어요");
+    } catch {
+      toast.error("초대 링크를 공유하지 못했어요. 잠시 후 다시 시도해주세요");
+    }
   };
 
   const handleSlotClick = (
@@ -378,7 +390,7 @@ const LobbyPage: React.FC = () => {
           </button>
           <button
             type="button"
-            onClick={() => meetingReferralClick()}
+            onClick={handleReferralClick}
             className="flex w-[53px] flex-col items-center"
           >
             <img src={btnInvite} alt="" className="mb-[-4px] size-[40px]" />
