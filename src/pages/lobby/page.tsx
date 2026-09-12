@@ -189,6 +189,19 @@ const LobbyPage: React.FC = () => {
     [board],
   );
 
+  // 인원 필터가 "참여 가능한 방을 빠르게 보여드려요"라고 약속한 것의 답이다.
+  // 마커를 흐리게 하는 판정과 같은 조건을 쓴다. 내 방은 참여할 수 없어 뺀다.
+  const joinableRoomCount = useMemo(
+    () =>
+      (board?.slots ?? []).filter(({ room }) => {
+        if (!room) return false;
+        if (myRoom && room.id === myRoom.roomId) return false;
+        if (partySize === null || partySize === "ANY") return true;
+        return room.partySize === partySize;
+      }).length,
+    [board, myRoom, partySize],
+  );
+
   const handleDeleteRoom = () => {
     if (!activeRoom) return;
     if (openRoomExpiresAt) {
@@ -378,6 +391,14 @@ const LobbyPage: React.FC = () => {
             <MatchChanceChip
               count={isMatchChanceUsedUp ? 0 : MATCH_CHANCE_PER_DAY}
             />
+          </div>
+        )}
+
+        {/* 내 방을 들고 있는 동안에는 어차피 참여할 수 없으므로 필터 카드가 보일 때만 말한다. */}
+        {board && isShowingFilterCard && (
+          <div className="absolute top-[58px] left-7 flex items-center gap-2">
+            <span className="h3 text-label-strong">참여 가능한 방</span>
+            <span className="h3 text-primary">{joinableRoomCount}개</span>
           </div>
         )}
 
