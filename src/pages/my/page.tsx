@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router";
 import TopBar from "@/components/Header";
 import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Instagram } from "lucide-react";
 import userIcon from "@/assets/icons/user_icon_mini.svg";
 import archiveIcon from "@/assets/icons/file.svg";
 import { ProfileAnalysisCard } from "@/components/my/ProfileAnalysisCard";
@@ -12,6 +12,9 @@ import { useUser } from "@/hooks/useUser";
 import { cn } from "@/lib/utils";
 import { ENABLE_PROFILE_VIEW } from "@/env";
 import { contactListClick, mypageView } from "@/lib/analytics";
+
+/** CS 문의를 받는 공식 계정. 계정이 하나뿐이라 환경마다 다를 이유가 없다. */
+const INQUIRY_URL = "https://www.instagram.com/ssu.signal/";
 
 const MyPage: React.FC = () => {
   const { profile, viewer } = useUser();
@@ -99,6 +102,18 @@ const MyPage: React.FC = () => {
             </Link>
           )}
         </div>
+
+        {/* 지난 시즌 프로필이 남는 등 스스로 풀 수 없는 문제를 겪는 사람이 찾는 길이다.
+            프로필·로그인 여부로 가리지 않는다. 정작 막힌 사람에게 안 보이면 의미가 없다. */}
+        <a
+          href={INQUIRY_URL}
+          target="_blank"
+          rel="noreferrer"
+          className="text-label-alternative mt-auto flex items-center gap-1 py-2"
+        >
+          <Instagram className="size-3.5" />
+          <span className="caption1 underline">문의하기</span>
+        </a>
       </div>
     </div>
   );
