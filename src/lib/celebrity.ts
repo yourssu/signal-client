@@ -91,5 +91,11 @@ export const CELEBRITY_LIST: Record<
   },
 };
 
-/** 태그를 눌렀을 때 특징 칸에 쓰는 문장. 선택 여부 판정도 같은 식을 쓴다. */
-export const toLookalikeTrait = (name: string) => `숭실대 ${name}`;
+/**
+ * 태그를 눌렀을 때 특징 칸에 쓰는 문장. 선택 여부 판정도 같은 식을 쓴다.
+ *
+ * 타 학교 학생에게 "숭실대"를 붙일 수는 없다. 학교명을 대신 넣지 않고 빈칸처럼
+ * 두는 건, 사용자가 자기 학교로 고쳐 쓰라는 뜻이다.
+ */
+export const toLookalikeTrait = (name: string, isAnotherSchool = false) =>
+  `${isAnotherSchool ? "OO대" : "숭실대"} ${name}`;
