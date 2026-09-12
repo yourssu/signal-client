@@ -17,9 +17,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAtom, useAtomValue } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 import { UserData } from "@/types/user";
-import { useAuth } from "@/hooks/useAuth";
 import { useUserInfo } from "@/hooks/queries/users";
-import { providerAtom } from "@/atoms/authTokens";
+import { isAuthenticatedAtom, providerAtom } from "@/atoms/authTokens";
 
 export const useUser = (): UserData & {
   setIsFirstProfileView: (value: boolean) => void;
@@ -30,8 +29,9 @@ export const useUser = (): UserData & {
   const [refreshInitiated, setRefreshInitiated] = useState(false);
   const [isRefreshed, setIsRefreshed] = useState(false);
 
-  // Check auth before fetching user data
-  const { isAuthenticated } = useAuth();
+  // useAuth를 여기서 부르면 useUser를 쓰는 화면마다 초기화가 따로 돌아
+  // 익명 등록과 갱신이 겹친다. 초기화는 Layout 한 곳이 맡고 여기선 상태만 읽는다.
+  const isAuthenticated = useAtomValue(isAuthenticatedAtom);
 
   const { data: info } = useUserInfo();
   const uuid = info?.uuid ?? null;

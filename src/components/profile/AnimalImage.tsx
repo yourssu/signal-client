@@ -14,6 +14,7 @@ import turtleImg from "@/assets/animals/turtle.png";
 import bearMaleImg from "@/assets/animals/male/bear.png";
 import deerMaleImg from "@/assets/animals/male/Deer.png";
 import dinosaurMaleImg from "@/assets/animals/male/Dinosaur.png";
+import wolfMaleImg from "@/assets/animals/male/wolf.png";
 import foxFemaleImg from "@/assets/animals/female/fox.png";
 import rabbitFemaleImg from "@/assets/animals/female/rabbit.png";
 import turtleFemaleImg from "@/assets/animals/female/turtle.png";
@@ -31,6 +32,7 @@ const animalImageMap: Record<AnimalType, string> = {
   FOX: foxImg,
   TURTLE: turtleImg,
   RABBIT: rabbitImg,
+  WOLF: wolfMaleImg,
 };
 
 const genderedAnimalImageMap: Record<Gender, Record<AnimalType, string>> = {
@@ -44,6 +46,7 @@ const genderedAnimalImageMap: Record<Gender, Record<AnimalType, string>> = {
     FOX: foxImg,
     TURTLE: turtleImg,
     RABBIT: rabbitImg,
+    WOLF: wolfMaleImg,
   },
   FEMALE: {
     DOG: dogCommonImg,
@@ -55,6 +58,7 @@ const genderedAnimalImageMap: Record<Gender, Record<AnimalType, string>> = {
     BEAR: bearImg,
     DEER: deerImg,
     DINOSAUR: dinosaurImg,
+    WOLF: wolfMaleImg,
   },
 };
 

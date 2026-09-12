@@ -5,7 +5,10 @@ import {
   useQuery,
   UseQueryOptions,
 } from "@tanstack/react-query";
+import { useAtomValue } from "jotai";
+import { accessTokenAtom } from "@/atoms/authTokens";
 import {
+  AnimalType,
   Gender,
   NicknameCreatedResponse,
   NicknameGeneratedRequest,
@@ -49,12 +52,16 @@ export const useSelfProfile = (
     "queryKey" | "queryFn"
   >,
 ) => {
+  const accessToken = useAtomValue(accessTokenAtom);
+  const { enabled = true, ...restOptions } = queryOptions ?? {};
+
   return useQuery({
     queryKey: ["profiles", "me"],
     queryFn: async () => {
       return authedFetch<ProfileContactResponse>(`${profileBase}/me`);
     },
-    ...queryOptions,
+    ...restOptions,
+    enabled: !!accessToken && enabled,
   });
 };
 
@@ -202,6 +209,9 @@ export const useProfileRanking = (
         `${profileBase}/ranking?${params.toString()}`,
       );
     },
+    // 마이페이지 카드와 분석 페이지가 같은 키를 쓴다. 0이면 카드가 받아둔 걸
+    // 분석 페이지가 곧바로 다시 받는다. 열람 횟수라 몇 분 묵어도 된다.
+    staleTime: 5 * 60_000,
     ...queryOptions,
   });
 };
@@ -224,12 +234,39 @@ export const useCountProfileByGender = (
   });
 };
 
+/** 동물상별 닮은꼴 연예인. 인증이 필요 없고 목록이 고정이라 한 번만 받는다. */
+export const useCelebrities = (
+  gender: Gender,
+  animal: AnimalType,
+  queryOptions?: Omit<
+    UseQueryOptions<string[], SignalError>,
+    "queryKey" | "queryFn"
+  >,
+) => {
+  return useQuery({
+    queryKey: ["profiles", "celebrities", gender, animal],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      params.append("gender", gender);
+      params.append("animal", animal);
+      return authedFetch<string[]>(
+        `${profileBase}/celebrities?${params.toString()}`,
+      );
+    },
+    staleTime: Infinity,
+    ...queryOptions,
+  });
+};
+
 export const usePurchasedProfiles = (
   queryOptions?: Omit<
     UseQueryOptions<PurchasedProfileResponse[], SignalError>,
     "queryKey" | "queryFn"
   >,
 ) => {
+  const accessToken = useAtomValue(accessTokenAtom);
+  const { enabled = true, ...restOptions } = queryOptions ?? {};
+
   return useQuery({
     queryKey: ["profiles", "me", "purchased"],
     queryFn: async () => {
@@ -237,7 +274,8 @@ export const usePurchasedProfiles = (
         `${profileBase}/me/purchased`,
       );
     },
-    ...queryOptions,
+    ...restOptions,
+    enabled: !!accessToken && enabled,
   });
 };
 

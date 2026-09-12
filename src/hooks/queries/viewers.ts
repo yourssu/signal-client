@@ -4,6 +4,8 @@ import {
   useQuery,
   UseQueryOptions,
 } from "@tanstack/react-query";
+import { useAtomValue } from "jotai";
+import { accessTokenAtom } from "@/atoms/authTokens";
 import {
   IssuedVerificationRequest,
   NotificationDepositRequest,
@@ -62,7 +64,7 @@ export const useIssueTicket = (
       });
       const res = (await response.json()) as SignalResponse<ViewerResponse>;
       if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
+        throw new SignalError(res.message, res.status, res.timestamp, res.code);
       } else {
         return res.result;
       }
@@ -94,12 +96,16 @@ export const useViewerSelf = (
     "queryKey" | "queryFn"
   >,
 ) => {
+  const accessToken = useAtomValue(accessTokenAtom);
+  const { enabled = true, ...restOptions } = queryOptions ?? {};
+
   return useQuery({
     queryKey: ["viewer", "me"],
     queryFn: async () => {
       return authedFetch<ViewerDetailResponse>(`${viewersBase}/me`);
     },
-    ...queryOptions,
+    ...restOptions,
+    enabled: !!accessToken && enabled,
   });
 };
 
@@ -165,7 +171,7 @@ export const useTicketPackages = (
       const res =
         (await response.json()) as SignalResponse<TicketPackagesResponse>;
       if (!("result" in res)) {
-        throw new SignalError(res.message, res.status, res.timestamp);
+        throw new SignalError(res.message, res.status, res.timestamp, res.code);
       } else {
         return res.result;
       }

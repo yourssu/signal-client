@@ -11,6 +11,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ContactedProfilesPage from "@/pages/my/signals/page";
 import {
   ENABLE_KAKAO_PAYMENTS,
+  ENABLE_LOBBY,
   ENABLE_PROFILE_VIEW,
   ENABLE_REGISTER,
   GOOGLE_OAUTH_CLIENT_ID,
@@ -25,6 +26,9 @@ import MyProfilePage from "@/pages/my/profile/page";
 import TermPrivacyPage from "@/pages/[privacy,terms]/page";
 import AnalysisMyProfilePage from "@/pages/my/analysis/page";
 import GoogleAuthPage from "@/pages/auth/google/page";
+import LobbyPage from "@/pages/lobby/page";
+import MeetingCreatePage from "@/pages/lobby/create/page";
+import LobbyJoinPage from "@/pages/lobby/join/page";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const router = createBrowserRouter([
@@ -136,6 +140,18 @@ const router = createBrowserRouter([
         ) : (
           <Navigate to="/" />
         ),
+      },
+      {
+        path: "lobby",
+        element: ENABLE_LOBBY ? <LobbyPage /> : <Navigate to="/" />,
+      },
+      {
+        path: "lobby/create",
+        element: ENABLE_LOBBY ? <MeetingCreatePage /> : <Navigate to="/" />,
+      },
+      {
+        path: "lobby/join/:roomId",
+        element: ENABLE_LOBBY ? <LobbyJoinPage /> : <Navigate to="/" />,
       },
     ],
   },

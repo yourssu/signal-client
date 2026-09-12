@@ -13,6 +13,7 @@ import turtleFemaleImg from "@/assets/animals/female/turtle.png";
 import dogCommonImg from "@/assets/animals/common/dog.png";
 import catCommonImg from "@/assets/animals/common/cat.png";
 import hamsterCommonImg from "@/assets/animals/common/hamster.png";
+import wolfMaleImg from "@/assets/animals/male/wolf.png";
 
 interface AnimalStepProps {
   gender: Gender;
@@ -25,19 +26,19 @@ const genderAnimals: Record<Gender, { type: AnimalType; img: string }[]> = {
     { type: "BEAR", img: bearMaleImg },
     { type: "DEER", img: deerMaleImg },
     { type: "DINOSAUR", img: dinosaurMaleImg },
+    { type: "DOG", img: dogCommonImg },
+    { type: "CAT", img: catCommonImg },
+    { type: "WOLF", img: wolfMaleImg },
   ],
   FEMALE: [
     { type: "FOX", img: foxFemaleImg },
     { type: "RABBIT", img: rabbitFemaleImg },
     { type: "TURTLE", img: turtleFemaleImg },
+    { type: "DOG", img: dogCommonImg },
+    { type: "CAT", img: catCommonImg },
+    { type: "HAMSTER", img: hamsterCommonImg },
   ],
 };
-
-const commonAnimals: { type: AnimalType; img: string }[] = [
-  { type: "DOG", img: dogCommonImg },
-  { type: "CAT", img: catCommonImg },
-  { type: "HAMSTER", img: hamsterCommonImg },
-];
 
 const AnimalStep: React.FC<AnimalStepProps> = ({
   gender,
@@ -82,16 +83,6 @@ const AnimalStep: React.FC<AnimalStepProps> = ({
                 ? "!max-w-24"
                 : undefined
             }
-          />
-        ))}
-        {commonAnimals.map((item) => (
-          <CharacterCard
-            key={item.type}
-            animalType={item.type}
-            imgSrc={item.img}
-            name={animalDisplayMap[item.type]}
-            selected={selectedAnimal === item.type}
-            onClick={() => setSelectedAnimal(item.type)}
           />
         ))}
       </div>

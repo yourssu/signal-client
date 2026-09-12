@@ -1,7 +1,27 @@
 import { animalDisplayMap } from "@/lib/animal";
+import { CELEBRITY_LIST } from "@/lib/celebrity";
+import {
+  getRequiredApplicantGender,
+  hasIneligibleApplicant,
+  MEETING_SLOTS,
+} from "@/lib/meeting";
 import { TicketIssuedRequest } from "@/types/admin";
 import { TokenResponse } from "@/types/auth";
 import { ErrorResponse, SuccessResponse } from "@/types/common";
+import {
+  MeetingBoardResponse,
+  MeetingCreationEligibilityResponse,
+  MeetingMatchRequest,
+  MeetingMatchResponse,
+  MeetingMemberResponse,
+  MeetingMyRoomResponse,
+  MeetingRoomCreateRequest,
+  MeetingRoomResponse,
+  MeetingResultResponse,
+  MeetingRoomDetailResponse,
+  MeetingSlot,
+  MeetingSlotResponse,
+} from "@/types/meeting";
 import {
   AnimalType,
   Gender,
@@ -41,7 +61,7 @@ const maleAnimals: AnimalType[] = [
   "DINOSAUR",
   "DOG",
   "CAT",
-  "HAMSTER",
+  "WOLF",
 ];
 const femaleAnimals: AnimalType[] = [
   "FOX",
@@ -84,6 +104,301 @@ const getRandomNickname = (animal: AnimalType): string => {
   ];
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
   return `${adjective} ${animalDisplayMap[animal]}`;
+};
+
+const FILLED_MEETING_SLOTS: MeetingSlot[] = [
+  "SLOT_1",
+  "SLOT_2",
+  "SLOT_3",
+  "SLOT_5",
+  "SLOT_7",
+];
+
+/** 방장 팀 성별 구성. MIXED는 성별 제약이 없는 방을 만든다. */
+type CreatorComposition = Gender | "MIXED";
+
+const MEETING_ROOM_MOCKS: {
+  partySize: number;
+  remainingMinutes: number;
+  creatorAnimal: AnimalType;
+  creatorComposition: CreatorComposition;
+}[] = [
+  {
+    partySize: 3,
+    remainingMinutes: 10,
+    creatorAnimal: "WOLF",
+    creatorComposition: "MALE",
+  },
+  {
+    partySize: 2,
+    remainingMinutes: 25,
+    creatorAnimal: "HAMSTER",
+    creatorComposition: "FEMALE",
+  },
+  {
+    partySize: 4,
+    remainingMinutes: 45,
+    creatorAnimal: "DEER",
+    creatorComposition: "MIXED",
+  },
+  {
+    partySize: 2,
+    remainingMinutes: 5,
+    creatorAnimal: "FOX",
+    creatorComposition: "FEMALE",
+  },
+  {
+    partySize: 4,
+    remainingMinutes: 60,
+    creatorAnimal: "TURTLE",
+    creatorComposition: "MALE",
+  },
+];
+
+/**
+ * 개발용 시나리오 전환. `/lobby?mock=waiting` 처럼 주소창에 붙여 쓴다.
+ * board 요청 URL에는 쿼리가 실리지 않으므로 location에서 직접 읽는다.
+ */
+type MeetingMockScenario =
+  | "waiting"
+  | "expiring"
+  | "matched"
+  | "applicant"
+  | "no-profile"
+  | "chance-used-up";
+
+const MEETING_MOCK_SCENARIOS: MeetingMockScenario[] = [
+  "waiting",
+  "expiring",
+  "matched",
+  "applicant",
+  "no-profile",
+  "chance-used-up",
+];
+
+const getMeetingMockScenario = (): MeetingMockScenario | null => {
+  const value = new URLSearchParams(window.location.search).get("mock");
+  return MEETING_MOCK_SCENARIOS.find((s) => s === value) ?? null;
+};
+
+/** 시나리오가 켜졌을 때 내 방으로 쓰는 슬롯과 방 id. */
+const MY_ROOM_SLOT: MeetingSlot = "SLOT_1";
+const MY_ROOM_ID = 1;
+
+/** cancel 핸들러가 취소한 방 id. buildMyRoom과 슬롯 생성이 함께 참조해 삭제한 방을 되살리지 않는다. */
+const cancelledRoomIds = new Set<number>();
+
+/**
+ * 목 기준 시각. 모듈 평가 시점에 잡으면 SPA 내비게이션으로 한참 뒤에 시나리오에
+ * 들어올 때 이미 만료된 상태로 시작한다. 첫 요청 시점에 한 번만 잡고,
+ * 폴링마다 다시 잡지 않는다(그러면 만료 시각이 계속 밀려 방이 끝나지 않는다).
+ */
+let mockBaseTime: number | null = null;
+const getMockBaseTime = (): number => {
+  if (mockBaseTime === null) {
+    mockBaseTime = Date.now();
+  }
+  return mockBaseTime;
+};
+
+/** POST /rooms로 만든 방. 시나리오 파라미터 없이도 생성 → 대기 시트 흐름을 볼 수 있다. */
+let createdRoom: {
+  id: number;
+  slot: MeetingSlot;
+  partySize: number;
+  invitation: string;
+  expiresAt: string;
+} | null = null;
+
+/** POST /matches로 참여한 방. */
+let joinedRoomId: number | null = null;
+
+const CREATED_ROOM_ID = 100;
+
+const buildMyRoom = (
+  scenario: MeetingMockScenario | null,
+): MeetingMyRoomResponse | null => {
+  if (scenario === "no-profile") return null;
+  if (joinedRoomId !== null) {
+    return { roomId: joinedRoomId, status: "MATCHED", teamSide: "APPLICANT" };
+  }
+  if (createdRoom && !cancelledRoomIds.has(createdRoom.id)) {
+    return { roomId: createdRoom.id, status: "OPEN", teamSide: "CREATOR" };
+  }
+  if (!scenario) return null;
+  if (cancelledRoomIds.has(MY_ROOM_ID)) return null;
+  const isMatched = scenario === "matched" || scenario === "applicant";
+  return {
+    roomId: MY_ROOM_ID,
+    status: isMatched ? "MATCHED" : "OPEN",
+    teamSide: scenario === "applicant" ? "APPLICANT" : "CREATOR",
+  };
+};
+
+const MEETING_MEMBER_MOCKS: Omit<
+  MeetingMemberResponse,
+  "teamSide" | "memberOrder"
+>[] = [
+  { department: "컴퓨터학부", birthYear: 2002, gender: "MALE" },
+  { department: "산업정보시스템공학과", birthYear: 2001, gender: "MALE" },
+  { department: "글로벌미디어학부", birthYear: 2003, gender: "MALE" },
+];
+
+const buildMeetingMembers = (
+  partySize: number,
+  creatorComposition: CreatorComposition,
+): MeetingMemberResponse[] => {
+  const build = (
+    teamSide: MeetingMemberResponse["teamSide"],
+    genderOf: (index: number) => Gender,
+  ) =>
+    Array.from({ length: partySize }, (_, index) => {
+      const base = MEETING_MEMBER_MOCKS[index % MEETING_MEMBER_MOCKS.length];
+      return {
+        ...base,
+        gender: genderOf(index),
+        teamSide,
+        memberOrder: index + 1,
+      };
+    });
+
+  // 혼성은 첫 사람만 남자로 둔다. 한 명이라도 다르면 단일 성별이 아니게 된다.
+  const creatorGenderOf = (index: number): Gender =>
+    creatorComposition === "MIXED"
+      ? index === 0
+        ? "MALE"
+        : "FEMALE"
+      : creatorComposition;
+
+  const creators = build("CREATOR", creatorGenderOf);
+  // 신청 팀은 조건을 만족한 팀으로 보여준다. 제약이 없는 방이면 아무 쪽이나 된다.
+  const applicantGender = getRequiredApplicantGender(creators) ?? "FEMALE";
+
+  return [...creators, ...build("APPLICANT", () => applicantGender)];
+};
+
+const createMeetingRoomDetail = (
+  roomId: number,
+): MeetingRoomDetailResponse | null => {
+  const scenario = getMeetingMockScenario();
+  const isMatched =
+    joinedRoomId === roomId ||
+    (roomId === MY_ROOM_ID &&
+      (scenario === "matched" || scenario === "applicant"));
+
+  if (createdRoom?.id === roomId) {
+    return {
+      room: {
+        id: roomId,
+        slot: createdRoom.slot,
+        creatorAnimal: "DOG",
+        creatorNickname: "숭실대 방장",
+        partySize: createdRoom.partySize,
+        invitation: createdRoom.invitation,
+        status: "OPEN",
+        expiresAt: createdRoom.expiresAt,
+      },
+      // 내 방은 상세 시트로 열 수 없어 성별 제약 모달에 닿지 않는다. 구성은 아무 값이나 된다.
+      members: buildMeetingMembers(createdRoom.partySize, "MALE"),
+    };
+  }
+
+  // 보드에 그려지는 방 id는 채워진 슬롯 순서대로 1부터 매겨진다.
+  const index = roomId - 1;
+  const mock = MEETING_ROOM_MOCKS[index];
+  if (!mock || cancelledRoomIds.has(roomId)) return null;
+
+  return {
+    room: {
+      id: roomId,
+      slot: FILLED_MEETING_SLOTS[index],
+      creatorAnimal: mock.creatorAnimal,
+      creatorNickname: "숭실대 방장",
+      partySize: mock.partySize,
+      invitation: `숭실대 테스트학과 ${mock.partySize}명이 모임을 기다리고 있어요!`,
+      status: isMatched ? "MATCHED" : "OPEN",
+      expiresAt: new Date(
+        getMockBaseTime() + mock.remainingMinutes * 60 * 1000,
+      ).toISOString(),
+    },
+    members: buildMeetingMembers(mock.partySize, mock.creatorComposition),
+  };
+};
+
+const buildCreationEligibility = (
+  scenario: MeetingMockScenario | null,
+): MeetingCreationEligibilityResponse => {
+  if (scenario === "no-profile")
+    return { canCreate: false, reason: "PROFILE_REQUIRED" };
+  if (scenario === "chance-used-up")
+    return { canCreate: false, reason: "DAILY_MEETING_LIMIT_EXCEEDED" };
+  return { canCreate: true };
+};
+
+const createMeetingBoardResponse = (): MeetingBoardResponse => {
+  const now = getMockBaseTime();
+  const scenario = getMeetingMockScenario();
+  let filledIndex = 0;
+
+  const slots: MeetingSlotResponse[] = MEETING_SLOTS.map((slot) => {
+    if (createdRoom?.slot === slot && !cancelledRoomIds.has(createdRoom.id)) {
+      return {
+        slot,
+        room: {
+          id: createdRoom.id,
+          partySize: createdRoom.partySize,
+          invitation: createdRoom.invitation,
+          expiresAt: createdRoom.expiresAt,
+          creatorAnimal: "DOG",
+        },
+      };
+    }
+    if (!FILLED_MEETING_SLOTS.includes(slot)) {
+      return { slot };
+    }
+
+    const roomIndex = filledIndex++;
+    const roomId = roomIndex + 1;
+    if (cancelledRoomIds.has(roomId)) {
+      return { slot };
+    }
+
+    const { partySize, remainingMinutes, creatorAnimal } =
+      MEETING_ROOM_MOCKS[roomIndex];
+    // 임박 시나리오는 내 방만 40초 뒤에 끝나게 둔다.
+    const remainingMs =
+      scenario === "expiring" && slot === MY_ROOM_SLOT
+        ? 40 * 1000
+        : remainingMinutes * 60 * 1000;
+    // 끝난 방은 열린 방이 아니다. 슬롯을 비워 다시 만들 수 있게 한다.
+    if (now + remainingMs <= Date.now()) {
+      return { slot };
+    }
+
+    return {
+      slot,
+      room: {
+        id: roomId,
+        partySize,
+        invitation: `숭실대 테스트학과 ${partySize}명이 모임을 기다리고 있어요!`,
+        expiresAt: new Date(now + remainingMs).toISOString(),
+        creatorAnimal,
+      },
+    };
+  });
+
+  return {
+    creationEligibility: buildCreationEligibility(scenario),
+    slots,
+    myRoom: buildMyRoom(scenario),
+    latestMatch: {
+      roomId: 1,
+      creatorNickname: "숭실대 방장",
+      creatorAnimal: "DOG",
+      matchedAt: new Date(now).toISOString(),
+      visibleUntil: new Date(now + 30 * 1000).toISOString(),
+    },
+  };
 };
 
 export const handlers = [
@@ -185,7 +500,7 @@ export const handlers = [
         ],
         school: "숭실대학교",
         egenTeto: "TETO",
-        contact: "https://instagram.com/example1",
+        contact: "@example1",
       },
       {
         profileId: 102,
@@ -202,7 +517,7 @@ export const handlers = [
         ],
         school: "숭실대학교",
         egenTeto: "EGEN",
-        contact: "https://instagram.com/example2",
+        contact: "@example2",
       },
     ];
     return HttpResponse.json({
@@ -299,6 +614,30 @@ export const handlers = [
       },
     } satisfies SuccessResponse<ProfileResponse>);
   }),
+  http.get("/api/profiles/celebrities", ({ request }) => {
+    const url = new URL(request.url);
+    const gender = url.searchParams.get("gender") as Gender | null;
+    const animal = url.searchParams.get("animal") as AnimalType | null;
+    const names =
+      gender && animal ? CELEBRITY_LIST[gender]?.[animal] : undefined;
+
+    if (!names) {
+      return HttpResponse.json(
+        {
+          timestamp: new Date().toISOString(),
+          status: 400,
+          message: "gender에 해당하지 않는 동물상입니다.",
+        } satisfies ErrorResponse,
+        { status: 400 },
+      );
+    }
+
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: names,
+    } satisfies SuccessResponse<string[]>);
+  }),
+
   http.post("/api/profiles", async ({ request }) => {
     const body = (await request.json()) as ProfileCreatedRequest;
 
@@ -470,5 +809,164 @@ export const handlers = [
         purchasedProfiles: [],
       },
     } satisfies SuccessResponse<ViewerDetailResponse>);
+  }),
+
+  /** Meetings */
+  http.get("/api/meetings/board", () => {
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: createMeetingBoardResponse(),
+    } satisfies SuccessResponse<MeetingBoardResponse>);
+  }),
+
+  http.get("/api/meetings/rooms/:roomId", ({ params }) => {
+    const roomId = Number(params.roomId);
+    const detail = createMeetingRoomDetail(roomId);
+    if (!detail) {
+      return HttpResponse.json(
+        {
+          timestamp: new Date().toISOString(),
+          status: 404,
+          message: "방을 찾을 수 없습니다.",
+          code: "MEETING_ROOM_NOT_FOUND",
+        } satisfies ErrorResponse,
+        { status: 404 },
+      );
+    }
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: detail,
+    } satisfies SuccessResponse<MeetingRoomDetailResponse>);
+  }),
+
+  http.get("/api/meetings/rooms/:roomId/result", ({ params }) => {
+    const roomId = Number(params.roomId);
+    // 시나리오로 잡은 내 방, 직접 만든 방, 참여한 방이 모두 당사자다.
+    const isParticipant =
+      roomId === MY_ROOM_ID ||
+      roomId === createdRoom?.id ||
+      roomId === joinedRoomId;
+    if (!isParticipant) {
+      return HttpResponse.json(
+        {
+          timestamp: new Date().toISOString(),
+          status: 403,
+          message: "매칭 당사자가 아닙니다.",
+          code: "MEETING_RESULT_FORBIDDEN",
+        } satisfies ErrorResponse,
+        { status: 403 },
+      );
+    }
+    return HttpResponse.json({
+      timestamp: new Date().toISOString(),
+      result: {
+        roomId,
+        counterpartContact: "@signal_official",
+      },
+    } satisfies SuccessResponse<MeetingResultResponse>);
+  }),
+
+  http.post("/api/meetings/rooms", async ({ request }) => {
+    const body = (await request.json()) as MeetingRoomCreateRequest;
+    // 보드가 비운 슬롯(만료·취소)에는 다시 만들 수 있어야 한다. 같은 판정을 쓴다.
+    const occupied = createMeetingBoardResponse().slots.some(
+      (slotItem) => slotItem.slot === body.slot && slotItem.room,
+    );
+    if (occupied) {
+      return HttpResponse.json(
+        {
+          timestamp: new Date().toISOString(),
+          status: 409,
+          message: "이미 사용 중인 자리입니다.",
+          code: "SLOT_ALREADY_OCCUPIED",
+        } satisfies ErrorResponse,
+        { status: 409 },
+      );
+    }
+
+    const partySize = body.companions.length + 1;
+    createdRoom = {
+      id: CREATED_ROOM_ID,
+      slot: body.slot,
+      partySize,
+      invitation: body.invitation,
+      expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+    };
+
+    return HttpResponse.json(
+      {
+        timestamp: new Date().toISOString(),
+        result: {
+          id: createdRoom.id,
+          slot: createdRoom.slot,
+          creatorAnimal: "DOG",
+          creatorNickname: "숭실대 방장",
+          partySize,
+          invitation: createdRoom.invitation,
+          status: "OPEN",
+          expiresAt: createdRoom.expiresAt,
+        },
+      } satisfies SuccessResponse<MeetingRoomResponse>,
+      { status: 201 },
+    );
+  }),
+
+  http.post(
+    "/api/meetings/rooms/:roomId/matches",
+    async ({ params, request }) => {
+      const roomId = Number(params.roomId);
+      const body = (await request.json()) as MeetingMatchRequest;
+
+      // 내 방은 성별을 따질 필요가 없다. 성별을 먼저 보면 자기 방 신청이 엉뚱한 코드를 받는다.
+      if (createdRoom?.id === roomId) {
+        return HttpResponse.json(
+          {
+            timestamp: new Date().toISOString(),
+            status: 409,
+            message: "본인이 만든 방에는 신청할 수 없습니다.",
+            code: "SELF_MATCH_NOT_ALLOWED",
+          } satisfies ErrorResponse,
+          { status: 409 },
+        );
+      }
+
+      // 화면과 목이 같은 규칙을 보게 lib의 판정을 그대로 쓴다.
+      const ineligible = hasIneligibleApplicant(
+        getRequiredApplicantGender(
+          createMeetingRoomDetail(roomId)?.members ?? [],
+        ),
+        [body.representative, ...body.companions],
+      );
+      if (ineligible) {
+        return HttpResponse.json(
+          {
+            timestamp: new Date().toISOString(),
+            status: 400,
+            message: "같은 성별끼리는 매칭할 수 없습니다.",
+            code: "SAME_GENDER_MATCH_NOT_ALLOWED",
+          } satisfies ErrorResponse,
+          { status: 400 },
+        );
+      }
+
+      joinedRoomId = roomId;
+      return HttpResponse.json(
+        {
+          timestamp: new Date().toISOString(),
+          result: {
+            roomId,
+            status: "MATCHED",
+            counterpartContact: "01044443333",
+          },
+        } satisfies SuccessResponse<MeetingMatchResponse>,
+        { status: 201 },
+      );
+    },
+  ),
+
+  http.post("/api/meetings/rooms/:roomId/cancel", ({ params }) => {
+    const roomId = Number(params.roomId);
+    cancelledRoomIds.add(roomId);
+    return new HttpResponse(null, { status: 204 });
   }),
 ];

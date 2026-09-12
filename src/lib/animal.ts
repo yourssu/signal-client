@@ -10,4 +10,5 @@ export const animalDisplayMap: Record<AnimalType, string> = {
   FOX: "여우",
   TURTLE: "꼬북이",
   RABBIT: "토끼",
+  WOLF: "늑대",
 };

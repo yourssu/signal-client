@@ -2,6 +2,7 @@ import AnimalImage from "@/components/profile/AnimalImage";
 import ProfileTags from "@/components/profile/ProfileTags";
 import { animalDisplayMap } from "@/lib/animal";
 import { cardBgConfig } from "@/lib/card";
+import { contactDetailClick } from "@/lib/analytics";
 import { cn, formatPhone } from "@/lib/utils";
 import { toast } from "sonner";
 import { Gender, ProfileResponse } from "@/types/profile";
@@ -133,6 +134,7 @@ const ProfileCardBack: React.FC<{
             <a
               href={`https://instagram.com/${contact.substring(1)}`}
               target="_blank"
+              onClick={() => contactDetailClick()}
               className="w-full flex justify-center items-center px-2 py-3"
             >
               <span
@@ -147,6 +149,7 @@ const ProfileCardBack: React.FC<{
           ) : (
             <button
               onClick={() => {
+                contactDetailClick();
                 navigator.clipboard.writeText(contact);
                 toast.success("전화번호가 복사되었어요");
               }}

@@ -38,6 +38,12 @@ export const tokenExpiryAtom = atomWithStorage<{
   { getOnInit: true },
 );
 
+/**
+ * 세션이 끝났음을 화면에 알리기 위한 상태. 값은 끝나기 직전의 provider다 —
+ * clearTokens가 provider를 지우므로 그 뒤에는 누구였는지 알 수 없다. null이면 정상.
+ */
+export const sessionEndedAtom = atom<"google" | "local" | null>(null);
+
 // Computed atom to check if tokens are valid
 export const isAuthenticatedAtom = atom((get) => {
   const accessToken = get(accessTokenAtom);
@@ -56,7 +62,7 @@ export const isAuthenticatedAtom = atom((get) => {
 export const setTokensAtom = atom(
   null,
   (
-    _get,
+    get,
     set,
     params: { tokenResponse: TokenResponse; provider?: "google" | "local" },
   ) => {
@@ -68,7 +74,11 @@ export const setTokensAtom = atom(
       accessTokenExpiresAt: now + params.tokenResponse.accessTokenExpiresIn,
       refreshTokenExpiresAt: now + params.tokenResponse.refreshTokenExpiresIn,
     });
-    set(providerAtom, params.provider || "local");
+    // 갱신은 provider를 모른 채 부른다. 그때마다 local로 되돌리면 구글 로그인이 지워진다.
+    set(providerAtom, params.provider ?? get(providerAtom) ?? "local");
+    // 토큰이 다시 생겼다는 것이 곧 세션이 회복됐다는 뜻이다. 버튼을 눌렀다고 풀면
+    // 등록이 실패하거나 로그인 드로어를 닫았을 때 막다른 화면이 다시 남는다.
+    set(sessionEndedAtom, null);
   },
 );
 

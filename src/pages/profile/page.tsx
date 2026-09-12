@@ -136,7 +136,7 @@ const ProfileListPage: React.FC = () => {
       setTicketModalOpen(true);
       return;
     }
-    contactClick(profile.profileId);
+    contactClick(profile.profileId, profile.compatibilityLabel);
     setSavedProfileId(profile.profileId);
     navigate(`/profile/contact?id=${profile.profileId}`, {
       state: {
