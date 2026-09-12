@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
+import { BIRTH_YEAR_ERROR_TEXT, isValidBirthYear } from "@/lib/birthYear";
 import { isValidMbti } from "@/lib/mbti";
 import { cn, whenPressEnter } from "@/lib/utils";
 import { Mbti, EgenTetoType } from "@/types/profile";
@@ -49,17 +50,15 @@ const EssentialInfoStep: React.FC<EssentialInfoStepProps> = ({
   );
 
   const isBirthYearValid = useMemo(
-    () =>
-      birthYearInput !== null &&
-      birthYearInput >= 1900 &&
-      birthYearInput <= 2010,
+    () => isValidBirthYear(birthYearInput),
     [birthYearInput],
   );
 
+  // 네 자리를 다 넣기 전에는 아직 틀린 게 아니다.
   const isBirthYearError =
     birthYearInput !== null &&
     String(birthYearInput).length === 4 &&
-    (birthYearInput < 1900 || birthYearInput > 2010);
+    !isBirthYearValid;
 
   const isMbtiValid = useMemo(() => isValidMbti(mbtiInput), [mbtiInput]);
 
@@ -140,7 +139,7 @@ const EssentialInfoStep: React.FC<EssentialInfoStepProps> = ({
               required
               placeholder="태어난 연도를 입력해주세요 (ex:2002)"
               state={isBirthYearError ? "error" : undefined}
-              errorText={isBirthYearError ? "잘못된 형식입니다." : undefined}
+              errorText={isBirthYearError ? BIRTH_YEAR_ERROR_TEXT : undefined}
             />
           </div>
 

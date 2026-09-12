@@ -1,5 +1,6 @@
 import GenderChips from "@/components/meeting/GenderChips";
 import { FormField } from "@/components/ui/form-field";
+import { BIRTH_YEAR_ERROR_TEXT, isValidBirthYear } from "@/lib/birthYear";
 import { isMeetingContact } from "@/lib/meeting";
 import { cn } from "@/lib/utils";
 import type { MeetingMemberRequest } from "@/types/meeting";
@@ -26,7 +27,10 @@ const MemberForm = ({
   const [contact, setContact] = useState("");
   const [gender, setGender] = useState<Gender>();
 
-  const isBirthYearValid = /^\d{4}$/.test(birthYear);
+  const isBirthYearValid =
+    /^\d{4}$/.test(birthYear) && isValidBirthYear(Number(birthYear));
+  // 네 자리를 다 넣기 전에는 아직 틀린 게 아니다.
+  const showBirthYearError = birthYear.length === 4 && !isBirthYearValid;
   const isDepartmentValid = department.trim().length > 0;
   const isContactValid = !showContact || isMeetingContact(contact);
   const isFormValid =
@@ -63,6 +67,8 @@ const MemberForm = ({
         onChange={(e) =>
           setBirthYear(e.target.value.replace(/\D/g, "").slice(0, 4))
         }
+        state={showBirthYearError ? "error" : "default"}
+        errorText={showBirthYearError ? BIRTH_YEAR_ERROR_TEXT : undefined}
       />
       <FormField
         label="학과"
