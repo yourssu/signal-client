@@ -13,11 +13,13 @@ import {
   MEETING_ERROR_MESSAGES,
   getRoomEndedReason,
   getMemberSummaryParts,
+  getRequiredApplicantGender,
   MEMBER_PART_SEPARATOR,
 } from "@/lib/meeting";
 import { cn } from "@/lib/utils";
 import invitationIcon from "@/assets/lobby/invitation.svg";
 import type { MeetingErrorCode, MeetingMemberResponse } from "@/types/meeting";
+import type { Gender } from "@/types/profile";
 
 interface RoomPreviewSheetProps {
   /** 미리 볼 방. null이면 닫힌다. */
@@ -25,7 +27,11 @@ interface RoomPreviewSheetProps {
   onOpenChange: (open: boolean) => void;
   /** 참여할 수 없는 사유. 넘기면 참여 버튼을 잠그고 남은 시간 자리에 이유를 쓴다. */
   joinBlockedReason?: MeetingErrorCode | null;
-  onJoin: (roomId: number) => void;
+  /**
+   * 방장 그룹이 단일 성별이면 신청할 수 있는 성별을 함께 올린다.
+   * 경고 다이얼로그는 시트 안이 아니라 페이지가 띄운다.
+   */
+  onJoin: (roomId: number, requiredGender: Gender | null) => void;
 }
 
 const MemberChip = ({ member }: { member: MeetingMemberResponse }) => (
@@ -168,7 +174,12 @@ export default function RoomPreviewSheet({
                 <button
                   type="button"
                   disabled={!!joinBlockedReason}
-                  onClick={() => onJoin(room.id)}
+                  onClick={() =>
+                    onJoin(
+                      room.id,
+                      getRequiredApplicantGender(detail?.members ?? []),
+                    )
+                  }
                   className={cn(
                     "button-l text-static-white h-14 w-full rounded-2xl",
                     joinBlockedReason ? "bg-line-normal" : "bg-primary",
