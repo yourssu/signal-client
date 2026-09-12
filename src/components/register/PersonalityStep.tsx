@@ -33,6 +33,7 @@ interface PersonalityStepProps {
   traits?: string[];
   gender?: Gender;
   animal?: AnimalType;
+  isAnotherSchool?: boolean;
   onSubmit: (traits: string[]) => void;
 }
 
@@ -40,6 +41,7 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
   traits: defaultTraits,
   gender,
   animal,
+  isAnotherSchool,
   onSubmit,
 }) => {
   // 복원된 값이 세 개보다 적어도 칸 수는 항상 세 개다.
@@ -136,6 +138,7 @@ const PersonalityStep: React.FC<PersonalityStepProps> = ({
               <CelebrityTags
                 gender={gender}
                 animal={animal}
+                isAnotherSchool={isAnotherSchool}
                 value={traits[LOOKALIKE_INDEX]}
                 onSelect={(value) => handleChange(LOOKALIKE_INDEX, value)}
               />

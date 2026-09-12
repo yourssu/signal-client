@@ -9,6 +9,7 @@ interface CelebrityTagsProps {
   animal?: AnimalType;
   /** 닮은꼴 특징 칸의 현재 값 */
   value: string;
+  isAnotherSchool?: boolean;
   onSelect: (value: string) => void;
 }
 
@@ -16,6 +17,7 @@ const CelebrityTags = ({
   gender,
   animal,
   value,
+  isAnotherSchool,
   onSelect,
 }: CelebrityTagsProps) => {
   // 표에 없는 조합은 서버도 400을 주므로 아예 묻지 않는다.
@@ -32,7 +34,7 @@ const CelebrityTags = ({
       <p className="h4 text-label-neutral">닮은 꼴이 떠오르지 않나요?</p>
       <div className="flex w-full flex-wrap gap-1">
         {names.map((name) => {
-          const trait = toLookalikeTrait(name);
+          const trait = toLookalikeTrait(name, isAnotherSchool);
           const isSelected = trait === value;
 
           return (

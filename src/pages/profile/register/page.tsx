@@ -283,6 +283,7 @@ const ProfileRegisterPage: React.FC = () => {
                 traits={funnel.context.introSentences}
                 gender={funnel.context.gender}
                 animal={funnel.context.animal}
+                isAnotherSchool={!!funnel.context.school}
                 onSubmit={handlePersonalitySubmit}
               />
             )}
