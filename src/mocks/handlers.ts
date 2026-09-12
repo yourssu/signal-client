@@ -1,12 +1,17 @@
 import { animalDisplayMap } from "@/lib/animal";
 import { CELEBRITY_LIST } from "@/lib/celebrity";
-import { MEETING_SLOTS } from "@/lib/meeting";
+import {
+  getRequiredApplicantGender,
+  hasIneligibleApplicant,
+  MEETING_SLOTS,
+} from "@/lib/meeting";
 import { TicketIssuedRequest } from "@/types/admin";
 import { TokenResponse } from "@/types/auth";
 import { ErrorResponse, SuccessResponse } from "@/types/common";
 import {
   MeetingBoardResponse,
   MeetingCreationEligibilityResponse,
+  MeetingMatchRequest,
   MeetingMatchResponse,
   MeetingMemberResponse,
   MeetingMyRoomResponse,
@@ -109,16 +114,45 @@ const FILLED_MEETING_SLOTS: MeetingSlot[] = [
   "SLOT_7",
 ];
 
+/** 방장 팀 성별 구성. MIXED는 성별 제약이 없는 방을 만든다. */
+type CreatorComposition = Gender | "MIXED";
+
 const MEETING_ROOM_MOCKS: {
   partySize: number;
   remainingMinutes: number;
   creatorAnimal: AnimalType;
+  creatorComposition: CreatorComposition;
 }[] = [
-  { partySize: 3, remainingMinutes: 10, creatorAnimal: "WOLF" },
-  { partySize: 2, remainingMinutes: 25, creatorAnimal: "HAMSTER" },
-  { partySize: 4, remainingMinutes: 45, creatorAnimal: "DEER" },
-  { partySize: 2, remainingMinutes: 5, creatorAnimal: "FOX" },
-  { partySize: 4, remainingMinutes: 60, creatorAnimal: "TURTLE" },
+  {
+    partySize: 3,
+    remainingMinutes: 10,
+    creatorAnimal: "WOLF",
+    creatorComposition: "MALE",
+  },
+  {
+    partySize: 2,
+    remainingMinutes: 25,
+    creatorAnimal: "HAMSTER",
+    creatorComposition: "FEMALE",
+  },
+  {
+    partySize: 4,
+    remainingMinutes: 45,
+    creatorAnimal: "DEER",
+    creatorComposition: "MIXED",
+  },
+  {
+    partySize: 2,
+    remainingMinutes: 5,
+    creatorAnimal: "FOX",
+    creatorComposition: "FEMALE",
+  },
+  {
+    partySize: 4,
+    remainingMinutes: 60,
+    creatorAnimal: "TURTLE",
+    creatorComposition: "MALE",
+  },
 ];
 
 /**
@@ -210,17 +244,37 @@ const MEETING_MEMBER_MOCKS: Omit<
   { department: "글로벌미디어학부", birthYear: 2003, gender: "MALE" },
 ];
 
-const buildMeetingMembers = (partySize: number): MeetingMemberResponse[] => {
+const buildMeetingMembers = (
+  partySize: number,
+  creatorComposition: CreatorComposition,
+): MeetingMemberResponse[] => {
   const build = (
     teamSide: MeetingMemberResponse["teamSide"],
-    gender: MeetingMemberResponse["gender"],
+    genderOf: (index: number) => Gender,
   ) =>
     Array.from({ length: partySize }, (_, index) => {
       const base = MEETING_MEMBER_MOCKS[index % MEETING_MEMBER_MOCKS.length];
-      return { ...base, gender, teamSide, memberOrder: index + 1 };
+      return {
+        ...base,
+        gender: genderOf(index),
+        teamSide,
+        memberOrder: index + 1,
+      };
     });
 
-  return [...build("CREATOR", "MALE"), ...build("APPLICANT", "FEMALE")];
+  // 혼성은 첫 사람만 남자로 둔다. 한 명이라도 다르면 단일 성별이 아니게 된다.
+  const creatorGenderOf = (index: number): Gender =>
+    creatorComposition === "MIXED"
+      ? index === 0
+        ? "MALE"
+        : "FEMALE"
+      : creatorComposition;
+
+  const creators = build("CREATOR", creatorGenderOf);
+  // 신청 팀은 조건을 만족한 팀으로 보여준다. 제약이 없는 방이면 아무 쪽이나 된다.
+  const applicantGender = getRequiredApplicantGender(creators) ?? "FEMALE";
+
+  return [...creators, ...build("APPLICANT", () => applicantGender)];
 };
 
 const createMeetingRoomDetail = (
@@ -244,7 +298,8 @@ const createMeetingRoomDetail = (
         status: "OPEN",
         expiresAt: createdRoom.expiresAt,
       },
-      members: buildMeetingMembers(createdRoom.partySize),
+      // 내 방은 상세 시트로 열 수 없어 성별 제약 모달에 닿지 않는다. 구성은 아무 값이나 된다.
+      members: buildMeetingMembers(createdRoom.partySize, "MALE"),
     };
   }
 
@@ -266,7 +321,7 @@ const createMeetingRoomDetail = (
         getMockBaseTime() + mock.remainingMinutes * 60 * 1000,
       ).toISOString(),
     },
-    members: buildMeetingMembers(mock.partySize),
+    members: buildMeetingMembers(mock.partySize, mock.creatorComposition),
   };
 };
 
@@ -860,8 +915,9 @@ export const handlers = [
     "/api/meetings/rooms/:roomId/matches",
     async ({ params, request }) => {
       const roomId = Number(params.roomId);
-      await request.json();
+      const body = (await request.json()) as MeetingMatchRequest;
 
+      // 내 방은 성별을 따질 필요가 없다. 성별을 먼저 보면 자기 방 신청이 엉뚱한 코드를 받는다.
       if (createdRoom?.id === roomId) {
         return HttpResponse.json(
           {
@@ -871,6 +927,25 @@ export const handlers = [
             code: "SELF_MATCH_NOT_ALLOWED",
           } satisfies ErrorResponse,
           { status: 409 },
+        );
+      }
+
+      // 화면과 목이 같은 규칙을 보게 lib의 판정을 그대로 쓴다.
+      const ineligible = hasIneligibleApplicant(
+        getRequiredApplicantGender(
+          createMeetingRoomDetail(roomId)?.members ?? [],
+        ),
+        [body.representative, ...body.companions],
+      );
+      if (ineligible) {
+        return HttpResponse.json(
+          {
+            timestamp: new Date().toISOString(),
+            status: 400,
+            message: "같은 성별끼리는 매칭할 수 없습니다.",
+            code: "SAME_GENDER_MATCH_NOT_ALLOWED",
+          } satisfies ErrorResponse,
+          { status: 400 },
         );
       }
 

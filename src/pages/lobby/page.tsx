@@ -10,6 +10,7 @@ import LatestMatchBanner from "@/components/lobby/LatestMatchBanner";
 import MatchChanceChip from "@/components/lobby/MatchChanceChip";
 import ManualDialog from "@/components/lobby/ManualDialog";
 import ProfileRequiredDialog from "@/components/lobby/ProfileRequiredDialog";
+import GenderRestrictionDialog from "@/components/lobby/GenderRestrictionDialog";
 import RoomDeleteDialog from "@/components/lobby/RoomDeleteDialog";
 import RoomPreviewSheet from "@/components/lobby/RoomPreviewSheet";
 import RoomWaitingSheet from "@/components/meeting/status/RoomWaitingSheet";
@@ -47,6 +48,7 @@ import mapBackground from "@/assets/lobby/map_background.png";
 import btnManual from "@/assets/lobby/btn_manual.svg";
 import btnInvite from "@/assets/lobby/btn_invite.svg";
 import type { MeetingRoomSummaryResponse, MeetingSlot } from "@/types/meeting";
+import type { Gender } from "@/types/profile";
 
 /** 베타 정책상 하루 한 번이다. 서버에 남은 횟수 필드가 생기면 그 값으로 바꾼다. */
 const MATCH_CHANCE_PER_DAY = 1;
@@ -73,6 +75,11 @@ const LobbyPage: React.FC = () => {
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   const [manualOpen, setManualOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  // 성별 제약을 알린 방. 경고일 뿐이라 확인을 누르면 그대로 들어간다.
+  const [genderNotice, setGenderNotice] = useState<{
+    roomId: number;
+    requiredGender: Gender;
+  } | null>(null);
   const [previewRoomId, setPreviewRoomId] = useState<number | null>(null);
   const [roomDismissal, setRoomDismissal] = useState<RoomDismissal | null>(
     null,
@@ -433,9 +440,24 @@ const LobbyPage: React.FC = () => {
           if (!open) setPreviewRoomId(null);
         }}
         joinBlockedReason={joinBlockedReason}
-        onJoin={(id) => {
+        onJoin={(id, requiredGender) => {
           roomParticipateClick(!!profile);
+          if (requiredGender) {
+            setGenderNotice({ roomId: id, requiredGender });
+            return;
+          }
           navigate(`/lobby/join/${id}`);
+        }}
+      />
+
+      <GenderRestrictionDialog
+        requiredGender={genderNotice?.requiredGender ?? null}
+        onOpenChange={(open) => {
+          if (!open) setGenderNotice(null);
+        }}
+        onConfirm={() => {
+          if (!genderNotice) return;
+          navigate(`/lobby/join/${genderNotice.roomId}`);
         }}
       />
 

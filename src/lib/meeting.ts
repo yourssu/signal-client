@@ -11,13 +11,14 @@ import avatarWolf from "@/assets/lobby/avatar_wolf.svg";
 import type {
   MeetingCreationBlockReason,
   MeetingErrorCode,
+  MeetingMemberRequest,
   MeetingMemberResponse,
   MeetingMyRoomResponse,
   MeetingRoomResponse,
   MeetingRoomSummaryResponse,
   MeetingSlot,
 } from "@/types/meeting";
-import type { AnimalType } from "@/types/profile";
+import type { AnimalType, Gender } from "@/types/profile";
 
 export interface SlotPosition {
   left: string;
@@ -63,6 +64,7 @@ export const MEETING_ERROR_MESSAGES: Record<MeetingErrorCode, string> = {
   ACTIVE_ROOM_EXISTS: "이미 참여 중인 방이 있어요",
   SLOT_ALREADY_OCCUPIED: "잠깐 사이 방이 찼어요. 다른 위치를 선택해주세요",
   SELF_MATCH_NOT_ALLOWED: "내가 만든 방에는 참여할 수 없어요",
+  SAME_GENDER_MATCH_NOT_ALLOWED: "같은 성별끼리는 매칭할 수 없어요",
   ROOM_ALREADY_MATCHED: "이미 매칭이 끝난 방이에요",
   ROOM_CANCELLED: "삭제된 방이에요",
   ROOM_EXPIRED: "종료된 방이에요",
@@ -155,6 +157,37 @@ export const getMemberSummaryParts = (
   `${String(member.birthYear % 100).padStart(2, "0")}년생`,
   member.gender === "MALE" ? "남" : "여",
 ];
+
+/**
+ * 방장 그룹이 한 성별로만 이뤄졌으면 신청 그룹은 전원 반대 성별이어야 한다.
+ *
+ * 혼성으로 만든 방에는 성별 제약이 없다. 멤버를 못 받은 방도 제약 없음으로 본다 —
+ * 없는 정보로 참여를 막으면 서버가 받아줄 신청까지 막힌다.
+ */
+export const getRequiredApplicantGender = (
+  members: Pick<MeetingMemberResponse, "gender" | "teamSide">[],
+): Gender | null => {
+  // 목·서버 모두 양 팀을 함께 내려주므로 규칙을 만드는 방장 팀만 골라낸다.
+  const creators = members.filter((member) => member.teamSide === "CREATOR");
+  const creatorGender = creators[0]?.gender;
+  if (!creatorGender) return null;
+  if (creators.some((member) => member.gender !== creatorGender)) return null;
+  return creatorGender === "MALE" ? "FEMALE" : "MALE";
+};
+
+/**
+ * 신청 그룹에 조건과 어긋나는 사람이 있는지 본다.
+ *
+ * "조건을 충족했는지"가 아니라 "어긋났는지"를 묻는다. 빈 배열이 어긋남이 아니게 되어
+ * 대표가 아직 없는 갈래(프로필 없이 들어온 경우)에 따로 분기할 필요가 없다.
+ * 프로필로 대표가 채워진 갈래에서는 내 성별이 어긋나면 친구 0명일 때부터 걸린다.
+ */
+export const hasIneligibleApplicant = (
+  requiredGender: Gender | null,
+  applicants: Pick<MeetingMemberRequest, "gender">[],
+): boolean =>
+  requiredGender !== null &&
+  applicants.some((applicant) => applicant.gender !== requiredGender);
 
 /**
  * 남은 밀리초를 초로 내린다. 파싱 실패는 0으로 떨어뜨린다.

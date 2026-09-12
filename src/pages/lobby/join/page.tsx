@@ -15,6 +15,8 @@ import {
   getJoinBlockedReason,
   getMeetingErrorMessage,
   getRoomEndedReason,
+  getRequiredApplicantGender,
+  hasIneligibleApplicant,
   isMeetingContact,
 } from "@/lib/meeting";
 import { useNow } from "@/hooks/useNow";
@@ -69,7 +71,13 @@ const LobbyJoinPage: React.FC = () => {
   // 내 자리가 이미 찼으면 친구만 채우면 된다.
   const neededCount = selfMember ? partySize - 1 : partySize;
   const isFull = partySize > 0 && members.length >= neededCount;
-  const canSubmit = isFull && !!contact;
+
+  // 제출할 때와 같은 식으로 한 번만 조립한다. 판정과 제출이 다른 배열을 보면 어긋난다.
+  const applicants = selfMember ? [selfMember, ...members] : members;
+  const requiredGender = getRequiredApplicantGender(roomDetail?.members ?? []);
+  const isIneligible = hasIneligibleApplicant(requiredGender, applicants);
+
+  const canSubmit = isFull && !!contact && !isIneligible;
 
   const handleAdd = (member: MeetingMemberRequest, memberContact?: string) => {
     if (isFull) return;
@@ -89,9 +97,7 @@ const LobbyJoinPage: React.FC = () => {
 
   const handleNext = () => {
     if (!canSubmit || !contact) return;
-    const [representative, ...companions] = selfMember
-      ? [selfMember, ...members]
-      : members;
+    const [representative, ...companions] = applicants;
     roomParticipateOnboardingCompleteClick([representative, ...companions]);
     matchRoom(
       { representative, contact, companions },
@@ -208,7 +214,7 @@ const LobbyJoinPage: React.FC = () => {
             canSubmit && !isMatching ? "bg-primary" : "bg-line-normal",
           )}
         >
-          다음
+          {isIneligible ? "조건에 맞지 않는 신청이에요" : "다음"}
         </button>
       </div>
     </div>
