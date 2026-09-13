@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
+import ContactReportNotice from "@/components/ContactReportNotice";
 import { ProfileResponse } from "@/types/profile";
 import { ScrollableCards } from "@/components/my/saved/ScrollableCards";
 import { ENABLE_SAVED } from "@/env";
@@ -50,6 +51,11 @@ const ContactedProfilesPage: React.FC = () => {
             <p className="caption1 text-label-strong text-center">
               카드를 클릭하면 카드를 뒤집을 수 있어요.
             </p>
+            <ContactReportNotice
+              profileId={profile.profileId}
+              contact={profile.contact ?? ""}
+              sourcePage="my_page"
+            />
           </div>
         </>
       ) : (

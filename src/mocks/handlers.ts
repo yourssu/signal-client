@@ -6,6 +6,7 @@ import {
   MEETING_SLOTS,
 } from "@/lib/meeting";
 import { TicketIssuedRequest } from "@/types/admin";
+import { ReportCreatedRequest, ReportResponse } from "@/types/report";
 import { TokenResponse } from "@/types/auth";
 import { ErrorResponse, SuccessResponse } from "@/types/common";
 import {
@@ -187,6 +188,9 @@ const MY_ROOM_ID = 1;
 
 /** cancel 핸들러가 취소한 방 id. buildMyRoom과 슬롯 생성이 함께 참조해 삭제한 방을 되살리지 않는다. */
 const cancelledRoomIds = new Set<number>();
+
+/** 이미 제보한 프로필. 서버가 같은 프로필 재신고를 409로 막는 것을 흉내 낸다. */
+const reportedProfileIds = new Set<number>();
 
 /**
  * 목 기준 시각. 모듈 평가 시점에 잡으면 SPA 내비게이션으로 한참 뒤에 시나리오에
@@ -483,6 +487,34 @@ export const handlers = [
       result: storedProfile,
     } satisfies SuccessResponse<ProfileContactResponse>);
   }),
+  http.post("/api/reports", async ({ request }) => {
+    const { profileId } = (await request.json()) as ReportCreatedRequest;
+
+    if (reportedProfileIds.has(profileId)) {
+      return HttpResponse.json(
+        {
+          timestamp: new Date().toISOString(),
+          status: 409,
+          message: "이미 신고한 프로필입니다.",
+        } satisfies ErrorResponse,
+        { status: 409 },
+      );
+    }
+
+    reportedProfileIds.add(profileId);
+    return HttpResponse.json(
+      {
+        timestamp: new Date().toISOString(),
+        result: {
+          reportId: reportedProfileIds.size,
+          reportedProfileId: profileId,
+          status: "PENDING",
+        },
+      } satisfies SuccessResponse<ReportResponse>,
+      { status: 201 },
+    );
+  }),
+
   http.get("/api/profiles/me/purchased", () => {
     const purchasedProfiles: ProfileContactResponse[] = [
       {

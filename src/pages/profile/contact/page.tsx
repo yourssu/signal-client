@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
 import { useSetAtom } from "jotai";
 import { purchaseProfileAtom } from "@/atoms/profiles";
+import ContactReportNotice from "@/components/ContactReportNotice";
 import TurnableProfileCard from "@/components/profile/TurnableProfileCard";
 import { ENABLE_SAVED, TICKET_COST } from "@/env";
 import {
@@ -140,6 +141,11 @@ const ContactViewPage: React.FC = () => {
                 isFlipped={true}
               />
             </div>
+            <ContactReportNotice
+              profileId={profileContact.profileId}
+              contact={profileContact.contact}
+              sourcePage="signal_contact"
+            />
             <div className="flex flex-row flex-wrap gap-4 w-full max-w-md">
               {!ENABLE_SAVED && (
                 <Button

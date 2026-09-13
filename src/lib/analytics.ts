@@ -192,6 +192,18 @@ export const myprofileEditCompleteClick = (data: {
     editted_contact_adress: data.edittedContactAdress,
   });
 
+/** adress는 시트 원문의 오타지만 대시보드가 이 이름으로 잡혀 있다. */
+export const profileReportClick = (data: {
+  targetUserId: string | number;
+  sourcePage: string;
+  targetUserContactAdress: string;
+}) =>
+  track("profile_report_click", {
+    target_user_id: String(data.targetUserId),
+    source_page: data.sourcePage,
+    target_user_contact_adress: data.targetUserContactAdress,
+  });
+
 export const myprofileLockClick = () => track("myprofile_lock_click");
 
 export const myprofileLockCheckClick = (lockedUserId: string | number) =>
