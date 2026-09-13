@@ -1,4 +1,4 @@
-import ConfirmDialog from "@/components/lobby/ConfirmDialog";
+import ConfirmDialog from "@/components/ConfirmDialog";
 
 interface ProfileRequiredDialogProps {
   open: boolean;

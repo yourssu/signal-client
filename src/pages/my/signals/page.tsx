@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import TopBar from "@/components/Header";
+import ContactReportDialog from "@/components/my/ContactReportDialog";
 import { ProfileResponse } from "@/types/profile";
 import { ScrollableCards } from "@/components/my/saved/ScrollableCards";
 import { ENABLE_SAVED } from "@/env";
 import main from "@/assets/home/main.png";
 import { useUser } from "@/hooks/useUser";
+import {
+  getReportErrorMessage,
+  useCreateReport,
+} from "@/hooks/queries/reports";
+import { profileReportClick } from "@/lib/analytics";
 
 const ContactedProfilesPage: React.FC = () => {
   const navigate = useNavigate();
@@ -18,7 +25,38 @@ const ContactedProfilesPage: React.FC = () => {
 
   // Update profile state when index changes
 
+  const [isReportOpen, setIsReportOpen] = useState(false);
+  const { mutate: createReport, isPending: isReporting } = useCreateReport();
+
   const count = `${purchasedProfiles?.length ?? 0}`.padStart(2, "0");
+
+  const handleReportClick = () => {
+    if (!profile) return;
+    profileReportClick({
+      targetUserId: profile.profileId,
+      sourcePage: "my_page",
+      targetUserContactAdress: profile.contact ?? "",
+    });
+    setIsReportOpen(true);
+  };
+
+  const handleReportConfirm = () => {
+    if (!profile) return;
+    createReport(
+      { profileId: profile.profileId },
+      {
+        onSuccess: () => {
+          setIsReportOpen(false);
+          toast.success("제보해 주셔서 감사해요! 확인 후 티켓이 지급돼요");
+        },
+        onError: (error) => {
+          // 이미 제보했거나 열람하지 않은 프로필은 다시 눌러도 소용없다.
+          setIsReportOpen(false);
+          toast.error(getReportErrorMessage(error));
+        },
+      },
+    );
+  };
 
   return (
     <div className="w-full h-full flex flex-col items-center">
@@ -50,7 +88,23 @@ const ContactedProfilesPage: React.FC = () => {
             <p className="caption1 text-label-strong text-center">
               카드를 클릭하면 카드를 뒤집을 수 있어요.
             </p>
+            <p className="caption1 text-label-alternative text-center">
+              등록된 아이디가 이상하다면?{" "}
+              <button
+                type="button"
+                onClick={handleReportClick}
+                className="underline"
+              >
+                제보하기
+              </button>
+            </p>
           </div>
+          <ContactReportDialog
+            open={isReportOpen}
+            onOpenChange={setIsReportOpen}
+            onConfirm={handleReportConfirm}
+            confirmDisabled={isReporting}
+          />
         </>
       ) : (
         <>
