@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import ConfirmDialog from "@/components/lobby/ConfirmDialog";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import type { Gender } from "@/types/profile";
 
 interface GenderRestrictionDialogProps {
